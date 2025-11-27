@@ -1,0 +1,101 @@
+---
+description: Always-on Swift + macOS development workflow for Cursor agents.
+alwaysApply: true
+---
+
+# Swift macOS Development Workflow
+
+Applies whenever you touch `Package.swift`, `.xcodeproj`, or `.xcworkspace` content in this repo. Keep Cursor as the editor, but rely on Xcode’s command-line stack for builds, runs, and validation to mirror the workflow described by Cursor and Sweetpad’s authors. [^cursor-ios] [^sweetpad-medium]
+
+---
+
+## 1. Editor vs. builder responsibilities
+- Treat Cursor as the primary IDE while delegating builds/tests to Xcode CLI (`xcodebuild`, `swift build`, `swift test`). Keep Xcode open only when Simulator/device management or provisioning UIs are unavoidable. [^cursor-ios]
+- Every fresh branch or dependency upgrade must include at least one successful CLI build to unblock SourceKit features (jump-to-def, autocomplete) before heavy editing. [^sweetpad-medium]
+
+---
+
+## 2. Build-server + indexing hygiene
+- Ensure a single `buildServer.json` sits at the repo root and references the active workspace/project plus the default scheme/destination. When schemes or destinations change, regenerate it with `xcode-build-server config -workspace <Workspace.xcworkspace> -scheme <Scheme>` (or `-project` if no workspace) so SourceKit sees accurate compile flags. [^xcode-build-server]
+- When you cannot trigger Sweetpad’s GUI command, edit `buildServer.json` manually using the last known structure in version control and commit the update alongside any scheme/destination changes so future runs stay deterministic. [^sweetpad-medium]
+- After regenerating the file, run one clean build (`xcodebuild ... clean build`) to refresh DerivedData and language-server indexes before resuming edits.
+
+---
+
+## 3. Build + run commands
+- Enumerate schemes/destinations with `xcodebuild -list -workspace <Workspace.xcworkspace>` to avoid stale assumptions.
+- Standard macOS build + run pipeline:
+  ```bash
+  set -o pipefail
+  xcodebuild \
+    -workspace <Workspace.xcworkspace> \
+    -scheme <Scheme> \
+    -configuration Debug \
+    -destination 'platform=macOS,arch=arm64' \
+    build \
+    | xcbeautify
+  open "$(xcodebuild -showBuildSettings -workspace <Workspace.xcworkspace> -scheme <Scheme> | awk -F'= ' '/BUILT_PRODUCTS_DIR/ {print $2}')/<App>.app"
+  ```
+  Sweetpad wraps the same `xcodebuild` invocations, so keeping these commands faithful ensures parity with the documented workflow. [^sweetpad-medium]
+- For Swift Package Manager modules, fall back to `swift build --configuration debug` or `swift run <target>` when no Xcode workspace exists.
+
+---
+
+## 4. Testing + coverage
+- Prefer scheme-scoped tests so Simulator/device state stays aligned with builds:
+  ```bash
+  xcodebuild \
+    -workspace <Workspace.xcworkspace> \
+    -scheme <Scheme> \
+    -destination 'platform=macOS,arch=arm64' \
+    test \
+    -enableCodeCoverage YES \
+    | xcbeautify
+  ```
+- For pure SPM targets use `swift test --parallel --enable-code-coverage`.
+- Record failing tests and attach logs (pretty-printed via `xcbeautify`) to PR descriptions.
+
+---
+
+## 5. Debugging + launch configs
+- Maintain `.vscode/launch.json` entries that use the `sweetpad-lldb` debugger type so agents can launch or attach without UI navigation:
+  ```jsonc
+  {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Attach to running app (SweetPad)",
+        "type": "sweetpad-lldb",
+        "request": "launch",
+        "preLaunchTask": "sweetpad: launch"
+      }
+    ]
+  }
+  ```
+  Keep this file in sync with scheme names so F5 / `Run & Debug` flows continue to match the documented Sweetpad process. [^sweetpad-medium]
+- When interactive debugging is impossible (CI-only hosts), fall back to `lldb <path-to-app-binary>` and re-run with `--wait-for` flags as needed.
+
+---
+
+## 6. Hot reloading + rapid iteration
+- When working inside `.xcworkspace` bundles that Xcode might cache aggressively, prefer the `Inject` hot-reload library to keep Cursor-driven edits visible without reopening Xcode. [^cursor-ios]
+- Guard hot reload hooks behind compilation flags so release builds stay unaffected (e.g., `#if DEBUG import Inject ... #endif`).
+
+---
+
+## 7. Validation + formatting gates
+- Format Swift code with `swiftformat --lint .` before committing; fail fast on style drift rather than waiting for CI. [^sweetpad-medium]
+- Always finish a task with `swift test` or `xcodebuild test` plus any relevant smoke-run so Cursor’s “build once” requirement is satisfied and Sweetpad’s indexing stays fresh. [^sweetpad-medium]
+
+---
+
+## 8. Operational tips
+- Prefer `DerivedData` inside the repo (`DerivedData/.build`) when possible so agents can inspect build artefacts without probing user-specific paths; otherwise capture the resolved path via `xcodebuild -showBuildSettings`.
+- Pipe every long-running `xcodebuild` invocation through `xcbeautify` for human-readable logs and include them when raising issues. [^sweetpad-medium]
+- If SourceKit loses cross-file references, re-run `xcode-build-server config ...` followed by a clean build to refresh compile commands before investigating further. [^xcode-build-server]
+
+---
+
+[^cursor-ios]: https://cursor.com/docs/configuration/languages/ios-macos-swift
+[^sweetpad-medium]: https://dimillian.medium.com/how-to-use-cursor-for-ios-development-54b912c23941
+[^xcode-build-server]: https://github.com/SolaWing/xcode-build-server

@@ -12,7 +12,7 @@ Knowledge workers with back-to-back calls rely on tools like Granola for transcr
 ## 2. Objectives & Success Criteria
 ### 2.1 Goals
 1. Detect Zoom or Google Meet sessions (automatic and manual start) and create a meeting workspace instantly.
-2. Record system audio locally, transcribe it with an NVIDIA Parakeet ASR checkpoint, and bucket every artifact (audio, notes, transcript, enhanced summary) into a user-chosen directory tree.
+2. Record system audio locally, transcribe it with the bundled SwiftWhisper (whisper.cpp) engine for a truly self-contained MVP, and bucket every artifact (audio, notes, transcript, enhanced summary) into a user-chosen directory tree. Phase 2 introduces the MLX-converted `mlx-community/parakeet-tdt-0.6b-v3` model for higher fidelity once the Swift port is battle-tested.[^swiftwhisper][^mlxparakeet]
 3. Provide an always-on note pane tied to the active recording session, persisting drafts even if the call drops unexpectedly.
 4. After each session, auto-run: audio-to-text, summary generation stub, and folder housekeeping—no manual export steps.
 
@@ -50,31 +50,34 @@ Knowledge workers with back-to-back calls rely on tools like Granola for transcr
 ## 4. Functional Requirements
 1. **Default Save Location UI**: picker + validation, fallback to `~/Documents/Alona`.
 2. **Meeting Detection**:
-   - Listen to `NSWorkspace.didLaunchApplicationNotification` / `didActivateApplicationNotification` to watch for `zoom.us`, Chrome tabs containing `meet.google.com`, Safari, Brave, Edge.[^nsworkspace]
-   - Manual "New Session" button for unsupported providers.
+   - Multi-signal pipeline: (a) `NSWorkspace` notifications/watchdogs to observe `zoom.us` lifecycle events, (b) 2 s timer that probes `lsof -i 4UDP -p <pid>` to confirm Zoom is exchanging media, (c) Accessibility + AppleScript queries that read Chromium/Safari tab URLs for `meet.google.com`, and (d) manual "New Session" entry for unsupported tools.[^nsworkspace]
+   - Onboarding checklist guides users through granting Accessibility + Automation permissions so the heuristics stay reliable.
 3. **Recording Pipeline**:
-   - Aggregate mic + system audio using `ScreenCaptureKit` or bundled BlackHole virtual device to tap speaker output.[^screencapture][^blackhole]
-   - Provide visible state (Red dot, pause/resume, timer).
+   - System audio: subscribe to the meeting window via `ScreenCaptureKit` and write a 16 kHz mono WAV suitable for MLX inference; fall back to a bundled BlackHole Multi-Output device when Screen Recording permission is unavailable.[^screencapture][^blackhole]
+   - Microphone audio: run `AVAudioEngine` taps on the default input, optionally write dual-channel WAVs (Ch1 system, Ch2 mic) before downmixing for transcription.[^avfoundation]
+   - Provide visible state (menu bar indicator, pause/resume, timer) whenever either capture path is active.
 4. **Notes Surface**:
    - Rich-text-lite editor (Markdown subset) with autosave drafts to `notes.tmp` and final `notes.md` on stop.
 5. **Transcription Job**:
-   - After recording, execute NeMo Parakeet checkpoint (default `nvidia/parakeet-tdt-0.6b-v2`) via offline runner; produce `.json` (timestamps) and `.txt` file.[^nemo]
-   - Configurable GPU/CPU fallback (warn if device lacks NVIDIA GPU; allow remote Linux box optional later).
+   - After recording, invoke the bundled SwiftWhisper (whisper.cpp) engine with a default `ggml-base.en` checkpoint to produce `.json` (timestamps) and `.txt` artifacts entirely offline—no Python runtime required.[^swiftwhisper]
+   - Settings expose model-size tradeoffs (tiny/base/small) plus an opt-in preview flag for the future MLX Parakeet port; the transcript schema stays identical so summaries remain engine-agnostic.[^mlxparakeet]
 6. **Enhanced Summary Stub**:
    - Call `generateEnhancedSummary(sessionId)` that currently writes deterministic dummy data (timestamp + placeholder).  
    - Provide "Regenerate" button; future integration can call LM Studio or remote OpenAI.
 7. **Folder Layout**:
-   ```
-   <root>/2025/11/27/<meeting-slug>/
-     raw/audio.wav
-     raw/metadata.json
-     notes/notes.md
-     transcript/transcript.json
-     transcript/transcript.txt
-     summaries/summary-v1.md
-   ```
-8. **Settings & Permissions**: wizard to request Accessibility, Screen Recording, Microphone, plus toggles for auto-start, push notifications.
-9. **Error Handling**: inline toasts for detection failures, permission issues, transcription crashes.
+   - Every session creates a single flat folder named `YYYY-MM-DD_HHMM_<slug>/` (e.g., `2025-11-27_1030_Product-Sync/`) so multiple meetings per day never collide.
+   - Files inside the folder stay at the root for easy Finder browsing:
+     ```
+     recording.wav          # dual-channel (system + mic) PCM WAV
+     recording-mono.wav     # downmixed copy handed to the transcription worker
+     notes.md               # final notes (autosave temp lives in same folder)
+     transcript.txt         # human-readable text
+     transcript.json        # structured segments with timestamps
+     summary.md             # enhanced summary (placeholder in MVP)
+     ```
+8. **Settings & Permissions**: wizard to request Accessibility, Automation, Screen Recording, Microphone, plus toggles for auto-start, push notifications, and model selection; surface Info.plist copy so users understand each entitlement.
+9. **UI Shell**: menu bar extra for status/actions, floating notes window that opens when a session starts, Finder quick links, and autosave cadence controls mirrored from the Claude/Gemini explorations.
+10. **Error Handling**: inline toasts for detection failures, permission issues, transcription crashes.
 
 ---
 
@@ -84,24 +87,27 @@ Knowledge workers with back-to-back calls rely on tools like Granola for transcr
 - **React Native macOS** is possible but would require handwritten native modules for detection, audio graph management, and GPU-accelerated ASR, negating the speed advantage. Recommendation: native Swift for MVP; revisit RN shell only if future cross-platform goals emerge.
 
 ### 5.2 Meeting Detection Layer
-- Use `NSWorkspace` notifications + `NSRunningApplication` metadata to detect Zoom process and frontmost bundle.[^nsworkspace]
-- For Google Meet, subscribe to Accessibility events on Chromium browsers (AX notifications) and inspect window titles/URLs. Start with heuristics (window title contains "Meet"), then allow manual override.
-- Provide fallback manual start for vendors like Teams/Webex.
+- `NSWorkspace` notifications + `NSRunningApplication` metadata detect Zoom lifecycle changes, while a watchdog timer re-polls every 2 s so transient foreground switches do not hide meetings.[^nsworkspace]
+- When Zoom is running, `lsof -i 4UDP -p <pid>` verifies the process has active RTP flows before auto-starting a recording, reducing false positives.
+- For Google Meet, Accessibility + AppleScript queries inspect Chrome/Safari tab URLs (`meet.google.com/*`), and we log when Automation permission is missing so the UI can fall back to manual start.
+- Manual overrides (Start/Pause/Stop) remain visible so users can recover from edge cases or support additional vendors (Teams, Webex, Slack huddles).
 
 ### 5.3 Audio Capture & Storage
-- `ScreenCaptureKit` streams provide per-app audio taps without virtual drivers on macOS 12.3+.[^screencapture]
-- For older releases, ship an optional helper to install the open-source BlackHole virtual audio driver and configure a Multi-Output device so the app can capture system output + mic mix.[^blackhole]
-- Use `AVAudioEngine` to route inputs, encode to 16-bit PCM WAV via `AVAudioFile` for compatibility with NeMo preprocessing.[^avfoundation]
+- `ScreenCaptureKit` streams provide per-app audio taps without virtual drivers on macOS 12.3+, letting us isolate the Zoom/Meet window audio and encode 16 kHz mono WAVs tailored for MLX ASR.[^screencapture]
+- Microphone capture uses `AVAudioEngine` taps so we can save dual mono channels (system, mic) into `recording.wav` while also writing `recording-mono.wav` for the transcription worker.[^avfoundation]
+- For machines without Screen Recording permission or on older OS releases, a helper walks users through installing the open-source BlackHole driver, creating a Multi-Output/Aggregate device, and selecting it inside the app so recordings still include remote audio.[^blackhole]
+- Keeping everything flat inside `YYYY-MM-DD_HHMM_<slug>/` folders keeps Finder navigation simple while still preserving the richer dual-channel source for future diarization.
 
 ### 5.4 Note Editor & UI Shell
-- SwiftUI split view: session timeline on the left, editor + live waveform on the right.
-- Markdown store backed by CoreData or plain files; prefer plain files for transparency.
-- Autosave timer triggered by Combine publisher emitting on text changes.
+- Menu bar extra hosts quick actions (Start/Pause, open Notes window, open Settings) and the status indicator (idle vs recording) so the app is usable even when all windows are closed.
+- When a session begins, a floating SwiftUI window opens with timeline badges, note editor, and insert buttons (timestamp, bullet) and autosaves drafts every 2 s to `notes.tmp` before committing `notes.md` on stop.
+- Plain-text Markdown storage keeps the “vibe coding” workflow transparent; no database migrations are required for MVP, but the file manager emits change events so future Spotlight/QuickLook plugins can index them.
 
 ### 5.5 Transcription Service
-- Bundle lightweight Python runtime (e.g., Miniconda env) or require pre-installed conda; launch `python transcribe.py audio.wav --model=nvidia/parakeet-tdt-0.6b-v2`.
-- Parakeet RNNT/CTC models expose timestamps by passing `timestamps=True` to NeMo ASRModel inference; we can leverage that for annotated transcripts.[^nemo]
-- Provide queue + retry semantics; show progress in UI with log tail.
+- MVP ships SwiftWhisper (Swift bindings around whisper.cpp) plus curated `ggml` weights (`tiny.en`, `base.en`, `small.en`). This keeps the app self-contained—no Python, Conda, or external scripts—while delivering proven on-device accuracy on Apple silicon.[^swiftwhisper]
+- The transcription worker converts the recorded WAV to 16 kHz mono (if needed), streams frames into SwiftWhisper, and emits standardized `.json` + `.txt` outputs with segment-level timestamps. Progress is surfaced in the UI with cancel/retry semantics.
+- Phase 3 in the delivery plan introduces an opt-in MLX Parakeet backend: we bundle `mlx-community/parakeet-tdt-0.6b-v3` weights plus `parakeet-mlx` binaries and gate them behind a “High Fidelity (Preview)” toggle. Both engines implement the same `TranscriptionProvider` protocol so switching simply swaps implementations.[^mlxparakeet]
+- Future work can re-enable NeMo Python runners for users with remote NVIDIA GPUs, but the primary story remains fully local on Apple silicon.
 
 ### 5.6 Enhanced Summary Mechanism (Phase 2 ready)
 - Define `SummaryProvider` protocol with implementations:
@@ -110,24 +116,7 @@ Knowledge workers with back-to-back calls rely on tools like Granola for transcr
   - Future `RemoteLLMProvider` for OpenAI/Claude.
 - Store summary metadata (model, timestamp, prompt) alongside markdown content for auditing.
 
-### 5.7 File Organization & Metadata
-- Central `manifest.json` per meeting containing:
-  ```json
-  {
-    "id": "2025-11-27-1030-product-sync",
-    "title": "Product Sync w/ Acme",
-    "participants": ["Abraham", "Michaela"],
-    "source": "Zoom",
-    "recording": "raw/audio.wav",
-    "transcript": "transcript/transcript.json",
-    "summary": "summaries/summary-v1.md",
-    "tags": ["sales", "acme"],
-    "notebookVersion": 1
-  }
-  ```
-- This enables future Spotlight/QuickLook integrations.
-
-### 5.8 Security & Privacy
+### 5.7 Security & Privacy
 - Entitlement prompts describe data flows; no background network calls besides optional summary providers.
 - Configurable retention policy (auto-delete after N days) stored in preferences.
 - Provide single-click "Reveal in Finder" to reassure data locality.
@@ -135,15 +124,19 @@ Knowledge workers with back-to-back calls rely on tools like Granola for transcr
 ---
 
 ## 6. Delivery Plan
+
+**Implementation RFC:** [RFC-001: Alona MVP Full Implementation](./rfcs/RFC-001-alona-mvp-full-implementation.md)
+
 | Phase | Scope | Key Deliverables |
 | --- | --- | --- |
 | **0 – Repo & Research (complete)** | Git init, README, PRD | This document. |
-| **1 – Local Capture MVP** | Detection, recording, notes, folder scaffold | SwiftUI shell, detection service, audio graph, manual start, folder writer, tests. |
-| **2 – Automation Loop** | Transcription + stub summary | Parakeet runner, job queue, UI statuses, dummy summary + regenerate, error handling. |
-| **3 – UX polish & Settings** | Permissions onboarding, notifications, theme | Settings window, onboarding checklist, keyboard shortcuts. |
-| **4 – LLM Integrations (stretch)** | Real enhanced summaries | LM Studio + OpenAI clients, provider switching, cost telemetry. |
+| **1 – Detection & Permissions** | Multi-signal detector + onboarding | RFC + service for Zoom/Meet detection, permission checklist UI, manual session start. |
+| **2 – Audio Graph & Notes Shell** | Recording + file scaffold | ScreenCaptureKit + AVAudioEngine services, BlackHole fallback guide, menu bar + notes window, autosave + folder writer. |
+| **3 – Transcription Loop** | SwiftWhisper MVP + MLX preview toggle | Bundled SwiftWhisper weights, background job queue, progress UI, schema-aligned transcript files, optional MLX Parakeet preview bundle. |
+| **4 – UX Polish & Notifications** | Settings, alerts, Finder surfacing | Settings window, onboarding checklist, Finder reveal + notifications, keyboard shortcuts. |
+| **5 – LLM Integrations (stretch)** | Real enhanced summaries | LM Studio + OpenAI clients, provider switching, telemetry. |
 
-Each phase should end with an RFC per major subsystem following the existing template.
+The single RFC covers all phases with a phased checklist. Each phase builds on the previous.
 
 ---
 
@@ -151,7 +144,7 @@ Each phase should end with an RFC per major subsystem following the existing tem
 | Risk | Impact | Mitigation |
 | --- | --- | --- |
 | System audio capture blocked (no ScreenCaptureKit permissions) | Cannot record output audio | Fallback to BlackHole driver install guide + permission checker UI. |
-| Parakeet models require NVIDIA GPU | Users on Intel/Apple Silicon only | Offer remote GPU host option, consider Whisper for CPU fallback later. |
+| MLX Parakeet inference is resource-heavy | Lower-tier Macs may transcribe slowly | Surface hardware guidance, allow SwiftWhisper fallback, throttle concurrent jobs. |
 | Meeting heuristics misfire (false positives) | Start recording at wrong time | Provide manual confirm toast + kill switch; log telemetry locally for tuning. |
 | Storage bloat | Disk pressure | Show per-meeting sizes, allow auto-delete raw audio older than configurable threshold. |
 
@@ -159,7 +152,7 @@ Each phase should end with an RFC per major subsystem following the existing tem
 
 ## 8. Open Questions
 1. Do we need video capture or screen snapshots for context? (requires Screen Recording entitlements + storage.)
-2. Should we bundle Python/NeMo or guide users through setup? (Impacts notarization size.)
+2. When we enable the MLX Parakeet preview, should we bundle the safetensors inside the `.app` or download them on demand to keep the installer lean?
 3. How to detect Google Meet reliably inside browsers without violating sandbox rules? Possibly use Chrome DevTools Protocol when user grants permission.
 4. Should auto-summary run for very short (<2 min) sessions?
 
@@ -185,3 +178,5 @@ Each phase should end with an RFC per major subsystem following the existing tem
 [^nemo]: NVIDIA NeMo Parakeet ASR usage (timestamps, pretrained load) https://github.com/NVIDIA/NeMo/blob/main/docs/source/asr/intro.rst
 [^lmstudio]: LM Studio OpenAI-compatible API docs https://lmstudio.ai/docs/developer/openai-compat
 [^swiftui]: Apple Developer Documentation – SwiftUI overview https://developer.apple.com/documentation/swiftui
+[^mlxparakeet]: MLX community conversions of NVIDIA Parakeet TDT checkpoints for Apple silicon https://huggingface.co/mlx-community/parakeet-tdt-0.6b-v3
+[^swiftwhisper]: SwiftWhisper (whisper.cpp bindings) for on-device transcription https://github.com/exPHAT/SwiftWhisper
