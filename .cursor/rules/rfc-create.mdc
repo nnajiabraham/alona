@@ -1,0 +1,58 @@
+---
+description: Follow these rules whenever you need to propose a significant change or feature.
+globs: 
+alwaysApply: false
+---
+# EBJoy – RFC Creation Rules
+
+Follow these rules whenever you need to propose a significant change or feature.
+
+---
+
+## 1. When is an RFC required?
+* New feature work that affects public API, database, or UX flow.
+* Architectural refactors.
+* Changes requiring multiple PRs or touching >2 domains (e.g. client + server).
+
+Minor bug-fixes or copy tweaks can skip the RFC process.
+
+---
+
+## 2. File Placement & Naming
+* Location: `docs/rfcs/`
+* Filename: `RFC-XYZ.md` (increment XYZ). Use the next integer.
+
+If unsure, search for existing RFCs: `grep_search query="RFC\-\d+" include_pattern="docs/rfcs/*.md"`.
+
+---
+
+## 3. Template
+Start from the template in [agent_guide_and_templates.md](mdc:agent_guide_and_templates.md) or copy an existing RFC and update.
+
+Mandatory sections:
+1. Goal
+2. Background & Context
+3. Technical Design – broken into subareas
+4. Dependencies
+5. Checklist (with `[ ]` items **and a nested Test-Cases sub-list for each task**)
+6. Definition of Done
+7. Implementation Notes / Summary – **must be kept up-to-date during implementation**
+
+Status should begin as **`Draft`**.
+
+> **Important:** For **every** checklist item, add `Test Cases` as a markdown sub-list that clearly enumerates the assertions that must pass for that task. These test cases guide implementation and serve as acceptance criteria.
+
+---
+
+## 4. Branch & Commit Conventions
+* Working branch format: `rfc/XYZ-short-desc`.
+* Commit messages **must** use Conventional Commits with RFC scope, e.g.:
+  * `feat(rfc-042): add user creation endpoint`
+  * `docs(rfc-042): initial draft`
+
+---
+
+## 5. Pull Request Workflow
+1. Push the RFC branch and open a **draft PR**.
+2. Gather feedback; iterate until stakeholders approve.
+3. When the RFC status changes to `Active`, implementation can begin (see [RFC Implementation Rules](mdc:rfc-implement.mdc)).

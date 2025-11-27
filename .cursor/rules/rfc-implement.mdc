@@ -1,0 +1,59 @@
+---
+description: Important Rules and Guidelines to follow when implementing plans and designs in from an RFC document
+globs: 
+alwaysApply: false
+---
+# EBJoy – RFC Implementation Rules
+
+Use this file after an RFC's status switches to **`Active`**.
+
+---
+
+## 1. Sequential Workflow
+For each unchecked item in the RFC **Checklist**:
+1. **Plan** the minimal, test-driven change, guided by the *Test Cases* listed under that checklist item.
+2. **Edit** code using Cursor tools (keep edits small and focused).
+3. **Run & fix** the tests for that task plus the global suite:
+   ```bash
+   make backend/test
+   make frontend/test
+   make backend/lint
+   make frontend/lint
+   ```
+4. If DB schema changes are required, follow the steps in [Database Rules](mdc:database.mdc).
+5. Commit the change (`<type>(rfc-XYZ): message`).
+6. **Update the RFC file**:
+   * Mark the checklist box `[X]` **only after all test cases pass**.
+   * Append a bullet to *Implementation Notes / Summary* detailing **file paths changed, config/migration commands run, environment variables added, and key decisions**.
+7. Push to the PR and ensure CI passes.
+
+> **Do not start the next checklist item until the current one is checked and the Implementation Notes have been updated.**
+
+Repeat until all items are complete.
+
+---
+
+## 2. Run Tests Early and Often
+Never mark a checklist item as complete until:
+* All automated tests are green.
+* Linters report zero errors.
+* (Optional) Manual smoke tests pass when relevant.
+
+---
+
+## 3. Definition of Done
+An RFC can be moved to **`Done`** when:
+* Every checklist item is checked.
+* `make test` and `make lint` pass for all projects.
+* The *Implementation Notes / Summary* section concisely describes the major changes.
+* The PR is reviewed & merged.
+
+---
+
+## 4. Safety Nets & Tips
+* Use small PRs scoped to a single checklist item whenever possible.
+* If you suspect a change may introduce regressions, add/extend tests **first**.
+* Use make commands consistently for all operations.
+* When stuck, revisit [RFC Creation Rules](mdc:rfc-create.mdc) and the RFC itself for clarity.
+
+---
