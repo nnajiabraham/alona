@@ -39,8 +39,7 @@ struct SettingsView: View {
         panel.begin { response in
             guard response == .OK, let url = panel.url else { return }
             Task { @MainActor in
-                appState.saveDirectory = url
-                UserDefaults.standard.set(url.path, forKey: "meetingSaveDirectory")
+                appState.updateSaveDirectory(url)
             }
         }
     }

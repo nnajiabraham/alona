@@ -1,19 +1,18 @@
 import SwiftUI
-#if DEBUG
-    import Inject
-#endif
 
 struct MenuBarView: View {
     @EnvironmentObject private var appState: AppState
     @EnvironmentObject private var permissionManager: PermissionManager
+    @EnvironmentObject private var meetingDetector: MeetingDetector
     @Environment(\.openWindow) private var openWindow
-    #if DEBUG
-        @ObserveInjection var inject
-    #endif
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             header
+            detectionStatus
+            if shouldShowDetectionPrompt {
+                detectionPrompt
+            }
             recordingControls
             Divider()
             permissionSummary
@@ -24,10 +23,17 @@ struct MenuBarView: View {
         .frame(minWidth: 300)
         .task {
             permissionManager.refreshAllPermissions()
+            syncMeetingTitleFromDetector()
         }
-        #if DEBUG
-        .enableInjection()
-        #endif
+        .onChange(of: meetingDetector.meetingTitle) { _ in
+            syncMeetingTitleFromDetector()
+        }
+        .onChange(of: meetingDetector.isInMeeting) { _ in
+            syncMeetingTitleFromDetector()
+        }
+        .onChange(of: activeDetectionIdentifier) { newValue in
+            appState.resetDetectionDismissalIfNeeded(for: newValue)
+        }
     }
 
     private var header: some View {
@@ -37,6 +43,27 @@ struct MenuBarView: View {
             Text(appState.meetingTitle)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
+        }
+    }
+
+    private var detectionStatus: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Detection")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            HStack(spacing: 8) {
+                Circle()
+                    .fill(meetingDetector.isInMeeting ? Color.green : Color.gray)
+                    .frame(width: 10, height: 10)
+                if meetingDetector.isInMeeting {
+                    Text(detectedMeetingDescription)
+                } else if meetingDetector.automationPermissionDenied {
+                    Text("Automation permission needed for Google Meet tabs")
+                } else {
+                    Text("Idle – waiting for meeting")
+                }
+            }
+            .font(.caption)
         }
     }
 
@@ -52,6 +79,28 @@ struct MenuBarView: View {
             }
             .buttonStyle(.borderedProminent)
         }
+    }
+
+    private var detectionPrompt: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Meeting detected")
+                .font(.headline)
+            Text(detectedMeetingDescription)
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+            HStack {
+                Button("Start Recording Now") {
+                    startDetectedMeeting()
+                }
+                .buttonStyle(.borderedProminent)
+                Button("Dismiss") {
+                    dismissDetectedMeeting()
+                }
+            }
+        }
+        .padding(12)
+        .background(Color.orange.opacity(0.1))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
     private var permissionSummary: some View {
@@ -84,6 +133,44 @@ struct MenuBarView: View {
         }
     }
 
+    private var shouldShowDetectionPrompt: Bool {
+        let identifier = activeDetectionIdentifier
+        guard !identifier.isEmpty, meetingDetector.isInMeeting, !appState.isRecording else { return false }
+        return appState.dismissedDetectionIdentifier != identifier
+    }
+
+    private var activeDetectionIdentifier: String {
+        guard meetingDetector.isInMeeting else { return "" }
+        return "\(meetingDetector.detectedApp?.rawValue ?? "unknown")|\(meetingDetector.meetingTitle)"
+    }
+
+    private var detectedMeetingDescription: String {
+        let appName = meetingDetector.detectedApp?.displayName ?? "Meeting"
+        return "\(appName) – \(meetingDetector.meetingTitle)"
+    }
+
+    private func startDetectedMeeting() {
+        let identifier = activeDetectionIdentifier
+        if !appState.isRecording {
+            appState.toggleRecording()
+        }
+        appState.dismissDetection(identifier: identifier)
+    }
+
+    private func dismissDetectedMeeting() {
+        let identifier = activeDetectionIdentifier
+        guard !identifier.isEmpty else { return }
+        appState.dismissDetection(identifier: identifier)
+    }
+
+    private func syncMeetingTitleFromDetector() {
+        if meetingDetector.isInMeeting {
+            appState.meetingTitle = meetingDetector.meetingTitle
+        } else if !appState.isRecording {
+            appState.meetingTitle = "No meeting detected"
+        }
+    }
+
     private func statusColor(for type: PermissionManager.PermissionType) -> Color {
         switch permissionManager.statuses[type] {
         case .granted:
@@ -100,4 +187,5 @@ struct MenuBarView: View {
     MenuBarView()
         .environmentObject(AppState())
         .environmentObject(PermissionManager())
+        .environmentObject(MeetingDetector())
 }

@@ -4,12 +4,20 @@ import SwiftUI
 struct AlonaApp: App {
     @StateObject private var appState = AppState()
     @StateObject private var permissionManager = PermissionManager()
+    @StateObject private var meetingDetector: MeetingDetector
+
+    init() {
+        let detector = MeetingDetector()
+        detector.startMonitoring()
+        _meetingDetector = StateObject(wrappedValue: detector)
+    }
 
     var body: some Scene {
         MenuBarExtra {
             MenuBarView()
                 .environmentObject(appState)
                 .environmentObject(permissionManager)
+                .environmentObject(meetingDetector)
         } label: {
             Label("Alona", systemImage: appState.isRecording ? "record.circle.fill" : "record.circle")
                 .labelStyle(.titleAndIcon)

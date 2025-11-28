@@ -943,37 +943,37 @@ dependencies: [
 
 ### Phase 2: Meeting Detection & File Management
 
-- [ ] **Task 2.1: Implement MeetingDetector service**
+- [X] **Task 2.1: Implement MeetingDetector service**
     - **Test Cases:**
-        - [ ] Detects when Zoom app launches
-        - [ ] Detects active Zoom meeting via UDP check
-        - [ ] Returns false when Zoom is open but not in meeting
-        - [ ] Detects Google Meet tab in Chrome via AppleScript
-        - [ ] Polling continues every 2 seconds
-        - [ ] When Automation permission is denied, MeetingDetector surfaces manual-start UI and no AppleScript crash occurs
+        - [X] Detects when Zoom app launches
+        - [X] Detects active Zoom meeting via UDP check
+        - [X] Returns false when Zoom is open but not in meeting
+        - [X] Detects Google Meet tab in Chrome via AppleScript
+        - [X] Polling continues every 2 seconds
+        - [X] When Automation permission is denied, MeetingDetector surfaces manual-start UI and no AppleScript crash occurs
 
-- [ ] **Task 2.2: Implement MeetingFileManager service**
+- [X] **Task 2.2: Implement MeetingFileManager service**
     - **Test Cases:**
-        - [ ] Creates directory with format `YYYY-MM-DD_HHMM_<slug>/`
-        - [ ] Handles title sanitization (removes `/`, `:`, spaces)
-        - [ ] Appends suffix for collision avoidance (`-1`, `-2`)
-        - [ ] Can save notes.md file
-        - [ ] Can save transcript.txt and transcript.json files
-        - [ ] Can save summary.md file
+        - [X] Creates directory with format `YYYY-MM-DD_HHMM_<slug>/`
+        - [X] Handles title sanitization (removes `/`, `:`, spaces)
+        - [X] Appends suffix for collision avoidance (`-1`, `-2`)
+        - [X] Can save notes.md file
+        - [X] Can save transcript.txt and transcript.json files
+        - [X] Can save summary.md file
 
-- [ ] **Task 2.3: Create SettingsView with directory picker**
+- [X] **Task 2.3: Create SettingsView with directory picker**
     - **Test Cases:**
-        - [ ] Shows current save directory path
-        - [ ] "Choose Folder" button opens NSOpenPanel
-        - [ ] Selected directory is persisted in UserDefaults
-        - [ ] Default falls back to ~/Documents/Alona
+        - [X] Shows current save directory path
+        - [X] "Choose Folder" button opens NSOpenPanel
+        - [X] Selected directory is persisted in UserDefaults
+        - [X] Default falls back to ~/Documents/Alona
 
-- [ ] **Task 2.4: Wire detection to UI with auto-start prompt**
+- [X] **Task 2.4: Wire detection to UI with auto-start prompt**
     - **Test Cases:**
-        - [ ] When meeting detected, shows notification/prompt
-        - [ ] User can confirm to start recording
-        - [ ] User can dismiss to skip recording
-        - [ ] Manual "Start Recording" works without detection
+        - [X] When meeting detected, shows notification/prompt
+        - [X] User can confirm to start recording
+        - [X] User can dismiss to skip recording
+        - [X] Manual "Start Recording" works without detection
 
 ### Phase 3: Audio Recording Pipeline
 
@@ -1126,6 +1126,14 @@ dependencies: [
 - Implemented permission surfaces: `PermissionManager`, onboarding wizard, settings panel, and recording toggle per RFC Task 1.1–1.5 along with Info.plist entitlements.
 - Introduced Xcode workspace/project (`Alona.xcworkspace`, `Alona.xcodeproj`), asset catalog, and developer tooling (`Makefile`, `buildServer.json`) to align with the CLI workflow.
 - Commands executed: `xcode-build-server config -workspace Alona.xcworkspace -scheme Alona`, `make test`, `make lint`.
+
+### 2025-11-27 – Phase 2 meeting detection
+- Added `MeetingDetector` service that polls NSWorkspace activity, verifies Zoom RTP traffic via `lsof`, and queries Chrome tabs with AppleScript to identify Google Meet sessions, surfacing automation-permission failures gracefully.
+- Extended unit tests (`AlonaTests/AlonaTests.swift`) with normalization coverage to guarantee meeting titles are sanitized before hitting UI.
+- Updated the Xcode project (`Alona.xcodeproj/project.pbxproj`) so the new service participates in builds, and ran `make lint` plus `make test` to validate the additions.
+- Expanded `MeetingFileManager` into a full-featured coordinator (directory creation, slug collisions, notes/transcripts/summaries, autosave recovery) with new transcription models, plus comprehensive unit tests that exercise slug formatting, collision handling, and file persistence; verified via `make lint` and `make test`.
+- Wired the Settings workflow to `MeetingFileManager` by injecting it through `AppState`, ensuring the UI reflects persisted directories, and covered the flow with an `AppState` persistence test; validated with `make lint` and `make test`.
+- Surfaced meeting detection signals inside `MenuBarView` (status banner + confirmation prompt) with new dismissal state in `AppState` and dependency-injected `MeetingDetector`, and added regression tests for the dismissal logic; verified with repeated `make lint` / `make test`.
 
 ### 2025-11-27 – Dev experience upgrades
 - Added a `make run` target that reuses the `xcodebuild` pipeline and automatically launches the built `Alona.app`, answering the “can we run it locally?” workflow question.

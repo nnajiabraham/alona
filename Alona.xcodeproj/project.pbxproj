@@ -16,6 +16,8 @@
 		AA0107 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA1007 /* Assets.xcassets */; };
 		AA0108 /* AlonaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2002 /* AlonaTests.swift */; };
 		AA0109 /* Inject in Frameworks */ = {isa = PBXBuildFile; productRef = AA9002 /* Inject */; };
+		AA0110 /* MeetingDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1009 /* MeetingDetector.swift */; };
+		AA0111 /* TranscriptionResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1010 /* TranscriptionResult.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,8 @@
 		AA1006 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		AA1007 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA1008 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA1009 /* MeetingDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingDetector.swift; sourceTree = "<group>"; };
+		AA1010 /* TranscriptionResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionResult.swift; sourceTree = "<group>"; };
 		AA2002 /* AlonaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlonaTests.swift; sourceTree = "<group>"; };
 		AA2003 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -87,7 +91,8 @@
 		AA4003 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				AA1001 /* AppState.swift */
+				AA1001 /* AppState.swift */,
+				AA1010 /* TranscriptionResult.swift */
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -96,7 +101,8 @@
 			isa = PBXGroup;
 			children = (
 				AA1002 /* PermissionManager.swift */,
-				AA1003 /* MeetingFileManager.swift */
+				AA1003 /* MeetingFileManager.swift */,
+				AA1009 /* MeetingDetector.swift */
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -228,7 +234,9 @@
 				AA0103 /* MeetingFileManager.swift in Sources */,
 				AA0104 /* MenuBarView.swift in Sources */,
 				AA0105 /* SettingsView.swift in Sources */,
-				AA0106 /* OnboardingView.swift in Sources */
+				AA0106 /* OnboardingView.swift in Sources */,
+				AA0110 /* MeetingDetector.swift in Sources */,
+				AA0111 /* TranscriptionResult.swift in Sources */
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
