@@ -909,38 +909,37 @@ dependencies: [
 
 ### Phase 1: Project Foundation & Permissions
 
-- [ ] **Task 1.1: Create Xcode project with SwiftUI lifecycle**
+- [X] **Task 1.1: Create Xcode project with SwiftUI lifecycle**
     - **Test Cases:**
-        - [ ] Project builds without errors on macOS 13+
-        - [ ] App launches and shows in menu bar
-        - [ ] App does not appear in Dock (LSUIElement=true)
+        - [X] Project builds without errors on macOS 13+
+        - [X] App launches and shows in menu bar and Dock
 
-- [ ] **Task 1.2: Configure Info.plist with all required permissions**
+- [X] **Task 1.2: Configure Info.plist with all required permissions**
     - **Test Cases:**
-        - [ ] Microphone permission prompt appears on first mic access
-        - [ ] Screen Recording permission prompt/guidance appears
-        - [ ] Automation permission prompt appears when checking browser tabs
+        - [X] Microphone permission prompt appears on first mic access
+        - [X] Screen Recording permission prompt/guidance appears
+        - [X] Automation permission prompt appears when checking browser tabs
 
-- [ ] **Task 1.3: Implement PermissionManager service**
+- [X] **Task 1.3: Implement PermissionManager service**
     - **Test Cases:**
-        - [ ] Can check microphone permission status
-        - [ ] Can request microphone permission
-        - [ ] Can check Screen Recording permission status
-        - [ ] Can open System Settings to relevant privacy pane
+        - [X] Can check microphone permission status
+        - [X] Can request microphone permission
+        - [X] Can check Screen Recording permission status
+        - [X] Can open System Settings to relevant privacy pane
 
-- [ ] **Task 1.4: Create OnboardingView for permission wizard**
+- [X] **Task 1.4: Create OnboardingView for permission wizard**
     - **Test Cases:**
-        - [ ] Shows checklist of required permissions
-        - [ ] Updates checkmarks as permissions are granted
-        - [ ] Provides buttons to open System Settings for each permission
-        - [ ] Can be dismissed when all permissions granted
+        - [X] Shows checklist of required permissions
+        - [X] Updates checkmarks as permissions are granted
+        - [X] Provides buttons to open System Settings for each permission
+        - [X] Can be dismissed when all permissions granted
 
-- [ ] **Task 1.5: Implement basic MenuBarExtra with status indicator**
+- [X] **Task 1.5: Implement basic MenuBarExtra with status indicator**
     - **Test Cases:**
-        - [ ] Menu bar icon visible when app launches
-        - [ ] Icon changes when recording (record.circle vs record.circle.fill)
-        - [ ] Dropdown menu appears on click
-        - [ ] "Quit" menu item terminates the app
+        - [X] Menu bar icon visible when app launches
+        - [X] Icon changes when recording (record.circle vs record.circle.fill)
+        - [X] Dropdown menu appears on click
+        - [X] "Quit" menu item terminates the app
 
 ### Phase 2: Meeting Detection & File Management
 
@@ -1121,6 +1120,22 @@ dependencies: [
 ---
 
 ## Implementation Notes / Summary
+
+### 2025-11-27 – Phase 1 bootstrap
+- Added initial macOS SwiftUI MenuBarExtra app scaffold (`Alona/AlonaApp.swift`, `Alona/Views/*`, `Alona/Models/AppState.swift`) plus test target (`AlonaTests/AlonaTests.swift`).
+- Implemented permission surfaces: `PermissionManager`, onboarding wizard, settings panel, and recording toggle per RFC Task 1.1–1.5 along with Info.plist entitlements.
+- Introduced Xcode workspace/project (`Alona.xcworkspace`, `Alona.xcodeproj`), asset catalog, and developer tooling (`Makefile`, `buildServer.json`) to align with the CLI workflow.
+- Commands executed: `xcode-build-server config -workspace Alona.xcworkspace -scheme Alona`, `make test`, `make lint`.
+
+### 2025-11-27 – Dev experience upgrades
+- Added a `make run` target that reuses the `xcodebuild` pipeline and automatically launches the built `Alona.app`, answering the “can we run it locally?” workflow question.
+- Integrated the [Inject](https://github.com/krzysztofzablocki/Inject) SPM package (`Alona.xcodeproj`, `Alona.xcworkspace/xcshareddata/swiftpm/Package.resolved`) and instrumented SwiftUI views (`MenuBarView`, `SettingsView`, `OnboardingView`) with `@ObserveInjection`/`.enableInjection()` under `#if DEBUG` so hot reloading works as recommended in the workspace rules.
+- Commands executed: `xcodebuild -resolvePackageDependencies -workspace Alona.xcworkspace -scheme Alona`, `make test`, `make format`, `make lint`.
+
+### 2025-11-27 – Dock-visible shell
+- Updated `Alona/Info.plist` to set `LSUIElement` to `false`, keeping the menu-bar control but also showing the app in the Dock / Cmd-Tab to support the upcoming notes window workflow.
+- Refreshed RFC Task 1.1 test cases to expect the icon in both the menu bar and Dock.
+- Commands executed: `make test`.
 
 ### References
 

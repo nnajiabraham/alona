@@ -1,0 +1,52 @@
+import SwiftUI
+#if DEBUG
+    import Inject
+#endif
+
+struct SettingsView: View {
+    @EnvironmentObject private var appState: AppState
+    #if DEBUG
+        @ObserveInjection var inject
+    #endif
+
+    var body: some View {
+        Form {
+            Section("Storage") {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(appState.saveDirectory.path)
+                        .font(.caption)
+                        .textSelection(.enabled)
+                    Button("Choose Folder") {
+                        chooseDirectory()
+                    }
+                }
+            }
+        }
+        .padding()
+        .frame(width: 420)
+        #if DEBUG
+            .enableInjection()
+        #endif
+    }
+
+    private func chooseDirectory() {
+        let panel = NSOpenPanel()
+        panel.prompt = "Select"
+        panel.canChooseDirectories = true
+        panel.canChooseFiles = false
+        panel.allowsMultipleSelection = false
+        panel.directoryURL = appState.saveDirectory
+        panel.begin { response in
+            guard response == .OK, let url = panel.url else { return }
+            Task { @MainActor in
+                appState.saveDirectory = url
+                UserDefaults.standard.set(url.path, forKey: "meetingSaveDirectory")
+            }
+        }
+    }
+}
+
+#Preview {
+    SettingsView()
+        .environmentObject(AppState())
+}
