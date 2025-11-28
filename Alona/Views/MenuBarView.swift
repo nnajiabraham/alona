@@ -138,8 +138,16 @@ struct MenuBarView: View {
 
     private var footerActions: some View {
         HStack(spacing: 12) {
-            Button("Open Notes") {
-                openNotesWindow()
+            Button("Recordings") {
+                openWindow(id: "recordings")
+            }
+            if appState.currentMeetingDirectory != nil {
+                Button("Current Notes") {
+                    openNotesWindow()
+                }
+            }
+            Button("Open Settings") {
+                openWindow(id: "settings-window")
             }
             Button("Review Permissions") {
                 openWindow(id: "onboarding")

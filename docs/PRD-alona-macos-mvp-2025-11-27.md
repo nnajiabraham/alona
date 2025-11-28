@@ -14,7 +14,7 @@ Knowledge workers with back-to-back calls rely on tools like Granola for transcr
 1. Detect Zoom or Google Meet sessions (automatic and manual start) and create a meeting workspace instantly.
 2. Record system audio locally, transcribe it with the bundled SwiftWhisper (whisper.cpp) engine for a truly self-contained MVP, and bucket every artifact (audio, notes, transcript, enhanced summary) into a user-chosen directory tree. Phase 2 introduces the MLX-converted `mlx-community/parakeet-tdt-0.6b-v3` model for higher fidelity once the Swift port is battle-tested.[^swiftwhisper][^mlxparakeet]
 3. Provide an always-on note pane tied to the active recording session, persisting drafts even if the call drops unexpectedly.
-4. After each session, auto-run: audio-to-text, summary generation stub, and folder housekeeping—no manual export steps.
+4. During an active session, automatically open a single meeting-notes window tied to that recording (manual “live note” pads are out-of-scope). After each session, auto-run: audio-to-text, summary generation stub, and folder housekeeping—no manual export steps.
 
 ### 2.2 Non-goals (MVP)
 - Speaker diarization, sentiment tagging, or call analytics beyond transcript text.
@@ -55,9 +55,9 @@ Knowledge workers with back-to-back calls rely on tools like Granola for transcr
 3. **Recording Pipeline**:
    - System audio: subscribe to the meeting window via `ScreenCaptureKit` and write a 16 kHz mono WAV suitable for MLX inference; fall back to a bundled BlackHole Multi-Output device when Screen Recording permission is unavailable.[^screencapture][^blackhole]
    - Microphone audio: run `AVAudioEngine` taps on the default input, optionally write dual-channel WAVs (Ch1 system, Ch2 mic) before downmixing for transcription.[^avfoundation]
-   - Provide visible state (menu bar indicator, pause/resume, timer) whenever either capture path is active.
+   - Provide visible state (menu bar indicator, pause/resume, timer) whenever either capture path is active, and automatically launch the meeting-notes window whenever a recording (auto-detected or manual) begins.
 4. **Notes Surface**:
-   - Rich-text-lite editor (Markdown subset) with autosave drafts to `notes.tmp` and final `notes.md` on stop.
+   - Rich-text-lite editor (Markdown subset) with autosave drafts to `notes.tmp` and final `notes.md` on stop. Notes are always tied to an active or historical meeting; there is no free-floating “live notes” pad outside of recording sessions.
 5. **Transcription Job**:
    - After recording, invoke the bundled SwiftWhisper (whisper.cpp) engine with a default `ggml-base.en` checkpoint to produce `.json` (timestamps) and `.txt` artifacts entirely offline—no Python runtime required.[^swiftwhisper]
    - Settings expose model-size tradeoffs (tiny/base/small) plus an opt-in preview flag for the future MLX Parakeet port; the transcript schema stays identical so summaries remain engine-agnostic.[^mlxparakeet]

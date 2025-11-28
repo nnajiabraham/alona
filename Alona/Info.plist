@@ -19,7 +19,7 @@
     <key>LSMinimumSystemVersion</key>
     <string>13.0</string>
     <key>LSUIElement</key>
-    <false/>
+    <true/>
     <key>NSMicrophoneUsageDescription</key>
     <string>Alona needs microphone access to capture your voice during meetings.</string>
     <key>NSScreenCaptureUsageDescription</key>

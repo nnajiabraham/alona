@@ -171,6 +171,24 @@ final class AlonaTests: XCTestCase {
         await appState.startRecording(meetingTitleOverride: "Window")
         XCTAssertNotNil(appState.notesWindowRequestID)
     }
+
+    func testMeetingEntriesLoadedInDescendingOrder() throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        let older = try harness.manager.createMeetingDirectory(title: "Older", date: Date(timeIntervalSince1970: 100))
+        try "Old notes".write(to: older.appendingPathComponent("notes.md"), atomically: true, encoding: .utf8)
+
+        let newer = try harness.manager.createMeetingDirectory(title: "Newer", date: Date(timeIntervalSince1970: 200))
+        try "New notes".write(to: newer.appendingPathComponent("notes.md"), atomically: true, encoding: .utf8)
+        try "Transcript".write(to: newer.appendingPathComponent("transcript.txt"), atomically: true, encoding: .utf8)
+
+        let entries = harness.manager.meetingEntries()
+        XCTAssertEqual(entries.count, 2)
+        XCTAssertEqual(entries.first?.title.contains("Newer"), true)
+        XCTAssertEqual(harness.manager.loadNotes(from: newer), "New notes")
+        XCTAssertEqual(harness.manager.loadTranscript(from: newer), "Transcript")
+    }
 }
 
 // MARK: - Test Harness

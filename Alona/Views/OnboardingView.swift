@@ -10,23 +10,25 @@ struct OnboardingView: View {
     #endif
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            Text("Welcome to Alona")
-                .font(.title)
-            Text("Grant the required permissions so Alona can detect meetings, capture audio, and manage notes locally.")
-                .foregroundStyle(.secondary)
-            permissionsList
-            HStack {
-                Button("Refresh") {
-                    permissionManager.refreshAllPermissions()
-                }
-                Spacer()
-                Button("Close") {
-                    NSApp.keyWindow?.close()
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Welcome to Alona")
+                    .font(.title)
+                Text("Grant the required permissions so Alona can detect meetings, capture audio, and manage notes locally.")
+                    .foregroundStyle(.secondary)
+                permissionsList
+                HStack {
+                    Button("Refresh") {
+                        permissionManager.refreshAllPermissions()
+                    }
+                    Spacer()
+                    Button("Close") {
+                        NSApp.keyWindow?.close()
+                    }
                 }
             }
+            .padding(24)
         }
-        .padding(24)
         .frame(minWidth: 420, minHeight: 420)
         #if DEBUG
             .enableInjection()

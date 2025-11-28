@@ -6,6 +6,14 @@ struct TranscriptSegmentRecord: Codable {
     let text: String
 }
 
+struct MeetingEntry: Identifiable, Equatable, Hashable {
+    let directory: URL
+    let title: String
+    let createdAt: Date
+
+    var id: URL { directory }
+}
+
 final class MeetingFileManager {
     private enum Constants {
         static let saveDirectoryKey = "meetingSaveDirectory"
@@ -92,6 +100,36 @@ final class MeetingFileManager {
     func recoverNotesFromTemp(in directory: URL) -> String? {
         let tempURL = directory.appendingPathComponent("notes.tmp")
         return try? String(contentsOf: tempURL, encoding: .utf8)
+    }
+
+    func loadNotes(from directory: URL) -> String? {
+        let notesURL = directory.appendingPathComponent("notes.md")
+        return try? String(contentsOf: notesURL, encoding: .utf8)
+    }
+
+    func loadTranscript(from directory: URL) -> String? {
+        let transcriptURL = directory.appendingPathComponent("transcript.txt")
+        return try? String(contentsOf: transcriptURL, encoding: .utf8)
+    }
+
+    func meetingEntries() -> [MeetingEntry] {
+        guard let contents = try? fileManager.contentsOfDirectory(
+            at: baseDirectory,
+            includingPropertiesForKeys: [.creationDateKey],
+            options: [.skipsHiddenFiles]
+        ) else {
+            return []
+        }
+
+        let directories = contents.compactMap { url -> MeetingEntry? in
+            var isDir: ObjCBool = false
+            guard fileManager.fileExists(atPath: url.path, isDirectory: &isDir), isDir.boolValue else { return nil }
+            let resourceValues = try? url.resourceValues(forKeys: [.creationDateKey])
+            let createdAt = resourceValues?.creationDate ?? Date.distantPast
+            return MeetingEntry(directory: url, title: url.lastPathComponent, createdAt: createdAt)
+        }
+
+        return directories.sorted { $0.createdAt > $1.createdAt }
     }
 
     private func sanitizedSlug(from rawTitle: String) -> String {

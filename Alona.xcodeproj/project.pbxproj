@@ -20,6 +20,8 @@
 		AA0111 /* TranscriptionResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1010 /* TranscriptionResult.swift */; };
 		AA0112 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1011 /* AudioRecorder.swift */; };
 		AA0113 /* MeetingNotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1012 /* MeetingNotesView.swift */; };
+		AA0114 /* StartupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1013 /* StartupView.swift */; };
+		AA0115 /* RecordingsBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1014 /* RecordingsBrowserView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +40,8 @@
 		AA1010 /* TranscriptionResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionResult.swift; sourceTree = "<group>"; };
 		AA1011 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
 		AA1012 /* MeetingNotesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesView.swift; sourceTree = "<group>"; };
+		AA1013 /* StartupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupView.swift; sourceTree = "<group>"; };
+		AA1014 /* RecordingsBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingsBrowserView.swift; sourceTree = "<group>"; };
 		AA2002 /* AlonaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlonaTests.swift; sourceTree = "<group>"; };
 		AA2003 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -118,7 +122,9 @@
 				AA1004 /* MenuBarView.swift */,
 				AA1005 /* SettingsView.swift */,
 				AA1006 /* OnboardingView.swift */,
-				AA1012 /* MeetingNotesView.swift */
+				AA1012 /* MeetingNotesView.swift */,
+				AA1013 /* StartupView.swift */,
+				AA1014 /* RecordingsBrowserView.swift */
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -244,7 +250,9 @@
 				AA0113 /* MeetingNotesView.swift in Sources */,
 				AA0110 /* MeetingDetector.swift in Sources */,
 				AA0111 /* TranscriptionResult.swift in Sources */,
-				AA0112 /* AudioRecorder.swift in Sources */
+				AA0112 /* AudioRecorder.swift in Sources */,
+				AA0114 /* StartupView.swift in Sources */,
+				AA0115 /* RecordingsBrowserView.swift in Sources */
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
