@@ -4,6 +4,13 @@ import CoreMedia
 import Foundation
 import ScreenCaptureKit
 
+protocol AudioRecordingController: AnyObject {
+    var isRecordingPublisher: AnyPublisher<Bool, Never> { get }
+    var recordingDurationPublisher: AnyPublisher<TimeInterval, Never> { get }
+    func startRecording(meetingTitle: String) async throws -> URL
+    func stopRecording() async
+}
+
 final class AudioRecorder: NSObject, ObservableObject {
     @Published private(set) var isRecording = false
     @Published private(set) var recordingDuration: TimeInterval = 0
@@ -251,6 +258,16 @@ extension AudioRecorder: SCStreamOutput {
             self?.systemAudioBuffer.append(contentsOf: floatSamples)
             self?.flushBuffersIfNeeded()
         }
+    }
+}
+
+extension AudioRecorder: AudioRecordingController {
+    var isRecordingPublisher: AnyPublisher<Bool, Never> {
+        $isRecording.eraseToAnyPublisher()
+    }
+
+    var recordingDurationPublisher: AnyPublisher<TimeInterval, Never> {
+        $recordingDuration.eraseToAnyPublisher()
     }
 }
 

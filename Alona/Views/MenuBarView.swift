@@ -37,6 +37,9 @@ struct MenuBarView: View {
         .onChange(of: meetingDetector.isInMeeting) { _ in
             syncMeetingTitleFromDetector()
         }
+        .onChange(of: appState.notesWindowRequestID) { _ in
+            openNotesWindow()
+        }
         .onChange(of: activeDetectionIdentifier) { newValue in
             appState.resetDetectionDismissalIfNeeded(for: newValue)
         }
@@ -134,7 +137,10 @@ struct MenuBarView: View {
     }
 
     private var footerActions: some View {
-        HStack {
+        HStack(spacing: 12) {
+            Button("Open Notes") {
+                openNotesWindow()
+            }
             Button("Review Permissions") {
                 openWindow(id: "onboarding")
             }
@@ -144,6 +150,10 @@ struct MenuBarView: View {
             }
             .keyboardShortcut("q")
         }
+    }
+
+    private func openNotesWindow() {
+        openWindow(id: "meeting-notes")
     }
 
     private var shouldShowDetectionPrompt: Bool {

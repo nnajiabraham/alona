@@ -1010,33 +1010,33 @@ dependencies: [
 
 ### Phase 4: Notes Interface & Autosave
 
-- [ ] **Task 4.1: Create MeetingNotesView floating window**
+- [X] **Task 4.1: Create MeetingNotesView floating window**
     - **Test Cases:**
-        - [ ] Window opens with notes TextEditor
-        - [ ] Shows meeting title and duration
-        - [ ] Shows recording indicator (red dot)
-        - [ ] Window can be resized and repositioned
+        - [X] Window opens with notes TextEditor
+        - [X] Shows meeting title and duration
+        - [X] Shows recording indicator (red dot)
+        - [X] Window can be resized and repositioned
 
-- [ ] **Task 4.2: Implement autosave (every 2 seconds)**
+- [X] **Task 4.2: Implement autosave (every 2 seconds)**
     - **Test Cases:**
-        - [ ] notes.tmp created in meeting directory
-        - [ ] Changes saved automatically after 2s debounce
-        - [ ] Final notes.md saved on recording stop
-        - [ ] notes.tmp is deleted after notes.md is finalized
-        - [ ] After force-quitting during a meeting, reopening the app resumes notes from notes.tmp
-        - [ ] Recovered notes are deleted once notes.md is finalized
+        - [X] notes.tmp created in meeting directory
+        - [X] Changes saved automatically after 2s debounce
+        - [X] Final notes.md saved on recording stop
+        - [X] notes.tmp is deleted after notes.md is finalized
+        - [X] After force-quitting during a meeting, reopening the app resumes notes from notes.tmp
+        - [X] Recovered notes are deleted once notes.md is finalized
 
-- [ ] **Task 4.3: Add timestamp and bullet insert buttons**
+- [X] **Task 4.3: Add timestamp and bullet insert buttons**
     - **Test Cases:**
-        - [ ] "Timestamp" button inserts `[MM:SS]` at cursor
-        - [ ] "Bullet" button inserts `• ` at cursor
-        - [ ] Buttons are accessible during recording
+        - [X] "Timestamp" button inserts `[MM:SS]` at cursor
+        - [X] "Bullet" button inserts `• ` at cursor
+        - [X] Buttons are accessible during recording
 
-- [ ] **Task 4.4: Wire window opening to recording start**
+- [X] **Task 4.4: Wire window opening to recording start**
     - **Test Cases:**
-        - [ ] Notes window opens automatically when recording starts
-        - [ ] Window can be opened manually from menu bar
-        - [ ] Window content persists if closed and reopened
+        - [X] Notes window opens automatically when recording starts
+        - [X] Window can be opened manually from menu bar
+        - [X] Window content persists if closed and reopened
 
 ### Phase 5: Transcription & Summary
 
@@ -1140,6 +1140,13 @@ dependencies: [
 - Updated `AppState` to own the recorder, expose duration/error state, and persist directories, and refreshed `MenuBarView` to show detection prompts, duration, and async start/stop flows wired to the recorder (`Alona/Models/AppState.swift`, `Alona/Views/MenuBarView.swift`, `Alona/AlonaApp.swift`).
 - Added helper/unit tests for the new math utilities and state handling while extending existing suites (`AlonaTests/AlonaTests.swift`); project file updated accordingly.
 - Commands executed: `make format`, `make lint`, `make test`.
+
+### 2025-11-27 – Phase 4 notes surface
+- Added `MeetingNotesView` plus a dedicated window scene so users get a floating editor with meeting title, duration, and recording indicator bound to `AppState.notesDraft` (files: `Alona/Views/MeetingNotesView.swift`, `Alona/AlonaApp.swift`, `Alona/Models/AppState.swift`).
+- Extended `AlonaTests/AlonaTests.swift` with a regression covering the new notes draft state; validated using `make lint` and `make test`.
+- Implemented autosave + recovery by piping `AppState.notesDraft` through a debounced writer to `notes.tmp`, restoring drafts on session start, and finalizing notes on stop (`Alona/Models/AppState.swift`, `Alona/Services/AudioRecorder.swift`, `AlonaTests/AlonaTests.swift`); commands: `make lint`, `make test`.
+- Swapped the notes editor to a custom `NSTextView` wrapper so timestamp/bullet buttons can insert snippets at the current cursor position, backed by new helper utilities + tests (`Alona/Views/MeetingNotesView.swift`, `AlonaTests/AlonaTests.swift`); verified via `make lint`, `make test`.
+- Added automatic + manual window presentation by signaling `notesWindowRequestID` from `AppState` and observing it in `MenuBarView`, plus a new “Open Notes” control so the window always reopens with preserved content (`Alona/Models/AppState.swift`, `Alona/Views/MenuBarView.swift`); validated with `make lint`, `make test`.
 
 ### 2025-11-27 – Dev experience upgrades
 - Added a `make run` target that reuses the `xcodebuild` pipeline and automatically launches the built `Alona.app`, answering the “can we run it locally?” workflow question.

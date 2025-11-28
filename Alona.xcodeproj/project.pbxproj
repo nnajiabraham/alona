@@ -19,6 +19,7 @@
 		AA0110 /* MeetingDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1009 /* MeetingDetector.swift */; };
 		AA0111 /* TranscriptionResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1010 /* TranscriptionResult.swift */; };
 		AA0112 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1011 /* AudioRecorder.swift */; };
+		AA0113 /* MeetingNotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1012 /* MeetingNotesView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		AA1009 /* MeetingDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingDetector.swift; sourceTree = "<group>"; };
 		AA1010 /* TranscriptionResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionResult.swift; sourceTree = "<group>"; };
 		AA1011 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
+		AA1012 /* MeetingNotesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesView.swift; sourceTree = "<group>"; };
 		AA2002 /* AlonaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlonaTests.swift; sourceTree = "<group>"; };
 		AA2003 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -115,7 +117,8 @@
 			children = (
 				AA1004 /* MenuBarView.swift */,
 				AA1005 /* SettingsView.swift */,
-				AA1006 /* OnboardingView.swift */
+				AA1006 /* OnboardingView.swift */,
+				AA1012 /* MeetingNotesView.swift */
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -238,6 +241,7 @@
 				AA0104 /* MenuBarView.swift in Sources */,
 				AA0105 /* SettingsView.swift in Sources */,
 				AA0106 /* OnboardingView.swift in Sources */,
+				AA0113 /* MeetingNotesView.swift in Sources */,
 				AA0110 /* MeetingDetector.swift in Sources */,
 				AA0111 /* TranscriptionResult.swift in Sources */,
 				AA0112 /* AudioRecorder.swift in Sources */

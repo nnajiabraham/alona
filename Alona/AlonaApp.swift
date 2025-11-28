@@ -36,5 +36,11 @@ struct AlonaApp: App {
                 .environmentObject(permissionManager)
         }
         .windowResizability(.contentSize)
+
+        WindowGroup(id: "meeting-notes") {
+            MeetingNotesView()
+                .environmentObject(appState)
+        }
+        .defaultSize(width: 420, height: 380)
     }
 }

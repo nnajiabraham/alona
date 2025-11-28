@@ -1,4 +1,5 @@
 @testable import Alona
+import Combine
 import XCTest
 
 @MainActor
@@ -109,6 +110,67 @@ final class AlonaTests: XCTestCase {
         let mono = AudioSampleMath.averagedMono(system: [1.0, -1.0, 0.0], mic: [-1.0, 1.0, 0.0])
         XCTAssertEqual(mono, [0.0, 0.0, 0.0])
     }
+
+    func testNotesDraftDefaultsEmpty() {
+        let appState = AppState()
+        XCTAssertEqual(appState.notesDraft, "")
+        appState.notesDraft = "Meeting notes"
+        XCTAssertEqual(appState.notesDraft, "Meeting notes")
+    }
+
+    @MainActor
+    func testNotesAutosaveAndFinalize() async throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        let directory = try harness.manager.createMeetingDirectory(title: "Autosave")
+        let recorder = MockAudioRecorder(directory: directory)
+
+        let appState = AppState(
+            meetingFileManager: harness.manager,
+            audioRecorder: recorder,
+            notesAutosaveInterval: 0.05,
+            notesAutosaveScheduler: .main
+        )
+
+        await appState.startRecording(meetingTitleOverride: "Autosave")
+        appState.notesDraft = "Autosaved text"
+
+        try await Task.sleep(nanoseconds: 200_000_000)
+        XCTAssertEqual(harness.manager.recoverNotesFromTemp(in: directory), "Autosaved text")
+
+        await appState.stopRecording()
+
+        let savedNotes = try String(contentsOf: directory.appendingPathComponent("notes.md"))
+        XCTAssertEqual(savedNotes, "Autosaved text")
+        XCTAssertNil(harness.manager.recoverNotesFromTemp(in: directory))
+    }
+
+    func testNotesInsertionAppendsWhenNoSelection() {
+        let result = NotesInsertion.inserting(snippet: "• ", in: "Hello", range: NSRange(location: 5, length: 0))
+        XCTAssertEqual(result.text, "Hello• ")
+        XCTAssertEqual(result.range.location, 7)
+    }
+
+    func testNotesInsertionReplacesSelection() {
+        let result = NotesInsertion.inserting(snippet: "[00:05] ", in: "Hello world", range: NSRange(location: 6, length: 5))
+        XCTAssertEqual(result.text, "Hello [00:05] ")
+        XCTAssertEqual(result.range.location, 14)
+    }
+
+    @MainActor
+    func testRecordingRequestsNotesWindow() async throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        let directory = try harness.manager.createMeetingDirectory(title: "Window")
+        let recorder = MockAudioRecorder(directory: directory)
+        let appState = AppState(meetingFileManager: harness.manager, audioRecorder: recorder)
+
+        XCTAssertNil(appState.notesWindowRequestID)
+        await appState.startRecording(meetingTitleOverride: "Window")
+        XCTAssertNotNil(appState.notesWindowRequestID)
+    }
 }
 
 // MARK: - Test Harness
@@ -138,5 +200,34 @@ private struct MeetingFileManagerTestHarness {
     func cleanup() {
         try? FileManager.default.removeItem(at: baseDirectory)
         userDefaults.removePersistentDomain(forName: defaultsSuiteName)
+    }
+}
+
+// MARK: - Mocks
+
+final class MockAudioRecorder: AudioRecordingController {
+    private let directory: URL
+    private let isRecordingSubject = CurrentValueSubject<Bool, Never>(false)
+    private let durationSubject = CurrentValueSubject<TimeInterval, Never>(0)
+
+    init(directory: URL) {
+        self.directory = directory
+    }
+
+    var isRecordingPublisher: AnyPublisher<Bool, Never> {
+        isRecordingSubject.eraseToAnyPublisher()
+    }
+
+    var recordingDurationPublisher: AnyPublisher<TimeInterval, Never> {
+        durationSubject.eraseToAnyPublisher()
+    }
+
+    func startRecording(meetingTitle _: String) async throws -> URL {
+        isRecordingSubject.send(true)
+        return directory
+    }
+
+    func stopRecording() async {
+        isRecordingSubject.send(false)
     }
 }
