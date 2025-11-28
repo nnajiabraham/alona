@@ -3,13 +3,6 @@ import XCTest
 
 @MainActor
 final class AlonaTests: XCTestCase {
-    func testAppStateToggle() {
-        let appState = AppState()
-        XCTAssertFalse(appState.isRecording)
-        appState.toggleRecording()
-        XCTAssertTrue(appState.isRecording)
-    }
-
     func testPermissionStatusDisplayNames() {
         XCTAssertEqual(PermissionManager.PermissionStatus.granted.displayName, "Granted")
         XCTAssertEqual(PermissionManager.PermissionStatus.denied.displayName, "Denied")
@@ -110,6 +103,11 @@ final class AlonaTests: XCTestCase {
 
         appState.resetDetectionDismissalIfNeeded(for: "meet|456")
         XCTAssertNil(appState.dismissedDetectionIdentifier)
+    }
+
+    func testAudioSampleMathDownmix() {
+        let mono = AudioSampleMath.averagedMono(system: [1.0, -1.0, 0.0], mic: [-1.0, 1.0, 0.0])
+        XCTAssertEqual(mono, [0.0, 0.0, 0.0])
     }
 }
 

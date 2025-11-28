@@ -5,6 +5,7 @@ struct MenuBarView: View {
     @EnvironmentObject private var permissionManager: PermissionManager
     @EnvironmentObject private var meetingDetector: MeetingDetector
     @Environment(\.openWindow) private var openWindow
+    @State private var recordingActionInFlight = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -14,6 +15,11 @@ struct MenuBarView: View {
                 detectionPrompt
             }
             recordingControls
+            if let error = appState.recordingError {
+                Text(error)
+                    .font(.caption)
+                    .foregroundStyle(.red)
+            }
             Divider()
             permissionSummary
             Divider()
@@ -72,12 +78,19 @@ struct MenuBarView: View {
             Text("Recording")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
-            Button(action: appState.toggleRecording) {
+            Button(action: toggleRecording) {
                 Label(appState.isRecording ? "Stop Recording" : "Start Recording",
                       systemImage: appState.isRecording ? "stop.circle.fill" : "record.circle")
                     .foregroundColor(appState.isRecording ? .red : .primary)
             }
             .buttonStyle(.borderedProminent)
+            .disabled(recordingActionInFlight)
+
+            if appState.isRecording {
+                Text("Duration: \(recordingDurationText)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
     }
 
@@ -151,10 +164,13 @@ struct MenuBarView: View {
 
     private func startDetectedMeeting() {
         let identifier = activeDetectionIdentifier
-        if !appState.isRecording {
-            appState.toggleRecording()
+        guard !identifier.isEmpty else { return }
+        recordingActionInFlight = true
+        Task {
+            await appState.startRecording(meetingTitleOverride: meetingDetector.meetingTitle)
+            appState.dismissDetection(identifier: identifier)
+            recordingActionInFlight = false
         }
-        appState.dismissDetection(identifier: identifier)
     }
 
     private func dismissDetectedMeeting() {
@@ -180,6 +196,26 @@ struct MenuBarView: View {
         default:
             return .secondary
         }
+    }
+
+    private func toggleRecording() {
+        guard !recordingActionInFlight else { return }
+        recordingActionInFlight = true
+        Task {
+            if appState.isRecording {
+                await appState.stopRecording()
+            } else {
+                await appState.startRecording()
+            }
+            recordingActionInFlight = false
+        }
+    }
+
+    private var recordingDurationText: String {
+        let totalSeconds = Int(appState.recordingDuration)
+        let minutes = totalSeconds / 60
+        let seconds = totalSeconds % 60
+        return String(format: "%02d:%02d", minutes, seconds)
     }
 }
 

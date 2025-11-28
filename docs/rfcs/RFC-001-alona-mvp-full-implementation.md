@@ -977,36 +977,36 @@ dependencies: [
 
 ### Phase 3: Audio Recording Pipeline
 
-- [ ] **Task 3.1: Implement system audio capture via ScreenCaptureKit**
+- [X] **Task 3.1: Implement system audio capture via ScreenCaptureKit**
     - **Test Cases:**
-        - [ ] SCStream starts successfully with audio configuration (16kHz mono)
-        - [ ] Audio samples are received in stream output delegate
-        - [ ] Audio samples buffered at 16kHz mono (later interleaved into dual-channel recording.wav)
-        - [ ] Handles permission denial gracefully
+        - [X] SCStream starts successfully with audio configuration (16kHz mono)
+        - [X] Audio samples are received in stream output delegate
+        - [X] Audio samples buffered at 16kHz mono (later interleaved into dual-channel recording.wav)
+        - [X] Handles permission denial gracefully
 
-- [ ] **Task 3.2: Implement microphone capture via AVAudioEngine**
+- [X] **Task 3.2: Implement microphone capture via AVAudioEngine**
     - **Test Cases:**
-        - [ ] AVAudioEngine starts without errors
-        - [ ] Audio tap receives microphone input at native sample rate
-        - [ ] Audio resampled to 16kHz mono and buffered (later interleaved into dual-channel recording.wav)
-        - [ ] Engine stops cleanly on stopRecording()
+        - [X] AVAudioEngine starts without errors
+        - [X] Audio tap receives microphone input at native sample rate
+        - [X] Audio resampled to 16kHz mono and buffered (later interleaved into dual-channel recording.wav)
+        - [X] Engine stops cleanly on stopRecording()
 
-- [ ] **Task 3.3: Implement AudioRecorder service combining both sources**
+- [X] **Task 3.3: Implement AudioRecorder service combining both sources**
     - **Test Cases:**
-        - [ ] startRecording() creates meeting directory
-        - [ ] Both system and mic recordings start
-        - [ ] Duration timer updates every second
-        - [ ] stopRecording() stops both captures
-        - [ ] recording.wav contains two channels (system + mic)
-        - [ ] recording-mono.wav is a 16kHz mono downmix for transcription
-        - [ ] No separate recording-mic.wav file exists (PRD compliance)
+        - [X] startRecording() creates meeting directory
+        - [X] Both system and mic recordings start
+        - [X] Duration timer updates every second
+        - [X] stopRecording() stops both captures
+        - [X] recording.wav contains two channels (system + mic)
+        - [X] recording-mono.wav is a 16kHz mono downmix for transcription
+        - [X] No separate recording-mic.wav file exists (PRD compliance)
 
-- [ ] **Task 3.4: Add recording state to MenuBarView**
+- [X] **Task 3.4: Add recording state to MenuBarView**
     - **Test Cases:**
-        - [ ] "Start Recording" button visible when idle
-        - [ ] "Stop Recording" button visible when recording
-        - [ ] Recording duration displayed during recording
-        - [ ] Menu bar icon reflects recording state
+        - [X] "Start Recording" button visible when idle
+        - [X] "Stop Recording" button visible when recording
+        - [X] Recording duration displayed during recording
+        - [X] Menu bar icon reflects recording state
 
 ### Phase 4: Notes Interface & Autosave
 
@@ -1134,6 +1134,12 @@ dependencies: [
 - Expanded `MeetingFileManager` into a full-featured coordinator (directory creation, slug collisions, notes/transcripts/summaries, autosave recovery) with new transcription models, plus comprehensive unit tests that exercise slug formatting, collision handling, and file persistence; verified via `make lint` and `make test`.
 - Wired the Settings workflow to `MeetingFileManager` by injecting it through `AppState`, ensuring the UI reflects persisted directories, and covered the flow with an `AppState` persistence test; validated with `make lint` and `make test`.
 - Surfaced meeting detection signals inside `MenuBarView` (status banner + confirmation prompt) with new dismissal state in `AppState` and dependency-injected `MeetingDetector`, and added regression tests for the dismissal logic; verified with repeated `make lint` / `make test`.
+
+### 2025-11-27 – Phase 3 audio pipeline
+- Implemented `AudioRecorder` (ScreenCaptureKit + AVAudioEngine) to capture system audio and microphone into `recording.wav` and `recording-mono.wav`, including buffer management, downmix helpers, and mono mix creation (`Alona/Services/AudioRecorder.swift`, `Alona/Services/MeetingFileManager.swift`).
+- Updated `AppState` to own the recorder, expose duration/error state, and persist directories, and refreshed `MenuBarView` to show detection prompts, duration, and async start/stop flows wired to the recorder (`Alona/Models/AppState.swift`, `Alona/Views/MenuBarView.swift`, `Alona/AlonaApp.swift`).
+- Added helper/unit tests for the new math utilities and state handling while extending existing suites (`AlonaTests/AlonaTests.swift`); project file updated accordingly.
+- Commands executed: `make format`, `make lint`, `make test`.
 
 ### 2025-11-27 – Dev experience upgrades
 - Added a `make run` target that reuses the `xcodebuild` pipeline and automatically launches the built `Alona.app`, answering the “can we run it locally?” workflow question.

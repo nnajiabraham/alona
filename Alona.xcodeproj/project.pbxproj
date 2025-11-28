@@ -18,6 +18,7 @@
 		AA0109 /* Inject in Frameworks */ = {isa = PBXBuildFile; productRef = AA9002 /* Inject */; };
 		AA0110 /* MeetingDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1009 /* MeetingDetector.swift */; };
 		AA0111 /* TranscriptionResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1010 /* TranscriptionResult.swift */; };
+		AA0112 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1011 /* AudioRecorder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		AA1008 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA1009 /* MeetingDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingDetector.swift; sourceTree = "<group>"; };
 		AA1010 /* TranscriptionResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionResult.swift; sourceTree = "<group>"; };
+		AA1011 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
 		AA2002 /* AlonaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlonaTests.swift; sourceTree = "<group>"; };
 		AA2003 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -102,6 +104,7 @@
 			children = (
 				AA1002 /* PermissionManager.swift */,
 				AA1003 /* MeetingFileManager.swift */,
+				AA1011 /* AudioRecorder.swift */,
 				AA1009 /* MeetingDetector.swift */
 			);
 			path = Services;
@@ -236,7 +239,8 @@
 				AA0105 /* SettingsView.swift in Sources */,
 				AA0106 /* OnboardingView.swift in Sources */,
 				AA0110 /* MeetingDetector.swift in Sources */,
-				AA0111 /* TranscriptionResult.swift in Sources */
+				AA0111 /* TranscriptionResult.swift in Sources */,
+				AA0112 /* AudioRecorder.swift in Sources */
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
