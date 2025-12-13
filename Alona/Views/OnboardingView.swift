@@ -30,6 +30,7 @@ struct OnboardingView: View {
             .padding(24)
         }
         .frame(minWidth: 420, minHeight: 420)
+        .background(WindowIdentifierSetter(identifier: WindowFocusController.identifier(for: "onboarding")))
         #if DEBUG
             .enableInjection()
         #endif

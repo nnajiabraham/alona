@@ -15,10 +15,10 @@ struct RecordingsBrowserView: View {
                     VStack(alignment: .leading, spacing: 4) {
                         TextField("Title", text: binding(for: entry))
                             .textFieldStyle(.plain)
-                            .font(.headline)
-                        Text(entry.createdAt.formatted(date: .abbreviated, time: .shortened))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                        .font(.headline)
+                    Text(entry.createdAt.formatted(date: .abbreviated, time: .shortened))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                     }
                     .padding(.vertical, 4)
                     .listRowBackground(selectionBackground(for: entry))
@@ -37,7 +37,7 @@ struct RecordingsBrowserView: View {
                             isEditingTitleFromDetail = editing
                         })
                         .textFieldStyle(.plain)
-                        .font(.title2)
+                            .font(.title2)
                         Text(entry.createdAt.formatted(date: .long, time: .shortened))
                             .foregroundStyle(.secondary)
                         if notesText.isEmpty {

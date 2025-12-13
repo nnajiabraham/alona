@@ -86,7 +86,7 @@ private extension TranscriptionEngine {
 
         var error: NSError?
         converter.convert(to: convertedBuffer, error: &error) { _, outStatus in
-            outStatus.pointee = .haveData
+                outStatus.pointee = .haveData
             return sourceBuffer
         }
 
