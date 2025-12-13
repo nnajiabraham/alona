@@ -11,6 +11,13 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
+            Section("Recording") {
+                Toggle("Capture system audio", isOn: $appState.captureSystemAudio)
+                Text("Disabling this hides the macOS “Currently Sharing” banner and records microphone audio only.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
             Section("Storage") {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(appState.saveDirectory.path)

@@ -319,6 +319,65 @@ final class AlonaTests: XCTestCase {
         XCTAssertEqual(scheduler.requests.count, 2)
     }
 
+    @MainActor
+    func testSystemAudioPreferencePersistsAcrossSessions() async throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        let recorder = MockAudioRecorder(directory: harness.manager.baseDirectory)
+        let appState = AppState(
+            meetingFileManager: harness.manager,
+            audioRecorder: recorder,
+            transcriptionEngine: MockTranscriptionEngine(),
+            summaryProvider: MockSummaryProvider(),
+            userDefaults: harness.userDefaults
+        )
+
+        XCTAssertFalse(appState.captureSystemAudio)
+        XCTAssertFalse(recorder.captureSystemAudio)
+
+        appState.captureSystemAudio = true
+        XCTAssertTrue(recorder.captureSystemAudio)
+
+        let reloadedRecorder = MockAudioRecorder(directory: harness.manager.baseDirectory)
+        let reloadedState = AppState(
+            meetingFileManager: harness.manager,
+            audioRecorder: reloadedRecorder,
+            transcriptionEngine: MockTranscriptionEngine(),
+            summaryProvider: MockSummaryProvider(),
+            userDefaults: harness.userDefaults
+        )
+
+        XCTAssertTrue(reloadedState.captureSystemAudio)
+        XCTAssertTrue(reloadedRecorder.captureSystemAudio)
+    }
+
+    @MainActor
+    func testDefaultMeetingTitleFallsBackToTimestamp() async throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        let directory = try harness.manager.createMeetingDirectory(title: "Placeholder")
+        let recorder = MockAudioRecorder(directory: directory)
+        let fixedDate = Date(timeIntervalSince1970: 1_738_000_000) // deterministic
+        let appState = AppState(
+            meetingFileManager: harness.manager,
+            audioRecorder: recorder,
+            transcriptionEngine: MockTranscriptionEngine(),
+            summaryProvider: MockSummaryProvider(),
+            userDefaults: harness.userDefaults,
+            nowProvider: { fixedDate }
+        )
+
+        await appState.startRecording()
+
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "MMM d, yyyy 'at' h:mm a"
+        formatter.timeZone = TimeZone.current
+        XCTAssertEqual(appState.meetingTitle, formatter.string(from: fixedDate))
+    }
+
     func testStartupWindowControllerFindsExistingWindow() {
         let other = NSWindow()
         other.identifier = NSUserInterfaceItemIdentifier("other")
@@ -380,6 +439,7 @@ final class MockAudioRecorder: AudioRecordingController {
     private let directory: URL
     private let isRecordingSubject = CurrentValueSubject<Bool, Never>(false)
     private let durationSubject = CurrentValueSubject<TimeInterval, Never>(0)
+    var captureSystemAudio: Bool = false
 
     init(directory: URL) {
         self.directory = directory

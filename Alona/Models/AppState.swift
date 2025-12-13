@@ -5,7 +5,7 @@ import Foundation
 final class AppState: ObservableObject {
     @Published private(set) var isRecording: Bool = false
     @Published private(set) var recordingDuration: TimeInterval = 0
-    @Published var meetingTitle: String = "No meeting detected"
+    @Published var meetingTitle: String = AppState.idleMeetingTitle
     @Published var showOnboarding: Bool = true
     @Published var saveDirectory: URL
     @Published var dismissedDetectionIdentifier: String?
@@ -14,6 +14,12 @@ final class AppState: ObservableObject {
     @Published var notesWindowRequestID: UUID?
     @Published var transcriptionState: TranscriptionState = .idle
     @Published private(set) var transcriptionJobs: [TranscriptionJob] = []
+    @Published var captureSystemAudio: Bool = false {
+        didSet {
+            audioRecorder.captureSystemAudio = captureSystemAudio
+            userDefaults.set(captureSystemAudio, forKey: Self.captureSystemAudioDefaultsKey)
+        }
+    }
 
     private(set) var meetingFileManager: MeetingFileManager
     private let audioRecorder: AudioRecordingController
@@ -26,6 +32,8 @@ final class AppState: ObservableObject {
     private var notificationActionCancellable: AnyCancellable?
     private let notesAutosaveInterval: TimeInterval
     private let notesAutosaveScheduler: DispatchQueue
+    private let nowProvider: () -> Date
+    private let userDefaults: UserDefaults
     private var activeJobTask: Task<Void, Never>?
     private var activeJobID: UUID?
     private var activeUIJobID: UUID?
@@ -35,7 +43,9 @@ final class AppState: ObservableObject {
          transcriptionEngine: TranscriptionProcessing? = nil,
          summaryProvider: SummaryProviding? = nil,
          notesAutosaveInterval: TimeInterval = 2.0,
-         notesAutosaveScheduler: DispatchQueue = .main)
+         notesAutosaveScheduler: DispatchQueue = .main,
+         userDefaults: UserDefaults = .standard,
+         nowProvider: @escaping () -> Date = Date.init)
     {
         meetingFileManager = manager
         let recorder = audioRecorder ?? AudioRecorder(meetingFileManager: manager)
@@ -46,6 +56,12 @@ final class AppState: ObservableObject {
         self.notesAutosaveInterval = notesAutosaveInterval
         self.notesAutosaveScheduler = notesAutosaveScheduler
         saveDirectory = manager.baseDirectory
+        self.userDefaults = userDefaults
+        self.nowProvider = nowProvider
+
+        let storedCapture = userDefaults.object(forKey: Self.captureSystemAudioDefaultsKey) as? Bool ?? false
+        captureSystemAudio = storedCapture
+        recorder.captureSystemAudio = storedCapture
 
         recorder.isRecordingPublisher
             .receive(on: RunLoop.main)
@@ -87,7 +103,7 @@ final class AppState: ObservableObject {
     }
 
     func startRecording(meetingTitleOverride: String? = nil) async {
-        let title = meetingTitleOverride?.isEmpty == false ? meetingTitleOverride! : meetingTitle
+        let title = resolveRecordingTitle(from: meetingTitleOverride ?? meetingTitle)
         do {
             let directory = try await audioRecorder.startRecording(meetingTitle: title)
             currentMeetingDirectory = directory
@@ -165,6 +181,15 @@ final class AppState: ObservableObject {
             processQueue()
         }
     }
+
+    private static let captureSystemAudioDefaultsKey = "AppState.captureSystemAudio"
+    private static let idleMeetingTitle = "No meeting detected"
+    private static let timestampFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "MMM d, yyyy 'at' h:mm a"
+        return formatter
+    }()
 }
 
 private extension Publisher where Failure == Never {
@@ -176,6 +201,14 @@ private extension Publisher where Failure == Never {
 }
 
 private extension AppState {
+    func resolveRecordingTitle(from override: String?) -> String {
+        let trimmed = override?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        if !trimmed.isEmpty, trimmed != Self.idleMeetingTitle {
+            return trimmed
+        }
+        return Self.timestampFormatter.string(from: nowProvider())
+    }
+
     func autosaveNotesDraft(_ text: String) {
         guard let directory = currentMeetingDirectory else { return }
         do {

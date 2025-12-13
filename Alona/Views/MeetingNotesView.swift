@@ -21,25 +21,14 @@ struct MeetingNotesView: View {
     }
 
     private var header: some View {
-        HStack(alignment: .center, spacing: 12) {
-            VStack(alignment: .leading, spacing: 4) {
-                TextField("Meeting title", text: Binding(
-                    get: { appState.meetingTitle },
-                    set: { appState.updateActiveMeetingTitle($0) }
-                ))
-                .textFieldStyle(.plain)
-                .font(.title3)
-                .bold()
-                .disabled(appState.currentMeetingDirectory == nil)
-                Text("Duration: \(formattedDuration)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            Spacer()
-            Label(appState.isRecording ? "Recording" : "Idle",
-                  systemImage: appState.isRecording ? "record.circle.fill" : "pause.circle")
-                .foregroundColor(appState.isRecording ? .red : .secondary)
-        }
+        TextField("Meeting title", text: Binding(
+            get: { appState.meetingTitle },
+            set: { appState.updateActiveMeetingTitle($0) }
+        ))
+        .textFieldStyle(.plain)
+        .font(.title3)
+        .bold()
+        .disabled(appState.currentMeetingDirectory == nil)
     }
 
     private var toolbar: some View {

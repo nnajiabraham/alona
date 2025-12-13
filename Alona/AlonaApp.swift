@@ -26,7 +26,7 @@ struct AlonaApp: App {
                 .environmentObject(permissionManager)
                 .environmentObject(meetingDetector)
         }
-        .menuBarExtraStyle(.window)
+        .menuBarExtraStyle(.menu)
         .defaultSize(width: 360, height: 320)
 
         WindowGroup(id: "onboarding") {

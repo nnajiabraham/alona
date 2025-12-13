@@ -7,6 +7,7 @@ import ScreenCaptureKit
 protocol AudioRecordingController: AnyObject {
     var isRecordingPublisher: AnyPublisher<Bool, Never> { get }
     var recordingDurationPublisher: AnyPublisher<TimeInterval, Never> { get }
+    var captureSystemAudio: Bool { get set }
     func startRecording(meetingTitle: String) async throws -> URL
     func stopRecording() async
 }
@@ -14,11 +15,22 @@ protocol AudioRecordingController: AnyObject {
 final class AudioRecorder: NSObject, ObservableObject {
     @Published private(set) var isRecording = false
     @Published private(set) var recordingDuration: TimeInterval = 0
+    var captureSystemAudio: Bool = true {
+        didSet {
+            if captureSystemAudio == false, systemAudioActive {
+                Task { [weak self] in
+                    await self?.stopSystemAudioCapture()
+                    self?.systemAudioActive = false
+                }
+            }
+        }
+    }
 
     private let meetingFileManager: MeetingFileManager
     private let bufferQueue = DispatchQueue(label: "com.alona.audio-buffer")
     private let sampleQueue = DispatchQueue(label: "com.alona.system-audio")
     private var scStream: SCStream?
+    private var systemAudioActive = false
     private var audioEngine: AVAudioEngine?
     private var dualChannelFile: AVAudioFile?
     private var durationTimer: Timer?
@@ -47,7 +59,12 @@ final class AudioRecorder: NSObject, ObservableObject {
         micAudioBuffer.removeAll(keepingCapacity: true)
 
         try prepareDualChannelWriter(in: directory)
-        try await startSystemAudioCapture()
+        if captureSystemAudio {
+            try await startSystemAudioCapture()
+            systemAudioActive = true
+        } else {
+            systemAudioActive = false
+        }
         try startMicrophoneCapture()
         startDurationTimer()
 
@@ -63,7 +80,10 @@ final class AudioRecorder: NSObject, ObservableObject {
     func stopRecording() async {
         guard isRecording else { return }
 
-        await stopSystemAudioCapture()
+        if systemAudioActive {
+            await stopSystemAudioCapture()
+            systemAudioActive = false
+        }
         stopMicrophoneCapture()
         stopDurationTimer()
 
@@ -167,6 +187,9 @@ private extension AudioRecorder {
                 let samples = Array(UnsafeBufferPointer(start: channelData, count: Int(convertedBuffer.frameLength)))
                 self.bufferQueue.async {
                     self.micAudioBuffer.append(contentsOf: samples)
+                    if self.captureSystemAudio == false {
+                        self.systemAudioBuffer.append(contentsOf: samples)
+                    }
                     self.flushBuffersIfNeeded()
                 }
             }
@@ -184,12 +207,22 @@ private extension AudioRecorder {
     }
 
     func flushBuffersIfNeeded() {
-        guard systemAudioBuffer.count >= Int(sampleRate), micAudioBuffer.count >= Int(sampleRate) else { return }
-        writeSamples(count: min(systemAudioBuffer.count, micAudioBuffer.count))
+        guard micAudioBuffer.count >= Int(sampleRate) else { return }
+        if captureSystemAudio {
+            guard systemAudioBuffer.count >= Int(sampleRate) else { return }
+            writeSamples(count: min(systemAudioBuffer.count, micAudioBuffer.count))
+        } else {
+            writeSamples(count: min(systemAudioBuffer.count, micAudioBuffer.count))
+        }
     }
 
     func flushRemainingBuffers() {
-        guard systemAudioBuffer.count > 0, micAudioBuffer.count > 0 else { return }
+        guard micAudioBuffer.count > 0 else { return }
+        if captureSystemAudio {
+            guard systemAudioBuffer.count > 0 else { return }
+        } else if systemAudioBuffer.isEmpty {
+            systemAudioBuffer = micAudioBuffer
+        }
         writeSamples(count: min(systemAudioBuffer.count, micAudioBuffer.count))
     }
 

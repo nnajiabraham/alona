@@ -1184,6 +1184,11 @@ dependencies: [
 - Added `StartupWindowController` + `StartupWindowIdentifierSetter` so “Open Startup” activates an existing window (bringing Alona to the front) instead of spawning duplicates, falling back to `openWindow(id:)` when nothing is open.
 - Updated `StartupView` to tag its host `NSWindow`, switched the menu button to use the helper, and introduced regression coverage (`testStartupWindowControllerFindsExistingWindow`); commands: `make lint`, `make test`.
 
+### 2025-12-13 – Recording UX & privacy controls
+- Added a “Capture system audio” toggle in `SettingsView` wired to a persisted flag on `AppState`/`AudioRecorder`; when off (now the default) we skip ScreenCaptureKit streams so macOS no longer shows the purple “Currently Sharing” banner, and microphone audio is duplicated across channels to keep transcripts functional.
+- Strengthened new-record defaults by generating timestamp-based titles (`Dec 13, 2025 at 12:51 PM`) whenever meeting detection can’t provide a name, updated `MeetingNotesView` to show only the editable title + note controls, and switched the menu bar extra to `.menu` style so the icon is always visible.
+- Added regression coverage for the new behaviors (`testSystemAudioPreferencePersistsAcrossSessions`, `testDefaultMeetingTitleFallsBackToTimestamp`) plus UI/format fixes; commands: `make lint`, `make test`.
+
 ### References
 
 - [SwiftWhisper GitHub](https://github.com/exPHAT/SwiftWhisper) - Swift bindings for whisper.cpp
