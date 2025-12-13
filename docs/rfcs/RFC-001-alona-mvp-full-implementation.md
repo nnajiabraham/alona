@@ -1040,41 +1040,41 @@ dependencies: [
 
 ### Phase 5: Transcription & Summary
 
-- [ ] **Task 5.1: Add SwiftWhisper dependency and bundle model**
+- [X] **Task 5.1: Add SwiftWhisper dependency and bundle model**
     - **Test Cases:**
-        - [ ] SwiftWhisper package resolves in Xcode via SPM (url: `https://github.com/exPHAT/SwiftWhisper.git`, branch: `master`)
-        - [ ] ggml-base.en.bin (~142MB) added to Xcode project and included in "Copy Bundle Resources" build phase
-        - [ ] Model file accessible via `Bundle.main.url(forResource: "ggml-base.en", withExtension: "bin")`
-        - [ ] Model loads without errors at app launch using `Whisper(fromFileURL:)`
-        - [ ] Build succeeds and .app bundle contains the model file in Resources/
+        - [X] SwiftWhisper package resolves in Xcode via SPM (url: `https://github.com/exPHAT/SwiftWhisper.git`, branch: `master`)
+        - [X] ggml-base.en.bin (~142MB) added to Xcode project and included in "Copy Bundle Resources" build phase
+        - [X] Model file accessible via `Bundle.main.url(forResource: "ggml-base.en", withExtension: "bin")`
+        - [X] Model loads without errors at app launch using `Whisper(fromFileURL:)`
+        - [X] Build succeeds and .app bundle contains the model file in Resources/
 
-- [ ] **Task 5.2: Implement TranscriptionEngine service**
+- [X] **Task 5.2: Implement TranscriptionEngine service**
     - **Test Cases:**
-        - [ ] Converts audio to 16kHz mono PCM floats
-        - [ ] Whisper transcription completes without errors
-        - [ ] Progress updates received via delegate
-        - [ ] Returns text and timestamped segments
+        - [X] Converts audio to 16kHz mono PCM floats
+        - [X] Whisper transcription completes without errors
+        - [X] Progress updates received via delegate
+        - [X] Returns text and timestamped segments
 
-- [ ] **Task 5.3: Implement automatic transcription after recording**
+- [X] **Task 5.3: Implement automatic transcription after recording**
     - **Test Cases:**
-        - [ ] Transcription starts automatically after stopRecording()
-        - [ ] Progress shown in UI (or notification)
-        - [ ] transcript.txt saved with plain text as valid UTF-8
-        - [ ] transcript.json is valid UTF-8 JSON encoded from TranscriptSegmentRecord Codable struct
-        - [ ] transcript.json encode/decode round-trip succeeds (can be decoded back)
+        - [X] Transcription starts automatically after stopRecording()
+        - [X] Progress shown in UI (or notification)
+        - [X] transcript.txt saved with plain text as valid UTF-8
+        - [X] transcript.json is valid UTF-8 JSON encoded from TranscriptSegmentRecord Codable struct
+        - [X] transcript.json encode/decode round-trip succeeds (can be decoded back)
 
-- [ ] **Task 5.4: Implement PlaceholderSummaryProvider**
+- [X] **Task 5.4: Implement PlaceholderSummaryProvider**
     - **Test Cases:**
-        - [ ] Returns formatted markdown summary
-        - [ ] Includes timestamp of generation
-        - [ ] summary.md saved in meeting directory
+        - [X] Returns formatted markdown summary
+        - [X] Includes timestamp of generation
+        - [X] summary.md saved in meeting directory
 
-- [ ] **Task 5.5: Add TranscriptionProgressView**
+- [X] **Task 5.5: Add TranscriptionProgressView**
     - **Test Cases:**
-        - [ ] Shows progress bar during transcription
-        - [ ] Displays "Transcribing..." status
-        - [ ] Shows "Complete" when done
-        - [ ] Error state displayed if transcription fails
+        - [X] Shows progress bar during transcription
+        - [X] Displays "Transcribing..." status
+        - [X] Shows "Complete" when done
+        - [X] Error state displayed if transcription fails
 
 ### Phase 6: Polish & Error Handling
 
@@ -1090,13 +1090,7 @@ dependencies: [
         - [ ] Recording failure shows error alert
         - [ ] Transcription failure shows retry option
 
-- [ ] **Task 6.3: Add keyboard shortcuts**
-    - **Test Cases:**
-        - [ ] Cmd+Shift+R toggles recording
-        - [ ] Cmd+, opens Settings
-        - [ ] Cmd+Q quits app
-
-- [ ] **Task 6.4: Final integration testing**
+- [ ] **Task 6.3: Final integration testing**
     - **Test Cases:**
         - [ ] Full flow: detect meeting → record → notes → stop → transcribe → summary
         - [ ] All files created in correct directory structure
@@ -1150,6 +1144,11 @@ dependencies: [
 - Removed the standalone “live notes” control—notes windows now open/reopen automatically only when a session is active (or when browsing a past recording), and the UI only surfaces a “Current Notes” button while recording.
 - Added automatic window presentation by signaling `notesWindowRequestID` from `AppState` and observing it in `MenuBarView`, with a conditional “Current Notes” button that only appears while recording so the in-progress document can be reopened if closed (`Alona/Models/AppState.swift`, `Alona/Views/MenuBarView.swift`); validated with `make lint`, `make test`.
 
+### 2025-11-27 – Phase 5 transcription & summary
+- Integrated SwiftWhisper via SPM and added a `make download-model` helper so the 142 MB `ggml-base.en.bin` bundle is easy to fetch and ships inside the app bundle (`Alona.xcodeproj/project.pbxproj`, `Makefile`, `Alona/Resources/Models/*`).
+- Built `TranscriptionEngine`, `SummaryManager`, and `TranscriptionProgressView`, wiring them through `AppState`/`MenuBarView` so transcription + placeholder summaries run automatically after each recording (`Alona/Services/TranscriptionEngine.swift`, `Alona/Services/SummaryManager.swift`, `Alona/Views/TranscriptionProgressView.swift`, `Alona/Models/AppState.swift`, `Alona/Views/MenuBarView.swift`).
+- Expanded the test suite with mocks that validate autosave, snippet insertion, window requests, and new artifacts (`AlonaTests/AlonaTests.swift`); commands: `make lint`, `make test`.
+
 ### 2025-11-27 – Dev experience upgrades
 - Added a `make run` target that reuses the `xcodebuild` pipeline and automatically launches the built `Alona.app`, answering the “can we run it locally?” workflow question.
 - Integrated the [Inject](https://github.com/krzysztofzablocki/Inject) SPM package (`Alona.xcodeproj`, `Alona.xcworkspace/xcshareddata/swiftpm/Package.resolved`) and instrumented SwiftUI views (`MenuBarView`, `SettingsView`, `OnboardingView`) with `@ObserveInjection`/`.enableInjection()` under `#if DEBUG` so hot reloading works as recommended in the workspace rules.
@@ -1159,6 +1158,31 @@ dependencies: [
 - Updated `Alona/Info.plist` to set `LSUIElement` to `false`, keeping the menu-bar control but also showing the app in the Dock / Cmd-Tab to support the upcoming notes window workflow.
 - Refreshed RFC Task 1.1 test cases to expect the icon in both the menu bar and Dock.
 - Commands executed: `make test`.
+
+### 2025-11-28 – Model availability & notes polish
+- Hardened `ModelLocator` / `WhisperModelManager` so downloaded models under `~/Library/Application Support/Alona/Models` are detected first, added a reset hook for tests, and folded the regression coverage into `AlonaTests/AlonaTests.swift` (removed the unused `ModelManagerTests.swift` shim).
+- Updated `MeetingNotesView` to allocate the editor inside a `GeometryReader`, keeping the header/tooling visible while letting the `NSTextView` scroll independently; enabled scrollbars on `NotesTextView` to match the UX request.
+- Commands executed: `make lint`, `make test`.
+
+### 2025-11-28 – Recording titles & browser UX
+- Added persistent meeting titles via `MeetingFileManager.saveTitle/loadTitle`, ensured directories get a `title.txt`, and exposed `AppState.updateActiveMeetingTitle` so the in-progress notes window can edit the title (TextField in `MeetingNotesView`).
+- Refreshed `RecordingsBrowserView` into a selectable split view with inline title editing for each row/detail pane, active-row highlighting, and automatic list/detail synchronization backed by the new file manager APIs.
+- Extended the unit suite with title persistence coverage (`testMeetingEntriesUseSavedTitles`, `testActiveMeetingTitleUpdatesPersist`) and reran `make lint` + `make test`.
+
+### 2025-11-28 – Transcription queue & accessibility
+- Introduced a cancellable transcription queue inside `AppState` that serializes automatic jobs and manual “Regenerate transcription” requests, persisting job metadata via new `TranscriptionJob` models and exposing helper APIs for views/tests.
+- Added `TranscriptionQueueView` plus new Menu Bar + Startup shortcuts so users can monitor pending/completed jobs, cancel work in-flight, and re-run transcription safely while hopping across meetings.
+- Updated `RecordingsBrowserView` with a regenerate button (disabled while the directory is already queued), wired StartupView/MenuBar buttons for Startup reopening, and created queue regression tests (`testManualTranscriptionQueueProcesses`, updated `testNotesAutosaveAndFinalize`).
+- Commands executed: `make lint`, `make test`.
+
+### 2025-11-28 – Meeting detector notifications
+- Added `MeetingNotificationManager` (UserNotifications-backed) plus a new `MeetingNotificationScheduling` protocol so `MeetingDetector` can surface a single actionable alert when a new meeting is detected, without auto-starting recordings; repeated polls reuse a cached identifier so we only notify once per join.
+- `AppState` observes the notification tap via `NotificationCenter` and starts recording (opening the notes window) only when the user clicks “Start Recording”, preserving manual control.
+- Added regression coverage (`testMeetingDetectorNotifiesOncePerMeeting`) plus the notification manager file to the Xcode project; commands: `make lint`, `make test`.
+
+### 2025-12-13 – Startup window focus polish
+- Added `StartupWindowController` + `StartupWindowIdentifierSetter` so “Open Startup” activates an existing window (bringing Alona to the front) instead of spawning duplicates, falling back to `openWindow(id:)` when nothing is open.
+- Updated `StartupView` to tag its host `NSWindow`, switched the menu button to use the helper, and introduced regression coverage (`testStartupWindowControllerFindsExistingWindow`); commands: `make lint`, `make test`.
 
 ### References
 

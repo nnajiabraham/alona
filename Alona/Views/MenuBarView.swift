@@ -94,6 +94,9 @@ struct MenuBarView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
+            if appState.transcriptionState != .idle {
+                TranscriptionProgressView(state: appState.transcriptionState)
+            }
         }
     }
 
@@ -141,16 +144,8 @@ struct MenuBarView: View {
             Button("Recordings") {
                 openWindow(id: "recordings")
             }
-            if appState.currentMeetingDirectory != nil {
-                Button("Current Notes") {
-                    openNotesWindow()
-                }
-            }
-            Button("Open Settings") {
-                openWindow(id: "settings-window")
-            }
-            Button("Review Permissions") {
-                openWindow(id: "onboarding")
+            Button("Open Startup") {
+                StartupWindowController.focusOrOpen(openWindow: openWindow)
             }
             Spacer()
             Button("Quit") {

@@ -26,6 +26,12 @@ final class MeetingDetector: ObservableObject {
     private var pollTimer: Timer?
     private var workspaceObserver: Any?
     private let pollInterval: TimeInterval = 2.0
+    private let notificationScheduler: MeetingNotificationScheduling
+    private var lastNotificationIdentifier: String?
+
+    init(notificationScheduler: MeetingNotificationScheduling = MeetingNotificationManager.shared) {
+        self.notificationScheduler = notificationScheduler
+    }
 
     func startMonitoring() {
         guard pollTimer == nil else { return }
@@ -71,6 +77,7 @@ final class MeetingDetector: ObservableObject {
         isInMeeting = false
         detectedApp = nil
         meetingTitle = "No meeting detected"
+        lastNotificationIdentifier = nil
     }
 
     private func checkZoomMeeting() -> Bool {
@@ -82,11 +89,8 @@ final class MeetingDetector: ObservableObject {
             return false
         }
 
-        detectedApp = .zoom
-        isInMeeting = true
-        meetingTitle = zoomApp.localizedName ?? "Zoom Meeting"
-        automationPermissionDenied = false
-        return true
+        let title = zoomApp.localizedName ?? "Zoom Meeting"
+        return handleDetection(app: .zoom, meetingTitle: title)
     }
 
     private func verifyUDPConnections(for pid: pid_t) -> Bool {
@@ -137,12 +141,31 @@ final class MeetingDetector: ObservableObject {
             return false
         }
 
-        detectedApp = .googleMeet
+        return handleDetection(app: .googleMeet, meetingTitle: Self.normalizeMeetingTitle(title))
+    }
+
+    @discardableResult
+    func handleDetection(app: MeetingApp, meetingTitle title: String) -> Bool {
+        detectedApp = app
         isInMeeting = true
-        meetingTitle = Self.normalizeMeetingTitle(title)
+        meetingTitle = title
         automationPermissionDenied = false
+        let identifier = "\(app.rawValue)|\(title)"
+        if lastNotificationIdentifier != identifier {
+            notificationScheduler.scheduleMeetingNotification(appName: app.displayName, meetingTitle: title, identifier: identifier)
+            lastNotificationIdentifier = identifier
+        }
         return true
     }
+
+    #if DEBUG
+        func resetDetectionStateForTesting() {
+            isInMeeting = false
+            detectedApp = nil
+            meetingTitle = "No meeting detected"
+            lastNotificationIdentifier = nil
+        }
+    #endif
 }
 
 extension MeetingDetector {

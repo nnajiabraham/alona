@@ -8,15 +8,24 @@ struct TranscriptSegmentRecord: Codable {
 
 struct MeetingEntry: Identifiable, Equatable, Hashable {
     let directory: URL
-    let title: String
+    var title: String
     let createdAt: Date
 
     var id: URL { directory }
+
+    static func == (lhs: MeetingEntry, rhs: MeetingEntry) -> Bool {
+        lhs.directory == rhs.directory
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(directory)
+    }
 }
 
 final class MeetingFileManager {
     private enum Constants {
         static let saveDirectoryKey = "meetingSaveDirectory"
+        static let titleFileName = "title.txt"
     }
 
     static var defaultBaseDirectory: URL {
@@ -62,6 +71,7 @@ final class MeetingFileManager {
         }
 
         try fileManager.createDirectory(at: meetingDir, withIntermediateDirectories: true)
+        try saveTitle(title, to: meetingDir)
         return meetingDir
     }
 
@@ -126,10 +136,23 @@ final class MeetingFileManager {
             guard fileManager.fileExists(atPath: url.path, isDirectory: &isDir), isDir.boolValue else { return nil }
             let resourceValues = try? url.resourceValues(forKeys: [.creationDateKey])
             let createdAt = resourceValues?.creationDate ?? Date.distantPast
-            return MeetingEntry(directory: url, title: url.lastPathComponent, createdAt: createdAt)
+            let title = loadTitle(from: url) ?? url.lastPathComponent
+            return MeetingEntry(directory: url, title: title, createdAt: createdAt)
         }
 
         return directories.sorted { $0.createdAt > $1.createdAt }
+    }
+
+    func loadTitle(from directory: URL) -> String? {
+        let titleURL = directory.appendingPathComponent(Constants.titleFileName)
+        return try? String(contentsOf: titleURL, encoding: .utf8)
+    }
+
+    func saveTitle(_ title: String, to directory: URL) throws {
+        let trimmed = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        let final = trimmed.isEmpty ? "Untitled meeting" : trimmed
+        let titleURL = directory.appendingPathComponent(Constants.titleFileName)
+        try final.write(to: titleURL, atomically: true, encoding: .utf8)
     }
 
     private func sanitizedSlug(from rawTitle: String) -> String {

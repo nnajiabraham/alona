@@ -13,7 +13,7 @@ struct AlonaApp: App {
     }
 
     var body: some Scene {
-        WindowGroup {
+        WindowGroup(id: "startup") {
             StartupView()
                 .environmentObject(appState)
                 .environmentObject(permissionManager)
@@ -53,5 +53,11 @@ struct AlonaApp: App {
                 .environmentObject(appState)
         }
         .defaultSize(width: 480, height: 360)
+
+        WindowGroup(id: "transcription-queue") {
+            TranscriptionQueueView()
+                .environmentObject(appState)
+        }
+        .defaultSize(width: 480, height: 420)
     }
 }

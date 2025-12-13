@@ -5,6 +5,9 @@ DESTINATION := 'platform=macOS,arch=arm64'
 CONFIGURATION := Debug
 XCBEAUTIFY := $(shell command -v xcbeautify 2>/dev/null)
 SWIFTFORMAT := $(shell command -v swiftformat 2>/dev/null)
+MODEL_DIR := Alona/Resources/Models
+MODEL_FILE := $(MODEL_DIR)/ggml-base.en.bin
+MODEL_URL := https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.en.bin
 
 ifeq ($(XCBEAUTIFY),)
 PIPE_CMD := cat
@@ -12,7 +15,7 @@ else
 PIPE_CMD := xcbeautify
 endif
 
-.PHONY: help setup build test lint format clean run
+.PHONY: help setup build test lint format clean run download-model
 
 help:
 	@echo "Available targets:"
@@ -23,6 +26,7 @@ help:
 	@echo "  make format  # apply swiftformat"
 	@echo "  make clean   # clean derived data"
 	@echo "  make run     # build and launch the macOS app"
+	@echo "  make download-model # fetch ggml-base.en.bin into Resources/Models"
 
 setup:
 	xcode-build-server config -workspace $(WORKSPACE) -scheme $(SCHEME)
@@ -68,3 +72,13 @@ run: build
 		exit 1; \
 	fi; \
 	open "$$APP_PATH"
+
+download-model:
+	@mkdir -p $(MODEL_DIR)
+	@if [ -f $(MODEL_FILE) ]; then \
+		echo "Model already present at $(MODEL_FILE)"; \
+	else \
+		echo "Downloading Whisper base model..."; \
+		curl -L "$(MODEL_URL)" -o $(MODEL_FILE); \
+		echo "Saved model to $(MODEL_FILE)"; \
+	fi

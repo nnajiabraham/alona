@@ -22,6 +22,15 @@
 		AA0113 /* MeetingNotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1012 /* MeetingNotesView.swift */; };
 		AA0114 /* StartupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1013 /* StartupView.swift */; };
 		AA0115 /* RecordingsBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1014 /* RecordingsBrowserView.swift */; };
+		AA0116 /* TranscriptionEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1015 /* TranscriptionEngine.swift */; };
+		AA0117 /* SummaryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1016 /* SummaryManager.swift */; };
+		AA0118 /* TranscriptionProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1017 /* TranscriptionProgressView.swift */; };
+		AA0119 /* ModelResources in Resources */ = {isa = PBXBuildFile; fileRef = AA1018 /* ModelResources */; };
+		AA0120 /* SwiftWhisper in Frameworks */ = {isa = PBXBuildFile; productRef = AA9004 /* SwiftWhisper */; };
+		AA0121 /* ModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1019 /* ModelManager.swift */; };
+		AA0122 /* TranscriptionQueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1020 /* TranscriptionQueueView.swift */; };
+		AA0123 /* MeetingNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1021 /* MeetingNotificationManager.swift */; };
+		AA0124 /* StartupWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1022 /* StartupWindowController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +51,14 @@
 		AA1012 /* MeetingNotesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotesView.swift; sourceTree = "<group>"; };
 		AA1013 /* StartupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupView.swift; sourceTree = "<group>"; };
 		AA1014 /* RecordingsBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingsBrowserView.swift; sourceTree = "<group>"; };
+		AA1015 /* TranscriptionEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionEngine.swift; sourceTree = "<group>"; };
+		AA1016 /* SummaryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryManager.swift; sourceTree = "<group>"; };
+		AA1017 /* TranscriptionProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionProgressView.swift; sourceTree = "<group>"; };
+		AA1018 /* ModelResources */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ModelResources; path = Models; sourceTree = "<group>"; };
+		AA1019 /* ModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelManager.swift; sourceTree = "<group>"; };
+		AA1020 /* TranscriptionQueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionQueueView.swift; sourceTree = "<group>"; };
+		AA1021 /* MeetingNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotificationManager.swift; sourceTree = "<group>"; };
+		AA1022 /* StartupWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupWindowController.swift; sourceTree = "<group>"; };
 		AA2002 /* AlonaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlonaTests.swift; sourceTree = "<group>"; };
 		AA2003 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -51,7 +68,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA0109 /* Inject in Frameworks */
+				AA0109 /* Inject in Frameworks */,
+				AA0120 /* SwiftWhisper in Frameworks */
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -111,7 +129,12 @@
 				AA1002 /* PermissionManager.swift */,
 				AA1003 /* MeetingFileManager.swift */,
 				AA1011 /* AudioRecorder.swift */,
-				AA1009 /* MeetingDetector.swift */
+				AA1009 /* MeetingDetector.swift */,
+				AA1015 /* TranscriptionEngine.swift */,
+				AA1016 /* SummaryManager.swift */,
+				AA1019 /* ModelManager.swift */,
+				AA1021 /* MeetingNotificationManager.swift */,
+				AA1022 /* StartupWindowController.swift */
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -124,7 +147,9 @@
 				AA1006 /* OnboardingView.swift */,
 				AA1012 /* MeetingNotesView.swift */,
 				AA1013 /* StartupView.swift */,
-				AA1014 /* RecordingsBrowserView.swift */
+				AA1014 /* RecordingsBrowserView.swift */,
+				AA1017 /* TranscriptionProgressView.swift */,
+				AA1020 /* TranscriptionQueueView.swift */
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -132,6 +157,7 @@
 		AA4006 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				AA1018 /* ModelResources */,
 				AA1007 /* Assets.xcassets */
 			);
 			path = Resources;
@@ -162,7 +188,8 @@
 			dependencies = (
 			);
 			packageProductDependencies = (
-				AA9002 /* Inject */
+				AA9002 /* Inject */,
+				AA9004 /* SwiftWhisper */
 			);
 			name = Alona;
 			productName = Alona;
@@ -215,7 +242,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			packageReferences = (
-				AA9001 /* XCRemoteSwiftPackageReference "Inject" */
+				AA9001 /* XCRemoteSwiftPackageReference "Inject" */,
+				AA9003 /* XCRemoteSwiftPackageReference "SwiftWhisper" */
 			);
 			targets = (
 				AA5000 /* Alona */,
@@ -229,7 +257,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA0107 /* Assets.xcassets in Resources */
+				AA0107 /* Assets.xcassets in Resources */,
+				AA0119 /* ModelResources in Resources */
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,7 +281,14 @@
 				AA0111 /* TranscriptionResult.swift in Sources */,
 				AA0112 /* AudioRecorder.swift in Sources */,
 				AA0114 /* StartupView.swift in Sources */,
-				AA0115 /* RecordingsBrowserView.swift in Sources */
+				AA0115 /* RecordingsBrowserView.swift in Sources */,
+				AA0116 /* TranscriptionEngine.swift in Sources */,
+				AA0117 /* SummaryManager.swift in Sources */,
+				AA0118 /* TranscriptionProgressView.swift in Sources */,
+				AA0121 /* ModelManager.swift in Sources */,
+				AA0122 /* TranscriptionQueueView.swift in Sources */,
+				AA0123 /* MeetingNotificationManager.swift in Sources */,
+				AA0124 /* StartupWindowController.swift in Sources */
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -508,6 +544,14 @@
 				minimumVersion = 1.2.4;
 			};
 		};
+		AA9003 /* XCRemoteSwiftPackageReference "SwiftWhisper" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/exPHAT/SwiftWhisper.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -515,6 +559,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AA9001 /* XCRemoteSwiftPackageReference "Inject" */;
 			productName = Inject;
+		};
+		AA9004 /* SwiftWhisper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA9003 /* XCRemoteSwiftPackageReference "SwiftWhisper" */;
+			productName = SwiftWhisper;
 		};
 /* End XCSwiftPackageProductDependency section */
 

@@ -9,20 +9,28 @@ struct MeetingNotesView: View {
         VStack(alignment: .leading, spacing: 16) {
             header
             toolbar
-            NotesTextView(text: $appState.notesDraft, selectedRange: $selectedRange)
-                .frame(minHeight: 300)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+            GeometryReader { editorProxy in
+                NotesTextView(text: $appState.notesDraft, selectedRange: $selectedRange)
+                    .frame(width: editorProxy.size.width, height: editorProxy.size.height)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+            }
+            .frame(minHeight: 280)
         }
         .padding(20)
-        .frame(minWidth: 420, minHeight: 360)
+        .frame(minWidth: 420, minHeight: 360, alignment: .topLeading)
     }
 
     private var header: some View {
         HStack(alignment: .center, spacing: 12) {
             VStack(alignment: .leading, spacing: 4) {
-                Text(appState.meetingTitle)
-                    .font(.title3)
-                    .bold()
+                TextField("Meeting title", text: Binding(
+                    get: { appState.meetingTitle },
+                    set: { appState.updateActiveMeetingTitle($0) }
+                ))
+                .textFieldStyle(.plain)
+                .font(.title3)
+                .bold()
+                .disabled(appState.currentMeetingDirectory == nil)
                 Text("Duration: \(formattedDuration)")
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -87,6 +95,10 @@ struct NotesTextView: NSViewRepresentable {
 
     func makeNSView(context: Context) -> NSScrollView {
         let scrollView = NSTextView.scrollableTextView()
+        scrollView.hasVerticalScroller = true
+        scrollView.hasHorizontalScroller = false
+        scrollView.autohidesScrollers = true
+        scrollView.drawsBackground = false
         let textView = scrollView.documentView as? NSTextView
         textView?.delegate = context.coordinator
         textView?.isRichText = false

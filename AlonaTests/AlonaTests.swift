@@ -1,4 +1,5 @@
 @testable import Alona
+import AppKit
 import Combine
 import XCTest
 
@@ -125,10 +126,15 @@ final class AlonaTests: XCTestCase {
 
         let directory = try harness.manager.createMeetingDirectory(title: "Autosave")
         let recorder = MockAudioRecorder(directory: directory)
+        let transcriptionResult = TranscriptionResult(text: "transcript text", segments: [])
+        let transcriptionEngine = MockTranscriptionEngine(result: transcriptionResult)
+        let summaryProvider = MockSummaryProvider(output: "SUMMARY")
 
         let appState = AppState(
             meetingFileManager: harness.manager,
             audioRecorder: recorder,
+            transcriptionEngine: transcriptionEngine,
+            summaryProvider: summaryProvider,
             notesAutosaveInterval: 0.05,
             notesAutosaveScheduler: .main
         )
@@ -140,10 +146,16 @@ final class AlonaTests: XCTestCase {
         XCTAssertEqual(harness.manager.recoverNotesFromTemp(in: directory), "Autosaved text")
 
         await appState.stopRecording()
+        try await waitForJobCompletion(in: appState)
 
         let savedNotes = try String(contentsOf: directory.appendingPathComponent("notes.md"))
         XCTAssertEqual(savedNotes, "Autosaved text")
         XCTAssertNil(harness.manager.recoverNotesFromTemp(in: directory))
+
+        let summary = try String(contentsOf: directory.appendingPathComponent("summary.md"))
+        XCTAssertEqual(summary, "SUMMARY")
+        let transcript = try String(contentsOf: directory.appendingPathComponent("transcript.txt"))
+        XCTAssertEqual(transcript, "transcript text")
     }
 
     func testNotesInsertionAppendsWhenNoSelection() {
@@ -165,7 +177,13 @@ final class AlonaTests: XCTestCase {
 
         let directory = try harness.manager.createMeetingDirectory(title: "Window")
         let recorder = MockAudioRecorder(directory: directory)
-        let appState = AppState(meetingFileManager: harness.manager, audioRecorder: recorder)
+        let transcriptionEngine = MockTranscriptionEngine()
+        let appState = AppState(
+            meetingFileManager: harness.manager,
+            audioRecorder: recorder,
+            transcriptionEngine: transcriptionEngine,
+            summaryProvider: MockSummaryProvider()
+        )
 
         XCTAssertNil(appState.notesWindowRequestID)
         await appState.startRecording(meetingTitleOverride: "Window")
@@ -188,6 +206,127 @@ final class AlonaTests: XCTestCase {
         XCTAssertEqual(entries.first?.title.contains("Newer"), true)
         XCTAssertEqual(harness.manager.loadNotes(from: newer), "New notes")
         XCTAssertEqual(harness.manager.loadTranscript(from: newer), "Transcript")
+    }
+
+    func testMeetingEntriesUseSavedTitles() throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        let directory = try harness.manager.createMeetingDirectory(title: "Original")
+        try harness.manager.saveTitle("Custom Title", to: directory)
+
+        let entries = harness.manager.meetingEntries()
+        XCTAssertEqual(entries.first?.title, "Custom Title")
+    }
+
+    @MainActor
+    func testActiveMeetingTitleUpdatesPersist() async throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        let directory = try harness.manager.createMeetingDirectory(title: "Original")
+        let recorder = MockAudioRecorder(directory: directory)
+        let appState = AppState(
+            meetingFileManager: harness.manager,
+            audioRecorder: recorder,
+            transcriptionEngine: MockTranscriptionEngine(),
+            summaryProvider: MockSummaryProvider()
+        )
+
+        await appState.startRecording(meetingTitleOverride: "Original")
+        appState.updateActiveMeetingTitle("Renamed Title")
+
+        let storedTitle = harness.manager.loadTitle(from: directory)
+        XCTAssertEqual(storedTitle, "Renamed Title")
+    }
+
+    func testModelLocatorRespectsOverriddenSupportDirectory() throws {
+        let tempBase = FileManager.default.temporaryDirectory
+            .appendingPathComponent("ModelLocator-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: tempBase, withIntermediateDirectories: true)
+        ModelLocator.applicationSupportDirectoryProvider = { tempBase }
+        defer {
+            ModelLocator.resetForTesting()
+            try? FileManager.default.removeItem(at: tempBase)
+        }
+
+        let modelsDir = try ModelLocator.userModelsDirectory()
+        XCTAssertTrue(modelsDir.path.hasPrefix(tempBase.path))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: modelsDir.path))
+    }
+
+    func testModelLocatorPrefersUserModelOverBundle() throws {
+        let tempBase = FileManager.default.temporaryDirectory
+            .appendingPathComponent("ModelLocatorUser-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: tempBase, withIntermediateDirectories: true)
+        ModelLocator.applicationSupportDirectoryProvider = { tempBase }
+        defer {
+            ModelLocator.resetForTesting()
+            try? FileManager.default.removeItem(at: tempBase)
+        }
+
+        let userURL = try ModelLocator.userModelURL()
+        FileManager.default.createFile(atPath: userURL.path, contents: Data("user".utf8))
+        let resolved = ModelLocator.existingModelURL()
+        XCTAssertEqual(resolved, userURL)
+    }
+
+    @MainActor
+    func testManualTranscriptionQueueProcesses() async throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        let directory = try harness.manager.createMeetingDirectory(title: "Queue")
+        try "Existing notes".write(to: directory.appendingPathComponent("notes.md"), atomically: true, encoding: .utf8)
+
+        let recorder = MockAudioRecorder(directory: directory)
+        let engine = MockTranscriptionEngine(result: TranscriptionResult(text: "Hello Queue", segments: []))
+        let summaryProvider = MockSummaryProvider(output: "Queued summary")
+        let appState = AppState(
+            meetingFileManager: harness.manager,
+            audioRecorder: recorder,
+            transcriptionEngine: engine,
+            summaryProvider: summaryProvider,
+            notesAutosaveInterval: 0.05,
+            notesAutosaveScheduler: .main
+        )
+
+        appState.regenerateTranscription(for: directory, notes: "Existing notes")
+
+        try await waitForJobCompletion(in: appState)
+
+        let transcript = try String(contentsOf: directory.appendingPathComponent("transcript.txt"))
+        XCTAssertEqual(transcript, "Hello Queue")
+        guard case .completed = appState.transcriptionJobs.first?.state else {
+            XCTFail("Job should be marked completed")
+            return
+        }
+    }
+
+    func testMeetingDetectorNotifiesOncePerMeeting() {
+        let scheduler = MockMeetingNotificationScheduler()
+        let detector = MeetingDetector(notificationScheduler: scheduler)
+
+        detector.handleDetection(app: .zoom, meetingTitle: "Daily Sync")
+        detector.handleDetection(app: .zoom, meetingTitle: "Daily Sync")
+        XCTAssertEqual(scheduler.requests.count, 1)
+
+        #if DEBUG
+            detector.resetDetectionStateForTesting()
+        #endif
+
+        detector.handleDetection(app: .zoom, meetingTitle: "Daily Sync")
+        XCTAssertEqual(scheduler.requests.count, 2)
+    }
+
+    func testStartupWindowControllerFindsExistingWindow() {
+        let other = NSWindow()
+        other.identifier = NSUserInterfaceItemIdentifier("other")
+        let target = NSWindow()
+        target.identifier = NSUserInterfaceItemIdentifier(StartupWindowController.identifier)
+
+        let found = StartupWindowController.existingWindow(in: [other, target])
+        XCTAssertTrue(found === target)
     }
 }
 
@@ -221,6 +360,20 @@ private struct MeetingFileManagerTestHarness {
     }
 }
 
+// MARK: - Helpers
+
+@MainActor
+private func waitForJobCompletion(in appState: AppState, timeout: TimeInterval = 2.0) async throws {
+    let deadline = Date().addingTimeInterval(timeout)
+    while Date() < deadline {
+        if case .completed = appState.transcriptionJobs.first?.state {
+            return
+        }
+        try await Task.sleep(nanoseconds: 50_000_000)
+    }
+    XCTFail("Timed out waiting for transcription job completion")
+}
+
 // MARK: - Mocks
 
 final class MockAudioRecorder: AudioRecordingController {
@@ -247,5 +400,45 @@ final class MockAudioRecorder: AudioRecordingController {
 
     func stopRecording() async {
         isRecordingSubject.send(false)
+    }
+}
+
+final class MockMeetingNotificationScheduler: MeetingNotificationScheduling {
+    var requests: [String] = []
+
+    func scheduleMeetingNotification(appName _: String, meetingTitle _: String, identifier: String) {
+        requests.append(identifier)
+    }
+}
+
+final class MockTranscriptionEngine: TranscriptionProcessing {
+    private let subject = PassthroughSubject<Double, Never>()
+    private let result: TranscriptionResult
+
+    init(result: TranscriptionResult = TranscriptionResult(text: "", segments: [])) {
+        self.result = result
+    }
+
+    var progressPublisher: AnyPublisher<Double, Never> {
+        subject.eraseToAnyPublisher()
+    }
+
+    func transcribe(audioURL _: URL) async throws -> TranscriptionResult {
+        subject.send(0.5)
+        subject.send(1.0)
+        subject.send(completion: .finished)
+        return result
+    }
+}
+
+struct MockSummaryProvider: SummaryProviding {
+    let output: String
+
+    init(output: String = "SUMMARY") {
+        self.output = output
+    }
+
+    func generateSummary(transcript _: String, notes _: String) async throws -> String {
+        output
     }
 }

@@ -4,6 +4,7 @@ struct StartupView: View {
     @EnvironmentObject private var appState: AppState
     @EnvironmentObject private var permissionManager: PermissionManager
     @Environment(\.openWindow) private var openWindow
+    @StateObject private var modelManager = WhisperModelManager.shared
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -18,6 +19,13 @@ struct StartupView: View {
         }
         .padding(24)
         .frame(minWidth: 420, minHeight: 320)
+        .background(StartupWindowIdentifierSetter())
+        .task {
+            modelManager.refreshStatus()
+        }
+        .onChange(of: appState.notesWindowRequestID) { _ in
+            openWindow(id: "meeting-notes")
+        }
     }
 
     private var header: some View {
@@ -58,11 +66,43 @@ struct StartupView: View {
                 Button("Review Permissions") {
                     openWindow(id: "onboarding")
                 }
+                Button("Transcription Queue") {
+                    openWindow(id: "transcription-queue")
+                }
             }
         }
     }
 
     private var footer: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            modelStatusSection
+            permissionSummary
+        }
+    }
+
+    private var modelStatusSection: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("Model status")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            HStack(spacing: 12) {
+                Text(modelStatusMessage)
+                    .foregroundStyle(modelStatusColor)
+                if showDownloadButton {
+                    Button("Download Model") {
+                        modelManager.downloadModel()
+                    }
+                }
+                if case let .failed(message) = modelManager.status {
+                    Text(message)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
+            }
+        }
+    }
+
+    private var permissionSummary: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text("Permissions summary")
                 .font(.footnote)
@@ -77,6 +117,39 @@ struct StartupView: View {
                 }
                 .padding(.vertical, 2)
             }
+        }
+    }
+
+    private var modelStatusMessage: String {
+        switch modelManager.status {
+        case .available:
+            return "Model installed"
+        case .downloading:
+            return "Downloading..."
+        case .missing:
+            return "Model missing"
+        case .failed:
+            return "Download failed"
+        }
+    }
+
+    private var modelStatusColor: Color {
+        switch modelManager.status {
+        case .available:
+            return .green
+        case .downloading:
+            return .orange
+        case .missing, .failed:
+            return .red
+        }
+    }
+
+    private var showDownloadButton: Bool {
+        switch modelManager.status {
+        case .available, .downloading:
+            return false
+        case .missing, .failed:
+            return true
         }
     }
 
