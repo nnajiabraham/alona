@@ -1360,6 +1360,43 @@ Rewrote `AudioRecorder.startMicrophoneCapture()` to capture at **native sample r
 - `make test` - all 40 tests passing
 - `make format`, `make lint` - code style conformance
 
+### 2025-12-13 – StartupView Meeting Detection & Menu Bar Stability
+
+#### StartupView Meeting Detection
+**Problem:** The StartupView did not show meeting detection status or prompt users when a meeting was detected.
+
+**Solution:** Added meeting detection UI to StartupView:
+- Added `@EnvironmentObject private var meetingDetector: MeetingDetector` to access detection state
+- Added `detectionStatus` view showing current detection state with green/gray indicator
+- Added `detectionPrompt` view (orange highlight) with "Start Recording" and "Dismiss" buttons when a meeting is detected
+- Updated header to show "Meeting detected" status when applicable
+- Implemented same detection prompt logic as MenuBarView (`shouldShowDetectionPrompt`, `activeDetectionIdentifier`, etc.)
+
+**Files Impacted:**
+- `Alona/AlonaApp.swift` - Added `.environmentObject(meetingDetector)` to StartupView WindowGroup
+- `Alona/Views/StartupView.swift` - Added meeting detection UI and logic
+
+#### Menu Bar Icon Stability
+**Problem:** The menu bar icon would sometimes disappear when a meeting was joined.
+
+**Potential Cause:** The `@AppStorage("showMenuBarExtra")` binding could potentially get corrupted or set to false unexpectedly.
+
+**Solution:** Changed from `@AppStorage` to regular `@State` binding to ensure the menu bar extra is always visible and not affected by UserDefaults state:
+```swift
+// Changed from:
+@AppStorage("showMenuBarExtra") private var showMenuBarExtra = true
+// To:
+@State private var showMenuBarExtra = true
+```
+
+**Files Impacted:**
+- `Alona/AlonaApp.swift` - Changed menu bar extra binding type
+
+#### Commands Executed
+- `make build` - verified compilation
+- `make test` - all 40 tests passing
+- `make format`, `make lint` - code style conformance
+
 ### References
 
 - [SwiftWhisper GitHub](https://github.com/exPHAT/SwiftWhisper) - Swift bindings for whisper.cpp

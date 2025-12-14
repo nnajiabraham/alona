@@ -6,7 +6,9 @@ struct AlonaApp: App {
     @StateObject private var appState = AppState()
     @StateObject private var permissionManager = PermissionManager()
     @StateObject private var meetingDetector: MeetingDetector
-    @AppStorage("showMenuBarExtra") private var showMenuBarExtra = true
+    // Use a State binding to ensure menu bar extra is always visible
+    // (Previously @AppStorage could cause the binding to become false unexpectedly)
+    @State private var showMenuBarExtra = true
     private let isRunningTests = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
 
     init() {
@@ -23,6 +25,7 @@ struct AlonaApp: App {
             StartupView()
                 .environmentObject(appState)
                 .environmentObject(permissionManager)
+                .environmentObject(meetingDetector)
         }
         .windowResizability(.contentSize)
         .commands {
