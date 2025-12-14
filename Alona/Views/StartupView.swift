@@ -22,6 +22,7 @@ struct StartupView: View {
         .background(StartupWindowIdentifierSetter())
         .task {
             modelManager.refreshStatus()
+            permissionManager.refreshAllPermissions()
         }
         .onChange(of: appState.notesWindowRequestID) { _ in
             WindowFocusController.focusOrOpen(windowID: "meeting-notes", openWindow: openWindow)

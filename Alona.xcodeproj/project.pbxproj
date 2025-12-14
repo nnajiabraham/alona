@@ -32,6 +32,7 @@
 		AA0123 /* MeetingNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1021 /* MeetingNotificationManager.swift */; };
 		AA0124 /* StartupWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1022 /* StartupWindowController.swift */; };
 		AA0125 /* RecordingAudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1023 /* RecordingAudioPlayer.swift */; };
+		AA0126 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1024 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,6 +62,7 @@
 		AA1021 /* MeetingNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingNotificationManager.swift; sourceTree = "<group>"; };
 		AA1022 /* StartupWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupWindowController.swift; sourceTree = "<group>"; };
 		AA1023 /* RecordingAudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingAudioPlayer.swift; sourceTree = "<group>"; };
+		AA1024 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AA2002 /* AlonaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlonaTests.swift; sourceTree = "<group>"; };
 		AA2003 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -111,7 +113,8 @@
 				AA4005 /* Views */,
 				AA4006 /* Resources */,
 				AA1008 /* Info.plist */,
-				AA1000 /* AlonaApp.swift */
+				AA1000 /* AlonaApp.swift */,
+				AA1024 /* AppDelegate.swift */
 			);
 			path = Alona;
 			sourceTree = "<group>";
@@ -292,7 +295,8 @@
 				AA0122 /* TranscriptionQueueView.swift in Sources */,
 				AA0123 /* MeetingNotificationManager.swift in Sources */,
 				AA0124 /* StartupWindowController.swift in Sources */,
-				AA0125 /* RecordingAudioPlayer.swift in Sources */
+				AA0125 /* RecordingAudioPlayer.swift in Sources */,
+				AA0126 /* AppDelegate.swift in Sources */
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

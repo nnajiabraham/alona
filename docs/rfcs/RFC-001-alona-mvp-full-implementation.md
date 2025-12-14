@@ -1190,10 +1190,46 @@ dependencies: [
 - Added regression coverage for the new behaviors (`testSystemAudioPreferencePersistsAcrossSessions`, `testDefaultMeetingTitleFallsBackToTimestamp`) plus UI/format fixes; commands: `make lint`, `make test`.
 
 ### 2025-12-13 – Window focus + recordings audio playback + Zoom detection
-- Standardized all window-opening actions (menu bar + Startup buttons + internal “open notes” triggers) to **focus existing windows** instead of spawning duplicates by tagging each `NSWindow` with an identifier via `WindowIdentifierSetter` and routing through `WindowFocusController`.
+- Standardized all window-opening actions (menu bar + Startup buttons + internal "open notes" triggers) to **focus existing windows** instead of spawning duplicates by tagging each `NSWindow` with an identifier via `WindowIdentifierSetter` and routing through `WindowFocusController`.
 - Added an **Audio** section to `RecordingsBrowserView` that can play/stop the locally saved recording (prefers `recording.wav`, falls back to `recording-mono.wav`) using `RecordingAudioPlayer`, stopping playback automatically when selection changes.
-- Updated Zoom detection to require an Accessibility/UI signal (“Leave Meeting”/“End Meeting” menu items) before considering the meeting active; this is closer to Granola-like behavior but requires System Events Automation/Accessibility grants.
+- Updated Zoom detection to require an Accessibility/UI signal ("Leave Meeting"/"End Meeting" menu items) before considering the meeting active; this is closer to Granola-like behavior but requires System Events Automation/Accessibility grants.
 - Added regression coverage (`testWindowFocusControllerFindsRecordingsWindow`, `testMeetingFileManagerRecordingAudioURLPrefersRecordingWav`) and updated Xcode project sources; commands: `make lint`, `make test`.
+
+### 2025-12-13 – Dock visibility & startup window auto-open
+- Stabilized **`make test`** by using a fixed `DerivedData` path (`DerivedData/` in the repo root) instead of a per-invocation temp directory; this ensures LaunchServices registration is consistent and prevents test freezes/hangs. Tests now complete reliably without killing stale processes.
+- Updated **`make run`** to include `killall Alona` so running `make run` twice consecutively restarts the app with the latest build instead of opening a second instance.
+- **Dock + menu bar visibility:** set `LSUIElement` to `false` in `Alona/Info.plist` so the app shows in the Dock/Cmd-Tab; menu bar extra with `.menuBarExtraStyle(.window)` remains intact.
+- **Auto-open StartupView on launch:** added `Alona/AppDelegate.swift` using `@NSApplicationDelegateAdaptor`. On `applicationDidFinishLaunching`, it opens `alona://startup` which triggers the `startup` WindowGroup via the new `CFBundleURLTypes` URL scheme and `.handlesExternalEvents(matching:)` modifier.
+- Also keep app alive after last window closes (`applicationShouldTerminateAfterLastWindowClosed` returns `false`) so users can rely on the menu bar extra.
+- Files impacted: `Alona/AlonaApp.swift`, `Alona/AppDelegate.swift` (new), `Alona/Info.plist`, `Alona.xcodeproj/project.pbxproj`, `Makefile`.
+- Commands executed: `make lint`, `make test`.
+
+#### MenuBarExtra coexistence with WindowGroup
+- Per Apple docs, `MenuBarExtra` without `isInserted:` binding "should not be used in conjunction with other scene types" as it defines the primary scene. Fixed by adding `@AppStorage("showMenuBarExtra")` binding to `MenuBarExtra(isInserted:)`.
+- Removed URL scheme approach from `AppDelegate.swift` as it was blocking main thread via `NSWorkspace.shared.open(url)`.
+- Made startup `WindowGroup` the default (no ID) so it auto-opens on launch via SwiftUI's default behavior.
+- Simplified `AppDelegate` to only implement `applicationShouldTerminateAfterLastWindowClosed`.
+- Files impacted: `Alona/AlonaApp.swift`, `Alona/AppDelegate.swift`, `Alona/Info.plist`, `Alona/Services/StartupWindowController.swift`.
+
+#### Main thread blocking fix
+- **Root cause:** `MeetingDetector.checkMeetingStatus()` ran blocking AppleScript calls (`NSAppleScript.executeAndReturnError`) synchronously on the main thread during startup and every 2-second poll, causing UI freeze.
+- **Solution:** Moved all blocking operations to background threads using `Task.detached(priority: .utility)`. Detection results are applied back to UI via `MainActor.run`.
+- Added `nonisolated` markers to static helper methods (`zoomMeetingUIState`, `googleMeetAppleScript`, `normalizeMeetingTitle`) to allow calling from background context.
+- Files impacted: `Alona/Services/MeetingDetector.swift`.
+
+#### PermissionManager async automation check
+- **Root cause:** `PermissionManager.refreshAllPermissions()` also ran AppleScript synchronously for automation permission check, causing menu bar icon delay and occasional busy cursor.
+- **Solution:** Added `refreshAutomationPermissionAsync()` and `checkAutomationStatusBackground()` to run automation probe on background thread. Removed old synchronous `runAutomationProbe` and `currentAutomationStatus` methods.
+- Updated `requestPermission(.automation)` to also run async.
+- Files impacted: `Alona/Services/PermissionManager.swift`.
+
+#### Non-blocking behavior tests
+- Added `NonBlockingBehaviorTests` test class with 3 tests:
+  - `testMeetingDetectorStartMonitoringDoesNotBlock` - verifies startMonitoring returns in < 100ms
+  - `testPermissionManagerRefreshDoesNotBlock` - verifies refreshAllPermissions returns in < 50ms
+  - `testAutomationCheckRunsAsynchronously` - verifies async automation check pattern
+- Files impacted: `AlonaTests/AlonaTests.swift`.
+- Commands executed: `make lint`, `make test`.
 
 ### References
 

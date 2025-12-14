@@ -32,14 +32,21 @@ enum WindowFocusController {
 }
 
 enum StartupWindowController {
-    static let identifier = WindowFocusController.identifier(for: "startup")
+    static let identifier = "startup-window"
 
-    static func focusOrOpen(openWindow: OpenWindowAction) {
-        WindowFocusController.focusOrOpen(windowID: "startup", openWindow: openWindow)
+    /// Focus the startup window if it exists, otherwise activate the app (SwiftUI will restore the main window).
+    static func focusOrOpen(openWindow _: OpenWindowAction) {
+        if let window = existingWindow(in: NSApp.windows) {
+            window.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            return
+        }
+        // For default WindowGroup (no ID), just activate the app - SwiftUI handles the rest
+        NSApp.activate(ignoringOtherApps: true)
     }
 
     static func existingWindow(in windows: [NSWindow]) -> NSWindow? {
-        WindowFocusController.existingWindow(in: windows, identifier: identifier)
+        windows.first { $0.identifier?.rawValue == identifier }
     }
 }
 
@@ -71,5 +78,6 @@ struct WindowIdentifierSetter: NSViewRepresentable {
 struct StartupWindowIdentifierSetter: View {
     var body: some View {
         WindowIdentifierSetter(identifier: StartupWindowController.identifier)
+            .frame(width: 0, height: 0)
     }
 }

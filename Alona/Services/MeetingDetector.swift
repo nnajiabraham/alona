@@ -42,17 +42,24 @@ final class MeetingDetector: ObservableObject {
             queue: .main
         ) { [weak self] _ in
             Task { @MainActor [weak self] in
-                self?.checkMeetingStatus()
+                self?.scheduleBackgroundCheck()
             }
         }
 
         pollTimer = Timer.scheduledTimer(withTimeInterval: pollInterval, repeats: true) { [weak self] _ in
             Task { @MainActor [weak self] in
-                self?.checkMeetingStatus()
+                self?.scheduleBackgroundCheck()
             }
         }
 
-        checkMeetingStatus()
+        // Initial check on background thread to avoid blocking main thread
+        scheduleBackgroundCheck()
+    }
+
+    private func scheduleBackgroundCheck() {
+        Task.detached(priority: .utility) { [weak self] in
+            await self?.checkMeetingStatusBackground()
+        }
     }
 
     func stopMonitoring() {
@@ -65,94 +72,91 @@ final class MeetingDetector: ObservableObject {
         }
     }
 
-    private func checkMeetingStatus() {
-        if checkZoomMeeting() {
+    /// Called from background thread - performs blocking operations off main thread
+    private nonisolated func checkMeetingStatusBackground() async {
+        // Perform blocking operations on current (background) thread
+        let zoomResult = Self.checkZoomMeetingBackground()
+        let googleMeetResult = Self.checkGoogleMeetBackground()
+
+        // Update UI state on main thread
+        await MainActor.run {
+            applyDetectionResult(zoom: zoomResult, googleMeet: googleMeetResult)
+        }
+    }
+
+    private func applyDetectionResult(zoom: DetectionResult, googleMeet: DetectionResult) {
+        // Apply Zoom result
+        if case let .detected(app, title) = zoom {
+            _ = handleDetection(app: app, meetingTitle: title)
             return
         }
-
-        if checkGoogleMeet() {
-            return
+        if case .permissionDenied = zoom {
+            automationPermissionDenied = true
         }
 
+        // Apply Google Meet result
+        if case let .detected(app, title) = googleMeet {
+            automationPermissionDenied = false
+            _ = handleDetection(app: app, meetingTitle: title)
+            return
+        }
+        if case .permissionDenied = googleMeet {
+            automationPermissionDenied = true
+        } else {
+            automationPermissionDenied = false
+        }
+
+        // No meeting detected
         isInMeeting = false
         detectedApp = nil
         meetingTitle = "No meeting detected"
         lastNotificationIdentifier = nil
     }
 
-    private func checkZoomMeeting() -> Bool {
-        guard let zoomApp = NSWorkspace.shared.runningApplications.first(where: { $0.bundleIdentifier == MeetingApp.zoom.rawValue }) else {
-            return false
+    private enum DetectionResult {
+        case detected(app: MeetingApp, title: String)
+        case notDetected
+        case permissionDenied
+    }
+
+    /// Blocking Zoom check - call from background thread only
+    private nonisolated static func checkZoomMeetingBackground() -> DetectionResult {
+        guard NSWorkspace.shared.runningApplications.first(where: { $0.bundleIdentifier == MeetingApp.zoom.rawValue }) != nil else {
+            return .notDetected
         }
 
-        switch Self.zoomMeetingUIState() {
+        switch zoomMeetingUIState() {
         case .permissionDenied:
-            automationPermissionDenied = true
-            return false
+            return .permissionDenied
         case .inactive:
-            automationPermissionDenied = false
-            return false
+            return .notDetected
         case .active:
-            automationPermissionDenied = false
+            break
         }
 
-        guard verifyUDPConnections(for: zoomApp.processIdentifier) else {
-            return false
-        }
-
-        let title = zoomApp.localizedName ?? "Zoom Meeting"
-        return handleDetection(app: .zoom, meetingTitle: title)
+        return .detected(app: .zoom, title: "Zoom Meeting")
     }
 
-    private func verifyUDPConnections(for pid: pid_t) -> Bool {
-        guard let executableURL = Self.locateLSOFExecutable() else {
-            return false
-        }
-
-        let task = Process()
-        task.executableURL = executableURL
-        task.arguments = ["-i", "4UDP", "-p", "\(pid)"]
-
-        let pipe = Pipe()
-        task.standardOutput = pipe
-        task.standardError = FileHandle.nullDevice
-
-        do {
-            try task.run()
-            task.waitUntilExit()
-
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            guard let output = String(data: data, encoding: .utf8) else { return false }
-
-            return output.components(separatedBy: "\n").count > 2
-        } catch {
-            return false
-        }
-    }
-
-    private func checkGoogleMeet() -> Bool {
-        let script = Self.googleMeetAppleScript
+    /// Blocking Google Meet check - call from background thread only
+    private nonisolated static func checkGoogleMeetBackground() -> DetectionResult {
+        let script = googleMeetAppleScript
         var errorInfo: NSDictionary?
         let appleScript = NSAppleScript(source: script)
         let result = appleScript?.executeAndReturnError(&errorInfo)
 
         if let errorInfo, let errorNumber = errorInfo[NSAppleScript.errorNumber] as? Int, errorNumber == -1743 {
-            automationPermissionDenied = true
-            return false
+            return .permissionDenied
         }
 
-        if let errorInfo {
-            automationPermissionDenied = false
-            NSLog("AppleScript error: %@", errorInfo)
-            return false
+        if errorInfo != nil {
+            return .notDetected
         }
 
         guard let title = result?.stringValue, !title.isEmpty else {
-            automationPermissionDenied = false
-            return false
+            return .notDetected
         }
 
-        return handleDetection(app: .googleMeet, meetingTitle: Self.normalizeMeetingTitle(title))
+        return .detected(app: .googleMeet, title: normalizeMeetingTitle(title))
     }
 
     @discardableResult
@@ -180,7 +184,7 @@ final class MeetingDetector: ObservableObject {
 }
 
 extension MeetingDetector {
-    static func normalizeMeetingTitle(_ rawTitle: String) -> String {
+    nonisolated static func normalizeMeetingTitle(_ rawTitle: String) -> String {
         let cleaned = rawTitle.replacingOccurrences(of: " - Google Meet", with: "")
             .trimmingCharacters(in: .whitespacesAndNewlines)
         return cleaned.isEmpty ? "Google Meet" : cleaned
@@ -188,13 +192,13 @@ extension MeetingDetector {
 }
 
 extension MeetingDetector {
-    private enum ZoomUIState {
+    private enum ZoomUIState: Sendable {
         case active
         case inactive
         case permissionDenied
     }
 
-    private static func zoomMeetingUIState() -> ZoomUIState {
+    private nonisolated static func zoomMeetingUIState() -> ZoomUIState {
         var errorInfo: NSDictionary?
         let script = NSAppleScript(source: zoomMeetingAppleScript)
         let result = script?.executeAndReturnError(&errorInfo)
@@ -209,7 +213,7 @@ extension MeetingDetector {
         return isActive ? .active : .inactive
     }
 
-    private static var zoomMeetingAppleScript: String {
+    private nonisolated static var zoomMeetingAppleScript: String {
         """
         tell application "System Events"
             repeat with appName in {"zoom.us", "Zoom Workplace"}
@@ -231,16 +235,7 @@ extension MeetingDetector {
 }
 
 private extension MeetingDetector {
-    static func locateLSOFExecutable() -> URL? {
-        let potentialPaths = ["/usr/sbin/lsof", "/usr/bin/lsof"]
-        let fileManager = FileManager.default
-        for path in potentialPaths where fileManager.isExecutableFile(atPath: path) {
-            return URL(fileURLWithPath: path)
-        }
-        return nil
-    }
-
-    static var googleMeetAppleScript: String {
+    nonisolated static var googleMeetAppleScript: String {
         """
         tell application "System Events"
             if exists (process "Google Chrome") then

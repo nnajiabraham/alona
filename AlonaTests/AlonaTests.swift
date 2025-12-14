@@ -528,3 +528,64 @@ struct MockSummaryProvider: SummaryProviding {
         output
     }
 }
+
+// MARK: - Non-blocking behavior tests
+
+@MainActor
+final class NonBlockingBehaviorTests: XCTestCase {
+    /// Verify MeetingDetector.startMonitoring returns immediately without blocking.
+    /// The actual detection happens asynchronously on a background thread.
+    func testMeetingDetectorStartMonitoringDoesNotBlock() {
+        let mockScheduler = MockMeetingNotificationScheduler()
+        let detector = MeetingDetector(notificationScheduler: mockScheduler)
+
+        // Measure how long startMonitoring takes - should be < 100ms
+        let start = CFAbsoluteTimeGetCurrent()
+        detector.startMonitoring()
+        let elapsed = CFAbsoluteTimeGetCurrent() - start
+
+        detector.stopMonitoring()
+
+        // startMonitoring should return almost immediately (< 100ms)
+        // AppleScript execution takes 500ms+ if run synchronously
+        XCTAssertLessThan(elapsed, 0.1, "startMonitoring should not block main thread")
+    }
+
+    /// Verify PermissionManager.refreshAllPermissions returns immediately.
+    /// Automation check runs asynchronously.
+    func testPermissionManagerRefreshDoesNotBlock() {
+        let manager = PermissionManager()
+
+        let start = CFAbsoluteTimeGetCurrent()
+        manager.refreshAllPermissions()
+        let elapsed = CFAbsoluteTimeGetCurrent() - start
+
+        // refreshAllPermissions should return almost immediately (< 50ms)
+        // AppleScript for automation check takes 500ms+ if run synchronously
+        XCTAssertLessThan(elapsed, 0.05, "refreshAllPermissions should not block main thread")
+    }
+
+    /// Verify that automation check runs asynchronously and eventually completes.
+    /// Note: In test sandbox, the result may be denied or the check may not complete.
+    func testAutomationCheckRunsAsynchronously() async {
+        let manager = PermissionManager()
+
+        // Initial state should be notDetermined
+        XCTAssertEqual(manager.statuses[.automation], .notDetermined)
+
+        // Trigger refresh - this should return immediately
+        let start = CFAbsoluteTimeGetCurrent()
+        manager.refreshAllPermissions()
+        let elapsed = CFAbsoluteTimeGetCurrent() - start
+
+        // Refresh should return quickly (automation check is async)
+        XCTAssertLessThan(elapsed, 0.05, "refreshAllPermissions should return immediately")
+
+        // Give async task time to complete
+        try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 second
+
+        // After waiting, status may have changed (we don't assert the value
+        // since test environment may not allow AppleScript execution)
+        // The key test is that refreshAllPermissions returned immediately above
+    }
+}

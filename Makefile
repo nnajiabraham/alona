@@ -3,10 +3,10 @@ WORKSPACE := Alona.xcworkspace
 SCHEME := Alona
 DESTINATION := 'platform=macOS,arch=arm64'
 CONFIGURATION := Debug
-# Fresh derived data per invocation to avoid LS/register cache contention.
-DERIVED_DATA_PATH ?= $(shell mktemp -d /tmp/alona-dd-XXXXXXXX)
-# Freeze the value so mktemp isn't re-run per recipe expansion.
-DERIVED_DATA_PATH := $(DERIVED_DATA_PATH)
+# Default to a stable DerivedData path so macOS permissions stick across runs.
+# Override with `DERIVED_DATA_PATH=/tmp/alona-dd-XXXX make test` when you need
+# a one-off clean environment.
+DERIVED_DATA_PATH ?= $(CURDIR)/DerivedData
 XCBEAUTIFY := $(shell command -v xcbeautify 2>/dev/null)
 SWIFTFORMAT := $(shell command -v swiftformat 2>/dev/null)
 MODEL_DIR := Alona/Resources/Models
@@ -45,6 +45,7 @@ build:
 		build | $(PIPE_CMD)
 
 test:
+	@killall Alona 2>/dev/null || true; \
 	set -o pipefail && xcodebuild \
 		-workspace $(WORKSPACE) \
 		-scheme $(SCHEME) \
@@ -72,7 +73,8 @@ clean:
 	rm -rf DerivedData
 
 run: build
-	@APP_PATH=$$(xcodebuild -workspace $(WORKSPACE) -scheme $(SCHEME) -configuration $(CONFIGURATION) -derivedDataPath $(DERIVED_DATA_PATH) -showBuildSettings | awk -F' = ' '$$1 ~ /^[[:space:]]*BUILT_PRODUCTS_DIR$$/ {dir=$$2} $$1 ~ /^[[:space:]]*FULL_PRODUCT_NAME$$/ {name=$$2} END {gsub(/^[[:space:]]+|[[:space:]]+$$/, "", dir); gsub(/^[[:space:]]+|[[:space:]]+$$/, "", name); printf "%s/%s", dir, name}'); \
+	@killall Alona 2>/dev/null || true; \
+	APP_PATH=$$(xcodebuild -workspace $(WORKSPACE) -scheme $(SCHEME) -configuration $(CONFIGURATION) -derivedDataPath $(DERIVED_DATA_PATH) -showBuildSettings | awk -F' = ' '$$1 ~ /^[[:space:]]*BUILT_PRODUCTS_DIR$$/ {dir=$$2} $$1 ~ /^[[:space:]]*FULL_PRODUCT_NAME$$/ {name=$$2} END {gsub(/^[[:space:]]+|[[:space:]]+$$/, "", dir); gsub(/^[[:space:]]+|[[:space:]]+$$/, "", name); printf "%s/%s", dir, name}'); \
 	if [ ! -d "$$APP_PATH" ]; then \
 		echo "Unable to locate built app at $$APP_PATH"; \
 		exit 1; \

@@ -18,8 +18,6 @@
     <string>1</string>
     <key>LSMinimumSystemVersion</key>
     <string>13.0</string>
-    <key>LSUIElement</key>
-    <true/>
     <key>NSMicrophoneUsageDescription</key>
     <string>Alona needs microphone access to capture your voice during meetings.</string>
     <key>NSScreenCaptureUsageDescription</key>
@@ -28,5 +26,7 @@
     <string>Alona uses automation to detect Google Meet tabs in supported browsers.</string>
     <key>NSAccessibilityUsageDescription</key>
     <string>Alona uses accessibility APIs to detect Zoom activity.</string>
+    <key>LSUIElement</key>
+    <false/>
 </dict>
 </plist>

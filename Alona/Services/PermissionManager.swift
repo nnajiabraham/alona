@@ -55,13 +55,44 @@ final class PermissionManager: ObservableObject {
 
     init() {
         PermissionType.allCases.forEach { statuses[$0] = .notDetermined }
+        // Refresh permissions on init so UI shows current status immediately
+        refreshAllPermissions()
     }
 
     func refreshAllPermissions() {
+        // Sync checks (fast, non-blocking)
         statuses[.microphone] = currentMicrophoneStatus()
         statuses[.screenRecording] = currentScreenRecordingStatus()
         statuses[.accessibility] = currentAccessibilityStatus()
-        statuses[.automation] = currentAutomationStatus()
+
+        // Async check for automation (runs AppleScript, potentially slow)
+        refreshAutomationPermissionAsync()
+    }
+
+    private func refreshAutomationPermissionAsync() {
+        Task.detached(priority: .utility) { [weak self] in
+            let status = Self.checkAutomationStatusBackground()
+            await MainActor.run {
+                self?.statuses[.automation] = status
+            }
+        }
+    }
+
+    private nonisolated static func checkAutomationStatusBackground() -> PermissionStatus {
+        let script = "tell application \"System Events\" to get name of every process"
+        var errorDict: NSDictionary?
+        let appleScript = NSAppleScript(source: script)
+        let result = appleScript?.executeAndReturnError(&errorDict)
+
+        if let errorDict, let errorNumber = errorDict[NSAppleScript.errorNumber] as? Int, errorNumber == -1743 {
+            return .denied
+        }
+
+        if errorDict != nil {
+            return .denied
+        }
+
+        return result != nil ? .granted : .denied
     }
 
     func requestPermission(_ type: PermissionType) {
@@ -80,12 +111,15 @@ final class PermissionManager: ObservableObject {
             let trusted = AXIsProcessTrustedWithOptions(options)
             statuses[.accessibility] = trusted ? .granted : .denied
         case .automation:
-            do {
-                let granted = try runAutomationProbe(promptUser: true)
-                statuses[.automation] = granted ? .granted : .denied
-            } catch {
-                statuses[.automation] = .denied
-                lastAutomationCheckError = error
+            // Run async to avoid blocking main thread
+            Task.detached(priority: .userInitiated) { [weak self] in
+                let status = Self.checkAutomationStatusBackground()
+                await MainActor.run {
+                    self?.statuses[.automation] = status
+                    if status == .denied {
+                        self?.openSystemSettings(for: .automation)
+                    }
+                }
             }
         }
     }
@@ -117,36 +151,5 @@ final class PermissionManager: ObservableObject {
 
     private func currentAccessibilityStatus() -> PermissionStatus {
         AXIsProcessTrusted() ? .granted : .denied
-    }
-
-    private func currentAutomationStatus() -> PermissionStatus {
-        do {
-            let authorized = try runAutomationProbe(promptUser: false)
-            return authorized ? .granted : .denied
-        } catch {
-            lastAutomationCheckError = error
-            return .denied
-        }
-    }
-
-    @discardableResult
-    private func runAutomationProbe(promptUser: Bool) throws -> Bool {
-        let script = "tell application \"System Events\" to get name of every process"
-        var errorDict: NSDictionary?
-        let appleScript = NSAppleScript(source: script)
-        let result = appleScript?.executeAndReturnError(&errorDict)
-
-        if let errorDict, let errorNumber = errorDict[NSAppleScript.errorNumber] as? Int, errorNumber == -1743 {
-            if promptUser {
-                openSystemSettings(for: .automation)
-            }
-            return false
-        }
-
-        if let errorDict {
-            throw NSError(domain: "AutomationProbe", code: (errorDict[NSAppleScript.errorNumber] as? Int) ?? -1, userInfo: errorDict as? [String: Any])
-        }
-
-        return result != nil
     }
 }

@@ -2,25 +2,36 @@ import SwiftUI
 
 @main
 struct AlonaApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @StateObject private var appState = AppState()
     @StateObject private var permissionManager = PermissionManager()
     @StateObject private var meetingDetector: MeetingDetector
+    @AppStorage("showMenuBarExtra") private var showMenuBarExtra = true
+    private let isRunningTests = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
 
     init() {
         let detector = MeetingDetector()
-        detector.startMonitoring()
         _meetingDetector = StateObject(wrappedValue: detector)
+        if !isRunningTests {
+            detector.startMonitoring()
+        }
     }
 
     var body: some Scene {
-        WindowGroup(id: "startup") {
+        // Primary window - opens automatically on launch
+        WindowGroup {
             StartupView()
                 .environmentObject(appState)
                 .environmentObject(permissionManager)
         }
         .windowResizability(.contentSize)
+        .commands {
+            // Disable Cmd+N creating new windows
+            CommandGroup(replacing: .newItem) {}
+        }
 
-        MenuBarExtra("Alona", systemImage: "note.text") {
+        // Menu bar extra with isInserted binding allows coexistence with WindowGroup
+        MenuBarExtra("Alona", systemImage: "note.text", isInserted: $showMenuBarExtra) {
             MenuBarView()
                 .environmentObject(appState)
                 .environmentObject(permissionManager)
