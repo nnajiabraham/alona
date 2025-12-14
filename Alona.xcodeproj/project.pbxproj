@@ -37,6 +37,8 @@
 		AA0128 /* ProcessTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1026 /* ProcessTap.swift */; };
 		AA0129 /* AudioCapturePermission.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1027 /* AudioCapturePermission.swift */; };
 		AA0130 /* MicrophoneActivityTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1028 /* MicrophoneActivityTracker.swift */; };
+		AA0131 /* MeetingDetectedPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1029 /* MeetingDetectedPopup.swift */; };
+		AA0132 /* MeetingPopupWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1030 /* MeetingPopupWindow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,6 +73,8 @@
 		AA1026 /* ProcessTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessTap.swift; sourceTree = "<group>"; };
 		AA1027 /* AudioCapturePermission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCapturePermission.swift; sourceTree = "<group>"; };
 		AA1028 /* MicrophoneActivityTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneActivityTracker.swift; sourceTree = "<group>"; };
+		AA1029 /* MeetingDetectedPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingDetectedPopup.swift; sourceTree = "<group>"; };
+		AA1030 /* MeetingPopupWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingPopupWindow.swift; sourceTree = "<group>"; };
 		AA2002 /* AlonaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlonaTests.swift; sourceTree = "<group>"; };
 		AA2003 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -167,7 +171,9 @@
 				AA1013 /* StartupView.swift */,
 				AA1014 /* RecordingsBrowserView.swift */,
 				AA1017 /* TranscriptionProgressView.swift */,
-				AA1020 /* TranscriptionQueueView.swift */
+				AA1020 /* TranscriptionQueueView.swift */,
+				AA1029 /* MeetingDetectedPopup.swift */,
+				AA1030 /* MeetingPopupWindow.swift */
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -312,7 +318,9 @@
 				AA0127 /* CoreAudioUtils.swift in Sources */,
 				AA0128 /* ProcessTap.swift in Sources */,
 				AA0129 /* AudioCapturePermission.swift in Sources */,
-				AA0130 /* MicrophoneActivityTracker.swift in Sources */
+				AA0130 /* MicrophoneActivityTracker.swift in Sources */,
+				AA0131 /* MeetingDetectedPopup.swift in Sources */,
+				AA0132 /* MeetingPopupWindow.swift in Sources */
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

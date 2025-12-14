@@ -32,6 +32,11 @@ final class MeetingDetector: ObservableObject {
     private var lastNotificationIdentifier: String?
     private let microphoneTracker = MicrophoneActivityTracker.shared
 
+    // Sticky detection: prevent flickering by keeping detection stable
+    private var lastDetectedApp: MeetingApp?
+    private var missedDetectionCount = 0
+    private let missedDetectionThreshold = 3 // Require 3 consecutive misses before clearing
+
     init(notificationScheduler: MeetingNotificationScheduling = MeetingNotificationManager.shared) {
         self.notificationScheduler = notificationScheduler
     }
@@ -99,6 +104,8 @@ final class MeetingDetector: ObservableObject {
     private func applyDetectionResult(zoom: DetectionResult, googleMeet: DetectionResult) {
         // Apply Zoom result
         if case let .detected(app, title) = zoom {
+            missedDetectionCount = 0
+            lastDetectedApp = app
             _ = handleDetection(app: app, meetingTitle: title)
             return
         }
@@ -108,6 +115,8 @@ final class MeetingDetector: ObservableObject {
 
         // Apply Google Meet result
         if case let .detected(app, title) = googleMeet {
+            missedDetectionCount = 0
+            lastDetectedApp = app
             automationPermissionDenied = false
             _ = handleDetection(app: app, meetingTitle: title)
             return
@@ -118,7 +127,30 @@ final class MeetingDetector: ObservableObject {
             automationPermissionDenied = false
         }
 
-        // No meeting detected
+        // No meeting detected - but use sticky detection to prevent flickering
+        // Only clear detection after several consecutive misses
+        if isInMeeting, let lastApp = lastDetectedApp {
+            // Check if the meeting app is still running
+            let appStillRunning = NSWorkspace.shared.runningApplications.contains {
+                $0.bundleIdentifier == lastApp.rawValue ||
+                    (lastApp == .googleMeet && $0.bundleIdentifier == "com.google.Chrome")
+            }
+
+            if appStillRunning {
+                missedDetectionCount += 1
+                // swiftformat:disable:next redundantSelf
+                logger.debug("Meeting app still running, missed count: \(self.missedDetectionCount)")
+
+                // Keep detection active if below threshold
+                if missedDetectionCount < missedDetectionThreshold {
+                    return
+                }
+            }
+        }
+
+        // Clear detection
+        missedDetectionCount = 0
+        lastDetectedApp = nil
         isInMeeting = false
         detectedApp = nil
         meetingTitle = "No meeting detected"
@@ -191,10 +223,35 @@ final class MeetingDetector: ObservableObject {
         automationPermissionDenied = false
         let identifier = "\(app.rawValue)|\(title)"
         if lastNotificationIdentifier != identifier {
+            // Show floating popup notification (Granola-style)
+            showMeetingPopup(app: app, meetingTitle: title)
+            // Also call notification scheduler (for testing and fallback)
             notificationScheduler.scheduleMeetingNotification(appName: app.displayName, meetingTitle: title, identifier: identifier)
             lastNotificationIdentifier = identifier
         }
         return true
+    }
+
+    private func showMeetingPopup(app: MeetingApp, meetingTitle: String) {
+        MeetingPopupWindowController.shared.showMeetingDetected(
+            appName: app.displayName,
+            meetingTitle: meetingTitle,
+            onStartRecording: { [weak self] in
+                guard let self else { return }
+                Task {
+                    await self.startRecordingFromPopup()
+                }
+            }
+        )
+    }
+
+    private func startRecordingFromPopup() async {
+        // Post notification to start recording (uses existing notification from MeetingNotificationManager)
+        NotificationCenter.default.post(
+            name: .meetingNotificationStartRecording,
+            object: nil,
+            userInfo: ["meetingTitle": meetingTitle]
+        )
     }
 
     #if DEBUG

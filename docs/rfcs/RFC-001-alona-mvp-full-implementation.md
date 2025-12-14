@@ -1397,6 +1397,54 @@ Rewrote `AudioRecorder.startMicrophoneCapture()` to capture at **native sample r
 - `make test` - all 40 tests passing
 - `make format`, `make lint` - code style conformance
 
+### 2025-12-13 – Stable Meeting Detection & Granola-style Popup
+
+#### Problem
+Zoom meeting detection was flickering between "Meeting Detected" and "Waiting for meeting..." because:
+1. Microphone activity check is inconsistent (especially when muted)
+2. AppleScript UI check can have latency
+3. Each 2-second poll could flip-flop the detection state
+
+#### Solution: Sticky Detection
+Added a "sticky" detection mechanism to prevent flickering:
+- Once a meeting is detected, keep it detected until clear evidence it ended
+- Track consecutive "missed detection" counts
+- Require 3 consecutive misses before clearing the detection (6 seconds of no detection while app still running)
+- Clear immediately if the meeting app is no longer running
+
+**New Properties in MeetingDetector:**
+```swift
+private var lastDetectedApp: MeetingApp?
+private var missedDetectionCount = 0
+private let missedDetectionThreshold = 3
+```
+
+#### Granola-style Floating Popup Notification
+Replaced inline detection prompt in StartupView with a floating popup notification:
+
+**New Files:**
+- `Alona/Views/MeetingDetectedPopup.swift` - SwiftUI view for the popup content (meeting info + "Take Notes" button + dismiss)
+- `Alona/Views/MeetingPopupWindow.swift` - `MeetingPopupWindowController` singleton that manages a borderless floating NSWindow positioned in top-right corner
+
+**Popup Features:**
+- Appears in top-right corner of screen (similar to Granola)
+- Shows meeting app name and "Meeting detected" label
+- "Take Notes" button to start recording
+- "X" button to dismiss
+- Auto-dismisses after 7 seconds
+- Fade in/out animations
+
+#### Files Impacted
+- `Alona/Services/MeetingDetector.swift` - Added sticky detection logic and popup integration
+- `Alona/Views/MeetingDetectedPopup.swift` (new)
+- `Alona/Views/MeetingPopupWindow.swift` (new)
+- `Alona.xcodeproj/project.pbxproj` - Added new view files
+
+#### Commands Executed
+- `make build` - verified compilation
+- `make test` - all 40 tests passing
+- `make format`, `make lint` - code style conformance
+
 ### References
 
 - [SwiftWhisper GitHub](https://github.com/exPHAT/SwiftWhisper) - Swift bindings for whisper.cpp
