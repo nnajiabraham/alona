@@ -1302,6 +1302,64 @@ Replaced ScreenCaptureKit-based system audio capture with CoreAudio Process Taps
 - `make test` - 36 tests passing
 - `make lint`, `make format` - code style conformance
 
+### 2025-12-13 – Voice Processing & TCC SPI
+
+#### Voice Processing (Echo Cancellation)
+**File:** `Alona/Services/AudioRecorder.swift`
+- Added `inputNode.setVoiceProcessingEnabled(true)` to enable Apple's built-in audio processing:
+  - **Acoustic Echo Cancellation (AEC)**: Removes speaker feedback picked up by microphone
+  - **Noise Suppression**: Reduces background noise for cleaner recordings
+  - **Automatic Gain Control (AGC)**: Normalizes volume levels for consistent audio
+- This addresses echoey audio and improves transcription accuracy.
+
+#### TCC SPI for System Audio Permission
+**File:** `Alona/Services/PermissionManager.swift`
+- Added TCC (Transparency, Consent, Control) private framework integration:
+  - `TCCAccessPreflight("kTCCServiceAudioCapture")` - Check permission status
+  - `TCCAccessRequest("kTCCServiceAudioCapture", callback)` - Request permission with dialog
+- This is the same approach Granola uses, and properly:
+  - Shows the macOS permission dialog to the user
+  - Adds Alona to the "System Audio Recording Only" section in System Settings
+- Falls back to opening System Settings if TCC SPI is unavailable.
+
+#### Files Impacted
+- `Alona/Services/AudioRecorder.swift` - Added voice processing for echo cancellation
+- `Alona/Services/PermissionManager.swift` - Added TCC SPI for proper permission request
+
+### 2025-12-13 – Audio Capture Fix (Native Sample Rate)
+
+#### Problem
+Mic-only recordings were producing empty audio files. The root cause was a failed sample rate conversion during capture:
+1. The code attempted real-time conversion from 48kHz (mic native) to 16kHz (target) using `AVAudioConverter`
+2. When voice processing was enabled, it could result in invalid format (sample rate 0)
+3. The converter would fail or produce 0 frames, causing all audio to be dropped
+
+#### Solution
+Rewrote `AudioRecorder.startMicrophoneCapture()` to capture at **native sample rate** without real-time conversion:
+
+**Key Changes:**
+1. **Capture at native rate**: Audio is now captured at whatever sample rate the mic provides (typically 48kHz), stored directly to buffers without conversion
+2. **Dynamic sample rate tracking**: Added `actualCaptureSampleRate` property that's set from the actual mic format
+3. **Dual-channel writer re-initialization**: The WAV file writer is re-initialized with the actual capture sample rate once known
+4. **Robust format handling**: Added fallback chain if voice processing produces invalid format:
+   - Try format after voice processing
+   - Fallback to hardware format if invalid
+   - Fallback to 48kHz mono as last resort
+5. **Post-capture resampling**: Sample rate conversion (48kHz → 16kHz) now happens during `createMonoMix()` post-processing, using `AVAudioConverter` in a non-streaming context
+6. **Improved logging**: Added `logger.info` statements (instead of `logger.debug`) at key points to aid debugging
+
+**Variable Renames:**
+- `sampleRate` → `targetSampleRate` (16kHz target for transcription)
+- Added `actualCaptureSampleRate` (dynamic, set from mic)
+
+#### Files Impacted
+- `Alona/Services/AudioRecorder.swift` - Rewrote capture to use native sample rate, added post-processing resampling
+
+#### Commands Executed
+- `make build` - verified compilation
+- `make test` - all 40 tests passing
+- `make format`, `make lint` - code style conformance
+
 ### References
 
 - [SwiftWhisper GitHub](https://github.com/exPHAT/SwiftWhisper) - Swift bindings for whisper.cpp

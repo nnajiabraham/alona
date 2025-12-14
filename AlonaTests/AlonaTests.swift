@@ -1,6 +1,7 @@
 @testable import Alona
 import AppKit
 import AudioToolbox
+import AVFoundation
 import Combine
 import XCTest
 
@@ -694,5 +695,89 @@ final class RecordingErrorTests: XCTestCase {
         XCTAssertEqual(RecordingError.streamDescriptionUnavailable.errorDescription, "Tap stream description not available.")
         XCTAssertEqual(RecordingError.formatCreationFailed.errorDescription, "Failed to create audio format.")
         XCTAssertEqual(RecordingError.bufferCreationFailed.errorDescription, "Failed to create audio buffer.")
+    }
+}
+
+// MARK: - Voice Processing Tests
+
+final class VoiceProcessingTests: XCTestCase {
+    func testAVAudioEngineInputNodeSupportsVoiceProcessing() {
+        // Verify that AVAudioEngine's inputNode can enable voice processing
+        // This is available in macOS 14+ which we require
+        let engine = AVAudioEngine()
+        let inputNode = engine.inputNode
+
+        // Voice processing should be available on macOS 14+
+        // This test verifies the API is callable without crashing
+        do {
+            try inputNode.setVoiceProcessingEnabled(true)
+            XCTAssertTrue(inputNode.isVoiceProcessingEnabled, "Voice processing should be enabled")
+
+            try inputNode.setVoiceProcessingEnabled(false)
+            XCTAssertFalse(inputNode.isVoiceProcessingEnabled, "Voice processing should be disabled")
+        } catch {
+            // Voice processing may fail if no audio input device is available
+            // This is expected in CI environments without audio hardware
+            print("Voice processing unavailable: \(error.localizedDescription)")
+        }
+    }
+}
+
+// MARK: - TCC SPI Tests
+
+final class TCCSPITests: XCTestCase {
+    func testTCCFrameworkCanBeLoaded() {
+        // Verify that we can load the TCC private framework
+        let tccPath = "/System/Library/PrivateFrameworks/TCC.framework/Versions/A/TCC"
+        let handle = dlopen(tccPath, RTLD_NOW)
+
+        // TCC framework should be loadable on macOS
+        XCTAssertNotNil(handle, "TCC framework should be loadable")
+
+        if let handle {
+            dlclose(handle)
+        }
+    }
+
+    func testTCCPreflightFunctionExists() {
+        // Verify that TCCAccessPreflight function can be found
+        let tccPath = "/System/Library/PrivateFrameworks/TCC.framework/Versions/A/TCC"
+        guard let handle = dlopen(tccPath, RTLD_NOW) else {
+            XCTFail("Failed to load TCC framework")
+            return
+        }
+        defer { dlclose(handle) }
+
+        let preflightSym = dlsym(handle, "TCCAccessPreflight")
+        XCTAssertNotNil(preflightSym, "TCCAccessPreflight function should exist")
+    }
+
+    func testTCCRequestFunctionExists() {
+        // Verify that TCCAccessRequest function can be found
+        let tccPath = "/System/Library/PrivateFrameworks/TCC.framework/Versions/A/TCC"
+        guard let handle = dlopen(tccPath, RTLD_NOW) else {
+            XCTFail("Failed to load TCC framework")
+            return
+        }
+        defer { dlclose(handle) }
+
+        let requestSym = dlsym(handle, "TCCAccessRequest")
+        XCTAssertNotNil(requestSym, "TCCAccessRequest function should exist")
+    }
+
+    @MainActor
+    func testPermissionManagerSystemAudioStatusCheck() {
+        // Verify that PermissionManager can check system audio status
+        let manager = PermissionManager()
+
+        // The status should be one of the valid states
+        let status = manager.statuses[.systemAudio]
+        XCTAssertNotNil(status, "System audio status should be populated")
+
+        // Status should be one of: granted, denied, or notDetermined
+        if let status {
+            let validStatuses: [PermissionManager.PermissionStatus] = [.granted, .denied, .notDetermined]
+            XCTAssertTrue(validStatuses.contains(status), "Status should be a valid permission status")
+        }
     }
 }
