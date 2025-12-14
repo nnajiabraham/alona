@@ -164,8 +164,16 @@ final class MeetingDetector: ObservableObject {
     }
 
     /// Improved Zoom detection: Zoom running + using microphone OR Zoom with active meeting UI
+    /// Also checks for Zoom Workplace (newer bundle ID)
     private nonisolated static func checkZoomMeetingBackground(isUsingMicrophone: Bool) -> DetectionResult {
-        guard NSWorkspace.shared.runningApplications.first(where: { $0.bundleIdentifier == MeetingApp.zoom.rawValue }) != nil else {
+        // Check for both Zoom bundle IDs (us.zoom.xos and Zoom Workplace)
+        let zoomBundleIDs = ["us.zoom.xos", "us.zoom.ZoomHelperAgent", "us.zoom.Workplace"]
+        let zoomRunning = NSWorkspace.shared.runningApplications.contains { app in
+            guard let bundleID = app.bundleIdentifier else { return false }
+            return zoomBundleIDs.contains(bundleID)
+        }
+
+        guard zoomRunning else {
             return .notDetected
         }
 
@@ -175,6 +183,7 @@ final class MeetingDetector: ObservableObject {
         }
 
         // Fall back to AppleScript UI check for cases where mic might not be active yet
+        // This catches cases like muted in meeting or just joined
         switch zoomMeetingUIState() {
         case .permissionDenied:
             return .permissionDenied

@@ -1,5 +1,5 @@
 import AudioToolbox
-import AVFoundation
+@preconcurrency import AVFoundation
 import Combine
 import Foundation
 import OSLog
@@ -42,13 +42,21 @@ final class AudioRecorder: NSObject, ObservableObject {
     // Microphone capture
     private var audioEngine: AVAudioEngine?
 
-    // File writing
-    private var dualChannelFile: AVAudioFile?
+    // File writing - unified to single channel for reliability
+    private var audioFile: AVAudioFile?
+    private var dualChannelFile: AVAudioFile? // Deprecated, kept for compatibility
     private var durationTimer: Timer?
     private var systemAudioBuffer: [Float] = []
     private var micAudioBuffer: [Float] = []
     private var currentMeetingDirectory: URL?
     private var actualCaptureSampleRate: Double = 48000 // Will be set from actual mic format
+    private var systemAudioSampleRate: Double = 48000 // Track system audio rate separately
+
+    // Track samples written for debugging
+    private var totalMicSamplesReceived: Int = 0
+    private var totalSystemSamplesReceived: Int = 0
+    private var totalSamplesWritten: Int = 0
+    private var micCaptureStarted = false
 
     private let targetSampleRate: Double = 16000
     private let channelCount: AVAudioChannelCount = 2
@@ -69,14 +77,24 @@ final class AudioRecorder: NSObject, ObservableObject {
         systemAudioBuffer.removeAll(keepingCapacity: true)
         micAudioBuffer.removeAll(keepingCapacity: true)
 
-        try prepareDualChannelWriter(in: directory)
+        // Reset tracking counters
+        totalMicSamplesReceived = 0
+        totalSystemSamplesReceived = 0
+        totalSamplesWritten = 0
+        micCaptureStarted = false
+
+        // Start microphone capture FIRST to establish sample rate
+        try startMicrophoneCapture()
+
+        // Now prepare the dual channel writer with the correct mic sample rate
+        try prepareDualChannelWriter(in: directory, sampleRate: actualCaptureSampleRate)
+
         if captureSystemAudio {
             try await startSystemAudioCapture()
             systemAudioActive = true
         } else {
             systemAudioActive = false
         }
-        try startMicrophoneCapture()
         startDurationTimer()
 
         DispatchQueue.main.async {
@@ -84,12 +102,20 @@ final class AudioRecorder: NSObject, ObservableObject {
             self.recordingDuration = 0
         }
 
+        let captureSys = captureSystemAudio
+        let sampleRate = actualCaptureSampleRate
+        logger.info("Recording started - captureSystemAudio: \(captureSys), sampleRate: \(sampleRate)")
         return directory
     }
 
     @MainActor
     func stopRecording() async {
         guard isRecording else { return }
+
+        let micSamples = totalMicSamplesReceived
+        let sysSamples = totalSystemSamplesReceived
+        let writtenSamples = totalSamplesWritten
+        logger.info("Stopping recording - mic samples: \(micSamples), system samples: \(sysSamples), written: \(writtenSamples)")
 
         if systemAudioActive {
             await stopSystemAudioCapture()
@@ -102,7 +128,13 @@ final class AudioRecorder: NSObject, ObservableObject {
             flushRemainingBuffers()
         }
 
+        let micBufCount = micAudioBuffer.count
+        let sysBufCount = systemAudioBuffer.count
+        let totalWritten = totalSamplesWritten
+        logger.info("Final write stats - mic buffer: \(micBufCount), system buffer: \(sysBufCount), total written: \(totalWritten)")
+
         dualChannelFile = nil
+        audioFile = nil
         DispatchQueue.main.async {
             self.isRecording = false
         }
@@ -236,52 +268,66 @@ private extension AudioRecorder {
         for buffer in buffers {
             guard let data = buffer.mData else { continue }
 
-            let frameCount = Int(buffer.mDataByteSize) / MemoryLayout<Float>.size
+            let floatPtr = data.assumingMemoryBound(to: Float.self)
+            let channelCount = Int(format.mChannelsPerFrame)
+            // For interleaved audio, total floats / channels = frames
+            let totalFloats = Int(buffer.mDataByteSize) / MemoryLayout<Float>.size
+            let frameCount = channelCount > 0 ? totalFloats / channelCount : totalFloats
 
-            // Convert to our target sample rate if needed
-            if format.mSampleRate == actualCaptureSampleRate {
-                let floatPtr = data.assumingMemoryBound(to: Float.self)
-                let samples = Array(UnsafeBufferPointer(start: floatPtr, count: frameCount))
+            guard frameCount > 0 else { continue }
 
-                // If stereo, downmix to mono
-                let monoSamples: [Float]
-                if format.mChannelsPerFrame == 2 {
-                    monoSamples = stride(from: 0, to: samples.count, by: 2).map { i in
-                        (samples[i] + samples[min(i + 1, samples.count - 1)]) / 2.0
-                    }
+            // Downmix to mono
+            var monoSamples = [Float]()
+            monoSamples.reserveCapacity(frameCount)
+
+            for i in 0 ..< frameCount {
+                if channelCount >= 2 {
+                    let left = floatPtr[i * channelCount]
+                    let right = floatPtr[i * channelCount + 1]
+                    monoSamples.append((left + right) / 2.0)
                 } else {
-                    monoSamples = samples
-                }
-
-                bufferQueue.async { [weak self] in
-                    self?.systemAudioBuffer.append(contentsOf: monoSamples)
-                    self?.flushBuffersIfNeeded()
-                }
-            } else {
-                // TODO: Resample if needed - for now assume matching rates
-                let floatPtr = data.assumingMemoryBound(to: Float.self)
-                let channelCount = Int(format.mChannelsPerFrame)
-                let sampleCount = frameCount / max(channelCount, 1)
-
-                var monoSamples = [Float]()
-                monoSamples.reserveCapacity(sampleCount)
-
-                for i in 0 ..< sampleCount {
-                    if channelCount == 2 {
-                        let left = floatPtr[i * 2]
-                        let right = floatPtr[i * 2 + 1]
-                        monoSamples.append((left + right) / 2.0)
-                    } else {
-                        monoSamples.append(floatPtr[i])
-                    }
-                }
-
-                bufferQueue.async { [weak self] in
-                    self?.systemAudioBuffer.append(contentsOf: monoSamples)
-                    self?.flushBuffersIfNeeded()
+                    monoSamples.append(floatPtr[i])
                 }
             }
+
+            // Resample system audio to match mic sample rate if needed
+            let resampledSamples: [Float]
+            if format.mSampleRate != actualCaptureSampleRate, format.mSampleRate > 0, actualCaptureSampleRate > 0 {
+                resampledSamples = resampleAudio(monoSamples, from: format.mSampleRate, to: actualCaptureSampleRate)
+            } else {
+                resampledSamples = monoSamples
+            }
+
+            bufferQueue.async { [weak self] in
+                guard let self else { return }
+                self.systemAudioBuffer.append(contentsOf: resampledSamples)
+                self.totalSystemSamplesReceived += resampledSamples.count
+                self.flushBuffersIfNeeded()
+            }
         }
+    }
+
+    /// Simple linear interpolation resampling for matching sample rates
+    func resampleAudio(_ samples: [Float], from sourceSampleRate: Double, to targetSampleRate: Double) -> [Float] {
+        guard sourceSampleRate > 0, targetSampleRate > 0, !samples.isEmpty else { return samples }
+
+        let ratio = targetSampleRate / sourceSampleRate
+        let outputCount = Int(Double(samples.count) * ratio)
+        guard outputCount > 0 else { return samples }
+
+        var result = [Float](repeating: 0, count: outputCount)
+
+        for i in 0 ..< outputCount {
+            let srcIndex = Double(i) / ratio
+            let srcIndexInt = Int(srcIndex)
+            let fraction = Float(srcIndex - Double(srcIndexInt))
+
+            let sample1 = samples[min(srcIndexInt, samples.count - 1)]
+            let sample2 = samples[min(srcIndexInt + 1, samples.count - 1)]
+            result[i] = sample1 + fraction * (sample2 - sample1)
+        }
+
+        return result
     }
 
     func stopSystemAudioCapture() async {
@@ -322,16 +368,23 @@ private extension AudioRecorder {
         let hardwareFormat = inputNode.inputFormat(forBus: 0)
         logger.info("Hardware input format: \(hardwareFormat.sampleRate) Hz, \(hardwareFormat.channelCount) ch")
 
-        // Only enable voice processing if we have a valid hardware format
+        // Voice processing (AEC/noise suppression) is ONLY enabled for mic-only recording
+        // When capturing system audio, voice processing causes audio quality issues:
+        // - AEC monitors system output and modifies it for echo cancellation
+        // - This makes both playback and recorded system audio sound muffled/crackly
         var voiceProcessingEnabled = false
-        if hardwareFormat.sampleRate > 0 && hardwareFormat.channelCount > 0 {
+        let shouldEnableVP = !captureSystemAudio && hardwareFormat.sampleRate > 0 && hardwareFormat.channelCount > 0
+
+        if shouldEnableVP {
             do {
                 try inputNode.setVoiceProcessingEnabled(true)
                 voiceProcessingEnabled = true
-                logger.info("Voice processing enabled (AEC, noise suppression, AGC)")
+                logger.info("Voice processing enabled (AEC, noise suppression, AGC) - mic-only mode")
             } catch {
                 logger.warning("Failed to enable voice processing: \(error.localizedDescription)")
             }
+        } else if captureSystemAudio {
+            logger.info("Voice processing DISABLED to prevent system audio quality degradation")
         } else {
             logger.warning("Skipping voice processing - invalid hardware format")
         }
@@ -365,18 +418,11 @@ private extension AudioRecorder {
         actualCaptureSampleRate = captureFormat.sampleRate
         logger.info("Final capture format: \(captureFormat.sampleRate) Hz, \(captureFormat.channelCount) ch")
 
-        // Re-prepare the dual channel writer with the actual capture sample rate
-        if let directory = currentMeetingDirectory {
-            do {
-                try prepareDualChannelWriter(in: directory, sampleRate: actualCaptureSampleRate)
-            } catch {
-                logger.error("Failed to re-prepare dual channel writer: \(error.localizedDescription)")
-            }
-        }
+        // Note: dual channel writer is now prepared AFTER startMicrophoneCapture() in startRecording()
+        // to ensure we have the correct sample rate
 
         // Track if we've logged the first buffer
         var hasLoggedFirstBuffer = false
-        var totalSamplesReceived = 0
 
         // Install tap at NATIVE sample rate - NO conversion during capture
         // This is the key fix: we capture exactly what the mic gives us
@@ -386,17 +432,18 @@ private extension AudioRecorder {
             // Log first buffer for debugging
             if !hasLoggedFirstBuffer {
                 hasLoggedFirstBuffer = true
-                self.logger.info("*** FIRST BUFFER *** frames: \(buffer.frameLength), format: \(buffer.format.sampleRate) Hz, \(buffer.format.channelCount) ch")
+                self.logger.info("*** FIRST MIC BUFFER *** frames: \(buffer.frameLength), format: \(buffer.format.sampleRate) Hz, \(buffer.format.channelCount) ch")
+                self.micCaptureStarted = true
             }
 
             guard buffer.frameLength > 0 else {
-                self.logger.warning("Received empty buffer")
+                self.logger.warning("Received empty mic buffer")
                 return
             }
 
             // Extract samples directly - no conversion
             guard let channelData = buffer.floatChannelData else {
-                self.logger.error("No float channel data in buffer!")
+                self.logger.error("No float channel data in mic buffer!")
                 return
             }
 
@@ -412,12 +459,14 @@ private extension AudioRecorder {
                 samples = Array(UnsafeBufferPointer(start: channelData[0], count: Int(buffer.frameLength)))
             }
 
-            totalSamplesReceived += samples.count
-
             self.bufferQueue.async {
                 self.micAudioBuffer.append(contentsOf: samples)
-                if self.captureSystemAudio == false {
+                self.totalMicSamplesReceived += samples.count
+
+                // For mic-only recording, duplicate to system channel
+                if !self.captureSystemAudio || !self.systemAudioActive {
                     self.systemAudioBuffer.append(contentsOf: samples)
+                    self.totalSystemSamplesReceived += samples.count
                 }
                 self.flushBuffersIfNeeded()
             }
@@ -447,9 +496,14 @@ private extension AudioRecorder {
     func flushBuffersIfNeeded() {
         // Flush in ~1 second chunks based on actual capture sample rate
         let flushThreshold = Int(actualCaptureSampleRate)
-        guard micAudioBuffer.count >= flushThreshold else { return }
 
-        if captureSystemAudio {
+        // For mic-only recording, only check mic buffer
+        if !captureSystemAudio || !systemAudioActive {
+            guard micAudioBuffer.count >= flushThreshold else { return }
+            // System buffer is already populated with mic data in the tap callback
+        } else {
+            // For dual capture, need both buffers to have enough data
+            guard micAudioBuffer.count >= flushThreshold else { return }
             guard systemAudioBuffer.count >= flushThreshold else { return }
         }
 
@@ -462,30 +516,58 @@ private extension AudioRecorder {
     func flushRemainingBuffers() {
         let micCount = micAudioBuffer.count
         let sysCount = systemAudioBuffer.count
-        logger.debug("Flushing remaining buffers - mic: \(micCount), system: \(sysCount)")
-        guard micAudioBuffer.count > 0 else {
-            logger.warning("No mic samples to flush")
-            return
-        }
-        if captureSystemAudio {
-            guard systemAudioBuffer.count > 0 else {
-                logger.warning("No system audio samples to flush (captureSystemAudio=true)")
-                return
-            }
-        } else if systemAudioBuffer.isEmpty {
-            logger.debug("Copying mic buffer to system buffer (mic-only recording)")
+        logger.info("Flushing remaining buffers - mic: \(micCount), system: \(sysCount)")
+
+        // Handle case where we have mic samples but no system samples
+        if micCount > 0, sysCount == 0 {
+            logger.debug("No system samples - duplicating mic to both channels")
             systemAudioBuffer = micAudioBuffer
         }
+
+        // Handle case where we have system samples but no mic samples (shouldn't happen but be defensive)
+        if sysCount > 0, micCount == 0 {
+            logger.warning("No mic samples - duplicating system to both channels")
+            micAudioBuffer = systemAudioBuffer
+        }
+
+        guard !micAudioBuffer.isEmpty, !systemAudioBuffer.isEmpty else {
+            logger.error("Both buffers empty - no audio to write!")
+            return
+        }
+
         let count = min(systemAudioBuffer.count, micAudioBuffer.count)
-        logger.info("Writing \(count) samples to file")
+        logger.info("Writing \(count) samples to file (mic had: \(micCount), system had: \(sysCount))")
         writeSamples(count: count)
+
+        // If there are remaining samples in one buffer, write them too (padding with silence)
+        if !systemAudioBuffer.isEmpty || !micAudioBuffer.isEmpty {
+            let remainingMic = micAudioBuffer.count
+            let remainingSys = systemAudioBuffer.count
+            if remainingMic > 0 || remainingSys > 0 {
+                logger.debug("Writing remaining samples - mic: \(remainingMic), system: \(remainingSys)")
+                // Pad the shorter buffer with zeros to match
+                let maxRemaining = max(remainingMic, remainingSys)
+                while micAudioBuffer.count < maxRemaining {
+                    micAudioBuffer.append(0)
+                }
+                while systemAudioBuffer.count < maxRemaining {
+                    systemAudioBuffer.append(0)
+                }
+                writeSamples(count: maxRemaining)
+            }
+        }
     }
 
     func writeSamples(count: Int) {
+        guard count > 0 else { return }
+
         guard
             let format = dualChannelFile?.processingFormat,
             let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(count))
-        else { return }
+        else {
+            logger.error("Failed to create buffer for writing \(count) samples")
+            return
+        }
 
         buffer.frameLength = AVAudioFrameCount(count)
         if let ch0 = buffer.floatChannelData?[0], let ch1 = buffer.floatChannelData?[1] {
@@ -495,7 +577,13 @@ private extension AudioRecorder {
             }
         }
 
-        try? dualChannelFile?.write(from: buffer)
+        do {
+            try dualChannelFile?.write(from: buffer)
+            totalSamplesWritten += count
+        } catch {
+            logger.error("Failed to write audio: \(error.localizedDescription)")
+        }
+
         systemAudioBuffer.removeFirst(count)
         micAudioBuffer.removeFirst(count)
     }

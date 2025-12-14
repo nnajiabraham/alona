@@ -75,12 +75,21 @@ final class MicrophoneActivityTracker: ObservableObject {
 
 extension MicrophoneActivityTracker {
     /// Check if Zoom is in an active meeting (running + using microphone).
+    /// Checks multiple Zoom bundle IDs for compatibility with different Zoom versions.
     func isZoomInMeeting() -> Bool {
-        isAppUsingMicrophone(bundleIdentifier: "us.zoom.xos")
+        let zoomBundleIDs = ["us.zoom.xos", "us.zoom.ZoomHelperAgent", "us.zoom.Workplace", "us.zoom.videomeetings"]
+        return zoomBundleIDs.contains { isAppUsingMicrophone(bundleIdentifier: $0) }
     }
 
     /// Check if Chrome (Google Meet) is in an active meeting (running + using microphone).
     func isChromeUsingMicrophone() -> Bool {
         isAppUsingMicrophone(bundleIdentifier: "com.google.Chrome")
+    }
+
+    /// Check if any known meeting app is using the microphone.
+    func isAnyMeetingAppUsingMicrophone() -> Bool {
+        isZoomInMeeting() || isChromeUsingMicrophone() ||
+            isAppUsingMicrophone(bundleIdentifier: "com.microsoft.teams") ||
+            isAppUsingMicrophone(bundleIdentifier: "com.microsoft.teams2")
     }
 }

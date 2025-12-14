@@ -237,7 +237,11 @@ private extension AppState {
 
     func processQueue() {
         guard activeJobTask == nil else { return }
-        guard let index = transcriptionJobs.firstIndex(where: { $0.state == .pending }) else { return }
+        guard let index = transcriptionJobs.firstIndex(where: { $0.state == .pending }) else {
+            // No more pending jobs - unload model to free memory
+            transcriptionEngine.unloadModelIfIdle()
+            return
+        }
         var job = transcriptionJobs[index]
         job.state = .preparing
         transcriptionJobs[index] = job

@@ -1511,5 +1511,95 @@ Each meeting creates a flat folder:
 
 ---
 
+## Implementation Notes (Dec 14, 2025)
+
+### Bug Fixes Applied
+
+#### 1. Zero-Duration Audio Recording Fix
+**Root Cause**: Buffer mismatch between mic (38,400 samples) and system audio (~16.7M samples) due to race conditions and sample rate mismatches.
+
+**Solution**:
+- Reordered startup: mic capture starts FIRST to establish sample rate before file preparation
+- Added robust fallback: if one buffer is empty, duplicate other to both channels  
+- Added padding with silence for remaining samples
+- Added tracking counters: `totalMicSamplesReceived`, `totalSystemSamplesReceived`, `totalSamplesWritten`
+
+**Files Changed**: `Alona/Services/AudioRecorder.swift`
+
+#### 2. System Audio Quality (Muffled/Crackly) Fix
+**Root Cause**: Voice Processing (AEC) monitors and modifies system audio output to cancel echo. When simultaneously capturing that audio, it sounds degraded.
+
+**Solution**:
+- Voice processing is now ONLY enabled for mic-only recording
+- When `captureSystemAudio=true`, voice processing is disabled to prevent interference
+- Added logging to indicate mode
+
+**Files Changed**: `Alona/Services/AudioRecorder.swift`
+
+#### 3. System Audio Sample Rate Mismatch Fix
+**Root Cause**: System audio at 48kHz vs mic at potentially different rate causing buffer growth imbalance.
+
+**Solution**:
+- Added `resampleAudio()` function using linear interpolation
+- System audio buffer is resampled to match mic sample rate before accumulating
+- Added `systemAudioSampleRate` tracking
+
+**Files Changed**: `Alona/Services/AudioRecorder.swift`
+
+#### 4. Whisper Model Memory (555MB+) Not Unloading Fix
+**Root Cause**: Timer scheduled in async context with no active RunLoop. Also no call to unload when queue empties.
+
+**Solution**:
+- Timer now scheduled on main thread with `DispatchQueue.main.async`
+- Added timer to `.common` RunLoop mode for reliability
+- Added immediate `unloadModelIfIdle()` call when transcription queue is empty
+- Added thread-safety check in unload function
+- Added debug logging for model lifecycle
+
+**Files Changed**: 
+- `Alona/Services/TranscriptionEngine.swift`
+- `Alona/Models/AppState.swift`
+
+#### 5. Menu Bar Icon Disappearing Fix
+**Root Cause**: `@AppStorage("showMenuBarExtra")` could become false unexpectedly.
+
+**Solution**: Changed to `@State private var showMenuBarExtra = true` (already applied in previous session)
+
+**Files Changed**: `Alona/AlonaApp.swift`
+
+#### 6. Zoom Meeting Detection Improvement
+**Root Cause**: Only checked `us.zoom.xos` bundle ID, missing newer Zoom versions.
+
+**Solution**:
+- Added support for multiple bundle IDs: `us.zoom.xos`, `us.zoom.ZoomHelperAgent`, `us.zoom.Workplace`, `us.zoom.videomeetings`
+- Updated both `MeetingDetector` and `MicrophoneActivityTracker`
+
+**Files Changed**: 
+- `Alona/Services/MeetingDetector.swift`
+- `Alona/Services/MicrophoneActivityTracker.swift`
+
+### Tests Added
+
+#### AudioBufferTests (5 tests)
+- `testResampleAudioDownsample`: 48kHz → 16kHz conversion
+- `testResampleAudioUpsample`: 16kHz → 48kHz conversion  
+- `testResampleAudioSameRate`: Pass-through when rates match
+- `testResampleAudioEmptyInput`: Empty array handling
+- `testResampleAudioInvalidRates`: Invalid rate handling
+
+#### TranscriptionMemoryTests (2 tests)
+- `testTranscriptionEngineModelLazyLoad`: Model not loaded on init
+- `testTranscriptionEngineUnloadWhenIdle`: Safe unload when idle
+
+#### MeetingDetectionImprovementsTests (3 tests)
+- `testMultipleZoomBundleIDsChecked`: Multiple Zoom bundle IDs
+- `testStickyDetectionPreventsFlickering`: Stable detection state
+- `testMeetingDetectorNotifiesOnlyOnce`: Notification deduplication
+
+### Test Results
+All 53 tests pass (including 10 new tests for bug fixes).
+
+---
+
 *This section will be updated during implementation with file paths, commands executed, and any deviations from the plan.*
 

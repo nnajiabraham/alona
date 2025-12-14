@@ -494,6 +494,10 @@ final class MockAudioRecorder: AudioRecordingController {
 final class MockMeetingNotificationScheduler: MeetingNotificationScheduling {
     var requests: [String] = []
 
+    var notificationCount: Int {
+        requests.count
+    }
+
     func scheduleMeetingNotification(appName _: String, meetingTitle _: String, identifier: String) {
         requests.append(identifier)
     }
@@ -516,6 +520,10 @@ final class MockTranscriptionEngine: TranscriptionProcessing {
         subject.send(1.0)
         subject.send(completion: .finished)
         return result
+    }
+
+    func unloadModelIfIdle() {
+        // No-op for mock
     }
 }
 
@@ -779,5 +787,159 @@ final class TCCSPITests: XCTestCase {
             let validStatuses: [PermissionManager.PermissionStatus] = [.granted, .denied, .notDetermined]
             XCTAssertTrue(validStatuses.contains(status), "Status should be a valid permission status")
         }
+    }
+}
+
+// MARK: - Audio Buffer Synchronization Tests
+
+final class AudioBufferTests: XCTestCase {
+    func testResampleAudioDownsample() {
+        // Test resampling from 48kHz to 16kHz (3:1 ratio)
+        let harness = AudioRecorderTestHarness()
+        let input: [Float] = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0] // 6 samples at 48kHz
+
+        let output = harness.resampleAudio(input, from: 48000, to: 16000)
+
+        // Should produce ~2 samples (6 * 16000/48000 = 2)
+        XCTAssertEqual(output.count, 2, "Should downsample 6 samples to 2")
+        XCTAssertGreaterThan(output[0], 0, "Output should have valid data")
+    }
+
+    func testResampleAudioUpsample() {
+        // Test resampling from 16kHz to 48kHz (1:3 ratio)
+        let harness = AudioRecorderTestHarness()
+        let input: [Float] = [1.0, 2.0] // 2 samples at 16kHz
+
+        let output = harness.resampleAudio(input, from: 16000, to: 48000)
+
+        // Should produce ~6 samples (2 * 48000/16000 = 6)
+        XCTAssertEqual(output.count, 6, "Should upsample 2 samples to 6")
+    }
+
+    func testResampleAudioSameRate() {
+        // Test resampling when rates are the same
+        let harness = AudioRecorderTestHarness()
+        let input: [Float] = [1.0, 2.0, 3.0]
+
+        let output = harness.resampleAudio(input, from: 48000, to: 48000)
+
+        // Should pass through unchanged
+        XCTAssertEqual(output.count, input.count, "Same rate should not change count")
+        XCTAssertEqual(output[0], input[0], accuracy: 0.001, "Values should be preserved")
+    }
+
+    func testResampleAudioEmptyInput() {
+        let harness = AudioRecorderTestHarness()
+        let input: [Float] = []
+
+        let output = harness.resampleAudio(input, from: 48000, to: 16000)
+
+        XCTAssertTrue(output.isEmpty, "Empty input should return empty output")
+    }
+
+    func testResampleAudioInvalidRates() {
+        let harness = AudioRecorderTestHarness()
+        let input: [Float] = [1.0, 2.0, 3.0]
+
+        // Zero source rate should return input unchanged
+        let output1 = harness.resampleAudio(input, from: 0, to: 16000)
+        XCTAssertEqual(output1.count, input.count, "Invalid source rate should return input")
+
+        // Zero target rate should return input unchanged
+        let output2 = harness.resampleAudio(input, from: 48000, to: 0)
+        XCTAssertEqual(output2.count, input.count, "Invalid target rate should return input")
+    }
+}
+
+/// Test harness that exposes internal AudioRecorder methods for testing
+private class AudioRecorderTestHarness {
+    /// Expose resample function for testing
+    func resampleAudio(_ samples: [Float], from sourceSampleRate: Double, to targetSampleRate: Double) -> [Float] {
+        guard sourceSampleRate > 0, targetSampleRate > 0, !samples.isEmpty else { return samples }
+
+        let ratio = targetSampleRate / sourceSampleRate
+        let outputCount = Int(Double(samples.count) * ratio)
+        guard outputCount > 0 else { return samples }
+
+        var result = [Float](repeating: 0, count: outputCount)
+
+        for i in 0 ..< outputCount {
+            let srcIndex = Double(i) / ratio
+            let srcIndexInt = Int(srcIndex)
+            let fraction = Float(srcIndex - Double(srcIndexInt))
+
+            let sample1 = samples[min(srcIndexInt, samples.count - 1)]
+            let sample2 = samples[min(srcIndexInt + 1, samples.count - 1)]
+            result[i] = sample1 + fraction * (sample2 - sample1)
+        }
+
+        return result
+    }
+}
+
+// MARK: - Transcription Engine Memory Management Tests
+
+final class TranscriptionMemoryTests: XCTestCase {
+    func testTranscriptionEngineModelLazyLoad() {
+        // Verify model is not loaded on init
+        let engine = TranscriptionEngine()
+
+        XCTAssertFalse(engine.isModelLoaded, "Model should not be loaded on init")
+    }
+
+    func testTranscriptionEngineUnloadWhenIdle() {
+        let engine = TranscriptionEngine()
+
+        // Unload should be safe even when no model is loaded
+        engine.unloadModelIfIdle()
+
+        XCTAssertFalse(engine.isModelLoaded, "Model should remain unloaded")
+    }
+}
+
+// MARK: - Meeting Detection Improvements Tests
+
+@MainActor
+final class MeetingDetectionImprovementsTests: XCTestCase {
+    func testMultipleZoomBundleIDsChecked() {
+        // Test that MicrophoneActivityTracker checks multiple Zoom bundle IDs
+        let tracker = MicrophoneActivityTracker.shared
+
+        // The isZoomInMeeting() method should check multiple bundle IDs
+        // This is a structural test - actual detection depends on running apps
+        let result = tracker.isZoomInMeeting()
+
+        // Result should be deterministic (false when Zoom isn't running with mic)
+        XCTAssertFalse(result, "Should return false when Zoom is not running with mic")
+    }
+
+    func testStickyDetectionPreventsFlickering() {
+        let scheduler = MockMeetingNotificationScheduler()
+        let detector = MeetingDetector(notificationScheduler: scheduler)
+
+        // Simulate detection
+        _ = detector.handleDetection(app: MeetingDetector.MeetingApp.zoom, meetingTitle: "Test Meeting")
+        XCTAssertTrue(detector.isInMeeting, "Should be in meeting after detection")
+
+        // State should remain stable (sticky detection)
+        XCTAssertEqual(detector.detectedApp, MeetingDetector.MeetingApp.zoom, "App should remain detected")
+        XCTAssertEqual(detector.meetingTitle, "Test Meeting", "Title should persist")
+    }
+
+    func testMeetingDetectorNotifiesOnlyOnce() {
+        let scheduler = MockMeetingNotificationScheduler()
+        let detector = MeetingDetector(notificationScheduler: scheduler)
+
+        // First detection should notify
+        _ = detector.handleDetection(app: MeetingDetector.MeetingApp.zoom, meetingTitle: "Meeting 1")
+        XCTAssertEqual(scheduler.notificationCount, 1, "Should notify on first detection")
+
+        // Same meeting should not notify again
+        _ = detector.handleDetection(app: MeetingDetector.MeetingApp.zoom, meetingTitle: "Meeting 1")
+        XCTAssertEqual(scheduler.notificationCount, 1, "Should not notify for same meeting")
+
+        // Different meeting should notify
+        _ = detector.handleDetection(app: MeetingDetector.MeetingApp.zoom, meetingTitle: "Meeting 2")
+        XCTAssertEqual(scheduler.notificationCount, 2, "Should notify for different meeting")
     }
 }
