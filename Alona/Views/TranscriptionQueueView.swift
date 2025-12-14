@@ -41,6 +41,7 @@ struct TranscriptionQueueView: View {
         }
         .padding(20)
         .frame(minWidth: 460, minHeight: 420)
+        .background(WindowIdentifierSetter(identifier: WindowFocusController.identifier(for: "transcription-queue")))
     }
 
     private var activeJobTitle: String? {

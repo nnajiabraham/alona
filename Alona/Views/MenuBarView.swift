@@ -67,7 +67,7 @@ struct MenuBarView: View {
                 if meetingDetector.isInMeeting {
                     Text(detectedMeetingDescription)
                 } else if meetingDetector.automationPermissionDenied {
-                    Text("Automation permission needed for Google Meet tabs")
+                    Text("Automation permission needed for meeting detection")
                 } else {
                     Text("Idle – waiting for meeting")
                 }
@@ -142,7 +142,7 @@ struct MenuBarView: View {
     private var footerActions: some View {
         HStack(spacing: 12) {
             Button("Recordings") {
-                openWindow(id: "recordings")
+                WindowFocusController.focusOrOpen(windowID: "recordings", openWindow: openWindow)
             }
             Button("Open Startup") {
                 StartupWindowController.focusOrOpen(openWindow: openWindow)
@@ -156,7 +156,7 @@ struct MenuBarView: View {
     }
 
     private func openNotesWindow() {
-        openWindow(id: "meeting-notes")
+        WindowFocusController.focusOrOpen(windowID: "meeting-notes", openWindow: openWindow)
     }
 
     private var shouldShowDetectionPrompt: Bool {

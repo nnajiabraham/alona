@@ -155,6 +155,18 @@ final class MeetingFileManager {
         try final.write(to: titleURL, atomically: true, encoding: .utf8)
     }
 
+    func recordingAudioURL(in directory: URL) -> URL? {
+        let preferred = directory.appendingPathComponent("recording.wav")
+        if fileManager.fileExists(atPath: preferred.path) {
+            return preferred
+        }
+        let fallback = directory.appendingPathComponent("recording-mono.wav")
+        if fileManager.fileExists(atPath: fallback.path) {
+            return fallback
+        }
+        return nil
+    }
+
     private func sanitizedSlug(from rawTitle: String) -> String {
         let trimmed = rawTitle.trimmingCharacters(in: .whitespacesAndNewlines)
         let source = trimmed.isEmpty ? "Meeting" : trimmed

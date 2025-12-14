@@ -387,6 +387,32 @@ final class AlonaTests: XCTestCase {
         let found = StartupWindowController.existingWindow(in: [other, target])
         XCTAssertTrue(found === target)
     }
+
+    func testWindowFocusControllerFindsRecordingsWindow() {
+        let other = NSWindow()
+        other.identifier = NSUserInterfaceItemIdentifier("other")
+        let recordings = NSWindow()
+        recordings.identifier = NSUserInterfaceItemIdentifier(WindowFocusController.identifier(for: "recordings"))
+
+        let found = WindowFocusController.existingWindow(in: [other, recordings],
+                                                         identifier: WindowFocusController.identifier(for: "recordings"))
+        XCTAssertTrue(found === recordings)
+    }
+
+    func testMeetingFileManagerRecordingAudioURLPrefersRecordingWav() throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        let directory = try harness.manager.createMeetingDirectory(title: "Audio URL")
+        let mono = directory.appendingPathComponent("recording-mono.wav")
+        let preferred = directory.appendingPathComponent("recording.wav")
+
+        try Data([0x00, 0x01]).write(to: mono)
+        XCTAssertEqual(harness.manager.recordingAudioURL(in: directory), mono)
+
+        try Data([0x02, 0x03]).write(to: preferred)
+        XCTAssertEqual(harness.manager.recordingAudioURL(in: directory), preferred)
+    }
 }
 
 // MARK: - Test Harness

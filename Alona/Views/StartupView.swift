@@ -24,7 +24,7 @@ struct StartupView: View {
             modelManager.refreshStatus()
         }
         .onChange(of: appState.notesWindowRequestID) { _ in
-            openWindow(id: "meeting-notes")
+            WindowFocusController.focusOrOpen(windowID: "meeting-notes", openWindow: openWindow)
         }
     }
 
@@ -47,13 +47,13 @@ struct StartupView: View {
                 .buttonStyle(.borderedProminent)
 
                 Button("Recordings") {
-                    openWindow(id: "recordings")
+                    WindowFocusController.focusOrOpen(windowID: "recordings", openWindow: openWindow)
                 }
                 .buttonStyle(.bordered)
 
                 if appState.currentMeetingDirectory != nil {
                     Button("Current Notes") {
-                        openWindow(id: "meeting-notes")
+                        WindowFocusController.focusOrOpen(windowID: "meeting-notes", openWindow: openWindow)
                     }
                     .buttonStyle(.bordered)
                 }
@@ -61,13 +61,13 @@ struct StartupView: View {
 
             HStack(spacing: 12) {
                 Button("Open Settings") {
-                    openWindow(id: "settings-window")
+                    WindowFocusController.focusOrOpen(windowID: "settings-window", openWindow: openWindow)
                 }
                 Button("Review Permissions") {
-                    openWindow(id: "onboarding")
+                    WindowFocusController.focusOrOpen(windowID: "onboarding", openWindow: openWindow)
                 }
                 Button("Transcription Queue") {
-                    openWindow(id: "transcription-queue")
+                    WindowFocusController.focusOrOpen(windowID: "transcription-queue", openWindow: openWindow)
                 }
             }
         }

@@ -31,6 +31,7 @@ struct SettingsView: View {
         }
         .padding()
         .frame(width: 420)
+        .background(WindowIdentifierSetter(identifier: WindowFocusController.identifier(for: "settings-window")))
         #if DEBUG
             .enableInjection()
         #endif

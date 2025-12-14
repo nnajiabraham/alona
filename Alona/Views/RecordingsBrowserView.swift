@@ -7,6 +7,7 @@ struct RecordingsBrowserView: View {
     @State private var notesText: String = ""
     @State private var transcriptText: String = ""
     @State private var isEditingTitleFromDetail = false
+    @StateObject private var audioPlayer = RecordingAudioPlayer()
 
     var body: some View {
         NavigationSplitView {
@@ -15,10 +16,10 @@ struct RecordingsBrowserView: View {
                     VStack(alignment: .leading, spacing: 4) {
                         TextField("Title", text: binding(for: entry))
                             .textFieldStyle(.plain)
-                        .font(.headline)
-                    Text(entry.createdAt.formatted(date: .abbreviated, time: .shortened))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                            .font(.headline)
+                        Text(entry.createdAt.formatted(date: .abbreviated, time: .shortened))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                     }
                     .padding(.vertical, 4)
                     .listRowBackground(selectionBackground(for: entry))
@@ -37,7 +38,7 @@ struct RecordingsBrowserView: View {
                             isEditingTitleFromDetail = editing
                         })
                         .textFieldStyle(.plain)
-                            .font(.title2)
+                        .font(.title2)
                         Text(entry.createdAt.formatted(date: .long, time: .shortened))
                             .foregroundStyle(.secondary)
                         if notesText.isEmpty {
@@ -50,6 +51,7 @@ struct RecordingsBrowserView: View {
                                 .textSelection(.enabled)
                                 .font(.body)
                         }
+                        audioSection(for: entry)
                         transcriptSection(for: entry)
                     }
                     .padding()
@@ -62,8 +64,13 @@ struct RecordingsBrowserView: View {
         .onAppear(perform: loadEntries)
         .onChange(of: selectedEntryID) { _ in
             guard !isEditingTitleFromDetail else { return }
+            audioPlayer.stop()
             loadSelectedEntry()
         }
+        .onDisappear {
+            audioPlayer.stop()
+        }
+        .background(WindowIdentifierSetter(identifier: WindowFocusController.identifier(for: "recordings")))
     }
 
     private var selectedEntry: MeetingEntry? {
@@ -120,6 +127,42 @@ struct RecordingsBrowserView: View {
             Text(transcriptText)
                 .textSelection(.enabled)
                 .font(.body)
+        }
+    }
+
+    @ViewBuilder
+    private func audioSection(for entry: MeetingEntry) -> some View {
+        Text("Audio")
+            .font(.headline)
+
+        if let error = audioPlayer.lastError {
+            Text(error)
+                .font(.caption)
+                .foregroundStyle(.red)
+        }
+
+        if let url = appState.meetingFileManager.recordingAudioURL(in: entry.directory) {
+            HStack(spacing: 12) {
+                Button {
+                    if audioPlayer.isPlaying, audioPlayer.playingURL == url {
+                        audioPlayer.stop()
+                    } else {
+                        audioPlayer.play(url: url)
+                    }
+                } label: {
+                    Label(audioPlayer.isPlaying && audioPlayer.playingURL == url ? "Stop" : "Play",
+                          systemImage: audioPlayer.isPlaying && audioPlayer.playingURL == url ? "stop.fill" : "play.fill")
+                }
+                .buttonStyle(.bordered)
+
+                Text(url.lastPathComponent)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .textSelection(.enabled)
+            }
+        } else {
+            Text("No audio recording found")
+                .foregroundStyle(.secondary)
         }
     }
 

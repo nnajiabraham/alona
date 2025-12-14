@@ -18,6 +18,7 @@ struct MeetingNotesView: View {
         }
         .padding(20)
         .frame(minWidth: 420, minHeight: 360, alignment: .topLeading)
+        .background(WindowIdentifierSetter(identifier: WindowFocusController.identifier(for: "meeting-notes")))
     }
 
     private var header: some View {

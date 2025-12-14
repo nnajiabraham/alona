@@ -1189,6 +1189,12 @@ dependencies: [
 - Strengthened new-record defaults by generating timestamp-based titles (`Dec 13, 2025 at 12:51 PM`) whenever meeting detection can’t provide a name, updated `MeetingNotesView` to show only the editable title + note controls, and switched the menu bar extra to `.menu` style so the icon is always visible.
 - Added regression coverage for the new behaviors (`testSystemAudioPreferencePersistsAcrossSessions`, `testDefaultMeetingTitleFallsBackToTimestamp`) plus UI/format fixes; commands: `make lint`, `make test`.
 
+### 2025-12-13 – Window focus + recordings audio playback + Zoom detection
+- Standardized all window-opening actions (menu bar + Startup buttons + internal “open notes” triggers) to **focus existing windows** instead of spawning duplicates by tagging each `NSWindow` with an identifier via `WindowIdentifierSetter` and routing through `WindowFocusController`.
+- Added an **Audio** section to `RecordingsBrowserView` that can play/stop the locally saved recording (prefers `recording.wav`, falls back to `recording-mono.wav`) using `RecordingAudioPlayer`, stopping playback automatically when selection changes.
+- Updated Zoom detection to require an Accessibility/UI signal (“Leave Meeting”/“End Meeting” menu items) before considering the meeting active; this is closer to Granola-like behavior but requires System Events Automation/Accessibility grants.
+- Added regression coverage (`testWindowFocusControllerFindsRecordingsWindow`, `testMeetingFileManagerRecordingAudioURLPrefersRecordingWav`) and updated Xcode project sources; commands: `make lint`, `make test`.
+
 ### References
 
 - [SwiftWhisper GitHub](https://github.com/exPHAT/SwiftWhisper) - Swift bindings for whisper.cpp

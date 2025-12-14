@@ -85,6 +85,17 @@ final class MeetingDetector: ObservableObject {
             return false
         }
 
+        switch Self.zoomMeetingUIState() {
+        case .permissionDenied:
+            automationPermissionDenied = true
+            return false
+        case .inactive:
+            automationPermissionDenied = false
+            return false
+        case .active:
+            automationPermissionDenied = false
+        }
+
         guard verifyUDPConnections(for: zoomApp.processIdentifier) else {
             return false
         }
@@ -173,6 +184,49 @@ extension MeetingDetector {
         let cleaned = rawTitle.replacingOccurrences(of: " - Google Meet", with: "")
             .trimmingCharacters(in: .whitespacesAndNewlines)
         return cleaned.isEmpty ? "Google Meet" : cleaned
+    }
+}
+
+extension MeetingDetector {
+    private enum ZoomUIState {
+        case active
+        case inactive
+        case permissionDenied
+    }
+
+    private static func zoomMeetingUIState() -> ZoomUIState {
+        var errorInfo: NSDictionary?
+        let script = NSAppleScript(source: zoomMeetingAppleScript)
+        let result = script?.executeAndReturnError(&errorInfo)
+
+        if let errorInfo, let errorNumber = errorInfo[NSAppleScript.errorNumber] as? Int,
+           errorNumber == -25211 || errorNumber == -25205 || errorNumber == -1743
+        {
+            return .permissionDenied
+        }
+
+        let isActive = result?.booleanValue ?? false
+        return isActive ? .active : .inactive
+    }
+
+    private static var zoomMeetingAppleScript: String {
+        """
+        tell application "System Events"
+            repeat with appName in {"zoom.us", "Zoom Workplace"}
+                if exists process appName then
+                    tell process appName
+                        if exists menu item "Leave Meeting" of menu "Meeting" of menu bar 1 then
+                            return true
+                        end if
+                        if exists menu item "End Meeting" of menu "Meeting" of menu bar 1 then
+                            return true
+                        end if
+                    end tell
+                end if
+            end repeat
+        end tell
+        return false
+        """
     }
 }
 
