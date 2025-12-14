@@ -1231,6 +1231,77 @@ dependencies: [
 - Files impacted: `AlonaTests/AlonaTests.swift`.
 - Commands executed: `make lint`, `make test`.
 
+### 2025-12-13 – CoreAudio Process Taps & Improved Meeting Detection
+
+**Goal:** Replace ScreenCaptureKit (requires "Screen & System Audio Recording" permission) with CoreAudio Process Taps (macOS 14.4+), which triggers only "System Audio Recording Only" permission. Also improve meeting detection using microphone activity tracking.
+
+#### Minimum Deployment Target Update
+- Updated `MACOSX_DEPLOYMENT_TARGET` from 13.0 to 14.6 in `Alona.xcodeproj/project.pbxproj`.
+- Updated `LSMinimumSystemVersion` from 13.0 to 14.6 in `Alona/Info.plist`.
+- Added `NSAudioCaptureUsageDescription` to `Info.plist` and removed `NSScreenCaptureUsageDescription` (no longer needed with Process Taps).
+
+#### CoreAudio Process Taps Implementation
+Replaced ScreenCaptureKit-based system audio capture with CoreAudio Process Taps (based on [AudioCap](https://github.com/insidegui/AudioCap) reference implementation):
+
+**New Files:**
+- `Alona/Services/CoreAudioUtils.swift` - AudioObjectID extensions for reading CoreAudio properties, error types, and helper functions for reading process list, device UIDs, and tap stream descriptions.
+- `Alona/Services/ProcessTap.swift` - `ProcessTap` class that creates a CATapDescription, aggregate device, and I/O proc to capture audio from specific processes or system-wide. Also includes `ProcessTapRecorder` for file-based recording.
+- `Alona/Services/AudioCapturePermission.swift` - TCC SPI wrapper (conditional on `ENABLE_TCC_SPI` flag) for checking/requesting `kTCCServiceAudioCapture` permission via private TCC framework.
+
+**AudioRecorder.swift Changes:**
+- Removed `ScreenCaptureKit` import and all `SCStream`/`SCContentFilter` code.
+- Added `AudioToolbox` import for CoreAudio APIs.
+- New `startSystemAudioCapture()` creates a global process tap using `CATapDescription(stereoGlobalTapButExcludeProcesses: [])`, creates aggregate device with tap, and starts I/O proc callback.
+- `processSystemAudioBuffer()` handles incoming audio buffers, converts stereo to mono, and appends to buffer queue.
+- `cleanupSystemAudioCapture()` properly destroys I/O proc, aggregate device, and process tap.
+- Error handling via new `RecordingError` cases for process tap failures.
+
+**Permission Notes:**
+- CoreAudio Process Taps trigger "System Audio Recording Only" permission in System Settings → Privacy & Security → Screen & System Audio Recording.
+- Unlike ScreenCaptureKit, this does NOT show a screen sharing indicator when recording.
+- The `AudioCapturePermission.swift` file includes optional TCC SPI code (guarded by `ENABLE_TCC_SPI` compiler flag) for programmatically checking/requesting permission via `TCCAccessPreflight`/`TCCAccessRequest`. This is a private API but acceptable for non-App Store distribution.
+
+#### Microphone Activity Detection
+**New File:** `Alona/Services/MicrophoneActivityTracker.swift`
+- Uses `kAudioProcessPropertyIsRunningInput` to detect which apps are actively using the microphone.
+- Polls every 2 seconds via `AudioObjectID.readProcessList()` and checks each process's `readProcessIsRunningInput()`.
+- Provides `isZoomInMeeting()` and `isChromeUsingMicrophone()` convenience methods for meeting detection.
+
+#### Improved Meeting Detection
+**MeetingDetector.swift Changes:**
+- Integrated `MicrophoneActivityTracker.shared` for more reliable meeting detection.
+- Zoom detection now uses "Zoom running + using microphone" as primary signal, falling back to AppleScript UI check for edge cases.
+- Google Meet detection now uses "Chrome running + meet.google.com tab with meeting URL + mic usage" for confirmed meeting state.
+- Added improved AppleScript (`googleMeetAppleScriptImproved`) that excludes landing pages, `/lookup/`, `/new`, and requires meeting code format (hyphenated paths like `abc-defg-hij`).
+
+#### New Tests
+- `CoreAudioProcessTapTests`:
+  - `testAudioObjectIDConstants` - validates AudioObjectID static properties
+  - `testReadProcessListDoesNotThrow` - verifies process list can be read
+  - `testCoreAudioErrorDescriptions` - validates error message formatting
+- `MicrophoneActivityTrackerTests`:
+  - `testMicrophoneTrackerStartsAndStops` - lifecycle test
+  - `testMicrophoneTrackerAppCheckMethods` - validates helper methods
+  - `testIsAppUsingMicrophoneReturnsFalseForUnknownApp` - edge case test
+- `RecordingErrorTests`:
+  - `testRecordingErrorDescriptions` - validates all new error cases
+
+#### Files Impacted
+- `Alona/Info.plist` - Updated min OS version, added NSAudioCaptureUsageDescription
+- `Alona.xcodeproj/project.pbxproj` - Updated deployment target, added new source files
+- `Alona/Services/AudioRecorder.swift` - Complete rewrite using CoreAudio Process Taps
+- `Alona/Services/MeetingDetector.swift` - Integrated microphone activity tracking
+- `Alona/Services/CoreAudioUtils.swift` (new)
+- `Alona/Services/ProcessTap.swift` (new)
+- `Alona/Services/AudioCapturePermission.swift` (new)
+- `Alona/Services/MicrophoneActivityTracker.swift` (new)
+- `AlonaTests/AlonaTests.swift` - Added new test classes
+
+#### Commands Executed
+- `make build` - verified compilation
+- `make test` - 36 tests passing
+- `make lint`, `make format` - code style conformance
+
 ### References
 
 - [SwiftWhisper GitHub](https://github.com/exPHAT/SwiftWhisper) - Swift bindings for whisper.cpp

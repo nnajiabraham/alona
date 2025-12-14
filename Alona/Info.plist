@@ -17,11 +17,11 @@
     <key>CFBundleVersion</key>
     <string>1</string>
     <key>LSMinimumSystemVersion</key>
-    <string>13.0</string>
+    <string>14.6</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>Alona needs microphone access to capture your voice during meetings.</string>
-    <key>NSScreenCaptureUsageDescription</key>
-    <string>Alona needs screen recording permission to capture meeting audio from other apps.</string>
+    <key>NSAudioCaptureUsageDescription</key>
+    <string>Alona captures meeting audio from other participants for transcription.</string>
     <key>NSAppleEventsUsageDescription</key>
     <string>Alona uses automation to detect Google Meet tabs in supported browsers.</string>
     <key>NSAccessibilityUsageDescription</key>

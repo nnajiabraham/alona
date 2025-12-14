@@ -33,6 +33,10 @@
 		AA0124 /* StartupWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1022 /* StartupWindowController.swift */; };
 		AA0125 /* RecordingAudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1023 /* RecordingAudioPlayer.swift */; };
 		AA0126 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1024 /* AppDelegate.swift */; };
+		AA0127 /* CoreAudioUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1025 /* CoreAudioUtils.swift */; };
+		AA0128 /* ProcessTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1026 /* ProcessTap.swift */; };
+		AA0129 /* AudioCapturePermission.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1027 /* AudioCapturePermission.swift */; };
+		AA0130 /* MicrophoneActivityTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1028 /* MicrophoneActivityTracker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,6 +67,10 @@
 		AA1022 /* StartupWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupWindowController.swift; sourceTree = "<group>"; };
 		AA1023 /* RecordingAudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingAudioPlayer.swift; sourceTree = "<group>"; };
 		AA1024 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		AA1025 /* CoreAudioUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreAudioUtils.swift; sourceTree = "<group>"; };
+		AA1026 /* ProcessTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessTap.swift; sourceTree = "<group>"; };
+		AA1027 /* AudioCapturePermission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCapturePermission.swift; sourceTree = "<group>"; };
+		AA1028 /* MicrophoneActivityTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneActivityTracker.swift; sourceTree = "<group>"; };
 		AA2002 /* AlonaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlonaTests.swift; sourceTree = "<group>"; };
 		AA2003 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -140,7 +148,11 @@
 				AA1019 /* ModelManager.swift */,
 				AA1021 /* MeetingNotificationManager.swift */,
 				AA1022 /* StartupWindowController.swift */,
-				AA1023 /* RecordingAudioPlayer.swift */
+				AA1023 /* RecordingAudioPlayer.swift */,
+				AA1025 /* CoreAudioUtils.swift */,
+				AA1026 /* ProcessTap.swift */,
+				AA1027 /* AudioCapturePermission.swift */,
+				AA1028 /* MicrophoneActivityTracker.swift */
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -296,7 +308,11 @@
 				AA0123 /* MeetingNotificationManager.swift in Sources */,
 				AA0124 /* StartupWindowController.swift in Sources */,
 				AA0125 /* RecordingAudioPlayer.swift in Sources */,
-				AA0126 /* AppDelegate.swift in Sources */
+				AA0126 /* AppDelegate.swift in Sources */,
+				AA0127 /* CoreAudioUtils.swift in Sources */,
+				AA0128 /* ProcessTap.swift in Sources */,
+				AA0129 /* AudioCapturePermission.swift in Sources */,
+				AA0130 /* MicrophoneActivityTracker.swift in Sources */
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -368,7 +384,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -417,7 +433,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;

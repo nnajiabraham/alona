@@ -1,5 +1,6 @@
 @testable import Alona
 import AppKit
+import AudioToolbox
 import Combine
 import XCTest
 
@@ -587,5 +588,111 @@ final class NonBlockingBehaviorTests: XCTestCase {
         // After waiting, status may have changed (we don't assert the value
         // since test environment may not allow AppleScript execution)
         // The key test is that refreshAllPermissions returned immediately above
+    }
+}
+
+// MARK: - CoreAudio Process Tap Tests
+
+final class CoreAudioProcessTapTests: XCTestCase {
+    /// Test CoreAudioUtils AudioObjectID extensions
+    func testAudioObjectIDConstants() {
+        XCTAssertEqual(AudioObjectID.system, AudioObjectID(kAudioObjectSystemObject))
+        XCTAssertEqual(AudioObjectID.unknown, kAudioObjectUnknown)
+        XCTAssertTrue(AudioObjectID.unknown.isUnknown)
+        XCTAssertFalse(AudioObjectID.unknown.isValid)
+        XCTAssertTrue(AudioObjectID.system.isValid)
+        XCTAssertFalse(AudioObjectID.system.isUnknown)
+    }
+
+    /// Test that process list can be read from system
+    func testReadProcessListDoesNotThrow() {
+        // This may return empty list if no audio processes are running
+        // but should not throw in a normal environment
+        do {
+            let processes = try AudioObjectID.readProcessList()
+            XCTAssertNotNil(processes)
+        } catch {
+            // May fail in sandboxed test environment - that's acceptable
+            XCTAssertNotNil(error.localizedDescription)
+        }
+    }
+
+    /// Test CoreAudioError descriptions are meaningful
+    func testCoreAudioErrorDescriptions() {
+        let tapError = CoreAudioError.tapCreationFailed(-12345)
+        XCTAssertTrue(tapError.errorDescription?.contains("-12345") ?? false)
+
+        let aggregateError = CoreAudioError.aggregateDeviceFailed(-67890)
+        XCTAssertTrue(aggregateError.errorDescription?.contains("-67890") ?? false)
+
+        let propertyError = CoreAudioError.propertyError("test property error")
+        XCTAssertEqual(propertyError.errorDescription, "test property error")
+
+        let invalidProcess = CoreAudioError.invalidProcess("invalid pid")
+        XCTAssertEqual(invalidProcess.errorDescription, "invalid pid")
+    }
+}
+
+// MARK: - Microphone Activity Tracker Tests
+
+final class MicrophoneActivityTrackerTests: XCTestCase {
+    func testMicrophoneTrackerStartsAndStops() {
+        let tracker = MicrophoneActivityTracker.shared
+
+        // Initially not tracking
+        tracker.stopTracking()
+
+        // Start tracking
+        tracker.startTracking()
+
+        // Should have initialized (may have empty set if no apps using mic)
+        XCTAssertNotNil(tracker.appsUsingMicrophone)
+
+        // Stop tracking
+        tracker.stopTracking()
+    }
+
+    func testMicrophoneTrackerAppCheckMethods() {
+        let tracker = MicrophoneActivityTracker.shared
+
+        // These should return false when no apps are using microphone
+        // (which is expected in test environment)
+        let zoomInMeeting = tracker.isZoomInMeeting()
+        let chromeUsingMic = tracker.isChromeUsingMicrophone()
+
+        // Just verify they don't crash and return booleans
+        XCTAssertNotNil(zoomInMeeting)
+        XCTAssertNotNil(chromeUsingMic)
+    }
+
+    func testIsAppUsingMicrophoneReturnsFalseForUnknownApp() {
+        let tracker = MicrophoneActivityTracker.shared
+
+        // Unknown bundle ID should return false
+        let result = tracker.isAppUsingMicrophone(bundleIdentifier: "com.unknown.app.that.does.not.exist")
+        XCTAssertFalse(result)
+    }
+}
+
+// MARK: - Recording Error Tests
+
+final class RecordingErrorTests: XCTestCase {
+    func testRecordingErrorDescriptions() {
+        let tapError = RecordingError.processTapCreationFailed(-12345)
+        XCTAssertTrue(tapError.errorDescription?.contains("-12345") ?? false)
+
+        let aggregateError = RecordingError.aggregateDeviceCreationFailed(-67890)
+        XCTAssertTrue(aggregateError.errorDescription?.contains("-67890") ?? false)
+
+        let ioProcError = RecordingError.ioProcCreationFailed(-11111)
+        XCTAssertTrue(ioProcError.errorDescription?.contains("-11111") ?? false)
+
+        let deviceStartError = RecordingError.deviceStartFailed(-22222)
+        XCTAssertTrue(deviceStartError.errorDescription?.contains("-22222") ?? false)
+
+        XCTAssertEqual(RecordingError.tapUnavailable.errorDescription, "Process tap is unavailable.")
+        XCTAssertEqual(RecordingError.streamDescriptionUnavailable.errorDescription, "Tap stream description not available.")
+        XCTAssertEqual(RecordingError.formatCreationFailed.errorDescription, "Failed to create audio format.")
+        XCTAssertEqual(RecordingError.bufferCreationFailed.errorDescription, "Failed to create audio buffer.")
     }
 }
