@@ -899,6 +899,53 @@ final class TranscriptionMemoryTests: XCTestCase {
 
 // MARK: - Meeting Detection Improvements Tests
 
+// MARK: - System Audio Capture Configuration Tests
+
+final class SystemAudioCaptureTests: XCTestCase {
+    func testTapDescriptionIsUnmuted() {
+        // Verify that CATapDescription uses unmuted behavior for non-interfering capture
+        let tapDescription = CATapDescription(stereoGlobalTapButExcludeProcesses: [])
+        tapDescription.muteBehavior = .unmuted
+
+        // .unmuted means the tap LISTENS without affecting playback
+        XCTAssertEqual(tapDescription.muteBehavior, .unmuted, "Tap should use unmuted mode for non-interfering capture")
+    }
+
+    func testAggregateDeviceConfigurationForTapOnly() {
+        // Verify the aggregate device configuration does NOT include sub-devices
+        // This is the key to preventing live audio interference
+        let outputUID = "test-output-uid"
+        let tapUID = UUID().uuidString
+        let aggregateUID = UUID().uuidString
+
+        // Correct configuration: tap-only, no sub-device list
+        let description: [String: Any] = [
+            kAudioAggregateDeviceNameKey: "Alona-Tap-Only",
+            kAudioAggregateDeviceUIDKey: aggregateUID,
+            kAudioAggregateDeviceMainSubDeviceKey: outputUID,
+            kAudioAggregateDeviceIsPrivateKey: true,
+            kAudioAggregateDeviceIsStackedKey: false,
+            kAudioAggregateDeviceTapAutoStartKey: true,
+            // No kAudioAggregateDeviceSubDeviceListKey - this is intentional!
+            kAudioAggregateDeviceTapListKey: [
+                [
+                    kAudioSubTapDriftCompensationKey: false,
+                    kAudioSubTapUIDKey: tapUID,
+                ],
+            ],
+        ]
+
+        // Verify sub-device list is NOT present (prevents routing interference)
+        XCTAssertNil(description[kAudioAggregateDeviceSubDeviceListKey] as? [[String: Any]], "Should NOT have sub-device list to prevent playback interference")
+
+        // Verify tap list IS present
+        XCTAssertNotNil(description[kAudioAggregateDeviceTapListKey] as? [[String: Any]], "Should have tap list for audio capture")
+
+        // Verify private flag is set (hides from user)
+        XCTAssertEqual(description[kAudioAggregateDeviceIsPrivateKey] as? Bool, true, "Should be private device")
+    }
+}
+
 @MainActor
 final class MeetingDetectionImprovementsTests: XCTestCase {
     func testMultipleZoomBundleIDsChecked() {

@@ -181,6 +181,7 @@ private extension AudioRecorder {
         logger.debug("Starting system audio capture with CoreAudio Process Tap")
 
         // Create a process tap for global system audio (excluding our own process)
+        // Using .unmuted ensures the tap LISTENS to audio without affecting playback
         let tapDescription = CATapDescription(stereoGlobalTapButExcludeProcesses: [])
         tapDescription.uuid = UUID()
         tapDescription.muteBehavior = .unmuted
@@ -196,25 +197,28 @@ private extension AudioRecorder {
         logger.debug("Created process tap #\(tapID)")
         processTapID = tapID
 
-        // Get system output device
+        // Get system output device UID - needed for tap reference
         let systemOutputID = try AudioDeviceID.readDefaultSystemOutputDevice()
         let outputUID = try systemOutputID.readDeviceUID()
         let aggregateUID = UUID().uuidString
 
-        // Create aggregate device with the tap
+        // Create a MINIMAL aggregate device with ONLY the tap
+        // IMPORTANT: We do NOT include the output device as a sub-device
+        // This prevents the aggregate device from interfering with live audio playback
+        // The tap already captures the audio stream - we don't need to route through aggregate
         let description: [String: Any] = [
-            kAudioAggregateDeviceNameKey: "Alona-System-Audio-Tap",
+            kAudioAggregateDeviceNameKey: "Alona-Tap-Only",
             kAudioAggregateDeviceUIDKey: aggregateUID,
+            // Reference the output device for the tap to know what to capture
             kAudioAggregateDeviceMainSubDeviceKey: outputUID,
             kAudioAggregateDeviceIsPrivateKey: true,
             kAudioAggregateDeviceIsStackedKey: false,
             kAudioAggregateDeviceTapAutoStartKey: true,
-            kAudioAggregateDeviceSubDeviceListKey: [
-                [kAudioSubDeviceUIDKey: outputUID],
-            ],
+            // NO sub-device list - don't include output device as sub-device
+            // This is the key fix: without sub-devices, audio routes normally to speakers
             kAudioAggregateDeviceTapListKey: [
                 [
-                    kAudioSubTapDriftCompensationKey: true,
+                    kAudioSubTapDriftCompensationKey: false, // Disable drift comp to reduce processing
                     kAudioSubTapUIDKey: tapDescription.uuid.uuidString,
                 ],
             ],
@@ -232,13 +236,13 @@ private extension AudioRecorder {
         }
 
         let createdDeviceID = aggregateDeviceID
-        logger.debug("Created aggregate device #\(createdDeviceID)")
+        logger.debug("Created tap-only aggregate device #\(createdDeviceID)")
 
         // Get the tap's stream format
         let tapFormat = try tapID.readAudioTapStreamBasicDescription()
         logger.debug("Tap format: \(tapFormat.mSampleRate) Hz, \(tapFormat.mChannelsPerFrame) channels")
 
-        // Create I/O proc to receive audio data
+        // Create I/O proc to receive audio data from the tap
         err = AudioDeviceCreateIOProcIDWithBlock(&deviceProcID, aggregateDeviceID, systemAudioQueue) { [weak self] _, inInputData, _, _, _ in
             guard let self else { return }
             processSystemAudioBuffer(inInputData, format: tapFormat)
@@ -259,7 +263,7 @@ private extension AudioRecorder {
             throw RecordingError.deviceStartFailed(err)
         }
 
-        logger.info("System audio capture started successfully")
+        logger.info("System audio capture started successfully (tap-only mode, no playback interference)")
     }
 
     func processSystemAudioBuffer(_ bufferList: UnsafePointer<AudioBufferList>, format: AudioStreamBasicDescription) {

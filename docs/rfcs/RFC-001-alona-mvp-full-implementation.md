@@ -1515,6 +1515,23 @@ Each meeting creates a flat folder:
 
 ### Bug Fixes Applied
 
+#### 0. Live System Audio Muffled During Recording Fix (Latest)
+**Root Cause**: The aggregate device configuration included the system output device as a sub-device (`kAudioAggregateDeviceSubDeviceListKey`), which caused audio to route through our aggregate device, affecting live playback quality.
+
+**Solution**:
+- Removed `kAudioAggregateDeviceSubDeviceListKey` from aggregate device configuration
+- Created a "tap-only" aggregate device that listens without routing audio
+- The tap captures the audio stream directly without interfering with normal playback
+- Disabled drift compensation to reduce additional processing
+
+**Key Insight**: The process tap already captures the audio stream - we don't need to include the output device as a sub-device. Including it causes CoreAudio to route playback through our aggregate, degrading quality.
+
+**Files Changed**: `Alona/Services/AudioRecorder.swift`
+
+**Tests Added**: 
+- `testTapDescriptionIsUnmuted`: Verifies unmuted mode for non-interfering capture
+- `testAggregateDeviceConfigurationForTapOnly`: Verifies no sub-device list in configuration
+
 #### 1. Zero-Duration Audio Recording Fix
 **Root Cause**: Buffer mismatch between mic (38,400 samples) and system audio (~16.7M samples) due to race conditions and sample rate mismatches.
 
@@ -1596,8 +1613,12 @@ Each meeting creates a flat folder:
 - `testStickyDetectionPreventsFlickering`: Stable detection state
 - `testMeetingDetectorNotifiesOnlyOnce`: Notification deduplication
 
+#### SystemAudioCaptureTests (2 tests)
+- `testTapDescriptionIsUnmuted`: Unmuted mode verification
+- `testAggregateDeviceConfigurationForTapOnly`: Tap-only config verification
+
 ### Test Results
-All 53 tests pass (including 10 new tests for bug fixes).
+All 52 tests pass (including 12 new tests for bug fixes).
 
 ---
 

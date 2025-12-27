@@ -16,7 +16,6 @@ dist/
 build/
 .npm/
 .pnpm-store/
-*.log
 
 # Swift / Xcode
 DerivedData/
