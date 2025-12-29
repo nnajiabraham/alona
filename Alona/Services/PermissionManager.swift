@@ -2,11 +2,12 @@ import AppKit
 import ApplicationServices
 import AudioToolbox
 import AVFoundation
-import Combine
 import CoreGraphics
+import Observation
 
+@Observable
 @MainActor
-final class PermissionManager: ObservableObject {
+final class PermissionManager {
     enum PermissionType: CaseIterable, Hashable {
         case microphone
         case systemAudio
@@ -65,8 +66,8 @@ final class PermissionManager: ObservableObject {
         }
     }
 
-    @Published private(set) var statuses: [PermissionType: PermissionStatus] = [:]
-    @Published var lastAutomationCheckError: Error?
+    private(set) var statuses: [PermissionType: PermissionStatus] = [:]
+    var lastAutomationCheckError: Error?
 
     init() {
         PermissionType.allCases.forEach { statuses[$0] = .notDetermined }
@@ -87,8 +88,9 @@ final class PermissionManager: ObservableObject {
     private func refreshAutomationPermissionAsync() {
         Task.detached(priority: .utility) { [weak self] in
             let status = Self.checkAutomationStatusBackground()
+            guard let self else { return }
             await MainActor.run {
-                self?.statuses[.automation] = status
+                self.statuses[.automation] = status
             }
         }
     }
@@ -149,10 +151,11 @@ final class PermissionManager: ObservableObject {
             // Run async to avoid blocking main thread
             Task.detached(priority: .userInitiated) { [weak self] in
                 let status = Self.checkAutomationStatusBackground()
+                guard let self else { return }
                 await MainActor.run {
-                    self?.statuses[.automation] = status
+                    self.statuses[.automation] = status
                     if status == .denied {
-                        self?.openSystemSettings(for: .automation)
+                        self.openSystemSettings(for: .automation)
                     }
                 }
             }

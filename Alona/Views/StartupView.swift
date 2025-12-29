@@ -1,9 +1,9 @@
 import SwiftUI
 
 struct StartupView: View {
-    @EnvironmentObject private var appState: AppState
-    @EnvironmentObject private var permissionManager: PermissionManager
-    @EnvironmentObject private var meetingDetector: MeetingDetector
+    @Environment(AppState.self) private var appState
+    @Environment(PermissionManager.self) private var permissionManager
+    @Environment(MeetingDetector.self) private var meetingDetector
     @Environment(\.openWindow) private var openWindow
     @StateObject private var modelManager = WhisperModelManager.shared
 
@@ -27,10 +27,10 @@ struct StartupView: View {
             modelManager.refreshStatus()
             permissionManager.refreshAllPermissions()
         }
-        .onChange(of: appState.notesWindowRequestID) { _ in
+        .onChange(of: appState.notesWindowRequestID) {
             WindowFocusController.focusOrOpen(windowID: "meeting-notes", openWindow: openWindow)
         }
-        .onChange(of: activeDetectionIdentifier) { newValue in
+        .onChange(of: activeDetectionIdentifier) { _, newValue in
             appState.resetDetectionDismissalIfNeeded(for: newValue)
         }
     }
@@ -260,7 +260,7 @@ struct StartupView: View {
 
 #Preview {
     StartupView()
-        .environmentObject(AppState())
-        .environmentObject(PermissionManager())
-        .environmentObject(MeetingDetector())
+        .environment(AppState())
+        .environment(PermissionManager())
+        .environment(MeetingDetector())
 }

@@ -1,10 +1,11 @@
 import AppKit
-import Combine
 import Foundation
+import Observation
 import OSLog
 
+@Observable
 @MainActor
-final class MeetingDetector: ObservableObject {
+final class MeetingDetector {
     enum MeetingApp: String, CaseIterable {
         case zoom = "us.zoom.xos"
         case googleMeet = "com.google.Chrome"
@@ -19,10 +20,10 @@ final class MeetingDetector: ObservableObject {
         }
     }
 
-    @Published var isInMeeting = false
-    @Published var detectedApp: MeetingApp?
-    @Published var meetingTitle: String = "No meeting detected"
-    @Published var automationPermissionDenied = false
+    var isInMeeting = false
+    var detectedApp: MeetingApp?
+    var meetingTitle: String = "No meeting detected"
+    var automationPermissionDenied = false
 
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "Alona", category: "MeetingDetector")
     private var pollTimer: Timer?

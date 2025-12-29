@@ -2,10 +2,11 @@ import AppKit
 import SwiftUI
 
 struct MeetingNotesView: View {
-    @EnvironmentObject private var appState: AppState
+    @Environment(AppState.self) private var appState
     @State private var selectedRange = NSRange(location: 0, length: 0)
 
     var body: some View {
+        @Bindable var appState = appState
         VStack(alignment: .leading, spacing: 16) {
             header
             toolbar
@@ -148,5 +149,5 @@ enum NotesInsertion {
 
 #Preview {
     MeetingNotesView()
-        .environmentObject(AppState())
+        .environment(AppState())
 }

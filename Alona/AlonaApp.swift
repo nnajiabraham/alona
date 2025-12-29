@@ -3,9 +3,9 @@ import SwiftUI
 @main
 struct AlonaApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
-    @StateObject private var appState = AppState()
-    @StateObject private var permissionManager = PermissionManager()
-    @StateObject private var meetingDetector: MeetingDetector
+    @State private var appState = AppState()
+    @State private var permissionManager = PermissionManager()
+    @State private var meetingDetector: MeetingDetector
     // Use a State binding to ensure menu bar extra is always visible
     // (Previously @AppStorage could cause the binding to become false unexpectedly)
     @State private var showMenuBarExtra = true
@@ -13,7 +13,7 @@ struct AlonaApp: App {
 
     init() {
         let detector = MeetingDetector()
-        _meetingDetector = StateObject(wrappedValue: detector)
+        _meetingDetector = State(initialValue: detector)
         if !isRunningTests {
             detector.startMonitoring()
         }
@@ -23,9 +23,9 @@ struct AlonaApp: App {
         // Primary window - opens automatically on launch
         WindowGroup {
             StartupView()
-                .environmentObject(appState)
-                .environmentObject(permissionManager)
-                .environmentObject(meetingDetector)
+                .environment(appState)
+                .environment(permissionManager)
+                .environment(meetingDetector)
         }
         .windowResizability(.contentSize)
         .commands {
@@ -36,41 +36,41 @@ struct AlonaApp: App {
         // Menu bar extra with isInserted binding allows coexistence with WindowGroup
         MenuBarExtra("Alona", systemImage: "note.text", isInserted: $showMenuBarExtra) {
             MenuBarView()
-                .environmentObject(appState)
-                .environmentObject(permissionManager)
-                .environmentObject(meetingDetector)
+                .environment(appState)
+                .environment(permissionManager)
+                .environment(meetingDetector)
         }
         .menuBarExtraStyle(.window)
         .defaultSize(width: 360, height: 320)
 
         WindowGroup(id: "onboarding") {
             OnboardingView()
-                .environmentObject(permissionManager)
+                .environment(permissionManager)
         }
         .windowResizability(.contentSize)
 
         WindowGroup(id: "meeting-notes") {
             MeetingNotesView()
-                .environmentObject(appState)
+                .environment(appState)
         }
         .defaultSize(width: 420, height: 380)
 
         WindowGroup(id: "recordings") {
             RecordingsBrowserView()
-                .environmentObject(appState)
+                .environment(appState)
         }
         .defaultSize(width: 700, height: 420)
 
         WindowGroup(id: "settings-window") {
             SettingsView()
-                .environmentObject(permissionManager)
-                .environmentObject(appState)
+                .environment(permissionManager)
+                .environment(appState)
         }
         .defaultSize(width: 480, height: 360)
 
         WindowGroup(id: "transcription-queue") {
             TranscriptionQueueView()
-                .environmentObject(appState)
+                .environment(appState)
         }
         .defaultSize(width: 480, height: 420)
     }

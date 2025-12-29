@@ -4,12 +4,13 @@ import SwiftUI
 #endif
 
 struct SettingsView: View {
-    @EnvironmentObject private var appState: AppState
+    @Environment(AppState.self) private var appState
     #if DEBUG
         @ObserveInjection var inject
     #endif
 
     var body: some View {
+        @Bindable var appState = appState
         Form {
             Section("Recording") {
                 Toggle("Capture system audio", isOn: $appState.captureSystemAudio)
@@ -55,5 +56,5 @@ struct SettingsView: View {
 
 #Preview {
     SettingsView()
-        .environmentObject(AppState())
+        .environment(AppState())
 }

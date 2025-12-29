@@ -4,7 +4,7 @@ import SwiftUI
 #endif
 
 struct OnboardingView: View {
-    @EnvironmentObject private var permissionManager: PermissionManager
+    @Environment(PermissionManager.self) private var permissionManager
     #if DEBUG
         @ObserveInjection var inject
     #endif
@@ -46,7 +46,7 @@ struct OnboardingView: View {
 
     private struct PermissionRow: View {
         let type: PermissionManager.PermissionType
-        @EnvironmentObject private var permissionManager: PermissionManager
+        @Environment(PermissionManager.self) private var permissionManager
         #if DEBUG
             @ObserveInjection var inject
         #endif
@@ -93,5 +93,5 @@ struct OnboardingView: View {
 
 #Preview {
     OnboardingView()
-        .environmentObject(PermissionManager())
+        .environment(PermissionManager())
 }

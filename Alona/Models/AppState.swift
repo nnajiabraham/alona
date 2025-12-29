@@ -1,20 +1,27 @@
 import Combine
 import Foundation
+import Observation
 
+@Observable
 @MainActor
-final class AppState: ObservableObject {
-    @Published private(set) var isRecording: Bool = false
-    @Published private(set) var recordingDuration: TimeInterval = 0
-    @Published var meetingTitle: String = AppState.idleMeetingTitle
-    @Published var showOnboarding: Bool = true
-    @Published var saveDirectory: URL
-    @Published var dismissedDetectionIdentifier: String?
-    @Published var recordingError: String?
-    @Published var notesDraft: String = ""
-    @Published var notesWindowRequestID: UUID?
-    @Published var transcriptionState: TranscriptionState = .idle
-    @Published private(set) var transcriptionJobs: [TranscriptionJob] = []
-    @Published var captureSystemAudio: Bool = false {
+final class AppState {
+    private(set) var isRecording: Bool = false
+    private(set) var recordingDuration: TimeInterval = 0
+    var meetingTitle: String = AppState.idleMeetingTitle
+    var showOnboarding: Bool = true
+    var saveDirectory: URL
+    var dismissedDetectionIdentifier: String?
+    var recordingError: String?
+    var notesDraft: String = "" {
+        didSet {
+            scheduleNotesAutosave()
+        }
+    }
+
+    var notesWindowRequestID: UUID?
+    var transcriptionState: TranscriptionState = .idle
+    private(set) var transcriptionJobs: [TranscriptionJob] = []
+    var captureSystemAudio: Bool = false {
         didSet {
             audioRecorder.captureSystemAudio = captureSystemAudio
             userDefaults.set(captureSystemAudio, forKey: Self.captureSystemAudioDefaultsKey)
@@ -25,18 +32,21 @@ final class AppState: ObservableObject {
     private let audioRecorder: AudioRecordingController
     private let transcriptionEngine: TranscriptionProcessing
     private let summaryProvider: SummaryProviding
-    private var cancellables: Set<AnyCancellable> = []
-    @Published private(set) var currentMeetingDirectory: URL?
-    private var notesAutosaveCancellable: AnyCancellable?
-    private var transcriptionProgressCancellable: AnyCancellable?
-    private var notificationActionCancellable: AnyCancellable?
+    // Keep Combine subscriptions for external publishers (from NSObject classes)
+    @ObservationIgnored private var cancellables: Set<AnyCancellable> = []
+    private(set) var currentMeetingDirectory: URL?
+    // Notes autosave uses Task-based debouncing instead of Combine
+    @ObservationIgnored private var notesAutosaveTask: Task<Void, Never>?
+    @ObservationIgnored private var transcriptionProgressCancellable: AnyCancellable?
+    @ObservationIgnored private var notificationActionCancellable: AnyCancellable?
     private let notesAutosaveInterval: TimeInterval
-    private let notesAutosaveScheduler: DispatchQueue
+    @ObservationIgnored private let notesAutosaveScheduler: DispatchQueue
     private let nowProvider: () -> Date
-    private let userDefaults: UserDefaults
-    private var activeJobTask: Task<Void, Never>?
-    private var activeJobID: UUID?
-    private var activeUIJobID: UUID?
+    @ObservationIgnored private let userDefaults: UserDefaults
+    @ObservationIgnored private var activeJobTask: Task<Void, Never>?
+    @ObservationIgnored private var activeJobID: UUID?
+    @ObservationIgnored private var activeUIJobID: UUID?
+    @ObservationIgnored private var lastSavedNotesDraft: String = ""
 
     init(meetingFileManager manager: MeetingFileManager = MeetingFileManager(),
          audioRecorder: AudioRecordingController? = nil,
@@ -63,14 +73,19 @@ final class AppState: ObservableObject {
         captureSystemAudio = storedCapture
         recorder.captureSystemAudio = storedCapture
 
+        // Subscribe to external Combine publishers (from NSObject classes that can't use @Observable)
         recorder.isRecordingPublisher
             .receive(on: RunLoop.main)
-            .assign(to: \.isRecording, onWeak: self)
+            .sink { [weak self] value in
+                self?.isRecording = value
+            }
             .store(in: &cancellables)
 
         recorder.recordingDurationPublisher
             .receive(on: RunLoop.main)
-            .assign(to: \.recordingDuration, onWeak: self)
+            .sink { [weak self] value in
+                self?.recordingDuration = value
+            }
             .store(in: &cancellables)
 
         transcriptionProgressCancellable = transcriptionEngine.progressPublisher
@@ -79,12 +94,7 @@ final class AppState: ObservableObject {
                 self?.handleTranscriptionProgress(value)
             }
 
-        notesAutosaveCancellable = $notesDraft
-            .removeDuplicates()
-            .debounce(for: .seconds(notesAutosaveInterval), scheduler: notesAutosaveScheduler)
-            .sink { [weak self] text in
-                self?.autosaveNotesDraft(text)
-            }
+        // Notes autosave is now handled via didSet + Task-based debouncing (see scheduleNotesAutosave)
 
         notificationActionCancellable = NotificationCenter.default.publisher(for: .meetingNotificationStartRecording)
             .receive(on: RunLoop.main)
@@ -190,12 +200,27 @@ final class AppState: ObservableObject {
         formatter.dateFormat = "MMM d, yyyy 'at' h:mm a"
         return formatter
     }()
-}
 
-private extension Publisher where Failure == Never {
-    func assign<T: AnyObject>(to keyPath: ReferenceWritableKeyPath<T, Output>, onWeak object: T?) -> AnyCancellable {
-        sink { [weak object] value in
-            object?[keyPath: keyPath] = value
+    /// Task-based debounced autosave for notes (replaces Combine $notesDraft.debounce)
+    private func scheduleNotesAutosave() {
+        // Skip if content hasn't actually changed (removeDuplicates equivalent)
+        guard notesDraft != lastSavedNotesDraft else { return }
+
+        // Cancel any pending autosave
+        notesAutosaveTask?.cancel()
+
+        let interval = notesAutosaveInterval
+        let textToSave = notesDraft
+
+        notesAutosaveTask = Task { [weak self] in
+            do {
+                try await Task.sleep(for: .seconds(interval))
+                guard let self, !Task.isCancelled else { return }
+                self.autosaveNotesDraft(textToSave)
+                self.lastSavedNotesDraft = textToSave
+            } catch {
+                // Task was cancelled - that's fine
+            }
         }
     }
 }

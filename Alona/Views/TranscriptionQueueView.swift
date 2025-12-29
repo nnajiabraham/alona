@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct TranscriptionQueueView: View {
-    @EnvironmentObject private var appState: AppState
+    @Environment(AppState.self) private var appState
 
     var body: some View {
         VStack(spacing: 12) {
@@ -134,5 +134,5 @@ private extension TranscriptionJob.State {
 #Preview {
     let manager = AppState()
     return TranscriptionQueueView()
-        .environmentObject(manager)
+        .environment(manager)
 }

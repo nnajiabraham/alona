@@ -1,9 +1,9 @@
 import SwiftUI
 
 struct MenuBarView: View {
-    @EnvironmentObject private var appState: AppState
-    @EnvironmentObject private var permissionManager: PermissionManager
-    @EnvironmentObject private var meetingDetector: MeetingDetector
+    @Environment(AppState.self) private var appState
+    @Environment(PermissionManager.self) private var permissionManager
+    @Environment(MeetingDetector.self) private var meetingDetector
     @Environment(\.openWindow) private var openWindow
     @State private var recordingActionInFlight = false
 
@@ -31,16 +31,16 @@ struct MenuBarView: View {
             permissionManager.refreshAllPermissions()
             syncMeetingTitleFromDetector()
         }
-        .onChange(of: meetingDetector.meetingTitle) { _ in
+        .onChange(of: meetingDetector.meetingTitle) {
             syncMeetingTitleFromDetector()
         }
-        .onChange(of: meetingDetector.isInMeeting) { _ in
+        .onChange(of: meetingDetector.isInMeeting) {
             syncMeetingTitleFromDetector()
         }
-        .onChange(of: appState.notesWindowRequestID) { _ in
+        .onChange(of: appState.notesWindowRequestID) {
             openNotesWindow()
         }
-        .onChange(of: activeDetectionIdentifier) { newValue in
+        .onChange(of: activeDetectionIdentifier) { _, newValue in
             appState.resetDetectionDismissalIfNeeded(for: newValue)
         }
     }
@@ -234,7 +234,7 @@ struct MenuBarView: View {
 
 #Preview {
     MenuBarView()
-        .environmentObject(AppState())
-        .environmentObject(PermissionManager())
-        .environmentObject(MeetingDetector())
+        .environment(AppState())
+        .environment(PermissionManager())
+        .environment(MeetingDetector())
 }

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct RecordingsBrowserView: View {
-    @EnvironmentObject private var appState: AppState
+    @Environment(AppState.self) private var appState
     @State private var entries: [MeetingEntry] = []
     @State private var selectedEntryID: MeetingEntry.ID?
     @State private var notesText: String = ""
@@ -62,7 +62,7 @@ struct RecordingsBrowserView: View {
             }
         }
         .onAppear(perform: loadEntries)
-        .onChange(of: selectedEntryID) { _ in
+        .onChange(of: selectedEntryID) {
             guard !isEditingTitleFromDetail else { return }
             audioPlayer.stop()
             loadSelectedEntry()
@@ -192,5 +192,5 @@ struct RecordingsBrowserView: View {
 
 #Preview {
     RecordingsBrowserView()
-        .environmentObject(AppState())
+        .environment(AppState())
 }
