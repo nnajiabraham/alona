@@ -88,7 +88,6 @@ Source baseline: [steipete/CodexBar](https://github.com/steipete/CodexBar/tree/m
     - `AudioRecorder`, `TranscriptionEngine` — currently extend `NSObject` but analysis shows they **don't actually require it** (see LOW priority checklist item at end)
     - `RecordingAudioPlayer` — **genuinely requires** `NSObject` for `AVAudioPlayerDelegate` conformance (Apple's Obj-C delegate protocol)
 - [x] **HIGH PRIORITY**: Create an `AGENTS.md` with repo-specific "do this every time" commands and rules (build/test/run, formatting, what to avoid, verification steps). ✅
-- [ ] **HIGH PRIORITY**: Add a `Scripts/compile_and_run.sh` dev-loop script (kill existing app, build, test, launch, verify it stays running), modeled after CodexBar’s ergonomics.
 - [ ] **MEDIUM**: Add `.swiftformat` and `.swiftlint.yml` (pin formatting + lint rules; optionally wire `make lint` to also run `swiftlint --strict`).
 - [ ] **MEDIUM**: Increase test coverage **and** split `AlonaTests/AlonaTests.swift` into focused `*Tests.swift` files by subsystem (AppState, MeetingDetector, PermissionManager, FileManager, Audio, Transcription).
 - [ ] **MEDIUM**: Adopt stricter concurrency posture (CodexBar uses `.enableUpcomingFeature("StrictConcurrency")`; for Alona: evaluate Swift 6.x migration or enable stricter Xcode concurrency checks where feasible).
