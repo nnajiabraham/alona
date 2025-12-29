@@ -5,14 +5,14 @@ struct TranscriptionProgressView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(title)
+            Text(self.title)
                 .font(.footnote)
                 .foregroundStyle(.secondary)
-            ProgressView(value: progress)
+            ProgressView(value: self.progress)
                 .progressViewStyle(.linear)
-            Text(message)
+            Text(self.message)
                 .font(.caption)
-                .foregroundStyle(messageColor)
+                .foregroundStyle(self.messageColor)
         }
         .padding(12)
         .background(Color.gray.opacity(0.08))
@@ -20,58 +20,58 @@ struct TranscriptionProgressView: View {
     }
 
     private var title: String {
-        switch state {
+        switch self.state {
         case .idle:
-            return "Transcription"
+            "Transcription"
         case .preparing:
-            return "Transcription – Preparing"
+            "Transcription – Preparing"
         case .processing:
-            return "Transcription – In Progress"
+            "Transcription – In Progress"
         case .summarizing:
-            return "Summary"
+            "Summary"
         case .completed:
-            return "Post-processing Complete"
+            "Post-processing Complete"
         case .failed:
-            return "Transcription Failed"
+            "Transcription Failed"
         }
     }
 
     private var progress: Double {
-        switch state {
+        switch self.state {
         case .idle:
-            return 0
+            0
         case .preparing:
-            return 0.1
+            0.1
         case let .processing(value):
-            return max(0.1, min(0.9, value))
+            max(0.1, min(0.9, value))
         case .summarizing:
-            return 0.95
+            0.95
         case .completed:
-            return 1.0
+            1.0
         case .failed:
-            return 1.0
+            1.0
         }
     }
 
     private var message: String {
-        switch state {
+        switch self.state {
         case .idle:
-            return "Waiting for recording"
+            "Waiting for recording"
         case .preparing:
-            return "Loading transcription model"
+            "Loading transcription model"
         case .processing:
-            return "Transcribing audio locally"
+            "Transcribing audio locally"
         case .summarizing:
-            return "Generating placeholder summary"
+            "Generating placeholder summary"
         case .completed:
-            return "Artifacts saved"
+            "Artifacts saved"
         case let .failed(error):
-            return error
+            error
         }
     }
 
     private var messageColor: Color {
-        if case .failed = state {
+        if case .failed = self.state {
             return .red
         }
         return .secondary

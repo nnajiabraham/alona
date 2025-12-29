@@ -13,7 +13,7 @@ extension AudioObjectID {
     var isUnknown: Bool { self == .unknown }
 
     /// `false` if this object has the value of `kAudioObjectUnknown`.
-    var isValid: Bool { !isUnknown }
+    var isValid: Bool { !self.isUnknown }
 }
 
 // MARK: - Concrete Property Helpers
@@ -35,13 +35,12 @@ extension AudioObjectID {
 
     /// Reads `kAudioHardwarePropertyProcessObjectList`.
     func readProcessList() throws -> [AudioObjectID] {
-        try requireSystemObject()
+        try self.requireSystemObject()
 
         var address = AudioObjectPropertyAddress(
             mSelector: kAudioHardwarePropertyProcessObjectList,
             mScope: kAudioObjectPropertyScopeGlobal,
-            mElement: kAudioObjectPropertyElementMain
-        )
+            mElement: kAudioObjectPropertyElementMain)
 
         var dataSize: UInt32 = 0
 
@@ -60,13 +59,12 @@ extension AudioObjectID {
 
     /// Reads `kAudioHardwarePropertyTranslatePIDToProcessObject` for the specific pid.
     func translatePIDToProcessObjectID(pid: pid_t) throws -> AudioObjectID {
-        try requireSystemObject()
+        try self.requireSystemObject()
 
         let processObject = try read(
             kAudioHardwarePropertyTranslatePIDToProcessObject,
             defaultValue: AudioObjectID.unknown,
-            qualifier: pid
-        )
+            qualifier: pid)
 
         guard processObject.isValid else {
             throw CoreAudioError.invalidProcess("Invalid process identifier: \(pid)")
@@ -93,7 +91,7 @@ extension AudioObjectID {
 
     /// Reads the value for `kAudioHardwarePropertyDefaultSystemOutputDevice`.
     func readDefaultSystemOutputDevice() throws -> AudioDeviceID {
-        try requireSystemObject()
+        try self.requireSystemObject()
 
         return try read(kAudioHardwarePropertyDefaultSystemOutputDevice, defaultValue: AudioDeviceID.unknown)
     }
@@ -114,45 +112,73 @@ extension AudioObjectID {
 // MARK: - Generic Property Access
 
 extension AudioObjectID {
-    func read<T, Q>(_ selector: AudioObjectPropertySelector,
-                    scope: AudioObjectPropertyScope = kAudioObjectPropertyScopeGlobal,
-                    element: AudioObjectPropertyElement = kAudioObjectPropertyElementMain,
-                    defaultValue: T,
-                    qualifier: Q) throws -> T
+    func read<T>(
+        _ selector: AudioObjectPropertySelector,
+        scope: AudioObjectPropertyScope = kAudioObjectPropertyScopeGlobal,
+        element: AudioObjectPropertyElement = kAudioObjectPropertyElementMain,
+        defaultValue: T,
+        qualifier: some Any) throws -> T
     {
-        try read(AudioObjectPropertyAddress(mSelector: selector, mScope: scope, mElement: element), defaultValue: defaultValue, qualifier: qualifier)
+        try self.read(
+            AudioObjectPropertyAddress(mSelector: selector, mScope: scope, mElement: element),
+            defaultValue: defaultValue,
+            qualifier: qualifier)
     }
 
-    func read<T>(_ selector: AudioObjectPropertySelector,
-                 scope: AudioObjectPropertyScope = kAudioObjectPropertyScopeGlobal,
-                 element: AudioObjectPropertyElement = kAudioObjectPropertyElementMain,
-                 defaultValue: T) throws -> T
+    func read<T>(
+        _ selector: AudioObjectPropertySelector,
+        scope: AudioObjectPropertyScope = kAudioObjectPropertyScopeGlobal,
+        element: AudioObjectPropertyElement = kAudioObjectPropertyElementMain,
+        defaultValue: T) throws -> T
     {
-        try read(AudioObjectPropertyAddress(mSelector: selector, mScope: scope, mElement: element), defaultValue: defaultValue)
+        try self.read(
+            AudioObjectPropertyAddress(mSelector: selector, mScope: scope, mElement: element),
+            defaultValue: defaultValue)
     }
 
     func read<T, Q>(_ address: AudioObjectPropertyAddress, defaultValue: T, qualifier: Q) throws -> T {
         var inQualifier = qualifier
         let qualifierSize = UInt32(MemoryLayout<Q>.size(ofValue: qualifier))
         return try withUnsafeMutablePointer(to: &inQualifier) { qualifierPtr in
-            try read(address, defaultValue: defaultValue, inQualifierSize: qualifierSize, inQualifierData: qualifierPtr)
+            try self.read(
+                address,
+                defaultValue: defaultValue,
+                inQualifierSize: qualifierSize,
+                inQualifierData: qualifierPtr)
         }
     }
 
     func read<T>(_ address: AudioObjectPropertyAddress, defaultValue: T) throws -> T {
-        try read(address, defaultValue: defaultValue, inQualifierSize: 0, inQualifierData: nil)
+        try self.read(address, defaultValue: defaultValue, inQualifierSize: 0, inQualifierData: nil)
     }
 
-    func readString(_ selector: AudioObjectPropertySelector, scope: AudioObjectPropertyScope = kAudioObjectPropertyScopeGlobal, element: AudioObjectPropertyElement = kAudioObjectPropertyElementMain) throws -> String {
-        try read(AudioObjectPropertyAddress(mSelector: selector, mScope: scope, mElement: element), defaultValue: "" as CFString) as String
+    func readString(
+        _ selector: AudioObjectPropertySelector,
+        scope: AudioObjectPropertyScope = kAudioObjectPropertyScopeGlobal,
+        element: AudioObjectPropertyElement = kAudioObjectPropertyElementMain) throws -> String
+    {
+        try self.read(
+            AudioObjectPropertyAddress(mSelector: selector, mScope: scope, mElement: element),
+            defaultValue: "" as CFString) as String
     }
 
-    func readBool(_ selector: AudioObjectPropertySelector, scope: AudioObjectPropertyScope = kAudioObjectPropertyScopeGlobal, element: AudioObjectPropertyElement = kAudioObjectPropertyElementMain) throws -> Bool {
-        let value: Int = try read(AudioObjectPropertyAddress(mSelector: selector, mScope: scope, mElement: element), defaultValue: 0)
+    func readBool(
+        _ selector: AudioObjectPropertySelector,
+        scope: AudioObjectPropertyScope = kAudioObjectPropertyScopeGlobal,
+        element: AudioObjectPropertyElement = kAudioObjectPropertyElementMain) throws -> Bool
+    {
+        let value: Int = try read(
+            AudioObjectPropertyAddress(mSelector: selector, mScope: scope, mElement: element),
+            defaultValue: 0)
         return value == 1
     }
 
-    private func read<T>(_ inAddress: AudioObjectPropertyAddress, defaultValue: T, inQualifierSize: UInt32 = 0, inQualifierData: UnsafeRawPointer? = nil) throws -> T {
+    private func read<T>(
+        _ inAddress: AudioObjectPropertyAddress,
+        defaultValue: T,
+        inQualifierSize: UInt32 = 0,
+        inQualifierData: UnsafeRawPointer? = nil) throws -> T
+    {
         var address = inAddress
 
         var dataSize: UInt32 = 0
@@ -189,13 +215,13 @@ enum CoreAudioError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case let .propertyError(msg): return msg
-        case let .invalidProcess(msg): return msg
-        case let .systemObjectRequired(msg): return msg
-        case let .tapCreationFailed(status): return "Process tap creation failed with error \(status)"
-        case let .aggregateDeviceFailed(status): return "Failed to create aggregate device: \(status)"
-        case let .deviceStartFailed(status): return "Failed to start audio device: \(status)"
-        case let .ioProcCreationFailed(status): return "Failed to create device I/O proc: \(status)"
+        case let .propertyError(msg): msg
+        case let .invalidProcess(msg): msg
+        case let .systemObjectRequired(msg): msg
+        case let .tapCreationFailed(status): "Process tap creation failed with error \(status)"
+        case let .aggregateDeviceFailed(status): "Failed to create aggregate device: \(status)"
+        case let .deviceStartFailed(status): "Failed to start audio device: \(status)"
+        case let .ioProcCreationFailed(status): "Failed to create device I/O proc: \(status)"
         }
     }
 }

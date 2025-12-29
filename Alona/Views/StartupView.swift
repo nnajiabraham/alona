@@ -9,29 +9,29 @@ struct StartupView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            header
-            if shouldShowDetectionPrompt {
-                detectionPrompt
+            self.header
+            if self.shouldShowDetectionPrompt {
+                self.detectionPrompt
             } else {
-                detectionStatus
+                self.detectionStatus
             }
             Divider()
-            controls
+            self.controls
             Spacer()
-            footer
+            self.footer
         }
         .padding(24)
         .frame(minWidth: 420, minHeight: 380)
         .background(StartupWindowIdentifierSetter())
         .task {
-            modelManager.refreshStatus()
-            permissionManager.refreshAllPermissions()
+            self.modelManager.refreshStatus()
+            self.permissionManager.refreshAllPermissions()
         }
-        .onChange(of: appState.notesWindowRequestID) {
-            WindowFocusController.focusOrOpen(windowID: "meeting-notes", openWindow: openWindow)
+        .onChange(of: self.appState.notesWindowRequestID) {
+            WindowFocusController.focusOrOpen(windowID: "meeting-notes", openWindow: self.openWindow)
         }
-        .onChange(of: activeDetectionIdentifier) { _, newValue in
-            appState.resetDetectionDismissalIfNeeded(for: newValue)
+        .onChange(of: self.activeDetectionIdentifier) { _, newValue in
+            self.appState.resetDetectionDismissalIfNeeded(for: newValue)
         }
     }
 
@@ -40,10 +40,10 @@ struct StartupView: View {
             Text("Welcome to Alona")
                 .font(.title2)
                 .bold()
-            if appState.isRecording {
+            if self.appState.isRecording {
                 Text("Recording in progress")
                     .foregroundStyle(.red)
-            } else if meetingDetector.isInMeeting {
+            } else if self.meetingDetector.isInMeeting {
                 Text("Meeting detected")
                     .foregroundStyle(.orange)
             } else {
@@ -56,12 +56,12 @@ struct StartupView: View {
     private var detectionStatus: some View {
         HStack(spacing: 8) {
             Circle()
-                .fill(meetingDetector.isInMeeting ? Color.green : Color.gray)
+                .fill(self.meetingDetector.isInMeeting ? Color.green : Color.gray)
                 .frame(width: 10, height: 10)
-            if meetingDetector.isInMeeting {
-                Text(detectedMeetingDescription)
+            if self.meetingDetector.isInMeeting {
+                Text(self.detectedMeetingDescription)
                     .font(.subheadline)
-            } else if meetingDetector.automationPermissionDenied {
+            } else if self.meetingDetector.automationPermissionDenied {
                 Text("Automation permission needed for meeting detection")
                     .font(.subheadline)
                     .foregroundStyle(.orange)
@@ -81,16 +81,16 @@ struct StartupView: View {
                 Text("Meeting Detected!")
                     .font(.headline)
             }
-            Text(detectedMeetingDescription)
+            Text(self.detectedMeetingDescription)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
             HStack(spacing: 12) {
                 Button("Start Recording") {
-                    startDetectedMeeting()
+                    self.startDetectedMeeting()
                 }
                 .buttonStyle(.borderedProminent)
                 Button("Dismiss") {
-                    dismissDetectedMeeting()
+                    self.dismissDetectedMeeting()
                 }
                 .buttonStyle(.bordered)
             }
@@ -102,52 +102,52 @@ struct StartupView: View {
     }
 
     private var shouldShowDetectionPrompt: Bool {
-        let identifier = activeDetectionIdentifier
-        guard !identifier.isEmpty, meetingDetector.isInMeeting, !appState.isRecording else { return false }
-        return appState.dismissedDetectionIdentifier != identifier
+        let identifier = self.activeDetectionIdentifier
+        guard !identifier.isEmpty, self.meetingDetector.isInMeeting, !self.appState.isRecording else { return false }
+        return self.appState.dismissedDetectionIdentifier != identifier
     }
 
     private var activeDetectionIdentifier: String {
-        guard meetingDetector.isInMeeting else { return "" }
-        return "\(meetingDetector.detectedApp?.rawValue ?? "unknown")|\(meetingDetector.meetingTitle)"
+        guard self.meetingDetector.isInMeeting else { return "" }
+        return "\(self.meetingDetector.detectedApp?.rawValue ?? "unknown")|\(self.meetingDetector.meetingTitle)"
     }
 
     private var detectedMeetingDescription: String {
-        let appName = meetingDetector.detectedApp?.displayName ?? "Meeting"
-        return "\(appName) – \(meetingDetector.meetingTitle)"
+        let appName = self.meetingDetector.detectedApp?.displayName ?? "Meeting"
+        return "\(appName) – \(self.meetingDetector.meetingTitle)"
     }
 
     private func startDetectedMeeting() {
-        let identifier = activeDetectionIdentifier
+        let identifier = self.activeDetectionIdentifier
         guard !identifier.isEmpty else { return }
         Task {
-            await appState.startRecording(meetingTitleOverride: meetingDetector.meetingTitle)
-            appState.dismissDetection(identifier: identifier)
+            await self.appState.startRecording(meetingTitleOverride: self.meetingDetector.meetingTitle)
+            self.appState.dismissDetection(identifier: identifier)
         }
     }
 
     private func dismissDetectedMeeting() {
-        let identifier = activeDetectionIdentifier
+        let identifier = self.activeDetectionIdentifier
         guard !identifier.isEmpty else { return }
-        appState.dismissDetection(identifier: identifier)
+        self.appState.dismissDetection(identifier: identifier)
     }
 
     private var controls: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 12) {
-                Button(appState.isRecording ? "Stop Recording" : "Start Recording") {
-                    toggleRecording()
+                Button(self.appState.isRecording ? "Stop Recording" : "Start Recording") {
+                    self.toggleRecording()
                 }
                 .buttonStyle(.borderedProminent)
 
                 Button("Recordings") {
-                    WindowFocusController.focusOrOpen(windowID: "recordings", openWindow: openWindow)
+                    WindowFocusController.focusOrOpen(windowID: "recordings", openWindow: self.openWindow)
                 }
                 .buttonStyle(.bordered)
 
-                if appState.currentMeetingDirectory != nil {
+                if self.appState.currentMeetingDirectory != nil {
                     Button("Current Notes") {
-                        WindowFocusController.focusOrOpen(windowID: "meeting-notes", openWindow: openWindow)
+                        WindowFocusController.focusOrOpen(windowID: "meeting-notes", openWindow: self.openWindow)
                     }
                     .buttonStyle(.bordered)
                 }
@@ -155,13 +155,13 @@ struct StartupView: View {
 
             HStack(spacing: 12) {
                 Button("Open Settings") {
-                    WindowFocusController.focusOrOpen(windowID: "settings-window", openWindow: openWindow)
+                    WindowFocusController.focusOrOpen(windowID: "settings-window", openWindow: self.openWindow)
                 }
                 Button("Review Permissions") {
-                    WindowFocusController.focusOrOpen(windowID: "onboarding", openWindow: openWindow)
+                    WindowFocusController.focusOrOpen(windowID: "onboarding", openWindow: self.openWindow)
                 }
                 Button("Transcription Queue") {
-                    WindowFocusController.focusOrOpen(windowID: "transcription-queue", openWindow: openWindow)
+                    WindowFocusController.focusOrOpen(windowID: "transcription-queue", openWindow: self.openWindow)
                 }
             }
         }
@@ -169,8 +169,8 @@ struct StartupView: View {
 
     private var footer: some View {
         VStack(alignment: .leading, spacing: 12) {
-            modelStatusSection
-            permissionSummary
+            self.modelStatusSection
+            self.permissionSummary
         }
     }
 
@@ -180,11 +180,11 @@ struct StartupView: View {
                 .font(.footnote)
                 .foregroundStyle(.secondary)
             HStack(spacing: 12) {
-                Text(modelStatusMessage)
-                    .foregroundStyle(modelStatusColor)
-                if showDownloadButton {
+                Text(self.modelStatusMessage)
+                    .foregroundStyle(self.modelStatusColor)
+                if self.showDownloadButton {
                     Button("Download Model") {
-                        modelManager.downloadModel()
+                        self.modelManager.downloadModel()
                     }
                 }
                 if case let .failed(message) = modelManager.status {
@@ -205,7 +205,7 @@ struct StartupView: View {
                 HStack {
                     Text(type.title)
                     Spacer()
-                    Text(permissionManager.statuses[type]?.displayName ?? "–")
+                    Text(self.permissionManager.statuses[type]?.displayName ?? "–")
                         .foregroundStyle(.secondary)
                         .font(.caption)
                 }
@@ -215,44 +215,44 @@ struct StartupView: View {
     }
 
     private var modelStatusMessage: String {
-        switch modelManager.status {
+        switch self.modelManager.status {
         case .available:
-            return "Model installed"
+            "Model installed"
         case .downloading:
-            return "Downloading..."
+            "Downloading..."
         case .missing:
-            return "Model missing"
+            "Model missing"
         case .failed:
-            return "Download failed"
+            "Download failed"
         }
     }
 
     private var modelStatusColor: Color {
-        switch modelManager.status {
+        switch self.modelManager.status {
         case .available:
-            return .green
+            .green
         case .downloading:
-            return .orange
+            .orange
         case .missing, .failed:
-            return .red
+            .red
         }
     }
 
     private var showDownloadButton: Bool {
-        switch modelManager.status {
+        switch self.modelManager.status {
         case .available, .downloading:
-            return false
+            false
         case .missing, .failed:
-            return true
+            true
         }
     }
 
     private func toggleRecording() {
         Task {
-            if appState.isRecording {
-                await appState.stopRecording()
+            if self.appState.isRecording {
+                await self.appState.stopRecording()
             } else {
-                await appState.startRecording()
+                await self.appState.startRecording()
             }
         }
     }

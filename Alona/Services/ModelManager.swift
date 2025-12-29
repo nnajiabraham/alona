@@ -9,7 +9,7 @@ enum ModelLocator {
     }
 
     static func resetForTesting() {
-        applicationSupportDirectoryProvider = {
+        self.applicationSupportDirectoryProvider = {
             FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
         }
     }
@@ -18,18 +18,18 @@ enum ModelLocator {
         if let url = Bundle.main.url(forResource: modelName, withExtension: modelExtension) {
             return url
         }
-        return Bundle.main.url(forResource: modelName, withExtension: modelExtension, subdirectory: "Models")
+        return Bundle.main.url(forResource: self.modelName, withExtension: self.modelExtension, subdirectory: "Models")
     }
 
     static func userModelsDirectory() throws -> URL {
-        let base = applicationSupportDirectoryProvider()
+        let base = self.applicationSupportDirectoryProvider()
         let directory = base.appendingPathComponent("Alona/Models", isDirectory: true)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         return directory
     }
 
     static func userModelURL() throws -> URL {
-        try userModelsDirectory().appendingPathComponent("\(modelName).\(modelExtension)")
+        try self.userModelsDirectory().appendingPathComponent("\(self.modelName).\(self.modelExtension)")
     }
 
     static func userModelExists() -> Bool {
@@ -72,21 +72,21 @@ final class WhisperModelManager: ObservableObject {
     private var downloadTask: Task<Void, Never>?
 
     private init() {
-        refreshStatus()
+        self.refreshStatus()
     }
 
     func refreshStatus() {
         if ModelLocator.existingModelURL() != nil {
-            status = .available
+            self.status = .available
         } else {
-            status = .missing
+            self.status = .missing
         }
     }
 
     func downloadModel() {
-        guard downloadTask == nil else { return }
-        status = .downloading
-        downloadTask = Task {
+        guard self.downloadTask == nil else { return }
+        self.status = .downloading
+        self.downloadTask = Task {
             do {
                 let (tempURL, _) = try await URLSession.shared.download(from: ModelLocator.remoteURL)
                 try ModelLocator.persistUserModel(from: tempURL)

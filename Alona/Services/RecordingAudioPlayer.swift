@@ -13,7 +13,7 @@ final class RecordingAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
             self.lastError = nil
         }
         do {
-            stop()
+            self.stop()
             let player = try AVAudioPlayer(contentsOf: url)
             player.delegate = self
             player.prepareToPlay()
@@ -33,8 +33,8 @@ final class RecordingAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
     }
 
     func stop() {
-        player?.stop()
-        player = nil
+        self.player?.stop()
+        self.player = nil
         DispatchQueue.main.async {
             self.isPlaying = false
             self.playingURL = nil

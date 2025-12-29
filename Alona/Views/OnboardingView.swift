@@ -1,12 +1,12 @@
 import SwiftUI
 #if DEBUG
-    import Inject
+import Inject
 #endif
 
 struct OnboardingView: View {
     @Environment(PermissionManager.self) private var permissionManager
     #if DEBUG
-        @ObserveInjection var inject
+    @ObserveInjection var inject
     #endif
 
     var body: some View {
@@ -14,12 +14,13 @@ struct OnboardingView: View {
             VStack(alignment: .leading, spacing: 16) {
                 Text("Welcome to Alona")
                     .font(.title)
-                Text("Grant the required permissions so Alona can detect meetings, capture audio, and manage notes locally.")
+                Text(
+                    "Grant the required permissions so Alona can detect meetings, capture audio, and manage notes locally.")
                     .foregroundStyle(.secondary)
-                permissionsList
+                self.permissionsList
                 HStack {
                     Button("Refresh") {
-                        permissionManager.refreshAllPermissions()
+                        self.permissionManager.refreshAllPermissions()
                     }
                     Spacer()
                     Button("Close") {
@@ -48,27 +49,27 @@ struct OnboardingView: View {
         let type: PermissionManager.PermissionType
         @Environment(PermissionManager.self) private var permissionManager
         #if DEBUG
-            @ObserveInjection var inject
+        @ObserveInjection var inject
         #endif
 
         var body: some View {
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
-                    Text(type.title)
+                    Text(self.type.title)
                         .font(.headline)
                     Spacer()
-                    Text(permissionManager.statuses[type]?.displayName ?? "–")
+                    Text(self.permissionManager.statuses[self.type]?.displayName ?? "–")
                         .font(.caption)
                         .padding(6)
-                        .background(statusColor.opacity(0.2))
+                        .background(self.statusColor.opacity(0.2))
                         .clipShape(RoundedRectangle(cornerRadius: 6))
                 }
                 HStack {
                     Button("Request Access") {
-                        permissionManager.requestPermission(type)
+                        self.permissionManager.requestPermission(self.type)
                     }
                     Button("Open Settings") {
-                        permissionManager.openSystemSettings(for: type)
+                        self.permissionManager.openSystemSettings(for: self.type)
                     }
                 }
                 .buttonStyle(.bordered)
@@ -82,10 +83,10 @@ struct OnboardingView: View {
         }
 
         private var statusColor: Color {
-            switch permissionManager.statuses[type] {
-            case .granted: return .green
-            case .denied: return .orange
-            default: return .gray
+            switch self.permissionManager.statuses[self.type] {
+            case .granted: .green
+            case .denied: .orange
+            default: .gray
             }
         }
     }

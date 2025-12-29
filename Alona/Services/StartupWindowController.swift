@@ -6,16 +6,16 @@ enum WindowFocusController {
         switch windowID {
         case "settings-window":
             // Keep this stable without double "-window" suffix.
-            return "settings-window"
+            "settings-window"
         default:
-            return "\(windowID)-window"
+            "\(windowID)-window"
         }
     }
 
     static func focusOrOpen(windowID: String, openWindow: OpenWindowAction) {
         let identifier = identifier(for: windowID)
         if let window = existingWindow(in: NSApp.windows, identifier: identifier) {
-            focus(window)
+            self.focus(window)
             return
         }
         openWindow(id: windowID)
@@ -46,7 +46,7 @@ enum StartupWindowController {
     }
 
     static func existingWindow(in windows: [NSWindow]) -> NSWindow? {
-        windows.first { $0.identifier?.rawValue == identifier }
+        windows.first { $0.identifier?.rawValue == self.identifier }
     }
 }
 
@@ -56,21 +56,21 @@ struct WindowIdentifierSetter: NSViewRepresentable {
     func makeNSView(context _: Context) -> NSView {
         let view = NSView()
         DispatchQueue.main.async {
-            updateIdentifier(for: view)
+            self.updateIdentifier(for: view)
         }
         return view
     }
 
     func updateNSView(_ nsView: NSView, context _: Context) {
         DispatchQueue.main.async {
-            updateIdentifier(for: nsView)
+            self.updateIdentifier(for: nsView)
         }
     }
 
     private func updateIdentifier(for view: NSView) {
         guard let window = view.window else { return }
-        if window.identifier?.rawValue != identifier {
-            window.identifier = NSUserInterfaceItemIdentifier(identifier)
+        if window.identifier?.rawValue != self.identifier {
+            window.identifier = NSUserInterfaceItemIdentifier(self.identifier)
         }
     }
 }

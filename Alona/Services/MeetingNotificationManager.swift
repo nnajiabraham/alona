@@ -19,7 +19,7 @@ final class MeetingNotificationManager: NSObject, MeetingNotificationScheduling,
 
     override private init() {
         super.init()
-        notificationCenter.delegate = self
+        self.notificationCenter.delegate = self
         configureCategories()
         requestAuthorizationIfNeeded()
     }
@@ -30,50 +30,52 @@ final class MeetingNotificationManager: NSObject, MeetingNotificationScheduling,
         content.title = "\(appName) meeting detected"
         content.body = "Tap Start Recording to capture \"\(meetingTitle)\"."
         content.sound = UNNotificationSound.default
-        content.categoryIdentifier = categoryIdentifier
+        content.categoryIdentifier = self.categoryIdentifier
         content.userInfo = ["meetingTitle": meetingTitle]
 
         let request = UNNotificationRequest(
             identifier: "meeting-\(identifier)",
             content: content,
-            trigger: nil
-        )
-        notificationCenter.add(request)
+            trigger: nil)
+        self.notificationCenter.add(request)
     }
 
-    func userNotificationCenter(_: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        if response.actionIdentifier == startActionIdentifier || response.actionIdentifier == UNNotificationDefaultActionIdentifier {
+    func userNotificationCenter(
+        _: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping () -> Void)
+    {
+        if response.actionIdentifier == self.startActionIdentifier || response
+            .actionIdentifier == UNNotificationDefaultActionIdentifier
+        {
             let title = response.notification.request.content.userInfo["meetingTitle"] as? String
             NotificationCenter.default.post(
                 name: .meetingNotificationStartRecording,
                 object: nil,
-                userInfo: ["meetingTitle": title ?? "Meeting"]
-            )
+                userInfo: ["meetingTitle": title ?? "Meeting"])
         }
         completionHandler()
     }
 }
 
-private extension MeetingNotificationManager {
-    func configureCategories() {
+extension MeetingNotificationManager {
+    private func configureCategories() {
         let startAction = UNNotificationAction(
             identifier: startActionIdentifier,
             title: "Start Recording",
-            options: [.foreground]
-        )
+            options: [.foreground])
         let category = UNNotificationCategory(
             identifier: categoryIdentifier,
             actions: [startAction],
             intentIdentifiers: [],
-            options: []
-        )
-        notificationCenter.setNotificationCategories([category])
+            options: [])
+        self.notificationCenter.setNotificationCategories([category])
     }
 
-    func requestAuthorizationIfNeeded() {
-        guard !authorizationRequested else { return }
-        authorizationRequested = true
-        notificationCenter.requestAuthorization(options: [.alert, .sound]) { _, _ in
+    private func requestAuthorizationIfNeeded() {
+        guard !self.authorizationRequested else { return }
+        self.authorizationRequested = true
+        self.notificationCenter.requestAuthorization(options: [.alert, .sound]) { _, _ in
             // Silent failures are acceptable; the UI still has manual options.
         }
     }

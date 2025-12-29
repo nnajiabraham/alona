@@ -88,7 +88,8 @@ Source baseline: [steipete/CodexBar](https://github.com/steipete/CodexBar/tree/m
     - `AudioRecorder`, `TranscriptionEngine` — currently extend `NSObject` but analysis shows they **don't actually require it** (see LOW priority checklist item at end)
     - `RecordingAudioPlayer` — **genuinely requires** `NSObject` for `AVAudioPlayerDelegate` conformance (Apple's Obj-C delegate protocol)
 - [x] **HIGH PRIORITY**: Create an `AGENTS.md` with repo-specific "do this every time" commands and rules (build/test/run, formatting, what to avoid, verification steps). ✅
-- [ ] **MEDIUM**: Add `.swiftformat` and `.swiftlint.yml` (pin formatting + lint rules; optionally wire `make lint` to also run `swiftlint --strict`).
+- [x] **MEDIUM**: Add `.swiftformat` and `.swiftlint.yml` (pin formatting + lint rules; optionally wire `make lint` to also run `swiftlint --strict`). ✅
+- [ ] **MEDIUM**: Upgrade project to Swift 6.2 (update `SWIFT_VERSION` in Xcode project + `.swiftformat --swiftversion 6.2`)
 - [ ] **MEDIUM**: Increase test coverage **and** split `AlonaTests/AlonaTests.swift` into focused `*Tests.swift` files by subsystem (AppState, MeetingDetector, PermissionManager, FileManager, Audio, Transcription).
 - [ ] **MEDIUM**: Adopt stricter concurrency posture (CodexBar uses `.enableUpcomingFeature("StrictConcurrency")`; for Alona: evaluate Swift 6.x migration or enable stricter Xcode concurrency checks where feasible).
 - [ ] **LOW**: Add GitHub Actions CI (`.github/workflows/ci.yml`) to run format/lint/tests on PRs.
@@ -254,6 +255,93 @@ private func scheduleNotesAutosave() {
 - Use modern `@Observable` / `@State` / `@Environment` patterns
 - Avoid deprecated `onChange` syntax
 - Use `@Bindable` for bindings to `@Observable` properties in views
+
+**Tests:** All 54 tests pass. **Lint:** Clean.
+
+---
+
+#### SwiftFormat and SwiftLint Configuration (2025-12-29)
+
+**Files created:**
+- `.swiftformat` — SwiftFormat configuration (pinned rules)
+- `.swiftlint.yml` — SwiftLint configuration (ready for when installed)
+
+**SwiftFormat key settings:**
+- `--swiftversion 5.9` — Matches project Swift version
+- `--self insert` — Explicit self in closures (concurrency-safe)
+- `--indent 4` — 4-space indentation
+- `--maxwidth 120` — 120 character line limit
+- `--importgrouping testable-bottom` — Organize imports
+- `--organizetypes class,struct,enum,extension` — Organize type declarations
+
+**SwiftLint key rules:**
+- **Line length:** 120 warning, 250 error
+- **Function body length:** 100 warning, 200 error
+- **Analyzer rules:** `unused_declaration`, `unused_import`
+- **Opt-in rules:** `force_unwrapping`, `empty_string`, `first_where`, `fatal_error_message`, etc.
+
+**Makefile updates:**
+- `make lint` now runs SwiftLint (if installed) after SwiftFormat
+- Added `SWIFTLINT` detection variable
+
+**Formatting applied:**
+- 28 files reformatted to match new config
+- All tests still pass after reformatting
+
+**Tests:** All 54 tests pass. **Lint:** Clean.
+
+---
+
+#### SwiftFormat/SwiftLint Config Update - CodexBar Alignment (2025-12-29)
+
+**Changes to `.swiftformat`:**
+
+Added from CodexBar:
+- `--selfrequired` — List of functions requiring explicit self
+- `--extensionacl on-declarations` — ACL on extension members
+- `--xcodeindentation enabled` — Match Xcode auto-indentation
+- `--linebreaks lf` — Unix line endings
+- `--emptybraces no-space` — `{}` not `{ }`
+- `--nospaceoperators ...,..<` — No space around range operators
+- `--ranges no-space` — Compact range notation
+- `--someAny true` — Proper `any`/`some` keywords
+- `--closingparen same-line` — Closing paren on same line
+- `--extensionmark "MARK: - %t + %p"` — Extension mark format
+- `--structthreshold 0` / `--enumthreshold 0` — Always organize
+- `--stripunusedargs closure-only` — Safer unused arg handling
+- `--header ignore` — Changed from `strip` to `ignore`
+
+Removed:
+- `--tabwidth 4` (unnecessary with `--indent 4`)
+- `--semicolons never` (SwiftFormat default)
+- `--header strip` (changed to `ignore`)
+
+**Changes to `.swiftlint.yml`:**
+
+Added opt-in rules from CodexBar:
+- `fallthrough` — Warn on fallthrough usage
+- `pattern_matching_keywords` — Consistent `case let`
+- `switch_case_alignment` — Consistent case alignment
+
+Added to disabled rules (SwiftFormat handles these):
+- `trailing_whitespace`, `trailing_newline`, `vertical_whitespace`
+- `indentation_width`, `sorted_imports`, `explicit_self`
+
+Removed:
+- `redundant_type_annotation` — Can be noisy
+
+Updated thresholds (more lenient, matching CodexBar):
+- `function_body_length`: 150w/300e (was 100w/200e)
+- `file_length`: 1000w/1500e (was 500w/1000e)
+- `type_body_length`: 500w/800e (was 300w/500e)
+- `cyclomatic_complexity`: 20w/40e (was 15w/25e)
+- `nesting.type_level`: 3w/5e (was 2)
+- `nesting.function_level`: 4w/6e (was 3)
+- `type_name.max_length`: 60w/80e (was 50w/60e)
+
+**Formatting applied:**
+- 19 files reformatted with updated rules
+- All 54 tests pass
 
 **Tests:** All 54 tests pass. **Lint:** Clean.
 

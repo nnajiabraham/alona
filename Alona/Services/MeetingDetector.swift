@@ -13,9 +13,9 @@ final class MeetingDetector {
 
         var displayName: String {
             switch self {
-            case .zoom: return "Zoom"
-            case .googleMeet: return "Google Meet"
-            case .teams: return "Microsoft Teams"
+            case .zoom: "Zoom"
+            case .googleMeet: "Google Meet"
+            case .teams: "Microsoft Teams"
             }
         }
     }
@@ -43,35 +43,35 @@ final class MeetingDetector {
     }
 
     func startMonitoring() {
-        guard pollTimer == nil else { return }
+        guard self.pollTimer == nil else { return }
 
         // Start tracking microphone activity
-        microphoneTracker.startTracking()
+        self.microphoneTracker.startTracking()
 
-        workspaceObserver = NSWorkspace.shared.notificationCenter.addObserver(
+        self.workspaceObserver = NSWorkspace.shared.notificationCenter.addObserver(
             forName: NSWorkspace.didActivateApplicationNotification,
             object: nil,
-            queue: .main
-        ) { [weak self] _ in
+            queue: .main)
+        { [weak self] _ in
             Task { @MainActor [weak self] in
                 self?.scheduleBackgroundCheck()
             }
         }
 
-        pollTimer = Timer.scheduledTimer(withTimeInterval: pollInterval, repeats: true) { [weak self] _ in
+        self.pollTimer = Timer.scheduledTimer(withTimeInterval: self.pollInterval, repeats: true) { [weak self] _ in
             Task { @MainActor [weak self] in
                 self?.scheduleBackgroundCheck()
             }
         }
 
         // Initial check on background thread to avoid blocking main thread
-        scheduleBackgroundCheck()
+        self.scheduleBackgroundCheck()
     }
 
     private func scheduleBackgroundCheck() {
         // Capture current mic usage state on main thread
-        let zoomUsingMic = microphoneTracker.isZoomInMeeting()
-        let chromeUsingMic = microphoneTracker.isChromeUsingMicrophone()
+        let zoomUsingMic = self.microphoneTracker.isZoomInMeeting()
+        let chromeUsingMic = self.microphoneTracker.isChromeUsingMicrophone()
 
         Task.detached(priority: .utility) { [weak self] in
             await self?.checkMeetingStatusBackground(zoomUsingMic: zoomUsingMic, chromeUsingMic: chromeUsingMic)
@@ -79,14 +79,14 @@ final class MeetingDetector {
     }
 
     func stopMonitoring() {
-        pollTimer?.invalidate()
-        pollTimer = nil
+        self.pollTimer?.invalidate()
+        self.pollTimer = nil
 
-        microphoneTracker.stopTracking()
+        self.microphoneTracker.stopTracking()
 
         if let observer = workspaceObserver {
             NSWorkspace.shared.notificationCenter.removeObserver(observer)
-            workspaceObserver = nil
+            self.workspaceObserver = nil
         }
     }
 
@@ -98,39 +98,39 @@ final class MeetingDetector {
 
         // Update UI state on main thread
         await MainActor.run {
-            applyDetectionResult(zoom: zoomResult, googleMeet: googleMeetResult)
+            self.applyDetectionResult(zoom: zoomResult, googleMeet: googleMeetResult)
         }
     }
 
     private func applyDetectionResult(zoom: DetectionResult, googleMeet: DetectionResult) {
         // Apply Zoom result
         if case let .detected(app, title) = zoom {
-            missedDetectionCount = 0
-            lastDetectedApp = app
-            _ = handleDetection(app: app, meetingTitle: title)
+            self.missedDetectionCount = 0
+            self.lastDetectedApp = app
+            _ = self.handleDetection(app: app, meetingTitle: title)
             return
         }
         if case .permissionDenied = zoom {
-            automationPermissionDenied = true
+            self.automationPermissionDenied = true
         }
 
         // Apply Google Meet result
         if case let .detected(app, title) = googleMeet {
-            missedDetectionCount = 0
-            lastDetectedApp = app
-            automationPermissionDenied = false
-            _ = handleDetection(app: app, meetingTitle: title)
+            self.missedDetectionCount = 0
+            self.lastDetectedApp = app
+            self.automationPermissionDenied = false
+            _ = self.handleDetection(app: app, meetingTitle: title)
             return
         }
         if case .permissionDenied = googleMeet {
-            automationPermissionDenied = true
+            self.automationPermissionDenied = true
         } else {
-            automationPermissionDenied = false
+            self.automationPermissionDenied = false
         }
 
         // No meeting detected - but use sticky detection to prevent flickering
         // Only clear detection after several consecutive misses
-        if isInMeeting, let lastApp = lastDetectedApp {
+        if self.isInMeeting, let lastApp = lastDetectedApp {
             // Check if the meeting app is still running
             let appStillRunning = NSWorkspace.shared.runningApplications.contains {
                 $0.bundleIdentifier == lastApp.rawValue ||
@@ -138,24 +138,24 @@ final class MeetingDetector {
             }
 
             if appStillRunning {
-                missedDetectionCount += 1
+                self.missedDetectionCount += 1
                 // swiftformat:disable:next redundantSelf
                 logger.debug("Meeting app still running, missed count: \(self.missedDetectionCount)")
 
                 // Keep detection active if below threshold
-                if missedDetectionCount < missedDetectionThreshold {
+                if self.missedDetectionCount < self.missedDetectionThreshold {
                     return
                 }
             }
         }
 
         // Clear detection
-        missedDetectionCount = 0
-        lastDetectedApp = nil
-        isInMeeting = false
-        detectedApp = nil
-        meetingTitle = "No meeting detected"
-        lastNotificationIdentifier = nil
+        self.missedDetectionCount = 0
+        self.lastDetectedApp = nil
+        self.isInMeeting = false
+        self.detectedApp = nil
+        self.meetingTitle = "No meeting detected"
+        self.lastNotificationIdentifier = nil
     }
 
     private enum DetectionResult {
@@ -198,7 +198,9 @@ final class MeetingDetector {
     /// Improved Google Meet detection: Chrome running + meet.google.com tab with meeting URL + optional mic check
     private nonisolated static func checkGoogleMeetBackground(isUsingMicrophone _: Bool) -> DetectionResult {
         // First check if Chrome is running
-        guard NSWorkspace.shared.runningApplications.first(where: { $0.bundleIdentifier == MeetingApp.googleMeet.rawValue }) != nil else {
+        guard NSWorkspace.shared.runningApplications
+            .first(where: { $0.bundleIdentifier == MeetingApp.googleMeet.rawValue }) != nil
+        else {
             return .notDetected
         }
 
@@ -227,17 +229,20 @@ final class MeetingDetector {
 
     @discardableResult
     func handleDetection(app: MeetingApp, meetingTitle title: String) -> Bool {
-        detectedApp = app
-        isInMeeting = true
-        meetingTitle = title
-        automationPermissionDenied = false
+        self.detectedApp = app
+        self.isInMeeting = true
+        self.meetingTitle = title
+        self.automationPermissionDenied = false
         let identifier = "\(app.rawValue)|\(title)"
-        if lastNotificationIdentifier != identifier {
+        if self.lastNotificationIdentifier != identifier {
             // Show floating popup notification (Granola-style)
-            showMeetingPopup(app: app, meetingTitle: title)
+            self.showMeetingPopup(app: app, meetingTitle: title)
             // Also call notification scheduler (for testing and fallback)
-            notificationScheduler.scheduleMeetingNotification(appName: app.displayName, meetingTitle: title, identifier: identifier)
-            lastNotificationIdentifier = identifier
+            self.notificationScheduler.scheduleMeetingNotification(
+                appName: app.displayName,
+                meetingTitle: title,
+                identifier: identifier)
+            self.lastNotificationIdentifier = identifier
         }
         return true
     }
@@ -251,8 +256,7 @@ final class MeetingDetector {
                 Task {
                     await self.startRecordingFromPopup()
                 }
-            }
-        )
+            })
     }
 
     private func startRecordingFromPopup() async {
@@ -260,17 +264,16 @@ final class MeetingDetector {
         NotificationCenter.default.post(
             name: .meetingNotificationStartRecording,
             object: nil,
-            userInfo: ["meetingTitle": meetingTitle]
-        )
+            userInfo: ["meetingTitle": self.meetingTitle])
     }
 
     #if DEBUG
-        func resetDetectionStateForTesting() {
-            isInMeeting = false
-            detectedApp = nil
-            meetingTitle = "No meeting detected"
-            lastNotificationIdentifier = nil
-        }
+    func resetDetectionStateForTesting() {
+        self.isInMeeting = false
+        self.detectedApp = nil
+        self.meetingTitle = "No meeting detected"
+        self.lastNotificationIdentifier = nil
+    }
     #endif
 }
 
@@ -325,10 +328,10 @@ extension MeetingDetector {
     }
 }
 
-private extension MeetingDetector {
+extension MeetingDetector {
     /// Improved Google Meet AppleScript that only matches actual meeting URLs
     /// Excludes: /lookup/, landing pages, "meeting ended" pages
-    nonisolated static var googleMeetAppleScriptImproved: String {
+    fileprivate nonisolated static var googleMeetAppleScriptImproved: String {
         """
         tell application "System Events"
             if exists (process "Google Chrome") then
@@ -358,7 +361,7 @@ private extension MeetingDetector {
     }
 
     /// Original simpler Google Meet script (kept for fallback)
-    nonisolated static var googleMeetAppleScript: String {
+    fileprivate nonisolated static var googleMeetAppleScript: String {
         """
         tell application "System Events"
             if exists (process "Google Chrome") then

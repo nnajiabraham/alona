@@ -17,7 +17,7 @@ struct TranscriptionQueueView: View {
                 }
             }
             List {
-                if appState.transcriptionJobs.isEmpty {
+                if self.appState.transcriptionJobs.isEmpty {
                     VStack(spacing: 8) {
                         Image(systemName: "waveform")
                             .font(.largeTitle)
@@ -32,8 +32,8 @@ struct TranscriptionQueueView: View {
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.vertical, 24)
                 } else {
-                    ForEach(appState.transcriptionJobs) { job in
-                        jobRow(job)
+                    ForEach(self.appState.transcriptionJobs) { job in
+                        self.jobRow(job)
                     }
                 }
             }
@@ -45,7 +45,7 @@ struct TranscriptionQueueView: View {
     }
 
     private var activeJobTitle: String? {
-        appState.transcriptionJobs.first(where: { $0.state.isBusy })?.title
+        self.appState.transcriptionJobs.first(where: { $0.state.isBusy })?.title
     }
 
     @ViewBuilder
@@ -74,7 +74,7 @@ struct TranscriptionQueueView: View {
             }
             if job.state.isBusy {
                 Button("Cancel") {
-                    appState.cancelTranscriptionJob(job)
+                    self.appState.cancelTranscriptionJob(job)
                 }
                 .buttonStyle(.bordered)
             }
@@ -83,47 +83,47 @@ struct TranscriptionQueueView: View {
     }
 }
 
-private extension TranscriptionJob.State {
-    var displayName: String {
+extension TranscriptionJob.State {
+    fileprivate var displayName: String {
         switch self {
         case .pending:
-            return "Pending"
+            "Pending"
         case .preparing:
-            return "Preparing"
+            "Preparing"
         case let .processing(value):
-            return "Processing \(Int(value * 100))%"
+            "Processing \(Int(value * 100))%"
         case .summarizing:
-            return "Summarizing"
+            "Summarizing"
         case let .completed(date):
-            return "Completed \(date.formatted(date: .omitted, time: .shortened))"
+            "Completed \(date.formatted(date: .omitted, time: .shortened))"
         case .failed:
-            return "Failed"
+            "Failed"
         case .cancelled:
-            return "Cancelled"
+            "Cancelled"
         }
     }
 
-    var statusColor: Color {
+    fileprivate var statusColor: Color {
         switch self {
         case .pending, .preparing, .processing, .summarizing:
-            return .accentColor
+            .accentColor
         case .completed:
-            return .green
+            .green
         case .failed:
-            return .red
+            .red
         case .cancelled:
-            return .secondary
+            .secondary
         }
     }
 
-    var progressValue: Double? {
+    fileprivate var progressValue: Double? {
         if case let .processing(value) = self {
             return value
         }
         return nil
     }
 
-    var errorDescription: String? {
+    fileprivate var errorDescription: String? {
         if case let .failed(message) = self {
             return message
         }

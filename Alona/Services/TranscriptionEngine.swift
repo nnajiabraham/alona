@@ -22,15 +22,15 @@ final class TranscriptionEngine: NSObject, ObservableObject, TranscriptionProces
     private let idleUnloadInterval: TimeInterval = 120
 
     var progressPublisher: AnyPublisher<Double, Never> {
-        $progressValue.eraseToAnyPublisher()
+        self.$progressValue.eraseToAnyPublisher()
     }
 
     var isModelLoaded: Bool {
-        whisper != nil
+        self.whisper != nil
     }
 
     func transcribe(audioURL: URL) async throws -> TranscriptionResult {
-        activeTranscriptions += 1
+        self.activeTranscriptions += 1
         defer {
             activeTranscriptions -= 1
             lastUsedTime = Date()
@@ -43,18 +43,17 @@ final class TranscriptionEngine: NSObject, ObservableObject, TranscriptionProces
             throw TranscriptionError.modelNotLoaded
         }
 
-        progressValue = 0
+        self.progressValue = 0
         whisper.delegate = self
         let segments = try await whisper.transcribe(audioFrames: frames)
         let mapped = segments.map { segment in
             TranscriptionSegment(
                 startTime: TimeInterval(segment.startTime) / 1000.0,
                 endTime: TimeInterval(segment.endTime) / 1000.0,
-                text: segment.text.trimmingCharacters(in: .whitespacesAndNewlines)
-            )
+                text: segment.text.trimmingCharacters(in: .whitespacesAndNewlines))
         }
         let text = mapped.map(\.text).joined(separator: " ")
-        progressValue = 1.0
+        self.progressValue = 1.0
         return TranscriptionResult(text: text, segments: mapped)
     }
 
@@ -68,21 +67,21 @@ final class TranscriptionEngine: NSObject, ObservableObject, TranscriptionProces
             return
         }
 
-        guard activeTranscriptions == 0 else {
-            let count = activeTranscriptions
-            logger.debug("Cannot unload model - \(count) active transcriptions")
+        guard self.activeTranscriptions == 0 else {
+            let count = self.activeTranscriptions
+            self.logger.debug("Cannot unload model - \(count) active transcriptions")
             return
         }
 
-        if whisper != nil {
-            logger.info("Unloading Whisper model to free memory...")
-            whisper = nil
+        if self.whisper != nil {
+            self.logger.info("Unloading Whisper model to free memory...")
+            self.whisper = nil
             // Force memory cleanup
             #if DEBUG
-                logger.debug("Model reference released, memory should be freed by ARC")
+            self.logger.debug("Model reference released, memory should be freed by ARC")
             #endif
         } else {
-            logger.debug("Model already unloaded or was never loaded")
+            self.logger.debug("Model already unloaded or was never loaded")
         }
     }
 
@@ -91,9 +90,10 @@ final class TranscriptionEngine: NSObject, ObservableObject, TranscriptionProces
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             self.unloadTimer?.invalidate()
-            self.unloadTimer = Timer.scheduledTimer(withTimeInterval: self.idleUnloadInterval, repeats: false) { [weak self] _ in
-                self?.unloadModelIfIdle()
-            }
+            self.unloadTimer = Timer
+                .scheduledTimer(withTimeInterval: self.idleUnloadInterval, repeats: false) { [weak self] _ in
+                    self?.unloadModelIfIdle()
+                }
             // Ensure the timer is added to the common RunLoop mode
             if let timer = self.unloadTimer {
                 RunLoop.main.add(timer, forMode: .common)
@@ -105,24 +105,24 @@ final class TranscriptionEngine: NSObject, ObservableObject, TranscriptionProces
 
 extension TranscriptionEngine: WhisperDelegate {
     func whisper(_: Whisper, didUpdateProgress progress: Double) {
-        progressValue = progress
+        self.progressValue = progress
     }
 
     func whisper(_: Whisper, didErrorWith _: Error) {
-        progressValue = 0
+        self.progressValue = 0
     }
 }
 
-private extension TranscriptionEngine {
-    func loadModelIfNeeded() throws {
-        guard whisper == nil else { return }
+extension TranscriptionEngine {
+    private func loadModelIfNeeded() throws {
+        guard self.whisper == nil else { return }
         guard let url = ModelLocator.existingModelURL() else {
             throw TranscriptionError.modelNotFound
         }
-        whisper = Whisper(fromFileURL: url)
+        self.whisper = Whisper(fromFileURL: url)
     }
 
-    func convertAudioToPCM(url: URL) async throws -> [Float] {
+    private func convertAudioToPCM(url: URL) async throws -> [Float] {
         let audioFile = try AVAudioFile(forReading: url)
         let sourceFormat = audioFile.processingFormat
         let frameCount = AVAudioFrameCount(audioFile.length)
@@ -135,8 +135,7 @@ private extension TranscriptionEngine {
             commonFormat: .pcmFormatFloat32,
             sampleRate: 16000.0,
             channels: 1,
-            interleaved: false
-        )!
+            interleaved: false)!
 
         guard let converter = AVAudioConverter(from: sourceFormat, to: targetFormat) else {
             throw TranscriptionError.conversionFailed
@@ -175,15 +174,15 @@ enum TranscriptionError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .modelNotFound:
-            return "Whisper model not found. Use StartupView → Download Model or run 'make download-model'."
+            "Whisper model not found. Use StartupView → Download Model or run 'make download-model'."
         case .modelNotLoaded:
-            return "Unable to load Whisper model."
+            "Unable to load Whisper model."
         case .conversionFailed:
-            return "Failed to convert audio to 16kHz mono."
+            "Failed to convert audio to 16kHz mono."
         case .bufferAllocationFailed:
-            return "Unable to allocate audio buffer."
+            "Unable to allocate audio buffer."
         case .noChannelData:
-            return "Audio buffer missing channel data."
+            "Audio buffer missing channel data."
         }
     }
 }

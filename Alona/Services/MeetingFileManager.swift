@@ -11,14 +11,14 @@ struct MeetingEntry: Identifiable, Equatable, Hashable {
     var title: String
     let createdAt: Date
 
-    var id: URL { directory }
+    var id: URL { self.directory }
 
     static func == (lhs: MeetingEntry, rhs: MeetingEntry) -> Bool {
         lhs.directory == rhs.directory
     }
 
     func hash(into hasher: inout Hasher) {
-        hasher.combine(directory)
+        hasher.combine(self.directory)
     }
 }
 
@@ -49,7 +49,7 @@ final class MeetingFileManager {
             return Self.defaultBaseDirectory
         }
         set {
-            userDefaults.set(newValue.path, forKey: Constants.saveDirectoryKey)
+            self.userDefaults.set(newValue.path, forKey: Constants.saveDirectoryKey)
         }
     }
 
@@ -60,25 +60,25 @@ final class MeetingFileManager {
         let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "HHmm"
 
-        let slug = sanitizedSlug(from: title)
+        let slug = self.sanitizedSlug(from: title)
         let folderName = "\(dateFormatter.string(from: date))_\(timeFormatter.string(from: date))_\(slug)"
 
-        var meetingDir = baseDirectory.appendingPathComponent(folderName, isDirectory: true)
+        var meetingDir = self.baseDirectory.appendingPathComponent(folderName, isDirectory: true)
         var suffix = 1
-        while fileManager.fileExists(atPath: meetingDir.path) {
-            meetingDir = baseDirectory.appendingPathComponent("\(folderName)-\(suffix)", isDirectory: true)
+        while self.fileManager.fileExists(atPath: meetingDir.path) {
+            meetingDir = self.baseDirectory.appendingPathComponent("\(folderName)-\(suffix)", isDirectory: true)
             suffix += 1
         }
 
-        try fileManager.createDirectory(at: meetingDir, withIntermediateDirectories: true)
-        try saveTitle(title, to: meetingDir)
+        try self.fileManager.createDirectory(at: meetingDir, withIntermediateDirectories: true)
+        try self.saveTitle(title, to: meetingDir)
         return meetingDir
     }
 
     func saveNotes(_ notes: String, to directory: URL) throws {
         let notesURL = directory.appendingPathComponent("notes.md")
         try notes.write(to: notesURL, atomically: true, encoding: .utf8)
-        try? fileManager.removeItem(at: directory.appendingPathComponent("notes.tmp"))
+        try? self.fileManager.removeItem(at: directory.appendingPathComponent("notes.tmp"))
     }
 
     func saveTranscript(_ result: TranscriptionResult, to directory: URL) throws {
@@ -126,17 +126,18 @@ final class MeetingFileManager {
         guard let contents = try? fileManager.contentsOfDirectory(
             at: baseDirectory,
             includingPropertiesForKeys: [.creationDateKey],
-            options: [.skipsHiddenFiles]
-        ) else {
+            options: [.skipsHiddenFiles])
+        else {
             return []
         }
 
         let directories = contents.compactMap { url -> MeetingEntry? in
             var isDir: ObjCBool = false
-            guard fileManager.fileExists(atPath: url.path, isDirectory: &isDir), isDir.boolValue else { return nil }
+            guard self.fileManager.fileExists(atPath: url.path, isDirectory: &isDir),
+                  isDir.boolValue else { return nil }
             let resourceValues = try? url.resourceValues(forKeys: [.creationDateKey])
             let createdAt = resourceValues?.creationDate ?? Date.distantPast
-            let title = loadTitle(from: url) ?? url.lastPathComponent
+            let title = self.loadTitle(from: url) ?? url.lastPathComponent
             return MeetingEntry(directory: url, title: title, createdAt: createdAt)
         }
 
@@ -157,11 +158,11 @@ final class MeetingFileManager {
 
     func recordingAudioURL(in directory: URL) -> URL? {
         let preferred = directory.appendingPathComponent("recording.wav")
-        if fileManager.fileExists(atPath: preferred.path) {
+        if self.fileManager.fileExists(atPath: preferred.path) {
             return preferred
         }
         let fallback = directory.appendingPathComponent("recording-mono.wav")
-        if fileManager.fileExists(atPath: fallback.path) {
+        if self.fileManager.fileExists(atPath: fallback.path) {
             return fallback
         }
         return nil

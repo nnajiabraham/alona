@@ -12,7 +12,7 @@ final class SummaryManager: SummaryProviding {
     }
 
     func generateSummary(transcript: String, notes: String) async throws -> String {
-        try await provider.generateSummary(transcript: transcript, notes: notes)
+        try await self.provider.generateSummary(transcript: transcript, notes: notes)
     }
 }
 

@@ -12,11 +12,11 @@ struct MeetingDetectedPopup: View {
     @State private var opacity: Double = 0
 
     var body: some View {
-        if isVisible {
+        if self.isVisible {
             HStack(spacing: 12) {
                 // Close button
                 Button {
-                    dismiss()
+                    self.dismiss()
                 } label: {
                     Image(systemName: "xmark")
                         .font(.caption)
@@ -30,7 +30,7 @@ struct MeetingDetectedPopup: View {
                     Text("Meeting detected")
                         .font(.subheadline)
                         .fontWeight(.medium)
-                    Text(appName)
+                    Text(self.appName)
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -39,8 +39,8 @@ struct MeetingDetectedPopup: View {
 
                 // Take Notes button
                 Button {
-                    onStartRecording()
-                    dismiss()
+                    self.onStartRecording()
+                    self.dismiss()
                 } label: {
                     HStack(spacing: 6) {
                         Image(systemName: "note.text")
@@ -63,14 +63,14 @@ struct MeetingDetectedPopup: View {
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .shadow(color: .black.opacity(0.15), radius: 10, x: 0, y: 4)
             .frame(maxWidth: 320)
-            .opacity(opacity)
+            .opacity(self.opacity)
             .onAppear {
                 withAnimation(.easeIn(duration: 0.2)) {
-                    opacity = 1
+                    self.opacity = 1
                 }
                 // Auto-dismiss after 7 seconds
                 DispatchQueue.main.asyncAfter(deadline: .now() + 7) {
-                    dismiss()
+                    self.dismiss()
                 }
             }
         }
@@ -78,11 +78,11 @@ struct MeetingDetectedPopup: View {
 
     private func dismiss() {
         withAnimation(.easeOut(duration: 0.2)) {
-            opacity = 0
+            self.opacity = 0
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            isVisible = false
-            onDismiss()
+            self.isVisible = false
+            self.onDismiss()
         }
     }
 }
@@ -94,9 +94,8 @@ struct MeetingDetectedPopup: View {
             appName: "Zoom",
             meetingTitle: "Team Standup",
             onStartRecording: {},
-            onDismiss: {}
-        )
-        .padding()
+            onDismiss: {})
+            .padding()
     }
     .frame(width: 400, height: 300)
     .background(Color.gray.opacity(0.2))

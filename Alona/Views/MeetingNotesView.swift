@@ -8,10 +8,10 @@ struct MeetingNotesView: View {
     var body: some View {
         @Bindable var appState = appState
         VStack(alignment: .leading, spacing: 16) {
-            header
-            toolbar
+            self.header
+            self.toolbar
             GeometryReader { editorProxy in
-                NotesTextView(text: $appState.notesDraft, selectedRange: $selectedRange)
+                NotesTextView(text: $appState.notesDraft, selectedRange: self.$selectedRange)
                     .frame(width: editorProxy.size.width, height: editorProxy.size.height)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
             }
@@ -24,26 +24,25 @@ struct MeetingNotesView: View {
 
     private var header: some View {
         TextField("Meeting title", text: Binding(
-            get: { appState.meetingTitle },
-            set: { appState.updateActiveMeetingTitle($0) }
-        ))
-        .textFieldStyle(.plain)
-        .font(.title3)
-        .bold()
-        .disabled(appState.currentMeetingDirectory == nil)
+            get: { self.appState.meetingTitle },
+            set: { self.appState.updateActiveMeetingTitle($0) }))
+            .textFieldStyle(.plain)
+            .font(.title3)
+            .bold()
+            .disabled(self.appState.currentMeetingDirectory == nil)
     }
 
     private var toolbar: some View {
         HStack(spacing: 12) {
             Button {
-                insertTimestamp()
+                self.insertTimestamp()
             } label: {
                 Label("Timestamp", systemImage: "clock")
             }
             .buttonStyle(.bordered)
 
             Button {
-                insertBullet()
+                self.insertBullet()
             } label: {
                 Label("Bullet", systemImage: "list.bullet")
             }
@@ -55,17 +54,17 @@ struct MeetingNotesView: View {
 
     private func insertTimestamp() {
         let snippet = "[\(formattedDuration)] "
-        applySnippet(snippet)
+        self.applySnippet(snippet)
     }
 
     private func insertBullet() {
-        applySnippet("• ")
+        self.applySnippet("• ")
     }
 
     private func applySnippet(_ snippet: String) {
-        let result = NotesInsertion.inserting(snippet: snippet, in: appState.notesDraft, range: selectedRange)
-        appState.notesDraft = result.text
-        selectedRange = result.range
+        let result = NotesInsertion.inserting(snippet: snippet, in: self.appState.notesDraft, range: self.selectedRange)
+        self.appState.notesDraft = result.text
+        self.selectedRange = result.range
     }
 
     private var formattedDuration: String {
@@ -97,20 +96,20 @@ struct NotesTextView: NSViewRepresentable {
         textView?.isAutomaticDashSubstitutionEnabled = false
         textView?.font = .monospacedSystemFont(ofSize: NSFont.systemFontSize, weight: .regular)
         textView?.backgroundColor = .textBackgroundColor
-        textView?.string = text
-        if let range = textView?.selectedRange() { selectedRange = range }
+        textView?.string = self.text
+        if let range = textView?.selectedRange() { self.selectedRange = range }
         context.coordinator.textView = textView
         return scrollView
     }
 
     func updateNSView(_ nsView: NSScrollView, context _: Context) {
         guard let textView = nsView.documentView as? NSTextView else { return }
-        if textView.string != text {
-            textView.string = text
+        if textView.string != self.text {
+            textView.string = self.text
         }
-        if textView.selectedRange() != selectedRange {
-            textView.setSelectedRange(selectedRange)
-            textView.scrollRangeToVisible(selectedRange)
+        if textView.selectedRange() != self.selectedRange {
+            textView.setSelectedRange(self.selectedRange)
+            textView.scrollRangeToVisible(self.selectedRange)
         }
     }
 
@@ -124,12 +123,12 @@ struct NotesTextView: NSViewRepresentable {
 
         func textDidChange(_ notification: Notification) {
             guard let textView = notification.object as? NSTextView else { return }
-            parent.text = textView.string
+            self.parent.text = textView.string
         }
 
         func textViewDidChangeSelection(_ notification: Notification) {
             guard let textView = notification.object as? NSTextView else { return }
-            parent.selectedRange = textView.selectedRange()
+            self.parent.selectedRange = textView.selectedRange()
         }
     }
 }

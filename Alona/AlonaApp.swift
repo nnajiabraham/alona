@@ -14,7 +14,7 @@ struct AlonaApp: App {
     init() {
         let detector = MeetingDetector()
         _meetingDetector = State(initialValue: detector)
-        if !isRunningTests {
+        if !self.isRunningTests {
             detector.startMonitoring()
         }
     }
@@ -23,9 +23,9 @@ struct AlonaApp: App {
         // Primary window - opens automatically on launch
         WindowGroup {
             StartupView()
-                .environment(appState)
-                .environment(permissionManager)
-                .environment(meetingDetector)
+                .environment(self.appState)
+                .environment(self.permissionManager)
+                .environment(self.meetingDetector)
         }
         .windowResizability(.contentSize)
         .commands {
@@ -34,43 +34,43 @@ struct AlonaApp: App {
         }
 
         // Menu bar extra with isInserted binding allows coexistence with WindowGroup
-        MenuBarExtra("Alona", systemImage: "note.text", isInserted: $showMenuBarExtra) {
+        MenuBarExtra("Alona", systemImage: "note.text", isInserted: self.$showMenuBarExtra) {
             MenuBarView()
-                .environment(appState)
-                .environment(permissionManager)
-                .environment(meetingDetector)
+                .environment(self.appState)
+                .environment(self.permissionManager)
+                .environment(self.meetingDetector)
         }
         .menuBarExtraStyle(.window)
         .defaultSize(width: 360, height: 320)
 
         WindowGroup(id: "onboarding") {
             OnboardingView()
-                .environment(permissionManager)
+                .environment(self.permissionManager)
         }
         .windowResizability(.contentSize)
 
         WindowGroup(id: "meeting-notes") {
             MeetingNotesView()
-                .environment(appState)
+                .environment(self.appState)
         }
         .defaultSize(width: 420, height: 380)
 
         WindowGroup(id: "recordings") {
             RecordingsBrowserView()
-                .environment(appState)
+                .environment(self.appState)
         }
         .defaultSize(width: 700, height: 420)
 
         WindowGroup(id: "settings-window") {
             SettingsView()
-                .environment(permissionManager)
-                .environment(appState)
+                .environment(self.permissionManager)
+                .environment(self.appState)
         }
         .defaultSize(width: 480, height: 360)
 
         WindowGroup(id: "transcription-queue") {
             TranscriptionQueueView()
-                .environment(appState)
+                .environment(self.appState)
         }
         .defaultSize(width: 480, height: 420)
     }

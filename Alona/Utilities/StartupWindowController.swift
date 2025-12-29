@@ -6,14 +6,14 @@ enum StartupWindowController {
 
     static func focusOrOpen(openWindow: OpenWindowAction) {
         if let window = existingWindow(in: NSApp.windows) {
-            focus(window)
+            self.focus(window)
         } else {
             openWindow(id: "startup")
         }
     }
 
     static func existingWindow(in windows: [NSWindow]) -> NSWindow? {
-        windows.first { $0.identifier?.rawValue == identifier }
+        windows.first { $0.identifier?.rawValue == self.identifier }
     }
 
     private static func focus(_ window: NSWindow) {
@@ -26,14 +26,14 @@ struct StartupWindowIdentifierSetter: NSViewRepresentable {
     func makeNSView(context _: Context) -> NSView {
         let view = NSView()
         DispatchQueue.main.async {
-            updateIdentifier(for: view)
+            self.updateIdentifier(for: view)
         }
         return view
     }
 
     func updateNSView(_ nsView: NSView, context _: Context) {
         DispatchQueue.main.async {
-            updateIdentifier(for: nsView)
+            self.updateIdentifier(for: nsView)
         }
     }
 

@@ -31,23 +31,23 @@ final class PermissionManager {
 
         var title: String {
             switch self {
-            case .microphone: return "Microphone"
-            case .systemAudio: return "System Audio Recording"
-            case .accessibility: return "Accessibility"
-            case .automation: return "Automation"
+            case .microphone: "Microphone"
+            case .systemAudio: "System Audio Recording"
+            case .accessibility: "Accessibility"
+            case .automation: "Automation"
             }
         }
 
         var description: String {
             switch self {
             case .microphone:
-                return "Capture your voice during meetings"
+                "Capture your voice during meetings"
             case .systemAudio:
-                return "Capture audio from meeting participants (via CoreAudio Process Taps)"
+                "Capture audio from meeting participants (via CoreAudio Process Taps)"
             case .accessibility:
-                return "Detect Zoom meeting UI state"
+                "Detect Zoom meeting UI state"
             case .automation:
-                return "Detect Google Meet tabs in browsers"
+                "Detect Google Meet tabs in browsers"
             }
         }
     }
@@ -59,9 +59,9 @@ final class PermissionManager {
 
         var displayName: String {
             switch self {
-            case .granted: return "Granted"
-            case .denied: return "Denied"
-            case .notDetermined: return "Not Determined"
+            case .granted: "Granted"
+            case .denied: "Denied"
+            case .notDetermined: "Not Determined"
             }
         }
     }
@@ -70,19 +70,19 @@ final class PermissionManager {
     var lastAutomationCheckError: Error?
 
     init() {
-        PermissionType.allCases.forEach { statuses[$0] = .notDetermined }
+        PermissionType.allCases.forEach { self.statuses[$0] = .notDetermined }
         // Refresh permissions on init so UI shows current status immediately
-        refreshAllPermissions()
+        self.refreshAllPermissions()
     }
 
     func refreshAllPermissions() {
         // Sync checks (fast, non-blocking)
-        statuses[.microphone] = currentMicrophoneStatus()
-        statuses[.systemAudio] = currentSystemAudioStatus()
-        statuses[.accessibility] = currentAccessibilityStatus()
+        self.statuses[.microphone] = self.currentMicrophoneStatus()
+        self.statuses[.systemAudio] = self.currentSystemAudioStatus()
+        self.statuses[.accessibility] = self.currentAccessibilityStatus()
 
         // Async check for automation (runs AppleScript, potentially slow)
-        refreshAutomationPermissionAsync()
+        self.refreshAutomationPermissionAsync()
     }
 
     private func refreshAutomationPermissionAsync() {
@@ -125,22 +125,22 @@ final class PermissionManager {
             // to trigger the permission dialog and add the app to System Settings.
             // We create a minimal process tap that immediately gets destroyed.
             Task {
-                await requestSystemAudioPermission()
+                await self.requestSystemAudioPermission()
             }
         case .accessibility:
             let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
             let trusted = AXIsProcessTrustedWithOptions(options)
-            statuses[.accessibility] = trusted ? .granted : .denied
+            self.statuses[.accessibility] = trusted ? .granted : .denied
             // If not trusted, open settings and poll for changes
             if !trusted {
-                openSystemSettings(for: .accessibility)
+                self.openSystemSettings(for: .accessibility)
                 // Poll for permission grant (user may toggle in System Settings)
                 Task {
-                    for _ in 0 ..< 30 { // Poll for up to 30 seconds
+                    for _ in 0..<30 { // Poll for up to 30 seconds
                         try? await Task.sleep(nanoseconds: 1_000_000_000)
                         if AXIsProcessTrusted() {
                             await MainActor.run {
-                                statuses[.accessibility] = .granted
+                                self.statuses[.accessibility] = .granted
                             }
                             break
                         }
@@ -183,7 +183,7 @@ final class PermissionManager {
     /// Checks system audio recording permission status using TCC SPI.
     private func currentSystemAudioStatus() -> PermissionStatus {
         // First try TCC SPI (most accurate)
-        let tccStatus = checkSystemAudioWithTCC()
+        let tccStatus = self.checkSystemAudioWithTCC()
         if tccStatus != .notDetermined {
             // Update cached value
             UserDefaults.standard.set(tccStatus == .granted, forKey: "systemAudioPermissionGranted")
@@ -204,15 +204,15 @@ final class PermissionManager {
     private func requestSystemAudioPermission() async {
         // Update status to show we're trying
         await MainActor.run {
-            statuses[.systemAudio] = .notDetermined
+            self.statuses[.systemAudio] = .notDetermined
         }
 
         // Use TCC SPI to request permission - this adds the app to System Settings
         guard let requestFunc = Self.tccRequestSPI else {
             // TCC SPI not available - fall back to opening System Settings
             await MainActor.run {
-                statuses[.systemAudio] = .denied
-                openSystemSettings(for: .systemAudio)
+                self.statuses[.systemAudio] = .denied
+                self.openSystemSettings(for: .systemAudio)
             }
             return
         }

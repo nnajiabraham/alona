@@ -1,9 +1,9 @@
-@testable import Alona
 import AppKit
 import AudioToolbox
 import AVFoundation
 import Combine
 import XCTest
+@testable import Alona
 
 @MainActor
 final class AlonaTests: XCTestCase {
@@ -138,8 +138,7 @@ final class AlonaTests: XCTestCase {
             transcriptionEngine: transcriptionEngine,
             summaryProvider: summaryProvider,
             notesAutosaveInterval: 0.05,
-            notesAutosaveScheduler: .main
-        )
+            notesAutosaveScheduler: .main)
 
         await appState.startRecording(meetingTitleOverride: "Autosave")
         appState.notesDraft = "Autosaved text"
@@ -167,7 +166,10 @@ final class AlonaTests: XCTestCase {
     }
 
     func testNotesInsertionReplacesSelection() {
-        let result = NotesInsertion.inserting(snippet: "[00:05] ", in: "Hello world", range: NSRange(location: 6, length: 5))
+        let result = NotesInsertion.inserting(
+            snippet: "[00:05] ",
+            in: "Hello world",
+            range: NSRange(location: 6, length: 5))
         XCTAssertEqual(result.text, "Hello [00:05] ")
         XCTAssertEqual(result.range.location, 14)
     }
@@ -184,8 +186,7 @@ final class AlonaTests: XCTestCase {
             meetingFileManager: harness.manager,
             audioRecorder: recorder,
             transcriptionEngine: transcriptionEngine,
-            summaryProvider: MockSummaryProvider()
-        )
+            summaryProvider: MockSummaryProvider())
 
         XCTAssertNil(appState.notesWindowRequestID)
         await appState.startRecording(meetingTitleOverride: "Window")
@@ -232,8 +233,7 @@ final class AlonaTests: XCTestCase {
             meetingFileManager: harness.manager,
             audioRecorder: recorder,
             transcriptionEngine: MockTranscriptionEngine(),
-            summaryProvider: MockSummaryProvider()
-        )
+            summaryProvider: MockSummaryProvider())
 
         await appState.startRecording(meetingTitleOverride: "Original")
         appState.updateActiveMeetingTitle("Renamed Title")
@@ -290,8 +290,7 @@ final class AlonaTests: XCTestCase {
             transcriptionEngine: engine,
             summaryProvider: summaryProvider,
             notesAutosaveInterval: 0.05,
-            notesAutosaveScheduler: .main
-        )
+            notesAutosaveScheduler: .main)
 
         appState.regenerateTranscription(for: directory, notes: "Existing notes")
 
@@ -314,7 +313,7 @@ final class AlonaTests: XCTestCase {
         XCTAssertEqual(scheduler.requests.count, 1)
 
         #if DEBUG
-            detector.resetDetectionStateForTesting()
+        detector.resetDetectionStateForTesting()
         #endif
 
         detector.handleDetection(app: .zoom, meetingTitle: "Daily Sync")
@@ -332,8 +331,7 @@ final class AlonaTests: XCTestCase {
             audioRecorder: recorder,
             transcriptionEngine: MockTranscriptionEngine(),
             summaryProvider: MockSummaryProvider(),
-            userDefaults: harness.userDefaults
-        )
+            userDefaults: harness.userDefaults)
 
         XCTAssertFalse(appState.captureSystemAudio)
         XCTAssertFalse(recorder.captureSystemAudio)
@@ -347,8 +345,7 @@ final class AlonaTests: XCTestCase {
             audioRecorder: reloadedRecorder,
             transcriptionEngine: MockTranscriptionEngine(),
             summaryProvider: MockSummaryProvider(),
-            userDefaults: harness.userDefaults
-        )
+            userDefaults: harness.userDefaults)
 
         XCTAssertTrue(reloadedState.captureSystemAudio)
         XCTAssertTrue(reloadedRecorder.captureSystemAudio)
@@ -368,8 +365,7 @@ final class AlonaTests: XCTestCase {
             transcriptionEngine: MockTranscriptionEngine(),
             summaryProvider: MockSummaryProvider(),
             userDefaults: harness.userDefaults,
-            nowProvider: { fixedDate }
-        )
+            nowProvider: { fixedDate })
 
         await appState.startRecording()
 
@@ -396,8 +392,10 @@ final class AlonaTests: XCTestCase {
         let recordings = NSWindow()
         recordings.identifier = NSUserInterfaceItemIdentifier(WindowFocusController.identifier(for: "recordings"))
 
-        let found = WindowFocusController.existingWindow(in: [other, recordings],
-                                                         identifier: WindowFocusController.identifier(for: "recordings"))
+        let found = WindowFocusController.existingWindow(
+            in: [other, recordings],
+            identifier: WindowFocusController
+                .identifier(for: "recordings"))
         XCTAssertTrue(found === recordings)
     }
 
@@ -426,24 +424,24 @@ private struct MeetingFileManagerTestHarness {
     private let defaultsSuiteName: String
 
     init() throws {
-        baseDirectory = FileManager.default.temporaryDirectory
+        self.baseDirectory = FileManager.default.temporaryDirectory
             .appendingPathComponent("MeetingFileManagerTests-\(UUID().uuidString)", isDirectory: true)
-        try FileManager.default.createDirectory(at: baseDirectory, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: self.baseDirectory, withIntermediateDirectories: true)
 
-        defaultsSuiteName = "MeetingFileManagerTests.\(UUID().uuidString)"
+        self.defaultsSuiteName = "MeetingFileManagerTests.\(UUID().uuidString)"
         guard let defaults = UserDefaults(suiteName: defaultsSuiteName) else {
             throw NSError(domain: "MeetingFileManagerTests", code: -1)
         }
-        defaults.removePersistentDomain(forName: defaultsSuiteName)
+        defaults.removePersistentDomain(forName: self.defaultsSuiteName)
 
-        userDefaults = defaults
-        manager = MeetingFileManager(fileManager: .default, userDefaults: defaults)
-        manager.baseDirectory = baseDirectory
+        self.userDefaults = defaults
+        self.manager = MeetingFileManager(fileManager: .default, userDefaults: defaults)
+        self.manager.baseDirectory = self.baseDirectory
     }
 
     func cleanup() {
-        try? FileManager.default.removeItem(at: baseDirectory)
-        userDefaults.removePersistentDomain(forName: defaultsSuiteName)
+        try? FileManager.default.removeItem(at: self.baseDirectory)
+        self.userDefaults.removePersistentDomain(forName: self.defaultsSuiteName)
     }
 }
 
@@ -474,20 +472,20 @@ final class MockAudioRecorder: AudioRecordingController {
     }
 
     var isRecordingPublisher: AnyPublisher<Bool, Never> {
-        isRecordingSubject.eraseToAnyPublisher()
+        self.isRecordingSubject.eraseToAnyPublisher()
     }
 
     var recordingDurationPublisher: AnyPublisher<TimeInterval, Never> {
-        durationSubject.eraseToAnyPublisher()
+        self.durationSubject.eraseToAnyPublisher()
     }
 
     func startRecording(meetingTitle _: String) async throws -> URL {
-        isRecordingSubject.send(true)
-        return directory
+        self.isRecordingSubject.send(true)
+        return self.directory
     }
 
     func stopRecording() async {
-        isRecordingSubject.send(false)
+        self.isRecordingSubject.send(false)
     }
 }
 
@@ -495,11 +493,11 @@ final class MockMeetingNotificationScheduler: MeetingNotificationScheduling {
     var requests: [String] = []
 
     var notificationCount: Int {
-        requests.count
+        self.requests.count
     }
 
     func scheduleMeetingNotification(appName _: String, meetingTitle _: String, identifier: String) {
-        requests.append(identifier)
+        self.requests.append(identifier)
     }
 }
 
@@ -512,14 +510,14 @@ final class MockTranscriptionEngine: TranscriptionProcessing {
     }
 
     var progressPublisher: AnyPublisher<Double, Never> {
-        subject.eraseToAnyPublisher()
+        self.subject.eraseToAnyPublisher()
     }
 
     func transcribe(audioURL _: URL) async throws -> TranscriptionResult {
-        subject.send(0.5)
-        subject.send(1.0)
-        subject.send(completion: .finished)
-        return result
+        self.subject.send(0.5)
+        self.subject.send(1.0)
+        self.subject.send(completion: .finished)
+        return self.result
     }
 
     func unloadModelIfIdle() {
@@ -535,7 +533,7 @@ struct MockSummaryProvider: SummaryProviding {
     }
 
     func generateSummary(transcript _: String, notes _: String) async throws -> String {
-        output
+        self.output
     }
 }
 
@@ -700,7 +698,9 @@ final class RecordingErrorTests: XCTestCase {
         XCTAssertTrue(deviceStartError.errorDescription?.contains("-22222") ?? false)
 
         XCTAssertEqual(RecordingError.tapUnavailable.errorDescription, "Process tap is unavailable.")
-        XCTAssertEqual(RecordingError.streamDescriptionUnavailable.errorDescription, "Tap stream description not available.")
+        XCTAssertEqual(
+            RecordingError.streamDescriptionUnavailable.errorDescription,
+            "Tap stream description not available.")
         XCTAssertEqual(RecordingError.formatCreationFailed.errorDescription, "Failed to create audio format.")
         XCTAssertEqual(RecordingError.bufferCreationFailed.errorDescription, "Failed to create audio buffer.")
     }
@@ -863,7 +863,7 @@ private class AudioRecorderTestHarness {
 
         var result = [Float](repeating: 0, count: outputCount)
 
-        for i in 0 ..< outputCount {
+        for i in 0..<outputCount {
             let srcIndex = Double(i) / ratio
             let srcIndexInt = Int(srcIndex)
             let fraction = Float(srcIndex - Double(srcIndexInt))
@@ -936,10 +936,14 @@ final class SystemAudioCaptureTests: XCTestCase {
         ]
 
         // Verify sub-device list is NOT present (prevents routing interference)
-        XCTAssertNil(description[kAudioAggregateDeviceSubDeviceListKey] as? [[String: Any]], "Should NOT have sub-device list to prevent playback interference")
+        XCTAssertNil(
+            description[kAudioAggregateDeviceSubDeviceListKey] as? [[String: Any]],
+            "Should NOT have sub-device list to prevent playback interference")
 
         // Verify tap list IS present
-        XCTAssertNotNil(description[kAudioAggregateDeviceTapListKey] as? [[String: Any]], "Should have tap list for audio capture")
+        XCTAssertNotNil(
+            description[kAudioAggregateDeviceTapListKey] as? [[String: Any]],
+            "Should have tap list for audio capture")
 
         // Verify private flag is set (hides from user)
         XCTAssertEqual(description[kAudioAggregateDeviceIsPrivateKey] as? Bool, true, "Should be private device")

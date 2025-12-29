@@ -9,6 +9,7 @@ CONFIGURATION := Debug
 DERIVED_DATA_PATH ?= $(CURDIR)/DerivedData
 XCBEAUTIFY := $(shell command -v xcbeautify 2>/dev/null)
 SWIFTFORMAT := $(shell command -v swiftformat 2>/dev/null)
+SWIFTLINT := $(shell command -v swiftlint 2>/dev/null)
 MODEL_DIR := Alona/Resources/Models
 MODEL_FILE := $(MODEL_DIR)/ggml-base.en.bin
 MODEL_URL := https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.en.bin
@@ -26,7 +27,7 @@ help:
 	@echo "  make setup   # regenerate buildServer.json"
 	@echo "  make build   # build macOS app"
 	@echo "  make test    # run unit tests"
-	@echo "  make lint    # run swiftformat --lint"
+	@echo "  make lint    # run swiftformat --lint (+ swiftlint if installed)"
 	@echo "  make format  # apply swiftformat"
 	@echo "  make clean   # clean derived data"
 	@echo "  make run     # build and launch the macOS app"
@@ -59,6 +60,9 @@ ifeq ($(SWIFTFORMAT),)
 	@echo "swiftformat is not installed. Install via 'brew install swiftformat' to run lint." && exit 1
 else
 	swiftformat Alona AlonaTests --lint
+endif
+ifneq ($(SWIFTLINT),)
+	swiftlint lint --quiet
 endif
 
 format:

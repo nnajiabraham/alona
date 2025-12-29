@@ -14,7 +14,7 @@ final class AppState {
     var recordingError: String?
     var notesDraft: String = "" {
         didSet {
-            scheduleNotesAutosave()
+            self.scheduleNotesAutosave()
         }
     }
 
@@ -23,8 +23,8 @@ final class AppState {
     private(set) var transcriptionJobs: [TranscriptionJob] = []
     var captureSystemAudio: Bool = false {
         didSet {
-            audioRecorder.captureSystemAudio = captureSystemAudio
-            userDefaults.set(captureSystemAudio, forKey: Self.captureSystemAudioDefaultsKey)
+            self.audioRecorder.captureSystemAudio = self.captureSystemAudio
+            self.userDefaults.set(self.captureSystemAudio, forKey: Self.captureSystemAudioDefaultsKey)
         }
     }
 
@@ -48,16 +48,17 @@ final class AppState {
     @ObservationIgnored private var activeUIJobID: UUID?
     @ObservationIgnored private var lastSavedNotesDraft: String = ""
 
-    init(meetingFileManager manager: MeetingFileManager = MeetingFileManager(),
-         audioRecorder: AudioRecordingController? = nil,
-         transcriptionEngine: TranscriptionProcessing? = nil,
-         summaryProvider: SummaryProviding? = nil,
-         notesAutosaveInterval: TimeInterval = 2.0,
-         notesAutosaveScheduler: DispatchQueue = .main,
-         userDefaults: UserDefaults = .standard,
-         nowProvider: @escaping () -> Date = Date.init)
+    init(
+        meetingFileManager manager: MeetingFileManager = MeetingFileManager(),
+        audioRecorder: AudioRecordingController? = nil,
+        transcriptionEngine: TranscriptionProcessing? = nil,
+        summaryProvider: SummaryProviding? = nil,
+        notesAutosaveInterval: TimeInterval = 2.0,
+        notesAutosaveScheduler: DispatchQueue = .main,
+        userDefaults: UserDefaults = .standard,
+        nowProvider: @escaping () -> Date = Date.init)
     {
-        meetingFileManager = manager
+        self.meetingFileManager = manager
         let recorder = audioRecorder ?? AudioRecorder(meetingFileManager: manager)
         self.audioRecorder = recorder
         let transcriptionEngine = transcriptionEngine ?? TranscriptionEngine()
@@ -65,12 +66,12 @@ final class AppState {
         self.summaryProvider = summaryProvider ?? SummaryManager()
         self.notesAutosaveInterval = notesAutosaveInterval
         self.notesAutosaveScheduler = notesAutosaveScheduler
-        saveDirectory = manager.baseDirectory
+        self.saveDirectory = manager.baseDirectory
         self.userDefaults = userDefaults
         self.nowProvider = nowProvider
 
         let storedCapture = userDefaults.object(forKey: Self.captureSystemAudioDefaultsKey) as? Bool ?? false
-        captureSystemAudio = storedCapture
+        self.captureSystemAudio = storedCapture
         recorder.captureSystemAudio = storedCapture
 
         // Subscribe to external Combine publishers (from NSObject classes that can't use @Observable)
@@ -79,16 +80,16 @@ final class AppState {
             .sink { [weak self] value in
                 self?.isRecording = value
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
         recorder.recordingDurationPublisher
             .receive(on: RunLoop.main)
             .sink { [weak self] value in
                 self?.recordingDuration = value
             }
-            .store(in: &cancellables)
+            .store(in: &self.cancellables)
 
-        transcriptionProgressCancellable = transcriptionEngine.progressPublisher
+        self.transcriptionProgressCancellable = transcriptionEngine.progressPublisher
             .receive(on: RunLoop.main)
             .sink { [weak self] value in
                 self?.handleTranscriptionProgress(value)
@@ -96,7 +97,8 @@ final class AppState {
 
         // Notes autosave is now handled via didSet + Task-based debouncing (see scheduleNotesAutosave)
 
-        notificationActionCancellable = NotificationCenter.default.publisher(for: .meetingNotificationStartRecording)
+        self.notificationActionCancellable = NotificationCenter.default
+            .publisher(for: .meetingNotificationStartRecording)
             .receive(on: RunLoop.main)
             .sink { [weak self] notification in
                 guard let self, !self.isRecording else { return }
@@ -108,66 +110,66 @@ final class AppState {
     }
 
     func updateSaveDirectory(_ url: URL) {
-        meetingFileManager.baseDirectory = url
-        saveDirectory = url
+        self.meetingFileManager.baseDirectory = url
+        self.saveDirectory = url
     }
 
     func startRecording(meetingTitleOverride: String? = nil) async {
-        let title = resolveRecordingTitle(from: meetingTitleOverride ?? meetingTitle)
+        let title = resolveRecordingTitle(from: meetingTitleOverride ?? self.meetingTitle)
         do {
             let directory = try await audioRecorder.startRecording(meetingTitle: title)
-            currentMeetingDirectory = directory
+            self.currentMeetingDirectory = directory
             if let draft = meetingFileManager.recoverNotesFromTemp(in: directory) {
-                notesDraft = draft
+                self.notesDraft = draft
             } else {
-                notesDraft = ""
+                self.notesDraft = ""
             }
-            meetingTitle = title
+            self.meetingTitle = title
             persistActiveMeetingTitle()
-            recordingError = nil
-            transcriptionState = .idle
-            notesWindowRequestID = UUID()
+            self.recordingError = nil
+            self.transcriptionState = .idle
+            self.notesWindowRequestID = UUID()
         } catch {
-            recordingError = error.localizedDescription
+            self.recordingError = error.localizedDescription
         }
     }
 
     func stopRecording() async {
         guard let directory = currentMeetingDirectory else {
-            await audioRecorder.stopRecording()
+            await self.audioRecorder.stopRecording()
             return
         }
 
-        await audioRecorder.stopRecording()
+        await self.audioRecorder.stopRecording()
 
         do {
-            try meetingFileManager.saveNotes(notesDraft, to: directory)
+            try self.meetingFileManager.saveNotes(self.notesDraft, to: directory)
         } catch {
-            recordingError = error.localizedDescription
+            self.recordingError = error.localizedDescription
         }
 
-        let notesCopy = notesDraft
-        notesDraft = ""
+        let notesCopy = self.notesDraft
+        self.notesDraft = ""
         enqueueTranscription(for: directory, notes: notesCopy, source: .automatic, showProgressInMainUI: true)
-        currentMeetingDirectory = nil
+        self.currentMeetingDirectory = nil
     }
 
     func updateActiveMeetingTitle(_ title: String) {
-        meetingTitle = title
+        self.meetingTitle = title
         persistActiveMeetingTitle()
     }
 
     func dismissDetection(identifier: String) {
-        dismissedDetectionIdentifier = identifier
+        self.dismissedDetectionIdentifier = identifier
     }
 
     func resetDetectionDismissalIfNeeded(for identifier: String) {
         if identifier.isEmpty {
-            dismissedDetectionIdentifier = nil
-        } else if dismissedDetectionIdentifier == identifier {
+            self.dismissedDetectionIdentifier = nil
+        } else if self.dismissedDetectionIdentifier == identifier {
             return
         } else {
-            dismissedDetectionIdentifier = nil
+            self.dismissedDetectionIdentifier = nil
         }
     }
 
@@ -176,14 +178,14 @@ final class AppState {
     }
 
     func isJobActive(for directory: URL) -> Bool {
-        transcriptionJobs.contains { job in
+        self.transcriptionJobs.contains { job in
             job.directory == directory && job.state.isBusy
         }
     }
 
     func cancelTranscriptionJob(_ job: TranscriptionJob) {
-        if activeJobID == job.id {
-            activeJobTask?.cancel()
+        if self.activeJobID == job.id {
+            self.activeJobTask?.cancel()
         } else {
             updateJob(job.id) { current in
                 current.state = .cancelled
@@ -204,15 +206,15 @@ final class AppState {
     /// Task-based debounced autosave for notes (replaces Combine $notesDraft.debounce)
     private func scheduleNotesAutosave() {
         // Skip if content hasn't actually changed (removeDuplicates equivalent)
-        guard notesDraft != lastSavedNotesDraft else { return }
+        guard self.notesDraft != self.lastSavedNotesDraft else { return }
 
         // Cancel any pending autosave
-        notesAutosaveTask?.cancel()
+        self.notesAutosaveTask?.cancel()
 
-        let interval = notesAutosaveInterval
-        let textToSave = notesDraft
+        let interval = self.notesAutosaveInterval
+        let textToSave = self.notesDraft
 
-        notesAutosaveTask = Task { [weak self] in
+        self.notesAutosaveTask = Task { [weak self] in
             do {
                 try await Task.sleep(for: .seconds(interval))
                 guard let self, !Task.isCancelled else { return }
@@ -225,27 +227,32 @@ final class AppState {
     }
 }
 
-private extension AppState {
-    func resolveRecordingTitle(from override: String?) -> String {
+extension AppState {
+    private func resolveRecordingTitle(from override: String?) -> String {
         let trimmed = override?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         if !trimmed.isEmpty, trimmed != Self.idleMeetingTitle {
             return trimmed
         }
-        return Self.timestampFormatter.string(from: nowProvider())
+        return Self.timestampFormatter.string(from: self.nowProvider())
     }
 
-    func autosaveNotesDraft(_ text: String) {
+    private func autosaveNotesDraft(_ text: String) {
         guard let directory = currentMeetingDirectory else { return }
         do {
-            try meetingFileManager.saveNotesDraft(text, to: directory)
+            try self.meetingFileManager.saveNotesDraft(text, to: directory)
         } catch {
-            recordingError = error.localizedDescription
+            self.recordingError = error.localizedDescription
         }
     }
 
-    func enqueueTranscription(for directory: URL, notes: String?, source: TranscriptionJob.Source, showProgressInMainUI: Bool) {
-        let title = meetingFileManager.loadTitle(from: directory) ?? directory.lastPathComponent
-        let noteValue = notes ?? meetingFileManager.loadNotes(from: directory) ?? ""
+    private func enqueueTranscription(
+        for directory: URL,
+        notes: String?,
+        source: TranscriptionJob.Source,
+        showProgressInMainUI: Bool)
+    {
+        let title = self.meetingFileManager.loadTitle(from: directory) ?? directory.lastPathComponent
+        let noteValue = notes ?? self.meetingFileManager.loadNotes(from: directory) ?? ""
         let job = TranscriptionJob(
             id: UUID(),
             directory: directory,
@@ -254,33 +261,36 @@ private extension AppState {
             requestedAt: Date(),
             state: .pending,
             source: source,
-            showProgressInMainUI: showProgressInMainUI
-        )
-        transcriptionJobs.append(job)
-        processQueue()
+            showProgressInMainUI: showProgressInMainUI)
+        self.transcriptionJobs.append(job)
+        self.processQueue()
     }
 
-    func processQueue() {
-        guard activeJobTask == nil else { return }
+    private func processQueue() {
+        guard self.activeJobTask == nil else { return }
         guard let index = transcriptionJobs.firstIndex(where: { $0.state == .pending }) else {
             // No more pending jobs - unload model to free memory
-            transcriptionEngine.unloadModelIfIdle()
+            self.transcriptionEngine.unloadModelIfIdle()
             return
         }
-        var job = transcriptionJobs[index]
+        var job = self.transcriptionJobs[index]
         job.state = .preparing
-        transcriptionJobs[index] = job
+        self.transcriptionJobs[index] = job
 
-        activeJobID = job.id
+        self.activeJobID = job.id
         if job.showProgressInMainUI {
-            activeUIJobID = job.id
-            transcriptionState = .preparing
+            self.activeUIJobID = job.id
+            self.transcriptionState = .preparing
         }
 
-        activeJobTask = Task { [weak self] in
+        self.activeJobTask = Task { [weak self] in
             guard let self else { return }
             do {
-                try await self.runPostProcessing(for: job.directory, notes: job.notes, jobID: job.id, showInMainUI: job.showProgressInMainUI)
+                try await self.runPostProcessing(
+                    for: job.directory,
+                    notes: job.notes,
+                    jobID: job.id,
+                    showInMainUI: job.showProgressInMainUI)
                 await MainActor.run {
                     self.updateJob(job.id) { current in
                         current.state = .completed(Date())
@@ -321,16 +331,16 @@ private extension AppState {
         }
     }
 
-    func updateJob(_ id: UUID, mutate: (inout TranscriptionJob) -> Void) {
+    private func updateJob(_ id: UUID, mutate: (inout TranscriptionJob) -> Void) {
         guard let idx = transcriptionJobs.firstIndex(where: { $0.id == id }) else { return }
-        var job = transcriptionJobs[idx]
+        var job = self.transcriptionJobs[idx]
         mutate(&job)
-        transcriptionJobs[idx] = job
+        self.transcriptionJobs[idx] = job
     }
 
-    func handleTranscriptionProgress(_ value: Double) {
+    private func handleTranscriptionProgress(_ value: Double) {
         if let jobID = activeJobID {
-            updateJob(jobID) { current in
+            self.updateJob(jobID) { current in
                 if case .summarizing = current.state {
                     return
                 }
@@ -338,44 +348,44 @@ private extension AppState {
             }
         }
 
-        guard activeUIJobID != nil else { return }
-        if case .summarizing = transcriptionState { return }
-        transcriptionState = .processing(value)
+        guard self.activeUIJobID != nil else { return }
+        if case .summarizing = self.transcriptionState { return }
+        self.transcriptionState = .processing(value)
     }
 
-    func runPostProcessing(for directory: URL, notes: String, jobID: UUID?, showInMainUI: Bool) async throws {
+    private func runPostProcessing(for directory: URL, notes: String, jobID: UUID?, showInMainUI: Bool) async throws {
         let monoURL = directory.appendingPathComponent("recording-mono.wav")
         try Task.checkCancellation()
         do {
             let transcription = try await transcriptionEngine.transcribe(audioURL: monoURL)
             try Task.checkCancellation()
-            try meetingFileManager.saveTranscript(transcription, to: directory)
+            try self.meetingFileManager.saveTranscript(transcription, to: directory)
             if let jobID {
-                updateJob(jobID) { current in
+                self.updateJob(jobID) { current in
                     current.state = .summarizing
                 }
             }
             if showInMainUI {
-                transcriptionState = .summarizing
+                self.transcriptionState = .summarizing
             }
             let summary = try await summaryProvider.generateSummary(transcript: transcription.text, notes: notes)
             try Task.checkCancellation()
-            try meetingFileManager.saveSummary(summary, to: directory)
+            try self.meetingFileManager.saveSummary(summary, to: directory)
         } catch let cancellationError as CancellationError {
             throw cancellationError
         } catch {
             let message = error.localizedDescription
-            recordingError = message
+            self.recordingError = message
             throw error
         }
     }
 
-    func persistActiveMeetingTitle() {
+    private func persistActiveMeetingTitle() {
         guard let directory = currentMeetingDirectory else { return }
         do {
-            try meetingFileManager.saveTitle(meetingTitle, to: directory)
+            try self.meetingFileManager.saveTitle(self.meetingTitle, to: directory)
         } catch {
-            recordingError = error.localizedDescription
+            self.recordingError = error.localizedDescription
         }
     }
 }
@@ -407,9 +417,9 @@ struct TranscriptionJob: Identifiable, Equatable {
         var isBusy: Bool {
             switch self {
             case .pending, .preparing, .processing, .summarizing:
-                return true
+                true
             case .completed, .failed, .cancelled:
-                return false
+                false
             }
         }
     }

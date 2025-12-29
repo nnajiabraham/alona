@@ -1,0 +1,60 @@
+# SwiftFormat Configuration for Alona
+# https://github.com/nicklockwood/SwiftFormat
+# Compatible with Swift 5.9 (upgrade to 6.2 planned)
+
+# Swift version (matches project settings - will upgrade to 6.2)
+--swiftversion 5.9
+
+# Self - required for Swift 6 concurrency safety
+--self insert
+--selfrequired
+
+# Indentation
+--indent 4
+--indentcase false
+--ifdef no-indent
+--xcodeindentation enabled
+
+# Line length and breaks
+--maxwidth 120
+--linebreaks lf
+
+# Whitespace
+--trimwhitespace always
+--emptybraces no-space
+--nospaceoperators ...,..<
+--ranges no-space
+--someAny true
+
+# Wrapping
+--wraparguments before-first
+--wrapparameters before-first
+--wrapcollections before-first
+--wrapreturntype preserve
+--wrapconditions preserve
+--closingparen same-line
+
+# Braces
+--allman false
+
+# Imports
+--importgrouping testable-bottom
+--extensionacl on-declarations
+
+# Organization
+--organizetypes class,struct,enum,extension
+--extensionmark "MARK: - %t + %p"
+--marktypes always
+--markextensions always
+--structthreshold 0
+--enumthreshold 0
+
+# Other
+--commas always
+--insertlines enabled
+--removelines enabled
+--header ignore
+--stripunusedargs closure-only
+
+# Exclude paths
+--exclude DerivedData,.build,.swiftpm,**.generated.swift

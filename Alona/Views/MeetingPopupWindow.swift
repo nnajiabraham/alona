@@ -17,10 +17,10 @@ final class MeetingPopupWindowController {
     func showMeetingDetected(
         appName: String,
         meetingTitle: String,
-        onStartRecording: @escaping () -> Void
-    ) {
+        onStartRecording: @escaping () -> Void)
+    {
         // Dismiss any existing popup first
-        dismiss()
+        self.dismiss()
 
         // Create the popup content
         let popupView = MeetingDetectedPopup(
@@ -29,16 +29,14 @@ final class MeetingPopupWindowController {
             onStartRecording: onStartRecording,
             onDismiss: { [weak self] in
                 self?.dismiss()
-            }
-        )
+            })
 
         // Create the window
         let window = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 340, height: 80),
             styleMask: [.borderless],
             backing: .buffered,
-            defer: false
-        )
+            defer: false)
         window.isOpaque = false
         window.backgroundColor = .clear
         window.level = .floating
@@ -52,7 +50,7 @@ final class MeetingPopupWindowController {
         window.contentView = hostingView
 
         // Position in top-right corner
-        positionWindow(window)
+        self.positionWindow(window)
 
         // Show the window
         window.orderFront(nil)
@@ -75,8 +73,8 @@ final class MeetingPopupWindowController {
 
     @MainActor
     func dismiss() {
-        window?.orderOut(nil)
-        window = nil
-        hostingView = nil
+        self.window?.orderOut(nil)
+        self.window = nil
+        self.hostingView = nil
     }
 }

@@ -1,12 +1,12 @@
 import SwiftUI
 #if DEBUG
-    import Inject
+import Inject
 #endif
 
 struct SettingsView: View {
     @Environment(AppState.self) private var appState
     #if DEBUG
-        @ObserveInjection var inject
+    @ObserveInjection var inject
     #endif
 
     var body: some View {
@@ -25,7 +25,7 @@ struct SettingsView: View {
                         .font(.caption)
                         .textSelection(.enabled)
                     Button("Choose Folder") {
-                        chooseDirectory()
+                        self.chooseDirectory()
                     }
                 }
             }
@@ -44,11 +44,11 @@ struct SettingsView: View {
         panel.canChooseDirectories = true
         panel.canChooseFiles = false
         panel.allowsMultipleSelection = false
-        panel.directoryURL = appState.saveDirectory
+        panel.directoryURL = self.appState.saveDirectory
         panel.begin { response in
             guard response == .OK, let url = panel.url else { return }
             Task { @MainActor in
-                appState.updateSaveDirectory(url)
+                self.appState.updateSaveDirectory(url)
             }
         }
     }

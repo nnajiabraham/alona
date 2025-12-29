@@ -7,7 +7,9 @@ import OSLog
 final class MicrophoneActivityTracker: ObservableObject {
     static let shared = MicrophoneActivityTracker()
 
-    private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "Alona", category: "MicrophoneActivityTracker")
+    private let logger = Logger(
+        subsystem: Bundle.main.bundleIdentifier ?? "Alona",
+        category: "MicrophoneActivityTracker")
 
     @Published private(set) var appsUsingMicrophone: Set<String> = []
 
@@ -17,24 +19,24 @@ final class MicrophoneActivityTracker: ObservableObject {
     private init() {}
 
     func startTracking() {
-        guard pollTimer == nil else { return }
+        guard self.pollTimer == nil else { return }
 
-        pollTimer = Timer.scheduledTimer(withTimeInterval: pollInterval, repeats: true) { [weak self] _ in
+        self.pollTimer = Timer.scheduledTimer(withTimeInterval: self.pollInterval, repeats: true) { [weak self] _ in
             self?.updateMicrophoneUsage()
         }
 
         // Initial check
-        updateMicrophoneUsage()
+        self.updateMicrophoneUsage()
     }
 
     func stopTracking() {
-        pollTimer?.invalidate()
-        pollTimer = nil
+        self.pollTimer?.invalidate()
+        self.pollTimer = nil
     }
 
     /// Check if a specific app (by bundle identifier) is currently using the microphone.
     func isAppUsingMicrophone(bundleIdentifier: String) -> Bool {
-        appsUsingMicrophone.contains(bundleIdentifier)
+        self.appsUsingMicrophone.contains(bundleIdentifier)
     }
 
     private func updateMicrophoneUsage() {
@@ -78,18 +80,18 @@ extension MicrophoneActivityTracker {
     /// Checks multiple Zoom bundle IDs for compatibility with different Zoom versions.
     func isZoomInMeeting() -> Bool {
         let zoomBundleIDs = ["us.zoom.xos", "us.zoom.ZoomHelperAgent", "us.zoom.Workplace", "us.zoom.videomeetings"]
-        return zoomBundleIDs.contains { isAppUsingMicrophone(bundleIdentifier: $0) }
+        return zoomBundleIDs.contains { self.isAppUsingMicrophone(bundleIdentifier: $0) }
     }
 
     /// Check if Chrome (Google Meet) is in an active meeting (running + using microphone).
     func isChromeUsingMicrophone() -> Bool {
-        isAppUsingMicrophone(bundleIdentifier: "com.google.Chrome")
+        self.isAppUsingMicrophone(bundleIdentifier: "com.google.Chrome")
     }
 
     /// Check if any known meeting app is using the microphone.
     func isAnyMeetingAppUsingMicrophone() -> Bool {
-        isZoomInMeeting() || isChromeUsingMicrophone() ||
-            isAppUsingMicrophone(bundleIdentifier: "com.microsoft.teams") ||
-            isAppUsingMicrophone(bundleIdentifier: "com.microsoft.teams2")
+        self.isZoomInMeeting() || self.isChromeUsingMicrophone() ||
+            self.isAppUsingMicrophone(bundleIdentifier: "com.microsoft.teams") ||
+            self.isAppUsingMicrophone(bundleIdentifier: "com.microsoft.teams2")
     }
 }
