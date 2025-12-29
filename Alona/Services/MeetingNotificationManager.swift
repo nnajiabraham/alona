@@ -15,6 +15,8 @@ final class MeetingNotificationManager: NSObject, MeetingNotificationScheduling,
     static let shared = MeetingNotificationManager()
 
     private let notificationCenter = UNUserNotificationCenter.current()
+    // nonisolated(unsafe) needed because these are accessed from nonisolated delegate method
+    // The warning about String being Sendable is incorrect - the issue is property access isolation
     private nonisolated(unsafe) static let categoryIdentifier = "meeting-detected-category"
     private nonisolated(unsafe) static let startActionIdentifier = "meeting-start-recording"
     private var authorizationRequested = false
