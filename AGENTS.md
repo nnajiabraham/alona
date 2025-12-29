@@ -12,7 +12,7 @@ Guidelines for AI agents (Cursor, Copilot, Claude, etc.) and human contributors 
 |-----------|-------|
 | Build System | Xcode workspace (`Alona.xcworkspace`) + Makefile |
 | Platform | macOS 14.6+ (arm64) |
-| Swift Version | 5.9 |
+| Swift Version | 6.0 |
 | UI Framework | SwiftUI with `MenuBarExtra` |
 | State Management | `@Observable` / `@State` / `@Environment` |
 

@@ -128,7 +128,8 @@ final class PermissionManager {
                 await self.requestSystemAudioPermission()
             }
         case .accessibility:
-            let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
+            // Use literal string to avoid Swift 6 concurrency warning with global constant
+            let options = ["AXTrustedCheckOptionPrompt": true] as CFDictionary
             let trusted = AXIsProcessTrustedWithOptions(options)
             self.statuses[.accessibility] = trusted ? .granted : .denied
             // If not trusted, open settings and poll for changes

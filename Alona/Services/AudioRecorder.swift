@@ -4,7 +4,7 @@ import Combine
 import Foundation
 import OSLog
 
-protocol AudioRecordingController: AnyObject {
+protocol AudioRecordingController: AnyObject, Sendable {
     var isRecordingPublisher: AnyPublisher<Bool, Never> { get }
     var recordingDurationPublisher: AnyPublisher<TimeInterval, Never> { get }
     var captureSystemAudio: Bool { get set }
@@ -14,7 +14,8 @@ protocol AudioRecordingController: AnyObject {
 
 /// Audio recorder that uses CoreAudio Process Taps (macOS 14.4+) for system audio capture.
 /// This triggers "System Audio Recording Only" permission instead of "Screen & System Audio Recording".
-final class AudioRecorder: NSObject, ObservableObject {
+/// Note: Marked as @unchecked Sendable because it uses internal dispatch queues for thread safety.
+final class AudioRecorder: NSObject, ObservableObject, @unchecked Sendable {
     @Published private(set) var isRecording = false
     @Published private(set) var recordingDuration: TimeInterval = 0
     var captureSystemAudio: Bool = true {

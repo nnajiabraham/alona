@@ -1,10 +1,10 @@
 import Foundation
 
-protocol SummaryProviding {
+protocol SummaryProviding: Sendable {
     func generateSummary(transcript: String, notes: String) async throws -> String
 }
 
-final class SummaryManager: SummaryProviding {
+final class SummaryManager: SummaryProviding, Sendable {
     private let provider: SummaryProviding
 
     init(provider: SummaryProviding = PlaceholderSummaryProvider()) {

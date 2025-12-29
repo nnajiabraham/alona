@@ -4,7 +4,8 @@ enum ModelLocator {
     static let modelName = "ggml-base.en"
     static let modelExtension = "bin"
     static let remoteURL = URL(string: "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.en.bin")!
-    static var applicationSupportDirectoryProvider: () -> URL = {
+    /// Mutable for testing only - intentionally not isolated
+    nonisolated(unsafe) static var applicationSupportDirectoryProvider: () -> URL = {
         FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
     }
 

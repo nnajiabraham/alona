@@ -1,6 +1,7 @@
 import Foundation
 import UserNotifications
 
+@MainActor
 protocol MeetingNotificationScheduling {
     func scheduleMeetingNotification(appName: String, meetingTitle: String, identifier: String)
 }
@@ -9,12 +10,13 @@ extension Notification.Name {
     static let meetingNotificationStartRecording = Notification.Name("meetingNotificationStartRecording")
 }
 
+@MainActor
 final class MeetingNotificationManager: NSObject, MeetingNotificationScheduling, UNUserNotificationCenterDelegate {
     static let shared = MeetingNotificationManager()
 
     private let notificationCenter = UNUserNotificationCenter.current()
-    private let categoryIdentifier = "meeting-detected-category"
-    private let startActionIdentifier = "meeting-start-recording"
+    private nonisolated(unsafe) static let categoryIdentifier = "meeting-detected-category"
+    private nonisolated(unsafe) static let startActionIdentifier = "meeting-start-recording"
     private var authorizationRequested = false
 
     override private init() {
@@ -30,7 +32,7 @@ final class MeetingNotificationManager: NSObject, MeetingNotificationScheduling,
         content.title = "\(appName) meeting detected"
         content.body = "Tap Start Recording to capture \"\(meetingTitle)\"."
         content.sound = UNNotificationSound.default
-        content.categoryIdentifier = self.categoryIdentifier
+        content.categoryIdentifier = Self.categoryIdentifier
         content.userInfo = ["meetingTitle": meetingTitle]
 
         let request = UNNotificationRequest(
@@ -40,14 +42,13 @@ final class MeetingNotificationManager: NSObject, MeetingNotificationScheduling,
         self.notificationCenter.add(request)
     }
 
-    func userNotificationCenter(
+    nonisolated func userNotificationCenter(
         _: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse,
         withCompletionHandler completionHandler: @escaping () -> Void)
     {
-        if response.actionIdentifier == self.startActionIdentifier || response
-            .actionIdentifier == UNNotificationDefaultActionIdentifier
-        {
+        let actionId = response.actionIdentifier
+        if actionId == Self.startActionIdentifier || actionId == UNNotificationDefaultActionIdentifier {
             let title = response.notification.request.content.userInfo["meetingTitle"] as? String
             NotificationCenter.default.post(
                 name: .meetingNotificationStartRecording,
@@ -61,11 +62,11 @@ final class MeetingNotificationManager: NSObject, MeetingNotificationScheduling,
 extension MeetingNotificationManager {
     private func configureCategories() {
         let startAction = UNNotificationAction(
-            identifier: startActionIdentifier,
+            identifier: Self.startActionIdentifier,
             title: "Start Recording",
             options: [.foreground])
         let category = UNNotificationCategory(
-            identifier: categoryIdentifier,
+            identifier: Self.categoryIdentifier,
             actions: [startAction],
             intentIdentifiers: [],
             options: [])

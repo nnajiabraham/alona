@@ -4,6 +4,7 @@ import OSLog
 
 /// Tracks which applications are actively using the microphone using CoreAudio APIs.
 /// This provides a more reliable meeting detection signal than process/URL checks alone.
+@MainActor
 final class MicrophoneActivityTracker: ObservableObject {
     static let shared = MicrophoneActivityTracker()
 
@@ -22,7 +23,9 @@ final class MicrophoneActivityTracker: ObservableObject {
         guard self.pollTimer == nil else { return }
 
         self.pollTimer = Timer.scheduledTimer(withTimeInterval: self.pollInterval, repeats: true) { [weak self] _ in
-            self?.updateMicrophoneUsage()
+            Task { @MainActor in
+                self?.updateMicrophoneUsage()
+            }
         }
 
         // Initial check
@@ -40,19 +43,17 @@ final class MicrophoneActivityTracker: ObservableObject {
     }
 
     private func updateMicrophoneUsage() {
-        Task.detached(priority: .utility) { [weak self] in
-            guard let self else { return }
-
+        Task.detached(priority: .utility) {
             let usingMic = Self.getAppsUsingMicrophone()
 
-            await MainActor.run {
-                self.appsUsingMicrophone = usingMic
+            await MainActor.run { [weak self] in
+                self?.appsUsingMicrophone = usingMic
             }
         }
     }
 
     /// Returns bundle identifiers of all apps currently using the microphone.
-    private static func getAppsUsingMicrophone() -> Set<String> {
+    private nonisolated static func getAppsUsingMicrophone() -> Set<String> {
         var result = Set<String>()
 
         guard let processObjects = try? AudioObjectID.readProcessList() else {

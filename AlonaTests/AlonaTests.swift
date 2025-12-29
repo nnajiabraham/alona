@@ -461,7 +461,7 @@ private func waitForJobCompletion(in appState: AppState, timeout: TimeInterval =
 
 // MARK: - Mocks
 
-final class MockAudioRecorder: AudioRecordingController {
+final class MockAudioRecorder: AudioRecordingController, @unchecked Sendable {
     private let directory: URL
     private let isRecordingSubject = CurrentValueSubject<Bool, Never>(false)
     private let durationSubject = CurrentValueSubject<TimeInterval, Never>(0)
@@ -489,6 +489,7 @@ final class MockAudioRecorder: AudioRecordingController {
     }
 }
 
+@MainActor
 final class MockMeetingNotificationScheduler: MeetingNotificationScheduling {
     var requests: [String] = []
 
@@ -501,7 +502,7 @@ final class MockMeetingNotificationScheduler: MeetingNotificationScheduling {
     }
 }
 
-final class MockTranscriptionEngine: TranscriptionProcessing {
+final class MockTranscriptionEngine: TranscriptionProcessing, @unchecked Sendable {
     private let subject = PassthroughSubject<Double, Never>()
     private let result: TranscriptionResult
 
@@ -642,6 +643,7 @@ final class CoreAudioProcessTapTests: XCTestCase {
 
 // MARK: - Microphone Activity Tracker Tests
 
+@MainActor
 final class MicrophoneActivityTrackerTests: XCTestCase {
     func testMicrophoneTrackerStartsAndStops() {
         let tracker = MicrophoneActivityTracker.shared

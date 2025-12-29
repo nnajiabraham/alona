@@ -3,6 +3,7 @@ import SwiftUI
 
 /// Manages a floating popup window for meeting detection notifications.
 /// Shows in the top-right corner, similar to Granola's notification style.
+@MainActor
 final class MeetingPopupWindowController {
     static let shared = MeetingPopupWindowController()
 
@@ -13,7 +14,6 @@ final class MeetingPopupWindowController {
 
     /// Show the meeting detected popup.
     /// The popup auto-dismisses after 7 seconds.
-    @MainActor
     func showMeetingDetected(
         appName: String,
         meetingTitle: String,
@@ -71,7 +71,6 @@ final class MeetingPopupWindowController {
         window.setFrameOrigin(NSPoint(x: x, y: y))
     }
 
-    @MainActor
     func dismiss() {
         self.window?.orderOut(nil)
         self.window = nil

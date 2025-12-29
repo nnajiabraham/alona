@@ -4,13 +4,16 @@ import Foundation
 import OSLog
 import SwiftWhisper
 
-protocol TranscriptionProcessing {
+protocol TranscriptionProcessing: Sendable {
     var progressPublisher: AnyPublisher<Double, Never> { get }
     func transcribe(audioURL: URL) async throws -> TranscriptionResult
     func unloadModelIfIdle()
 }
 
-final class TranscriptionEngine: NSObject, ObservableObject, TranscriptionProcessing {
+/// TranscriptionEngine handles Whisper transcription.
+/// Note: This class uses ObservableObject for Combine compatibility but is not MainActor-isolated
+/// because SwiftWhisper's Whisper type is not Sendable. UI updates are dispatched explicitly.
+final class TranscriptionEngine: NSObject, ObservableObject, TranscriptionProcessing, @unchecked Sendable {
     @Published private var progressValue: Double = 0
     private var whisper: Whisper?
     private var lastUsedTime: Date?
@@ -32,14 +35,14 @@ final class TranscriptionEngine: NSObject, ObservableObject, TranscriptionProces
     func transcribe(audioURL: URL) async throws -> TranscriptionResult {
         self.activeTranscriptions += 1
         defer {
-            activeTranscriptions -= 1
-            lastUsedTime = Date()
-            scheduleIdleUnload()
+            self.activeTranscriptions -= 1
+            self.lastUsedTime = Date()
+            self.scheduleIdleUnload()
         }
 
-        let frames = try await convertAudioToPCM(url: audioURL)
-        try loadModelIfNeeded()
-        guard let whisper else {
+        let frames = try await self.convertAudioToPCM(url: audioURL)
+        try self.loadModelIfNeeded()
+        guard let whisper = self.whisper else {
             throw TranscriptionError.modelNotLoaded
         }
 
@@ -59,7 +62,7 @@ final class TranscriptionEngine: NSObject, ObservableObject, TranscriptionProces
 
     /// Unloads the Whisper model to free memory if no transcriptions are active
     func unloadModelIfIdle() {
-        // Must run on main thread for thread safety
+        // Must run on main thread for thread safety with timer
         if !Thread.isMainThread {
             DispatchQueue.main.async { [weak self] in
                 self?.unloadModelIfIdle()
@@ -86,7 +89,6 @@ final class TranscriptionEngine: NSObject, ObservableObject, TranscriptionProces
     }
 
     private func scheduleIdleUnload() {
-        // Must schedule timer on main thread to ensure RunLoop is active
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             self.unloadTimer?.invalidate()

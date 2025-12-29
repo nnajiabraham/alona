@@ -1,6 +1,7 @@
 import AVFoundation
 import Foundation
 
+@MainActor
 final class RecordingAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
     @Published private(set) var isPlaying: Bool = false
     @Published private(set) var playingURL: URL?
@@ -9,9 +10,7 @@ final class RecordingAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
     private var player: AVAudioPlayer?
 
     func play(url: URL) {
-        DispatchQueue.main.async {
-            self.lastError = nil
-        }
+        self.lastError = nil
         do {
             self.stop()
             let player = try AVAudioPlayer(contentsOf: url)
@@ -19,30 +18,24 @@ final class RecordingAudioPlayer: NSObject, ObservableObject, AVAudioPlayerDeleg
             player.prepareToPlay()
             player.play()
             self.player = player
-            DispatchQueue.main.async {
-                self.isPlaying = true
-                self.playingURL = url
-            }
+            self.isPlaying = true
+            self.playingURL = url
         } catch {
-            DispatchQueue.main.async {
-                self.lastError = error.localizedDescription
-                self.isPlaying = false
-                self.playingURL = nil
-            }
+            self.lastError = error.localizedDescription
+            self.isPlaying = false
+            self.playingURL = nil
         }
     }
 
     func stop() {
         self.player?.stop()
         self.player = nil
-        DispatchQueue.main.async {
-            self.isPlaying = false
-            self.playingURL = nil
-        }
+        self.isPlaying = false
+        self.playingURL = nil
     }
 
-    func audioPlayerDidFinishPlaying(_: AVAudioPlayer, successfully _: Bool) {
-        DispatchQueue.main.async {
+    nonisolated func audioPlayerDidFinishPlaying(_: AVAudioPlayer, successfully _: Bool) {
+        Task { @MainActor in
             self.isPlaying = false
             self.playingURL = nil
             self.player = nil

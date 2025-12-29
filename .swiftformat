@@ -2,8 +2,8 @@
 # https://github.com/nicklockwood/SwiftFormat
 # Compatible with Swift 5.9 (upgrade to 6.2 planned)
 
-# Swift version (matches project settings - will upgrade to 6.2)
---swiftversion 5.9
+# Swift version (matches project settings)
+--swiftversion 6.0
 
 # Self - required for Swift 6 concurrency safety
 --self insert
