@@ -95,7 +95,7 @@ final class PermissionManager {
         }
     }
 
-    private nonisolated static func checkAutomationStatusBackground() -> PermissionStatus {
+    nonisolated private static func checkAutomationStatusBackground() -> PermissionStatus {
         let script = "tell application \"System Events\" to get name of every process"
         var errorDict: NSDictionary?
         let appleScript = NSAppleScript(source: script)

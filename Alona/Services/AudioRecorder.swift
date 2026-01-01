@@ -116,9 +116,8 @@ final class AudioRecorder: NSObject, ObservableObject, @unchecked Sendable {
         let micSamples = self.totalMicSamplesReceived
         let sysSamples = self.totalSystemSamplesReceived
         let writtenSamples = self.totalSamplesWritten
-        self.logger
-            .info(
-                "Stopping recording - mic samples: \(micSamples), system samples: \(sysSamples), written: \(writtenSamples)")
+        self.logger.info(
+            "Stopping recording - mic: \(micSamples), system: \(sysSamples), written: \(writtenSamples)")
 
         if self.systemAudioActive {
             await stopSystemAudioCapture()
@@ -134,9 +133,8 @@ final class AudioRecorder: NSObject, ObservableObject, @unchecked Sendable {
         let micBufCount = self.micAudioBuffer.count
         let sysBufCount = self.systemAudioBuffer.count
         let totalWritten = self.totalSamplesWritten
-        self.logger
-            .info(
-                "Final write stats - mic buffer: \(micBufCount), system buffer: \(sysBufCount), total written: \(totalWritten)")
+        self.logger.info(
+            "Final stats - mic buf: \(micBufCount), sys buf: \(sysBufCount), written: \(totalWritten)")
 
         self.dualChannelFile = nil
         self.audioFile = nil
@@ -160,7 +158,7 @@ extension AudioRecorder {
             commonFormat: .pcmFormatFloat32,
             sampleRate: sampleRate,
             channels: channelCount,
-            interleaved: false)!
+            interleaved: false)! // swiftlint:disable:this force_unwrapping
         self.dualChannelFile = try AVAudioFile(forWriting: dualChannelURL, settings: format.settings)
         self.logger.info("Prepared dual-channel writer at \(sampleRate) Hz")
     }
@@ -250,11 +248,10 @@ extension AudioRecorder {
         err = AudioDeviceCreateIOProcIDWithBlock(
             &self.deviceProcID,
             self.aggregateDeviceID,
-            self.systemAudioQueue)
-        { [weak self] _, inInputData, _, _, _ in
-            guard let self else { return }
-            self.processSystemAudioBuffer(inInputData, format: tapFormat)
-        }
+            self.systemAudioQueue) { [weak self] _, inInputData, _, _, _ in
+                guard let self else { return }
+                self.processSystemAudioBuffer(inInputData, format: tapFormat)
+            }
 
         guard err == noErr else {
             self.logger.error("Failed to create device I/O proc: \(err)")
@@ -276,8 +273,7 @@ extension AudioRecorder {
 
     private func processSystemAudioBuffer(
         _ bufferList: UnsafePointer<AudioBufferList>,
-        format: AudioStreamBasicDescription)
-    {
+        format: AudioStreamBasicDescription) {
         let buffers = UnsafeMutableAudioBufferListPointer(UnsafeMutablePointer(mutating: bufferList))
 
         for buffer in buffers {
@@ -307,8 +303,7 @@ extension AudioRecorder {
 
             // Resample system audio to match mic sample rate if needed
             let resampledSamples: [Float] = if format.mSampleRate != self.actualCaptureSampleRate,
-                                               format.mSampleRate > 0, self.actualCaptureSampleRate > 0
-            {
+                                               format.mSampleRate > 0, self.actualCaptureSampleRate > 0 {
                 self.resampleAudio(monoSamples, from: format.mSampleRate, to: self.actualCaptureSampleRate)
             } else {
                 monoSamples
@@ -327,8 +322,7 @@ extension AudioRecorder {
     private func resampleAudio(
         _ samples: [Float],
         from sourceSampleRate: Double,
-        to targetSampleRate: Double) -> [Float]
-    {
+        to targetSampleRate: Double) -> [Float] {
         guard sourceSampleRate > 0, targetSampleRate > 0, !samples.isEmpty else { return samples }
 
         let ratio = targetSampleRate / sourceSampleRate
@@ -412,9 +406,8 @@ extension AudioRecorder {
 
         // Get the format AFTER voice processing is enabled (it may change)
         var captureFormat = inputNode.outputFormat(forBus: 0)
-        self.logger
-            .info(
-                "Output format after voice processing: \(captureFormat.sampleRate) Hz, \(captureFormat.channelCount) ch")
+        self.logger.info(
+            "Format after VP: \(captureFormat.sampleRate) Hz, \(captureFormat.channelCount) ch")
 
         // If format is invalid after voice processing, disable it and use hardware format
         if captureFormat.sampleRate == 0 || captureFormat.channelCount == 0 {
@@ -433,7 +426,7 @@ extension AudioRecorder {
                 commonFormat: .pcmFormatFloat32,
                 sampleRate: 48000,
                 channels: 1,
-                interleaved: false)!
+                interleaved: false)! // swiftlint:disable:this force_unwrapping
         }
 
         // Store the actual capture sample rate for writing
@@ -454,9 +447,9 @@ extension AudioRecorder {
             // Log first buffer for debugging
             if !hasLoggedFirstBuffer {
                 hasLoggedFirstBuffer = true
-                self.logger
-                    .info(
-                        "*** FIRST MIC BUFFER *** frames: \(buffer.frameLength), format: \(buffer.format.sampleRate) Hz, \(buffer.format.channelCount) ch")
+                let rate = buffer.format.sampleRate
+                let ch = buffer.format.channelCount
+                self.logger.info("*** FIRST MIC BUFFER *** frames: \(buffer.frameLength), \(rate) Hz, \(ch) ch")
                 self.micCaptureStarted = true
             }
 
@@ -473,8 +466,7 @@ extension AudioRecorder {
 
             // If stereo, downmix to mono; otherwise use channel 0
             let samples: [Float] = if buffer.format.channelCount >= 2, let ch0 = buffer.floatChannelData?[0],
-                                      let ch1 = buffer.floatChannelData?[1]
-            {
+                                      let ch1 = buffer.floatChannelData?[1] {
                 // Stereo: average the two channels
                 (0..<Int(buffer.frameLength)).map { i in
                     (ch0[i] + ch1[i]) / 2.0
@@ -506,9 +498,8 @@ extension AudioRecorder {
         }
 
         self.audioEngine = engine
-        self.logger
-            .info(
-                "=== Microphone capture started (VP: \(voiceProcessingEnabled), rate: \(captureFormat.sampleRate) Hz) ===")
+        self.logger.info(
+            "=== Mic capture started (VP: \(voiceProcessingEnabled), rate: \(captureFormat.sampleRate) Hz) ===")
     }
 
     private func stopMicrophoneCapture() {
@@ -638,7 +629,7 @@ extension AudioRecorder {
             commonFormat: .pcmFormatFloat32,
             sampleRate: targetRate,
             channels: 1,
-            interleaved: false)!
+            interleaved: false)! // swiftlint:disable:this force_unwrapping
 
         let monoFile = try AVAudioFile(forWriting: monoURL, settings: monoFormat.settings)
 
@@ -665,7 +656,7 @@ extension AudioRecorder {
             commonFormat: .pcmFormatFloat32,
             sampleRate: sourceSampleRate,
             channels: 1,
-            interleaved: false)!
+            interleaved: false)! // swiftlint:disable:this force_unwrapping
 
         guard let intermediateBuffer = AVAudioPCMBuffer(
             pcmFormat: intermediateFormat,
@@ -681,8 +672,7 @@ extension AudioRecorder {
         if
             let ch0 = sourceBuffer.floatChannelData?[0],
             let ch1 = sourceBuffer.floatChannelData?[1],
-            let monoData = intermediateBuffer.floatChannelData?[0]
-        {
+            let monoData = intermediateBuffer.floatChannelData?[0] {
             AudioSampleMath.downmix(
                 system: ch0,
                 mic: ch1,
@@ -755,8 +745,7 @@ enum AudioSampleMath {
         system: UnsafePointer<Float>,
         mic: UnsafePointer<Float>,
         destination: UnsafeMutablePointer<Float>,
-        frameCount: Int)
-    {
+        frameCount: Int) {
         for index in 0..<frameCount {
             destination[index] = (system[index] + mic[index]) / 2.0
         }

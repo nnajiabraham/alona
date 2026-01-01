@@ -1,6 +1,7 @@
 import AppKit
 import SwiftUI
 
+@MainActor
 enum StartupWindowController {
     static let identifier = "startup-window"
 

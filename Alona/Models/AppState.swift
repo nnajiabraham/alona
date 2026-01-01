@@ -56,8 +56,7 @@ final class AppState {
         notesAutosaveInterval: TimeInterval = 2.0,
         notesAutosaveScheduler: DispatchQueue = .main,
         userDefaults: UserDefaults = .standard,
-        nowProvider: @escaping () -> Date = Date.init)
-    {
+        nowProvider: @escaping () -> Date = Date.init) {
         self.meetingFileManager = manager
         let recorder = audioRecorder ?? AudioRecorder(meetingFileManager: manager)
         self.audioRecorder = recorder
@@ -249,8 +248,7 @@ extension AppState {
         for directory: URL,
         notes: String?,
         source: TranscriptionJob.Source,
-        showProgressInMainUI: Bool)
-    {
+        showProgressInMainUI: Bool) {
         let title = self.meetingFileManager.loadTitle(from: directory) ?? directory.lastPathComponent
         let noteValue = notes ?? self.meetingFileManager.loadNotes(from: directory) ?? ""
         let job = TranscriptionJob(

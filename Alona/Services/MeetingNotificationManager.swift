@@ -16,8 +16,8 @@ final class MeetingNotificationManager: NSObject, MeetingNotificationScheduling,
 
     private let notificationCenter = UNUserNotificationCenter.current()
     // nonisolated needed because these are accessed from nonisolated delegate method
-    private nonisolated static let categoryIdentifier = "meeting-detected-category"
-    private nonisolated static let startActionIdentifier = "meeting-start-recording"
+    nonisolated private static let categoryIdentifier = "meeting-detected-category"
+    nonisolated private static let startActionIdentifier = "meeting-start-recording"
     private var authorizationRequested = false
 
     override private init() {
@@ -46,8 +46,7 @@ final class MeetingNotificationManager: NSObject, MeetingNotificationScheduling,
     nonisolated func userNotificationCenter(
         _: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse,
-        withCompletionHandler completionHandler: @escaping () -> Void)
-    {
+        withCompletionHandler completionHandler: @escaping () -> Void) {
         let actionId = response.actionIdentifier
         if actionId == Self.startActionIdentifier || actionId == UNNotificationDefaultActionIdentifier {
             let title = response.notification.request.content.userInfo["meetingTitle"] as? String

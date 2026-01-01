@@ -36,6 +36,10 @@
 
 # Braces
 --allman false
+--disable wrapMultilineStatementBraces
+
+# Disable rules that conflict with SwiftLint
+--disable modifierOrder
 
 # Imports
 --importgrouping testable-bottom

@@ -51,12 +51,11 @@ final class MeetingDetector {
         self.workspaceObserver = NSWorkspace.shared.notificationCenter.addObserver(
             forName: NSWorkspace.didActivateApplicationNotification,
             object: nil,
-            queue: .main)
-        { [weak self] _ in
-            Task { @MainActor [weak self] in
-                self?.scheduleBackgroundCheck()
+            queue: .main) { [weak self] _ in
+                Task { @MainActor [weak self] in
+                    self?.scheduleBackgroundCheck()
+                }
             }
-        }
 
         self.pollTimer = Timer.scheduledTimer(withTimeInterval: self.pollInterval, repeats: true) { [weak self] _ in
             Task { @MainActor [weak self] in
@@ -91,7 +90,7 @@ final class MeetingDetector {
     }
 
     /// Called from background thread - performs blocking operations off main thread
-    private nonisolated func checkMeetingStatusBackground(zoomUsingMic: Bool, chromeUsingMic: Bool) async {
+    nonisolated private func checkMeetingStatusBackground(zoomUsingMic: Bool, chromeUsingMic: Bool) async {
         // Perform blocking operations on current (background) thread
         let zoomResult = Self.checkZoomMeetingBackground(isUsingMicrophone: zoomUsingMic)
         let googleMeetResult = Self.checkGoogleMeetBackground(isUsingMicrophone: chromeUsingMic)
@@ -166,7 +165,7 @@ final class MeetingDetector {
 
     /// Improved Zoom detection: Zoom running + using microphone OR Zoom with active meeting UI
     /// Also checks for Zoom Workplace (newer bundle ID)
-    private nonisolated static func checkZoomMeetingBackground(isUsingMicrophone: Bool) -> DetectionResult {
+    nonisolated private static func checkZoomMeetingBackground(isUsingMicrophone: Bool) -> DetectionResult {
         // Check for both Zoom bundle IDs (us.zoom.xos and Zoom Workplace)
         let zoomBundleIDs = ["us.zoom.xos", "us.zoom.ZoomHelperAgent", "us.zoom.Workplace"]
         let zoomRunning = NSWorkspace.shared.runningApplications.contains { app in
@@ -196,10 +195,10 @@ final class MeetingDetector {
     }
 
     /// Improved Google Meet detection: Chrome running + meet.google.com tab with meeting URL + optional mic check
-    private nonisolated static func checkGoogleMeetBackground(isUsingMicrophone _: Bool) -> DetectionResult {
+    nonisolated private static func checkGoogleMeetBackground(isUsingMicrophone _: Bool) -> DetectionResult {
         // First check if Chrome is running
         guard NSWorkspace.shared.runningApplications
-            .first(where: { $0.bundleIdentifier == MeetingApp.googleMeet.rawValue }) != nil
+            .contains(where: { $0.bundleIdentifier == MeetingApp.googleMeet.rawValue })
         else {
             return .notDetected
         }
@@ -292,14 +291,13 @@ extension MeetingDetector {
         case permissionDenied
     }
 
-    private nonisolated static func zoomMeetingUIState() -> ZoomUIState {
+    nonisolated private static func zoomMeetingUIState() -> ZoomUIState {
         var errorInfo: NSDictionary?
         let script = NSAppleScript(source: zoomMeetingAppleScript)
         let result = script?.executeAndReturnError(&errorInfo)
 
         if let errorInfo, let errorNumber = errorInfo[NSAppleScript.errorNumber] as? Int,
-           errorNumber == -25211 || errorNumber == -25205 || errorNumber == -1743
-        {
+           errorNumber == -25211 || errorNumber == -25205 || errorNumber == -1743 {
             return .permissionDenied
         }
 
@@ -307,7 +305,7 @@ extension MeetingDetector {
         return isActive ? .active : .inactive
     }
 
-    private nonisolated static var zoomMeetingAppleScript: String {
+    nonisolated private static var zoomMeetingAppleScript: String {
         """
         tell application "System Events"
             repeat with appName in {"zoom.us", "Zoom Workplace"}
@@ -329,9 +327,10 @@ extension MeetingDetector {
 }
 
 extension MeetingDetector {
+    // swiftlint:disable line_length
     /// Improved Google Meet AppleScript that only matches actual meeting URLs
     /// Excludes: /lookup/, landing pages, "meeting ended" pages
-    fileprivate nonisolated static var googleMeetAppleScriptImproved: String {
+    nonisolated fileprivate static var googleMeetAppleScriptImproved: String {
         """
         tell application "System Events"
             if exists (process "Google Chrome") then
@@ -360,8 +359,10 @@ extension MeetingDetector {
         """
     }
 
+    // swiftlint:enable line_length
+
     /// Original simpler Google Meet script (kept for fallback)
-    fileprivate nonisolated static var googleMeetAppleScript: String {
+    nonisolated fileprivate static var googleMeetAppleScript: String {
         """
         tell application "System Events"
             if exists (process "Google Chrome") then

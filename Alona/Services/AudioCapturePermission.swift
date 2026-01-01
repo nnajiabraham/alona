@@ -23,11 +23,10 @@ final class AudioCapturePermission {
         NotificationCenter.default.addObserver(
             forName: NSApplication.didBecomeActiveNotification,
             object: nil,
-            queue: .main)
-        { [weak self] _ in
-            guard let self else { return }
-            self.updateStatus()
-        }
+            queue: .main) { [weak self] _ in
+                guard let self else { return }
+                self.updateStatus()
+            }
 
         self.updateStatus()
         #else

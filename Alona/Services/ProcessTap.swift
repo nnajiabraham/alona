@@ -174,8 +174,7 @@ final class ProcessTap {
     func run(
         on queue: DispatchQueue,
         ioBlock: @escaping AudioDeviceIOBlock,
-        invalidationHandler: @escaping InvalidationHandler) throws
-    {
+        invalidationHandler: @escaping InvalidationHandler) throws {
         assert(self.activated, "\(#function) called with inactive tap!")
         assert(self.invalidationHandler == nil, "\(#function) called with tap already active!")
 

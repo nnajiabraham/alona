@@ -17,8 +17,7 @@ final class MeetingPopupWindowController {
     func showMeetingDetected(
         appName: String,
         meetingTitle: String,
-        onStartRecording: @escaping () -> Void)
-    {
+        onStartRecording: @escaping () -> Void) {
         // Dismiss any existing popup first
         self.dismiss()
 

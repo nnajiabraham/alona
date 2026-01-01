@@ -74,6 +74,7 @@ disabled_rules:
   - vertical_whitespace
   - indentation_width
   - sorted_imports
+  - closure_end_indentation
   # Swift 6 requires explicit self - disable this rule
   - explicit_self
   # We use TODO comments during development

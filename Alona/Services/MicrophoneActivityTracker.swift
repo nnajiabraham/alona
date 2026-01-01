@@ -53,7 +53,7 @@ final class MicrophoneActivityTracker: ObservableObject {
     }
 
     /// Returns bundle identifiers of all apps currently using the microphone.
-    private nonisolated static func getAppsUsingMicrophone() -> Set<String> {
+    nonisolated private static func getAppsUsingMicrophone() -> Set<String> {
         var result = Set<String>()
 
         guard let processObjects = try? AudioObjectID.readProcessList() else {

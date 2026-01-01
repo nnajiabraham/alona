@@ -3,6 +3,7 @@ import Foundation
 enum ModelLocator {
     static let modelName = "ggml-base.en"
     static let modelExtension = "bin"
+    // swiftlint:disable:next force_unwrapping
     static let remoteURL = URL(string: "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.en.bin")!
     /// Mutable for testing only - intentionally not isolated
     nonisolated(unsafe) static var applicationSupportDirectoryProvider: () -> URL = {

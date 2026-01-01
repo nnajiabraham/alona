@@ -14,8 +14,7 @@ struct OnboardingView: View {
             VStack(alignment: .leading, spacing: 16) {
                 Text("Welcome to Alona")
                     .font(.title)
-                Text(
-                    "Grant the required permissions so Alona can detect meetings, capture audio, and manage notes locally.")
+                Text("Grant the required permissions so Alona can detect meetings, capture audio, and manage notes.")
                     .foregroundStyle(.secondary)
                 self.permissionsList
                 HStack {

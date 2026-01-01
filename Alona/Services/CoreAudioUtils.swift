@@ -117,8 +117,7 @@ extension AudioObjectID {
         scope: AudioObjectPropertyScope = kAudioObjectPropertyScopeGlobal,
         element: AudioObjectPropertyElement = kAudioObjectPropertyElementMain,
         defaultValue: T,
-        qualifier: some Any) throws -> T
-    {
+        qualifier: some Any) throws -> T {
         try self.read(
             AudioObjectPropertyAddress(mSelector: selector, mScope: scope, mElement: element),
             defaultValue: defaultValue,
@@ -129,8 +128,7 @@ extension AudioObjectID {
         _ selector: AudioObjectPropertySelector,
         scope: AudioObjectPropertyScope = kAudioObjectPropertyScopeGlobal,
         element: AudioObjectPropertyElement = kAudioObjectPropertyElementMain,
-        defaultValue: T) throws -> T
-    {
+        defaultValue: T) throws -> T {
         try self.read(
             AudioObjectPropertyAddress(mSelector: selector, mScope: scope, mElement: element),
             defaultValue: defaultValue)
@@ -155,8 +153,7 @@ extension AudioObjectID {
     func readString(
         _ selector: AudioObjectPropertySelector,
         scope: AudioObjectPropertyScope = kAudioObjectPropertyScopeGlobal,
-        element: AudioObjectPropertyElement = kAudioObjectPropertyElementMain) throws -> String
-    {
+        element: AudioObjectPropertyElement = kAudioObjectPropertyElementMain) throws -> String {
         try self.read(
             AudioObjectPropertyAddress(mSelector: selector, mScope: scope, mElement: element),
             defaultValue: "" as CFString) as String
@@ -165,8 +162,7 @@ extension AudioObjectID {
     func readBool(
         _ selector: AudioObjectPropertySelector,
         scope: AudioObjectPropertyScope = kAudioObjectPropertyScopeGlobal,
-        element: AudioObjectPropertyElement = kAudioObjectPropertyElementMain) throws -> Bool
-    {
+        element: AudioObjectPropertyElement = kAudioObjectPropertyElementMain) throws -> Bool {
         let value: Int = try read(
             AudioObjectPropertyAddress(mSelector: selector, mScope: scope, mElement: element),
             defaultValue: 0)
@@ -177,8 +173,7 @@ extension AudioObjectID {
         _ inAddress: AudioObjectPropertyAddress,
         defaultValue: T,
         inQualifierSize: UInt32 = 0,
-        inQualifierData: UnsafeRawPointer? = nil) throws -> T
-    {
+        inQualifierData: UnsafeRawPointer? = nil) throws -> T {
         var address = inAddress
 
         var dataSize: UInt32 = 0

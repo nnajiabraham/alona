@@ -137,7 +137,7 @@ extension TranscriptionEngine {
             commonFormat: .pcmFormatFloat32,
             sampleRate: 16000.0,
             channels: 1,
-            interleaved: false)!
+            interleaved: false)! // swiftlint:disable:this force_unwrapping
 
         guard let converter = AVAudioConverter(from: sourceFormat, to: targetFormat) else {
             throw TranscriptionError.conversionFailed
