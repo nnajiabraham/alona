@@ -1,6 +1,7 @@
 @preconcurrency import AVFoundation
 import Combine
 import Foundation
+import Observation
 import OSLog
 import SwiftWhisper
 
@@ -11,10 +12,16 @@ protocol TranscriptionProcessing: Sendable {
 }
 
 /// TranscriptionEngine handles Whisper transcription.
-/// Note: This class uses ObservableObject for Combine compatibility but is not MainActor-isolated
-/// because SwiftWhisper's Whisper type is not Sendable. UI updates are dispatched explicitly.
-final class TranscriptionEngine: NSObject, ObservableObject, TranscriptionProcessing, @unchecked Sendable {
-    @Published private var progressValue: Double = 0
+/// Note: This class uses @Observable for SwiftUI observation and exposes Combine publishers
+/// for protocol-based consumption. Marked as @unchecked Sendable because SwiftWhisper's
+/// Whisper type is not Sendable. UI updates are dispatched explicitly.
+@Observable
+final class TranscriptionEngine: TranscriptionProcessing, @unchecked Sendable {
+    private var progressValue: Double = 0 {
+        didSet { self.progressSubject.send(self.progressValue) }
+    }
+
+    @ObservationIgnored private let progressSubject = CurrentValueSubject<Double, Never>(0)
     private var whisper: Whisper?
     private var lastUsedTime: Date?
     private var unloadTimer: Timer?
@@ -25,7 +32,7 @@ final class TranscriptionEngine: NSObject, ObservableObject, TranscriptionProces
     private let idleUnloadInterval: TimeInterval = 120
 
     var progressPublisher: AnyPublisher<Double, Never> {
-        self.$progressValue.eraseToAnyPublisher()
+        self.progressSubject.eraseToAnyPublisher()
     }
 
     var isModelLoaded: Bool {

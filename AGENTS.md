@@ -56,10 +56,10 @@ Alona/
 │   ├── AppState.swift       # @Observable main state container
 │   └── TranscriptionResult.swift
 ├── Services/
-│   ├── AudioRecorder.swift  # CoreAudio process tap + mic capture
+│   ├── AudioRecorder.swift  # @Observable - CoreAudio process tap + mic capture
 │   ├── MeetingDetector.swift # @Observable - detects Zoom/Meet
 │   ├── PermissionManager.swift # @Observable - permission handling
-│   ├── TranscriptionEngine.swift # Whisper integration
+│   ├── TranscriptionEngine.swift # @Observable - Whisper integration
 │   └── ...
 ├── Views/
 │   ├── MenuBarView.swift    # Main menu bar UI
@@ -69,7 +69,15 @@ Alona/
     └── Models/              # Whisper model files (ggml-base.en.bin)
 
 AlonaTests/
-└── AlonaTests.swift         # All unit tests
+├── TestHelpers.swift        # Shared mocks and harnesses
+├── AppStateTests.swift      # AppState behavior tests
+├── MeetingFileManagerTests.swift
+├── MeetingDetectorTests.swift
+├── AudioTests.swift         # Audio processing, CoreAudio
+├── TranscriptionTests.swift
+├── PermissionTests.swift
+├── MicrophoneTrackerTests.swift
+└── WindowControllerTests.swift
 ```
 
 ---
@@ -144,10 +152,10 @@ make test   # Runs all tests, kills any running Alona instance first
 
 ### Writing Tests
 
-- Add tests to `AlonaTests/AlonaTests.swift` (or new `*Tests.swift` files)
+- Add tests to the appropriate `*Tests.swift` file by subsystem (see Project Structure)
 - Use `@MainActor` for tests involving main-actor-isolated types
-- Use test harnesses with cleanup (see `MeetingFileManagerTestHarness`)
-- Mock external dependencies (see `MockAudioRecorder`, `MockTranscriptionEngine`)
+- Use test harnesses with cleanup (see `MeetingFileManagerTestHarness` in `TestHelpers.swift`)
+- Mock external dependencies (see `MockAudioRecorder`, `MockTranscriptionEngine` in `TestHelpers.swift`)
 
 ### Test Naming
 

@@ -2,6 +2,7 @@ import AudioToolbox
 @preconcurrency import AVFoundation
 import Combine
 import Foundation
+import Observation
 import OSLog
 
 protocol AudioRecordingController: AnyObject, Sendable {
@@ -15,9 +16,19 @@ protocol AudioRecordingController: AnyObject, Sendable {
 /// Audio recorder that uses CoreAudio Process Taps (macOS 14.4+) for system audio capture.
 /// This triggers "System Audio Recording Only" permission instead of "Screen & System Audio Recording".
 /// Note: Marked as @unchecked Sendable because it uses internal dispatch queues for thread safety.
-final class AudioRecorder: NSObject, ObservableObject, @unchecked Sendable {
-    @Published private(set) var isRecording = false
-    @Published private(set) var recordingDuration: TimeInterval = 0
+/// Uses @Observable for SwiftUI observation and exposes Combine publishers for protocol-based consumption.
+@Observable
+final class AudioRecorder: @unchecked Sendable {
+    private(set) var isRecording = false {
+        didSet { self.isRecordingSubject.send(self.isRecording) }
+    }
+
+    private(set) var recordingDuration: TimeInterval = 0 {
+        didSet { self.recordingDurationSubject.send(self.recordingDuration) }
+    }
+
+    @ObservationIgnored private let isRecordingSubject = CurrentValueSubject<Bool, Never>(false)
+    @ObservationIgnored private let recordingDurationSubject = CurrentValueSubject<TimeInterval, Never>(0)
     var captureSystemAudio: Bool = true {
         didSet {
             if self.captureSystemAudio == false, self.systemAudioActive {
@@ -64,7 +75,6 @@ final class AudioRecorder: NSObject, ObservableObject, @unchecked Sendable {
 
     init(meetingFileManager: MeetingFileManager) {
         self.meetingFileManager = meetingFileManager
-        super.init()
     }
 
     @MainActor
@@ -730,11 +740,11 @@ extension AudioRecorder {
 
 extension AudioRecorder: AudioRecordingController {
     var isRecordingPublisher: AnyPublisher<Bool, Never> {
-        self.$isRecording.eraseToAnyPublisher()
+        self.isRecordingSubject.eraseToAnyPublisher()
     }
 
     var recordingDurationPublisher: AnyPublisher<TimeInterval, Never> {
-        self.$recordingDuration.eraseToAnyPublisher()
+        self.recordingDurationSubject.eraseToAnyPublisher()
     }
 }
 

@@ -94,12 +94,7 @@ Source baseline: [steipete/CodexBar](https://github.com/steipete/CodexBar/tree/m
 - [x] **MEDIUM**: Adopt stricter concurrency posture (CodexBar uses `.enableUpcomingFeature("StrictConcurrency")`; for Alona: evaluate Swift 6.x migration or enable stricter Xcode concurrency checks where feasible). ✅ (Completed via Swift 6.0 upgrade)
 - [x] **LOW**: Add GitHub Actions CI (`.github/workflows/ci.yml`) to run format/lint/tests on PRs. ✅
 - [x] **LOW**: Review and clean up README (removed accidental cookie paste, updated outdated content). ✅
-- [ ] **LOW**: Migrate `AudioRecorder` and `TranscriptionEngine` from `NSObject` to `@Observable`
-  - These classes don't actually require `NSObject` — they only inherited from it out of habit
-  - `AudioRecorder`: Uses CoreAudio callbacks (Swift closures) and AVAudioEngine taps (no Obj-C requirement)
-  - `TranscriptionEngine`: `WhisperDelegate` only requires `AnyObject`, not `NSObject`
-  - Keep `RecordingAudioPlayer` as `ObservableObject` — it requires `NSObject` for `AVAudioPlayerDelegate` conformance (Apple's Obj-C delegate protocol inherits from `NSObjectProtocol`)
-  - Migration involves: removing `: NSObject, ObservableObject`, adding `@Observable`, refactoring `AnyPublisher` properties to callbacks or keeping them with `@ObservationIgnored`
+- [x] **LOW**: Migrate `AudioRecorder` and `TranscriptionEngine` from `NSObject` to `@Observable` ✅
 
 ---
 
@@ -457,5 +452,70 @@ Updated thresholds (more lenient, matching CodexBar):
 - Tech stack summary
 
 **Security note:** Removed accidentally pasted curl command that contained session cookies/auth tokens.
+
+---
+
+#### AudioRecorder and TranscriptionEngine Migration to @Observable (2025-01-01)
+
+**Goal:** Remove unnecessary `NSObject` inheritance and migrate from `ObservableObject` to `@Observable`.
+
+**Analysis:**
+- `AudioRecorder`: Uses CoreAudio C callbacks and AVAudioEngine Swift closures — no Obj-C requirement
+- `TranscriptionEngine`: `WhisperDelegate` protocol only requires `AnyObject`, not `NSObjectProtocol`
+- `RecordingAudioPlayer`: **NOT migrated** — genuinely requires `NSObject` for `AVAudioPlayerDelegate` (Obj-C protocol)
+
+**Challenge: Combine Publisher Compatibility**
+
+Both classes expose `AnyPublisher` properties via protocols (`AudioRecordingController`, `TranscriptionProcessing`) consumed by `AppState`:
+- `isRecordingPublisher: AnyPublisher<Bool, Never>`
+- `recordingDurationPublisher: AnyPublisher<TimeInterval, Never>`
+- `progressPublisher: AnyPublisher<Double, Never>`
+
+**Solution:** Keep Combine publishers backed by `CurrentValueSubject` with `@ObservationIgnored`, sync via property `didSet`:
+
+```swift
+@Observable
+final class AudioRecorder: @unchecked Sendable {
+    private(set) var isRecording = false {
+        didSet { isRecordingSubject.send(isRecording) }
+    }
+    
+    @ObservationIgnored private let isRecordingSubject = CurrentValueSubject<Bool, Never>(false)
+    
+    var isRecordingPublisher: AnyPublisher<Bool, Never> {
+        isRecordingSubject.eraseToAnyPublisher()
+    }
+}
+```
+
+**Changes to `AudioRecorder.swift`:**
+- Removed `: NSObject, ObservableObject`
+- Added `@Observable` macro
+- Removed `@Published` from `isRecording` and `recordingDuration`
+- Added `didSet` observers that publish to `CurrentValueSubject`
+- Added `@ObservationIgnored` subjects for Combine compatibility
+- Changed publisher implementations from `$property` to `subject.eraseToAnyPublisher()`
+- Removed `super.init()` call
+
+**Changes to `TranscriptionEngine.swift`:**
+- Removed `: NSObject, ObservableObject`
+- Added `@Observable` macro
+- Removed `@Published` from `progressValue`
+- Added `didSet` observer that publishes to `CurrentValueSubject`
+- Added `@ObservationIgnored` subject for Combine compatibility
+- Changed `progressPublisher` implementation from `$progressValue` to `progressSubject.eraseToAnyPublisher()`
+
+**Key Pattern: @Observable + Combine Interop**
+
+| Use Case | Pattern |
+|----------|---------|
+| SwiftUI direct observation | `@Observable` provides automatic tracking |
+| Protocol-based Combine publishers | `CurrentValueSubject` with `@ObservationIgnored` |
+| Sync observation ↔ Combine | Property `didSet` calls `subject.send(newValue)` |
+
+**What remains on ObservableObject:**
+- `RecordingAudioPlayer` — requires `NSObject` for `AVAudioPlayerDelegate: NSObjectProtocol`
+
+**Tests:** All 50 tests pass. **Lint:** Clean.
 
 ---
