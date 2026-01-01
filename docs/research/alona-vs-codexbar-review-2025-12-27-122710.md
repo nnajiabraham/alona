@@ -90,7 +90,7 @@ Source baseline: [steipete/CodexBar](https://github.com/steipete/CodexBar/tree/m
 - [x] **HIGH PRIORITY**: Create an `AGENTS.md` with repo-specific "do this every time" commands and rules (build/test/run, formatting, what to avoid, verification steps). ✅
 - [x] **MEDIUM**: Add `.swiftformat` and `.swiftlint.yml` (pin formatting + lint rules; optionally wire `make lint` to also run `swiftlint --strict`). ✅
 - [x] **MEDIUM**: Upgrade project to Swift 6.0 (update `SWIFT_VERSION` in Xcode project + `.swiftformat --swiftversion 6.0`) ✅
-- [ ] **MEDIUM**: Increase test coverage **and** split `AlonaTests/AlonaTests.swift` into focused `*Tests.swift` files by subsystem (AppState, MeetingDetector, PermissionManager, FileManager, Audio, Transcription).
+- [x] **MEDIUM**: Split `AlonaTests/AlonaTests.swift` into focused `*Tests.swift` files by subsystem. ✅
 - [x] **MEDIUM**: Adopt stricter concurrency posture (CodexBar uses `.enableUpcomingFeature("StrictConcurrency")`; for Alona: evaluate Swift 6.x migration or enable stricter Xcode concurrency checks where feasible). ✅ (Completed via Swift 6.0 upgrade)
 - [ ] **LOW**: Add GitHub Actions CI (`.github/workflows/ci.yml`) to run format/lint/tests on PRs.
 - [ ] **LOW**: Review and clean up README (remove accidental cookie paste if present).
@@ -394,3 +394,33 @@ Updated thresholds (more lenient, matching CodexBar):
 
 ---
 
+#### Test Suite Split (2025-12-29)
+
+**Before:** Single monolithic `AlonaTests/AlonaTests.swift` file (998 lines) containing all tests.
+
+**After:** 9 focused test files organized by subsystem:
+
+| File | Purpose | Test Classes |
+|------|---------|--------------|
+| `TestHelpers.swift` | Shared mocks, harnesses, helper functions | `MeetingFileManagerTestHarness`, `MockAudioRecorder`, `MockTranscriptionEngine`, `MockSummaryProvider`, `MockMeetingNotificationScheduler` |
+| `AppStateTests.swift` | AppState behavior, notes autosave, recording flow | `AppStateTests` (12 tests) |
+| `MeetingFileManagerTests.swift` | File operations, directory creation, persistence | `MeetingFileManagerTests` (6 tests) |
+| `MeetingDetectorTests.swift` | Meeting detection logic, notification deduplication | `MeetingDetectorTests`, `NonBlockingBehaviorTests` (6 tests) |
+| `AudioTests.swift` | Audio processing, CoreAudio, resampling | `AudioSampleMathTests`, `CoreAudioProcessTapTests`, `RecordingErrorTests`, `VoiceProcessingTests`, `AudioBufferTests`, `SystemAudioCaptureTests` (16 tests) |
+| `TranscriptionTests.swift` | Transcription engine, model locator | `TranscriptionMemoryTests`, `ModelLocatorTests` (4 tests) |
+| `PermissionTests.swift` | Permission handling, TCC framework | `PermissionManagerTests`, `TCCSPITests` (6 tests) |
+| `MicrophoneTrackerTests.swift` | Microphone activity detection | `MicrophoneTrackerTests` (4 tests) |
+| `WindowControllerTests.swift` | Window management | `WindowControllerTests` (2 tests) |
+
+**Project file changes:**
+- Updated `Alona.xcodeproj/project.pbxproj` to remove `AlonaTests.swift` reference and add all 9 new test files to the `AlonaTests` target
+
+**Benefits of split:**
+- Faster test discovery and navigation
+- Clearer test organization by domain
+- Easier to add tests to appropriate file
+- Parallel test execution by test class
+
+**Tests:** All 50 tests pass. **Lint:** Clean.
+
+---

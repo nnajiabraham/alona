@@ -14,7 +14,15 @@
 		AA0105 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1005 /* SettingsView.swift */; };
 		AA0106 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1006 /* OnboardingView.swift */; };
 		AA0107 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA1007 /* Assets.xcassets */; };
-		AA0108 /* AlonaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2002 /* AlonaTests.swift */; };
+		AA0140 /* TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2010 /* TestHelpers.swift */; };
+		AA0141 /* AppStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2011 /* AppStateTests.swift */; };
+		AA0142 /* MeetingFileManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2012 /* MeetingFileManagerTests.swift */; };
+		AA0143 /* MeetingDetectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2013 /* MeetingDetectorTests.swift */; };
+		AA0144 /* AudioTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2014 /* AudioTests.swift */; };
+		AA0145 /* TranscriptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2015 /* TranscriptionTests.swift */; };
+		AA0146 /* PermissionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2016 /* PermissionTests.swift */; };
+		AA0147 /* MicrophoneTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2017 /* MicrophoneTrackerTests.swift */; };
+		AA0148 /* WindowControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2018 /* WindowControllerTests.swift */; };
 		AA0109 /* Inject in Frameworks */ = {isa = PBXBuildFile; productRef = AA9002 /* Inject */; };
 		AA0110 /* MeetingDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1009 /* MeetingDetector.swift */; };
 		AA0111 /* TranscriptionResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1010 /* TranscriptionResult.swift */; };
@@ -75,8 +83,16 @@
 		AA1028 /* MicrophoneActivityTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneActivityTracker.swift; sourceTree = "<group>"; };
 		AA1029 /* MeetingDetectedPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingDetectedPopup.swift; sourceTree = "<group>"; };
 		AA1030 /* MeetingPopupWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingPopupWindow.swift; sourceTree = "<group>"; };
-		AA2002 /* AlonaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlonaTests.swift; sourceTree = "<group>"; };
 		AA2003 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA2010 /* TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelpers.swift; sourceTree = "<group>"; };
+		AA2011 /* AppStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateTests.swift; sourceTree = "<group>"; };
+		AA2012 /* MeetingFileManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingFileManagerTests.swift; sourceTree = "<group>"; };
+		AA2013 /* MeetingDetectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingDetectorTests.swift; sourceTree = "<group>"; };
+		AA2014 /* AudioTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioTests.swift; sourceTree = "<group>"; };
+		AA2015 /* TranscriptionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionTests.swift; sourceTree = "<group>"; };
+		AA2016 /* PermissionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionTests.swift; sourceTree = "<group>"; };
+		AA2017 /* MicrophoneTrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneTrackerTests.swift; sourceTree = "<group>"; };
+		AA2018 /* WindowControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowControllerTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -190,7 +206,15 @@
 		AA4002 /* AlonaTests */ = {
 			isa = PBXGroup;
 			children = (
-				AA2002 /* AlonaTests.swift */,
+				AA2010 /* TestHelpers.swift */,
+				AA2011 /* AppStateTests.swift */,
+				AA2012 /* MeetingFileManagerTests.swift */,
+				AA2013 /* MeetingDetectorTests.swift */,
+				AA2014 /* AudioTests.swift */,
+				AA2015 /* TranscriptionTests.swift */,
+				AA2016 /* PermissionTests.swift */,
+				AA2017 /* MicrophoneTrackerTests.swift */,
+				AA2018 /* WindowControllerTests.swift */,
 				AA2003 /* Info.plist */
 			);
 			path = AlonaTests;
@@ -328,7 +352,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA0108 /* AlonaTests.swift in Sources */
+				AA0140 /* TestHelpers.swift in Sources */,
+				AA0141 /* AppStateTests.swift in Sources */,
+				AA0142 /* MeetingFileManagerTests.swift in Sources */,
+				AA0143 /* MeetingDetectorTests.swift in Sources */,
+				AA0144 /* AudioTests.swift in Sources */,
+				AA0145 /* TranscriptionTests.swift in Sources */,
+				AA0146 /* PermissionTests.swift in Sources */,
+				AA0147 /* MicrophoneTrackerTests.swift in Sources */,
+				AA0148 /* WindowControllerTests.swift in Sources */
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
