@@ -1,6 +1,7 @@
 import AppKit
 import SwiftUI
 
+@MainActor
 enum WindowFocusController {
     static func identifier(for windowID: String) -> String {
         switch windowID {
@@ -31,6 +32,7 @@ enum WindowFocusController {
     }
 }
 
+@MainActor
 enum StartupWindowController {
     static let identifier = "startup-window"
 

@@ -5,6 +5,7 @@ import XCTest
 
 // MARK: - Window Controller Tests
 
+@MainActor
 final class WindowControllerTests: XCTestCase {
     func testStartupWindowControllerFindsExistingWindow() {
         let other = NSWindow()
