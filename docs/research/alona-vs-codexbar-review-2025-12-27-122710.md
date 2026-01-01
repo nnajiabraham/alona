@@ -92,8 +92,8 @@ Source baseline: [steipete/CodexBar](https://github.com/steipete/CodexBar/tree/m
 - [x] **MEDIUM**: Upgrade project to Swift 6.0 (update `SWIFT_VERSION` in Xcode project + `.swiftformat --swiftversion 6.0`) ✅
 - [x] **MEDIUM**: Split `AlonaTests/AlonaTests.swift` into focused `*Tests.swift` files by subsystem. ✅
 - [x] **MEDIUM**: Adopt stricter concurrency posture (CodexBar uses `.enableUpcomingFeature("StrictConcurrency")`; for Alona: evaluate Swift 6.x migration or enable stricter Xcode concurrency checks where feasible). ✅ (Completed via Swift 6.0 upgrade)
-- [ ] **LOW**: Add GitHub Actions CI (`.github/workflows/ci.yml`) to run format/lint/tests on PRs.
-- [ ] **LOW**: Review and clean up README (remove accidental cookie paste if present).
+- [x] **LOW**: Add GitHub Actions CI (`.github/workflows/ci.yml`) to run format/lint/tests on PRs. ✅
+- [x] **LOW**: Review and clean up README (removed accidental cookie paste, updated outdated content). ✅
 - [ ] **LOW**: Migrate `AudioRecorder` and `TranscriptionEngine` from `NSObject` to `@Observable`
   - These classes don't actually require `NSObject` — they only inherited from it out of habit
   - `AudioRecorder`: Uses CoreAudio callbacks (Swift closures) and AVAudioEngine taps (no Obj-C requirement)
@@ -422,5 +422,40 @@ Updated thresholds (more lenient, matching CodexBar):
 - Parallel test execution by test class
 
 **Tests:** All 50 tests pass. **Lint:** Clean.
+
+---
+
+#### GitHub Actions CI (2025-12-29)
+
+**File created:** `.github/workflows/ci.yml`
+
+**CI workflow includes:**
+- Triggers on push to `main`/`master` and on pull requests
+- Runs on `macos-14` (Apple Silicon runners)
+- Installs SwiftFormat, SwiftLint, xcbeautify via Homebrew
+- **SwiftFormat lint** — Fails PR if formatting issues found
+- **SwiftLint** — Currently warning-only (non-blocking) for gradual adoption
+- **Build** — Builds with xcodebuild + xcbeautify for readable output
+- **Test** — Runs full test suite
+
+**Badge:** Added CI status badge to README (requires updating `YOUR_USERNAME` placeholder)
+
+---
+
+#### README Cleanup (2025-12-29)
+
+**Before:** Outdated README with "Project scaffolding only" status and accidental curl command paste (lines 20-32 with cookies/auth tokens).
+
+**After:** Comprehensive README including:
+- CI badge placeholder
+- Feature list with emoji icons
+- Requirements (macOS 14.6+, Apple Silicon)
+- Installation instructions
+- Development commands
+- Permissions table
+- Architecture overview
+- Tech stack summary
+
+**Security note:** Removed accidentally pasted curl command that contained session cookies/auth tokens.
 
 ---
