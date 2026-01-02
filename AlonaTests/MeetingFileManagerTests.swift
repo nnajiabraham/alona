@@ -106,3 +106,109 @@ final class MeetingFileManagerTests: XCTestCase {
         XCTAssertEqual(harness.manager.recordingAudioURL(in: directory), preferred)
     }
 }
+
+// MARK: - MeetingFileManager Edge Case Tests
+
+@MainActor
+final class MeetingFileManagerEdgeCaseTests: XCTestCase {
+    func testMeetingDirectoryWithSpecialCharactersInTitle() throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        // Test various special characters that should be sanitized
+        let directory = try harness.manager.createMeetingDirectory(title: "Test: Meeting / Review (2024)")
+        let name = directory.lastPathComponent
+
+        // Should not contain problematic characters
+        XCTAssertFalse(name.contains("/"), "Should not contain forward slash")
+        XCTAssertFalse(name.contains(":"), "Should not contain colon")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: directory.path), "Directory should exist")
+    }
+
+    func testMeetingDirectoryWithVeryLongTitle() throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        // Create a very long title
+        let longTitle = String(repeating: "A", count: 300)
+        let directory = try harness.manager.createMeetingDirectory(title: longTitle)
+
+        // Should create directory successfully (filename may be truncated)
+        XCTAssertTrue(FileManager.default.fileExists(atPath: directory.path), "Directory should exist")
+
+        // Save and verify title is preserved correctly
+        try harness.manager.saveTitle(longTitle, to: directory)
+        let loadedTitle = harness.manager.loadTitle(from: directory)
+        XCTAssertEqual(loadedTitle, longTitle, "Full title should be preserved in metadata")
+    }
+
+    func testMeetingDirectoryWithEmptyTitle() throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        let directory = try harness.manager.createMeetingDirectory(title: "")
+
+        // Should still create a valid directory
+        XCTAssertTrue(FileManager.default.fileExists(atPath: directory.path), "Directory should exist")
+    }
+
+    func testMeetingDirectoryWithUnicodeTitle() throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        let unicodeTitle = "会议 Meeting 🎉 Réunion"
+        let directory = try harness.manager.createMeetingDirectory(title: unicodeTitle)
+
+        XCTAssertTrue(FileManager.default.fileExists(atPath: directory.path), "Directory should exist")
+
+        try harness.manager.saveTitle(unicodeTitle, to: directory)
+        let loadedTitle = harness.manager.loadTitle(from: directory)
+        XCTAssertEqual(loadedTitle, unicodeTitle, "Unicode title should be preserved")
+    }
+
+    func testLoadNotesReturnsNilForMissingFile() throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        let directory = try harness.manager.createMeetingDirectory(title: "No Notes")
+
+        // Don't create notes.md file
+        let notes = harness.manager.loadNotes(from: directory)
+        XCTAssertNil(notes, "Should return nil for missing notes file")
+    }
+
+    func testLoadTranscriptReturnsNilForMissingFile() throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        let directory = try harness.manager.createMeetingDirectory(title: "No Transcript")
+
+        // Don't create transcript.txt file
+        let transcript = harness.manager.loadTranscript(from: directory)
+        XCTAssertNil(transcript, "Should return nil for missing transcript file")
+    }
+
+    func testMeetingEntriesWithMissingMetadataFiles() throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        // Create directory but don't add any metadata files
+        let directory = try harness.manager.createMeetingDirectory(title: "Bare")
+
+        let entries = harness.manager.meetingEntries()
+
+        // Should still list the entry (using directory name as fallback title)
+        XCTAssertEqual(entries.count, 1)
+        XCTAssertNotNil(entries.first?.title)
+    }
+
+    func testRecoverNotesFromTempReturnsNilWhenNoTemp() throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        let directory = try harness.manager.createMeetingDirectory(title: "No Temp")
+
+        let recovered = harness.manager.recoverNotesFromTemp(in: directory)
+        XCTAssertNil(recovered, "Should return nil when no temp file exists")
+    }
+}

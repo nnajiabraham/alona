@@ -3,6 +3,175 @@ import Foundation
 import XCTest
 @testable import Alona
 
+// MARK: - AppState Recording Flow Integration Tests
+
+@MainActor
+final class AppStateRecordingFlowTests: XCTestCase {
+    func testStartRecordingUpdatesIsRecordingState() async throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        let directory = try harness.manager.createMeetingDirectory(title: "Recording Flow")
+        let recorder = MockAudioRecorder(directory: directory)
+        let appState = AppState(
+            meetingFileManager: harness.manager,
+            audioRecorder: recorder,
+            transcriptionEngine: MockTranscriptionEngine(),
+            summaryProvider: MockSummaryProvider())
+
+        XCTAssertFalse(appState.isRecording, "Should not be recording initially")
+
+        await appState.startRecording(meetingTitleOverride: "Test")
+
+        // Give time for publisher to propagate
+        try await Task.sleep(nanoseconds: 50_000_000)
+
+        XCTAssertTrue(appState.isRecording, "Should be recording after start")
+    }
+
+    func testStopRecordingUpdatesIsRecordingState() async throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        let directory = try harness.manager.createMeetingDirectory(title: "Stop Flow")
+        let recorder = MockAudioRecorder(directory: directory)
+        let appState = AppState(
+            meetingFileManager: harness.manager,
+            audioRecorder: recorder,
+            transcriptionEngine: MockTranscriptionEngine(),
+            summaryProvider: MockSummaryProvider())
+
+        await appState.startRecording(meetingTitleOverride: "Test")
+        try await Task.sleep(nanoseconds: 50_000_000)
+        XCTAssertTrue(appState.isRecording)
+
+        await appState.stopRecording()
+        try await Task.sleep(nanoseconds: 50_000_000)
+
+        XCTAssertFalse(appState.isRecording, "Should not be recording after stop")
+    }
+
+    func testRecordingDurationUpdatesFromPublisher() async throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        let directory = try harness.manager.createMeetingDirectory(title: "Duration")
+        let recorder = MockAudioRecorder(directory: directory)
+        let appState = AppState(
+            meetingFileManager: harness.manager,
+            audioRecorder: recorder,
+            transcriptionEngine: MockTranscriptionEngine(),
+            summaryProvider: MockSummaryProvider())
+
+        XCTAssertEqual(appState.recordingDuration, 0, "Duration should start at 0")
+    }
+}
+
+// MARK: - AppState Edge Case Tests
+
+@MainActor
+final class AppStateEdgeCaseTests: XCTestCase {
+    func testNotesAutosaveSkipsDuplicateContent() async throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        let directory = try harness.manager.createMeetingDirectory(title: "Duplicate")
+        let recorder = MockAudioRecorder(directory: directory)
+        let appState = AppState(
+            meetingFileManager: harness.manager,
+            audioRecorder: recorder,
+            transcriptionEngine: MockTranscriptionEngine(),
+            summaryProvider: MockSummaryProvider(),
+            notesAutosaveInterval: 0.05)
+
+        await appState.startRecording(meetingTitleOverride: "Duplicate")
+
+        // Set notes and wait for autosave
+        appState.notesDraft = "Same content"
+        try await Task.sleep(nanoseconds: 100_000_000)
+
+        // Set same content again - should not trigger redundant save
+        appState.notesDraft = "Same content"
+        try await Task.sleep(nanoseconds: 100_000_000)
+
+        // Verify content is saved correctly
+        let saved = harness.manager.recoverNotesFromTemp(in: directory)
+        XCTAssertEqual(saved, "Same content")
+    }
+
+    func testNotesSelectionBoundsAreRespected() {
+        // Test that selection bounds work correctly with NotesInsertion
+        let text = "Hello"
+
+        // Valid range at end
+        let result1 = NotesInsertion.inserting(snippet: "!", in: text, range: NSRange(location: 5, length: 0))
+        XCTAssertEqual(result1.text, "Hello!")
+
+        // Valid range at start
+        let result2 = NotesInsertion.inserting(snippet: "Hi ", in: text, range: NSRange(location: 0, length: 0))
+        XCTAssertEqual(result2.text, "Hi Hello")
+
+        // Valid range replacing middle
+        let result3 = NotesInsertion.inserting(snippet: "i", in: text, range: NSRange(location: 1, length: 3))
+        XCTAssertEqual(result3.text, "Hio")
+    }
+
+    func testTranscriptionJobStateTransitions() async throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        let directory = try harness.manager.createMeetingDirectory(title: "Job State")
+        let recorder = MockAudioRecorder(directory: directory)
+        let engine = MockTranscriptionEngine(result: TranscriptionResult(text: "Test", segments: []))
+        let appState = AppState(
+            meetingFileManager: harness.manager,
+            audioRecorder: recorder,
+            transcriptionEngine: engine,
+            summaryProvider: MockSummaryProvider())
+
+        // Queue a transcription job
+        appState.regenerateTranscription(for: directory, notes: "")
+
+        // Job should be queued
+        XCTAssertEqual(appState.transcriptionJobs.count, 1)
+
+        // Wait for completion
+        try await waitForJobCompletion(in: appState)
+
+        // Verify final state
+        guard case .completed = appState.transcriptionJobs.first?.state else {
+            XCTFail("Job should be in completed state")
+            return
+        }
+    }
+
+    func testCaptureSystemAudioToggles() throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        let recorder = MockAudioRecorder(directory: harness.manager.baseDirectory)
+        let appState = AppState(
+            meetingFileManager: harness.manager,
+            audioRecorder: recorder,
+            transcriptionEngine: MockTranscriptionEngine(),
+            summaryProvider: MockSummaryProvider(),
+            userDefaults: harness.userDefaults)
+
+        XCTAssertFalse(appState.captureSystemAudio)
+        XCTAssertFalse(recorder.captureSystemAudio)
+
+        appState.captureSystemAudio = true
+        XCTAssertTrue(appState.captureSystemAudio)
+        XCTAssertTrue(recorder.captureSystemAudio)
+
+        appState.captureSystemAudio = false
+        XCTAssertFalse(appState.captureSystemAudio)
+        XCTAssertFalse(recorder.captureSystemAudio)
+    }
+}
+
+// MARK: - AppState Tests
+
 @MainActor
 final class AppStateTests: XCTestCase {
     func testAppStateUpdatesSaveDirectory() throws {

@@ -23,6 +23,8 @@
 		AA0146 /* PermissionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2016 /* PermissionTests.swift */; };
 		AA0147 /* MicrophoneTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2017 /* MicrophoneTrackerTests.swift */; };
 		AA0148 /* WindowControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2018 /* WindowControllerTests.swift */; };
+		AA0149 /* SummaryManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2019 /* SummaryManagerTests.swift */; };
+		AA0150 /* NotificationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2020 /* NotificationTests.swift */; };
 		AA0109 /* Inject in Frameworks */ = {isa = PBXBuildFile; productRef = AA9002 /* Inject */; };
 		AA0110 /* MeetingDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1009 /* MeetingDetector.swift */; };
 		AA0111 /* TranscriptionResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1010 /* TranscriptionResult.swift */; };
@@ -93,6 +95,8 @@
 		AA2016 /* PermissionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionTests.swift; sourceTree = "<group>"; };
 		AA2017 /* MicrophoneTrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneTrackerTests.swift; sourceTree = "<group>"; };
 		AA2018 /* WindowControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowControllerTests.swift; sourceTree = "<group>"; };
+		AA2019 /* SummaryManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryManagerTests.swift; sourceTree = "<group>"; };
+		AA2020 /* NotificationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -215,6 +219,8 @@
 				AA2016 /* PermissionTests.swift */,
 				AA2017 /* MicrophoneTrackerTests.swift */,
 				AA2018 /* WindowControllerTests.swift */,
+				AA2019 /* SummaryManagerTests.swift */,
+				AA2020 /* NotificationTests.swift */,
 				AA2003 /* Info.plist */
 			);
 			path = AlonaTests;
@@ -360,7 +366,9 @@
 				AA0145 /* TranscriptionTests.swift in Sources */,
 				AA0146 /* PermissionTests.swift in Sources */,
 				AA0147 /* MicrophoneTrackerTests.swift in Sources */,
-				AA0148 /* WindowControllerTests.swift in Sources */
+				AA0148 /* WindowControllerTests.swift in Sources */,
+				AA0149 /* SummaryManagerTests.swift in Sources */,
+				AA0150 /* NotificationTests.swift in Sources */
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

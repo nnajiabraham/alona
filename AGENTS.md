@@ -70,14 +70,16 @@ Alona/
 
 AlonaTests/
 ├── TestHelpers.swift        # Shared mocks and harnesses
-├── AppStateTests.swift      # AppState behavior tests
-├── MeetingFileManagerTests.swift
-├── MeetingDetectorTests.swift
-├── AudioTests.swift         # Audio processing, CoreAudio
-├── TranscriptionTests.swift
-├── PermissionTests.swift
-├── MicrophoneTrackerTests.swift
-└── WindowControllerTests.swift
+├── AppStateTests.swift      # AppState behavior tests (18 tests)
+├── MeetingFileManagerTests.swift # File operations (14 tests)
+├── MeetingDetectorTests.swift # Meeting detection (6 tests)
+├── AudioTests.swift         # Audio processing, CoreAudio (20 tests)
+├── TranscriptionTests.swift # Transcription (9 tests)
+├── PermissionTests.swift    # Permissions (6 tests)
+├── MicrophoneTrackerTests.swift # Mic tracking (4 tests)
+├── WindowControllerTests.swift # Window mgmt (2 tests)
+├── SummaryManagerTests.swift # Summaries (7 tests)
+└── NotificationTests.swift  # Notifications (6 tests)
 ```
 
 ---

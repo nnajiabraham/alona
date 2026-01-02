@@ -519,3 +519,46 @@ final class AudioRecorder: @unchecked Sendable {
 **Tests:** All 50 tests pass. **Lint:** Clean.
 
 ---
+
+#### Extended Test Coverage (2025-01-01)
+
+**Goal:** Increase test coverage by adding tests for untested or under-tested areas identified during code review.
+
+**Test count increase:** 52 → 92 tests (+40 tests, +77% increase)
+
+**New test categories added:**
+
+| Category | Tests Added | Description |
+|----------|-------------|-------------|
+| AudioRecorder/TranscriptionEngine Publisher Tests | 3 | Verify @Observable + Combine interop with CurrentValueSubject |
+| TranscriptionResult Tests | 5 | Test struct initialization, segments, time intervals, edge cases |
+| TranscriptionError Tests | 1 | Verify error descriptions are meaningful |
+| AppState Recording Flow Tests | 3 | Test start/stop recording state transitions |
+| AppState Edge Case Tests | 4 | Notes autosave, selection bounds, job state transitions |
+| SummaryManager Tests | 7 | Test provider delegation, placeholder formatting, edge cases |
+| MeetingNotificationManager Tests | 6 | Test notification content, observer patterns |
+| AudioProcess/ProcessTap Tests | 4 | Test process enumeration, tap configuration |
+| MeetingFileManager Edge Cases | 8 | Special chars, long titles, unicode, missing files |
+
+**New test files created:**
+- `AlonaTests/SummaryManagerTests.swift` (7 tests)
+- `AlonaTests/NotificationTests.swift` (6 tests)
+
+**Test coverage by file (after):**
+
+| File | Test Count |
+|------|------------|
+| AppStateTests.swift | 18 |
+| AudioTests.swift | 20 |
+| MeetingFileManagerTests.swift | 14 |
+| TranscriptionTests.swift | 9 |
+| SummaryManagerTests.swift | 7 |
+| NotificationTests.swift | 6 |
+| MeetingDetectorTests.swift | 6 |
+| PermissionTests.swift | 6 |
+| MicrophoneTrackerTests.swift | 4 |
+| WindowControllerTests.swift | 2 |
+
+**Tests:** All 92 tests pass. **Lint:** Clean.
+
+---

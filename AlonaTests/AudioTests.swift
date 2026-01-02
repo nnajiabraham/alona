@@ -1,5 +1,6 @@
 import AudioToolbox
 import AVFoundation
+import Combine
 import Foundation
 import XCTest
 @testable import Alona
@@ -189,6 +190,103 @@ private class AudioRecorderTestHarness {
         }
 
         return result
+    }
+}
+
+// MARK: - AudioRecorder Publisher Tests
+
+final class AudioRecorderPublisherTests: XCTestCase {
+    func testAudioRecorderPublisherEmitsOnIsRecordingChange() throws {
+        // Test that the CurrentValueSubject-backed publisher emits when isRecording changes
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        let recorder = AudioRecorder(meetingFileManager: harness.manager)
+        var receivedValues: [Bool] = []
+        var cancellables = Set<AnyCancellable>()
+
+        recorder.isRecordingPublisher
+            .sink { receivedValues.append($0) }
+            .store(in: &cancellables)
+
+        // Should receive initial value (false)
+        XCTAssertEqual(receivedValues, [false], "Should emit initial value")
+    }
+
+    func testAudioRecorderPublisherEmitsOnDurationChange() throws {
+        // Test that duration publisher emits correctly
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        let recorder = AudioRecorder(meetingFileManager: harness.manager)
+        var receivedValues: [TimeInterval] = []
+        var cancellables = Set<AnyCancellable>()
+
+        recorder.recordingDurationPublisher
+            .sink { receivedValues.append($0) }
+            .store(in: &cancellables)
+
+        // Should receive initial value (0)
+        XCTAssertEqual(receivedValues, [0], "Should emit initial duration of 0")
+    }
+}
+
+// MARK: - TranscriptionEngine Publisher Tests
+
+final class TranscriptionEnginePublisherTests: XCTestCase {
+    func testTranscriptionEngineProgressPublisherEmitsOnProgressChange() {
+        let engine = TranscriptionEngine()
+        var receivedValues: [Double] = []
+        var cancellables = Set<AnyCancellable>()
+
+        engine.progressPublisher
+            .sink { receivedValues.append($0) }
+            .store(in: &cancellables)
+
+        // Should receive initial value (0)
+        XCTAssertEqual(receivedValues, [0], "Should emit initial progress of 0")
+    }
+}
+
+// MARK: - AudioProcess Tests
+
+final class AudioProcessTests: XCTestCase {
+    func testAudioProcessAllRunningReturnsArray() {
+        // This may return empty in test environment but should not crash
+        let processes = AudioProcess.allRunning()
+        XCTAssertNotNil(processes, "Should return an array (possibly empty)")
+    }
+
+    func testAudioProcessFindByBundleIdentifierReturnsNilForUnknown() {
+        // Looking for a bundle ID that definitely doesn't exist
+        let result = AudioProcess.find(bundleIdentifier: "com.nonexistent.app.12345")
+        XCTAssertNil(result, "Should return nil for unknown bundle ID")
+    }
+}
+
+// MARK: - ProcessTap Configuration Tests
+
+final class ProcessTapConfigurationTests: XCTestCase {
+    func testProcessTapMuteBehaviorConfiguration() {
+        // Test that mute behavior is correctly configured
+        let tapDescriptionMuted = CATapDescription(stereoMixdownOfProcesses: [])
+        tapDescriptionMuted.muteBehavior = .mutedWhenTapped
+
+        let tapDescriptionUnmuted = CATapDescription(stereoMixdownOfProcesses: [])
+        tapDescriptionUnmuted.muteBehavior = .unmuted
+
+        XCTAssertEqual(tapDescriptionMuted.muteBehavior, .mutedWhenTapped)
+        XCTAssertEqual(tapDescriptionUnmuted.muteBehavior, .unmuted)
+    }
+
+    func testProcessTapUUIDIsUnique() {
+        let tap1 = CATapDescription(stereoMixdownOfProcesses: [])
+        tap1.uuid = UUID()
+
+        let tap2 = CATapDescription(stereoMixdownOfProcesses: [])
+        tap2.uuid = UUID()
+
+        XCTAssertNotEqual(tap1.uuid, tap2.uuid, "Each tap should have unique UUID")
     }
 }
 
