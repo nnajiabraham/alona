@@ -1,0 +1,123 @@
+import OSLog
+import SwiftUI
+
+private let appLogger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "Alona", category: "AlonaApp")
+
+// Note: @main removed - see main.swift for custom entry point
+// This allows bypassing SwiftUI initialization during CI tests
+struct AlonaApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    @State private var appState: AppState
+    @State private var permissionManager: PermissionManager
+    @State private var meetingDetector: MeetingDetector
+    // Use a State binding to ensure menu bar extra is always visible
+    // (Previously @AppStorage could cause the binding to become false unexpectedly)
+    // During tests, hide menu bar extra to avoid UI issues on CI
+    @State private var showMenuBarExtra: Bool
+    private let isRunningTests: Bool
+
+    init() {
+        let isTest = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+        self.isRunningTests = isTest
+
+        // Log startup for debugging CI issues
+        print("🚀 AlonaApp.init() starting, isTest=\(isTest)")
+        appLogger.info("🚀 AlonaApp.init() starting, isTest=\(isTest)")
+
+        // Disable notification observer during tests to prevent test notifications
+        // from triggering real recordings in the production directory
+        print("🚀 AlonaApp.init() creating AppState...")
+        _appState = State(initialValue: AppState(observeNotifications: !isTest))
+        print("🚀 AlonaApp.init() AppState created")
+
+        // Skip permission manager initialization during tests (avoids AppleScript/TCC calls)
+        print("🚀 AlonaApp.init() creating PermissionManager...")
+        _permissionManager = State(initialValue: isTest ? PermissionManager(skipRefresh: true) : PermissionManager())
+        print("🚀 AlonaApp.init() PermissionManager created")
+
+        // Hide menu bar extra during tests
+        _showMenuBarExtra = State(initialValue: !isTest)
+
+        print("🚀 AlonaApp.init() creating MeetingDetector...")
+        let detector = MeetingDetector()
+        _meetingDetector = State(initialValue: detector)
+        if !isTest {
+            detector.startMonitoring()
+        }
+        print("🚀 AlonaApp.init() complete")
+        appLogger.info("🚀 AlonaApp.init() complete")
+    }
+
+    var body: some Scene {
+        // Primary window - opens automatically on launch
+        // During tests, show minimal empty view to avoid UI blocking on CI
+        WindowGroup {
+            if self.isRunningTests {
+                Color.clear
+                    .frame(width: 1, height: 1)
+            } else {
+                StartupView()
+                    .environment(self.appState)
+                    .environment(self.permissionManager)
+                    .environment(self.meetingDetector)
+            }
+        }
+        .windowResizability(.contentSize)
+        .commands {
+            // Disable Cmd+N creating new windows
+            CommandGroup(replacing: .newItem) {}
+        }
+
+        // Menu bar extra with isInserted binding allows coexistence with WindowGroup
+        // During tests, isInserted=false prevents menu bar from showing
+        MenuBarExtra("Alona", systemImage: "note.text", isInserted: self.$showMenuBarExtra) {
+            MenuBarView()
+                .environment(self.appState)
+                .environment(self.permissionManager)
+                .environment(self.meetingDetector)
+        }
+        .menuBarExtraStyle(.window)
+        .defaultSize(width: 360, height: 320)
+
+        WindowGroup(id: "onboarding") {
+            if !self.isRunningTests {
+                OnboardingView()
+                    .environment(self.permissionManager)
+            }
+        }
+        .windowResizability(.contentSize)
+
+        WindowGroup(id: "meeting-notes") {
+            if !self.isRunningTests {
+                MeetingNotesView()
+                    .environment(self.appState)
+            }
+        }
+        .defaultSize(width: 420, height: 380)
+
+        WindowGroup(id: "recordings") {
+            if !self.isRunningTests {
+                RecordingsBrowserView()
+                    .environment(self.appState)
+            }
+        }
+        .defaultSize(width: 700, height: 420)
+
+        WindowGroup(id: "settings-window") {
+            if !self.isRunningTests {
+                SettingsView()
+                    .environment(self.permissionManager)
+                    .environment(self.appState)
+            }
+        }
+        .defaultSize(width: 480, height: 360)
+
+        WindowGroup(id: "transcription-queue") {
+            if !self.isRunningTests {
+                TranscriptionQueueView()
+                    .environment(self.appState)
+            }
+        }
+        .defaultSize(width: 480, height: 420)
+    }
+}

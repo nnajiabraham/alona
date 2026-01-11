@@ -1,17 +1,97 @@
 # Alona
 
-Alona is an experimental macOS-first meeting assistant inspired by Granola.ai. The goal is to provide private, local-first note taking, audio capture, and transcription for Zoom, Google Meet, and other calls without relying on cloud bots.
+[![CI](https://github.com/YOUR_USERNAME/alona/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/alona/actions/workflows/ci.yml)
 
-## Current Status
-- Project scaffolding only
-- PRD and implementation plans in progress
+**Alona** is a macOS-native meeting assistant that captures, transcribes, and summarizes your meetings — entirely on-device.
 
-## High-Level Goals
-1. Detect when a video meeting starts or when the user manually starts a recording session
-2. Capture local system audio and user notes for the session
-3. Transcribe the audio with NVIDIA Parakeet models hosted locally
-4. Organize meeting artifacts (audio, notes, transcripts, summaries) in a user-selected directory
-5. Regenerate enhanced summaries via remote or local LLMs when needed
+## Features
+
+- **🎯 Meeting Detection** — Automatically detects active Zoom and Google Meet sessions
+- **🎙️ Audio Capture** — Records system audio (meeting participants) and microphone (your voice) using macOS CoreAudio Process Taps
+- **🗣️ Local Transcription** — Transcribes audio locally using Whisper (ggml-base.en) — no cloud uploads
+- **📝 Notes & Summaries** — Take notes during meetings and generate AI-powered summaries
+- **📁 Organized Storage** — All meeting artifacts (audio, notes, transcripts, summaries) saved to a user-chosen directory
+
+## Requirements
+
+- macOS 14.6+ (Sonoma)
+- Apple Silicon (arm64)
+
+## Installation
+
+1. Clone the repository
+2. Download the Whisper model:
+   ```bash
+   make download-model
+   ```
+3. Open `Alona.xcworkspace` in Xcode and build, or:
+   ```bash
+   make build
+   make run
+   ```
+
+## Development
+
+```bash
+# Build and run tests
+make test
+
+# Format code
+make format
+
+# Check formatting without changes
+make lint
+
+# Clean build artifacts
+make clean
+```
+
+See [AGENTS.md](AGENTS.md) for detailed development guidelines.
+
+## Permissions Required
+
+Alona requires the following macOS permissions:
+
+| Permission | Purpose |
+|------------|---------|
+| **Microphone** | Capture your voice |
+| **System Audio Recording** | Capture meeting participant audio via CoreAudio Process Taps |
+| **Accessibility** | Detect Zoom meeting state |
+| **Automation** | Detect Google Meet tab titles via AppleScript |
+
+## Architecture
+
+```
+Alona/
+├── AlonaApp.swift           # App entry point, MenuBarExtra
+├── Models/
+│   ├── AppState.swift       # @Observable main state container
+│   └── TranscriptionResult.swift
+├── Services/
+│   ├── AudioRecorder.swift  # CoreAudio process tap + mic capture
+│   ├── MeetingDetector.swift
+│   ├── TranscriptionEngine.swift
+│   └── ...
+├── Views/
+│   ├── MenuBarView.swift    # Menu bar UI
+│   ├── MeetingNotesView.swift
+│   └── ...
+└── Resources/
+    └── Models/              # Whisper model files
+```
+
+## Tech Stack
+
+- **SwiftUI** with `MenuBarExtra` for menu bar integration
+- **@Observable** (Swift Observation framework) for state management
+- **CoreAudio** Process Taps for non-interfering system audio capture
+- **SwiftWhisper** for local transcription
+- **Swift 6.0** with strict concurrency
 
 ## Contributing
-This repo is currently private and under active planning. Please coordinate before opening pull requests.
+
+This repo is currently private and under active development. Please coordinate before opening pull requests.
+
+## License
+
+Private — All rights reserved.

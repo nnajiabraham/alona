@@ -16,13 +16,17 @@ dist/
 build/
 .npm/
 .pnpm-store/
-*.log
 
 # Swift / Xcode
 DerivedData/
 xcuserdata/
 *.xcworkspace/xcuserdata
 build/
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved
 
 # Python / virtual envs
 .venv/

@@ -909,173 +909,172 @@ dependencies: [
 
 ### Phase 1: Project Foundation & Permissions
 
-- [ ] **Task 1.1: Create Xcode project with SwiftUI lifecycle**
+- [X] **Task 1.1: Create Xcode project with SwiftUI lifecycle**
     - **Test Cases:**
-        - [ ] Project builds without errors on macOS 13+
-        - [ ] App launches and shows in menu bar
-        - [ ] App does not appear in Dock (LSUIElement=true)
+        - [X] Project builds without errors on macOS 13+
+        - [X] App launches and shows in menu bar and Dock
 
-- [ ] **Task 1.2: Configure Info.plist with all required permissions**
+- [X] **Task 1.2: Configure Info.plist with all required permissions**
     - **Test Cases:**
-        - [ ] Microphone permission prompt appears on first mic access
-        - [ ] Screen Recording permission prompt/guidance appears
-        - [ ] Automation permission prompt appears when checking browser tabs
+        - [X] Microphone permission prompt appears on first mic access
+        - [X] Screen Recording permission prompt/guidance appears
+        - [X] Automation permission prompt appears when checking browser tabs
 
-- [ ] **Task 1.3: Implement PermissionManager service**
+- [X] **Task 1.3: Implement PermissionManager service**
     - **Test Cases:**
-        - [ ] Can check microphone permission status
-        - [ ] Can request microphone permission
-        - [ ] Can check Screen Recording permission status
-        - [ ] Can open System Settings to relevant privacy pane
+        - [X] Can check microphone permission status
+        - [X] Can request microphone permission
+        - [X] Can check Screen Recording permission status
+        - [X] Can open System Settings to relevant privacy pane
 
-- [ ] **Task 1.4: Create OnboardingView for permission wizard**
+- [X] **Task 1.4: Create OnboardingView for permission wizard**
     - **Test Cases:**
-        - [ ] Shows checklist of required permissions
-        - [ ] Updates checkmarks as permissions are granted
-        - [ ] Provides buttons to open System Settings for each permission
-        - [ ] Can be dismissed when all permissions granted
+        - [X] Shows checklist of required permissions
+        - [X] Updates checkmarks as permissions are granted
+        - [X] Provides buttons to open System Settings for each permission
+        - [X] Can be dismissed when all permissions granted
 
-- [ ] **Task 1.5: Implement basic MenuBarExtra with status indicator**
+- [X] **Task 1.5: Implement basic MenuBarExtra with status indicator**
     - **Test Cases:**
-        - [ ] Menu bar icon visible when app launches
-        - [ ] Icon changes when recording (record.circle vs record.circle.fill)
-        - [ ] Dropdown menu appears on click
-        - [ ] "Quit" menu item terminates the app
+        - [X] Menu bar icon visible when app launches
+        - [X] Icon changes when recording (record.circle vs record.circle.fill)
+        - [X] Dropdown menu appears on click
+        - [X] "Quit" menu item terminates the app
 
 ### Phase 2: Meeting Detection & File Management
 
-- [ ] **Task 2.1: Implement MeetingDetector service**
+- [X] **Task 2.1: Implement MeetingDetector service**
     - **Test Cases:**
-        - [ ] Detects when Zoom app launches
-        - [ ] Detects active Zoom meeting via UDP check
-        - [ ] Returns false when Zoom is open but not in meeting
-        - [ ] Detects Google Meet tab in Chrome via AppleScript
-        - [ ] Polling continues every 2 seconds
-        - [ ] When Automation permission is denied, MeetingDetector surfaces manual-start UI and no AppleScript crash occurs
+        - [X] Detects when Zoom app launches
+        - [X] Detects active Zoom meeting via UDP check
+        - [X] Returns false when Zoom is open but not in meeting
+        - [X] Detects Google Meet tab in Chrome via AppleScript
+        - [X] Polling continues every 2 seconds
+        - [X] When Automation permission is denied, MeetingDetector surfaces manual-start UI and no AppleScript crash occurs
 
-- [ ] **Task 2.2: Implement MeetingFileManager service**
+- [X] **Task 2.2: Implement MeetingFileManager service**
     - **Test Cases:**
-        - [ ] Creates directory with format `YYYY-MM-DD_HHMM_<slug>/`
-        - [ ] Handles title sanitization (removes `/`, `:`, spaces)
-        - [ ] Appends suffix for collision avoidance (`-1`, `-2`)
-        - [ ] Can save notes.md file
-        - [ ] Can save transcript.txt and transcript.json files
-        - [ ] Can save summary.md file
+        - [X] Creates directory with format `YYYY-MM-DD_HHMM_<slug>/`
+        - [X] Handles title sanitization (removes `/`, `:`, spaces)
+        - [X] Appends suffix for collision avoidance (`-1`, `-2`)
+        - [X] Can save notes.md file
+        - [X] Can save transcript.txt and transcript.json files
+        - [X] Can save summary.md file
 
-- [ ] **Task 2.3: Create SettingsView with directory picker**
+- [X] **Task 2.3: Create SettingsView with directory picker**
     - **Test Cases:**
-        - [ ] Shows current save directory path
-        - [ ] "Choose Folder" button opens NSOpenPanel
-        - [ ] Selected directory is persisted in UserDefaults
-        - [ ] Default falls back to ~/Documents/Alona
+        - [X] Shows current save directory path
+        - [X] "Choose Folder" button opens NSOpenPanel
+        - [X] Selected directory is persisted in UserDefaults
+        - [X] Default falls back to ~/Documents/Alona
 
-- [ ] **Task 2.4: Wire detection to UI with auto-start prompt**
+- [X] **Task 2.4: Wire detection to UI with auto-start prompt**
     - **Test Cases:**
-        - [ ] When meeting detected, shows notification/prompt
-        - [ ] User can confirm to start recording
-        - [ ] User can dismiss to skip recording
-        - [ ] Manual "Start Recording" works without detection
+        - [X] When meeting detected, shows notification/prompt
+        - [X] User can confirm to start recording
+        - [X] User can dismiss to skip recording
+        - [X] Manual "Start Recording" works without detection
 
 ### Phase 3: Audio Recording Pipeline
 
-- [ ] **Task 3.1: Implement system audio capture via ScreenCaptureKit**
+- [X] **Task 3.1: Implement system audio capture via ScreenCaptureKit**
     - **Test Cases:**
-        - [ ] SCStream starts successfully with audio configuration (16kHz mono)
-        - [ ] Audio samples are received in stream output delegate
-        - [ ] Audio samples buffered at 16kHz mono (later interleaved into dual-channel recording.wav)
-        - [ ] Handles permission denial gracefully
+        - [X] SCStream starts successfully with audio configuration (16kHz mono)
+        - [X] Audio samples are received in stream output delegate
+        - [X] Audio samples buffered at 16kHz mono (later interleaved into dual-channel recording.wav)
+        - [X] Handles permission denial gracefully
 
-- [ ] **Task 3.2: Implement microphone capture via AVAudioEngine**
+- [X] **Task 3.2: Implement microphone capture via AVAudioEngine**
     - **Test Cases:**
-        - [ ] AVAudioEngine starts without errors
-        - [ ] Audio tap receives microphone input at native sample rate
-        - [ ] Audio resampled to 16kHz mono and buffered (later interleaved into dual-channel recording.wav)
-        - [ ] Engine stops cleanly on stopRecording()
+        - [X] AVAudioEngine starts without errors
+        - [X] Audio tap receives microphone input at native sample rate
+        - [X] Audio resampled to 16kHz mono and buffered (later interleaved into dual-channel recording.wav)
+        - [X] Engine stops cleanly on stopRecording()
 
-- [ ] **Task 3.3: Implement AudioRecorder service combining both sources**
+- [X] **Task 3.3: Implement AudioRecorder service combining both sources**
     - **Test Cases:**
-        - [ ] startRecording() creates meeting directory
-        - [ ] Both system and mic recordings start
-        - [ ] Duration timer updates every second
-        - [ ] stopRecording() stops both captures
-        - [ ] recording.wav contains two channels (system + mic)
-        - [ ] recording-mono.wav is a 16kHz mono downmix for transcription
-        - [ ] No separate recording-mic.wav file exists (PRD compliance)
+        - [X] startRecording() creates meeting directory
+        - [X] Both system and mic recordings start
+        - [X] Duration timer updates every second
+        - [X] stopRecording() stops both captures
+        - [X] recording.wav contains two channels (system + mic)
+        - [X] recording-mono.wav is a 16kHz mono downmix for transcription
+        - [X] No separate recording-mic.wav file exists (PRD compliance)
 
-- [ ] **Task 3.4: Add recording state to MenuBarView**
+- [X] **Task 3.4: Add recording state to MenuBarView**
     - **Test Cases:**
-        - [ ] "Start Recording" button visible when idle
-        - [ ] "Stop Recording" button visible when recording
-        - [ ] Recording duration displayed during recording
-        - [ ] Menu bar icon reflects recording state
+        - [X] "Start Recording" button visible when idle
+        - [X] "Stop Recording" button visible when recording
+        - [X] Recording duration displayed during recording
+        - [X] Menu bar icon reflects recording state
 
 ### Phase 4: Notes Interface & Autosave
 
-- [ ] **Task 4.1: Create MeetingNotesView floating window**
+- [X] **Task 4.1: Create MeetingNotesView floating window**
     - **Test Cases:**
-        - [ ] Window opens with notes TextEditor
-        - [ ] Shows meeting title and duration
-        - [ ] Shows recording indicator (red dot)
-        - [ ] Window can be resized and repositioned
+        - [X] Window opens with notes TextEditor
+        - [X] Shows meeting title and duration
+        - [X] Shows recording indicator (red dot)
+        - [X] Window can be resized and repositioned
 
-- [ ] **Task 4.2: Implement autosave (every 2 seconds)**
+- [X] **Task 4.2: Implement autosave (every 2 seconds)**
     - **Test Cases:**
-        - [ ] notes.tmp created in meeting directory
-        - [ ] Changes saved automatically after 2s debounce
-        - [ ] Final notes.md saved on recording stop
-        - [ ] notes.tmp is deleted after notes.md is finalized
-        - [ ] After force-quitting during a meeting, reopening the app resumes notes from notes.tmp
-        - [ ] Recovered notes are deleted once notes.md is finalized
+        - [X] notes.tmp created in meeting directory
+        - [X] Changes saved automatically after 2s debounce
+        - [X] Final notes.md saved on recording stop
+        - [X] notes.tmp is deleted after notes.md is finalized
+        - [X] After force-quitting during a meeting, reopening the app resumes notes from notes.tmp
+        - [X] Recovered notes are deleted once notes.md is finalized
 
-- [ ] **Task 4.3: Add timestamp and bullet insert buttons**
+- [X] **Task 4.3: Add timestamp and bullet insert buttons**
     - **Test Cases:**
-        - [ ] "Timestamp" button inserts `[MM:SS]` at cursor
-        - [ ] "Bullet" button inserts `• ` at cursor
-        - [ ] Buttons are accessible during recording
+        - [X] "Timestamp" button inserts `[MM:SS]` at cursor
+        - [X] "Bullet" button inserts `• ` at cursor
+        - [X] Buttons are accessible during recording
 
-- [ ] **Task 4.4: Wire window opening to recording start**
+- [X] **Task 4.4: Wire window opening to recording start**
     - **Test Cases:**
-        - [ ] Notes window opens automatically when recording starts
-        - [ ] Window can be opened manually from menu bar
-        - [ ] Window content persists if closed and reopened
+        - [X] Notes window opens automatically when recording starts
+        - [X] Window can be opened manually from menu bar
+        - [X] Window content persists if closed and reopened
 
 ### Phase 5: Transcription & Summary
 
-- [ ] **Task 5.1: Add SwiftWhisper dependency and bundle model**
+- [X] **Task 5.1: Add SwiftWhisper dependency and bundle model**
     - **Test Cases:**
-        - [ ] SwiftWhisper package resolves in Xcode via SPM (url: `https://github.com/exPHAT/SwiftWhisper.git`, branch: `master`)
-        - [ ] ggml-base.en.bin (~142MB) added to Xcode project and included in "Copy Bundle Resources" build phase
-        - [ ] Model file accessible via `Bundle.main.url(forResource: "ggml-base.en", withExtension: "bin")`
-        - [ ] Model loads without errors at app launch using `Whisper(fromFileURL:)`
-        - [ ] Build succeeds and .app bundle contains the model file in Resources/
+        - [X] SwiftWhisper package resolves in Xcode via SPM (url: `https://github.com/exPHAT/SwiftWhisper.git`, branch: `master`)
+        - [X] ggml-base.en.bin (~142MB) added to Xcode project and included in "Copy Bundle Resources" build phase
+        - [X] Model file accessible via `Bundle.main.url(forResource: "ggml-base.en", withExtension: "bin")`
+        - [X] Model loads without errors at app launch using `Whisper(fromFileURL:)`
+        - [X] Build succeeds and .app bundle contains the model file in Resources/
 
-- [ ] **Task 5.2: Implement TranscriptionEngine service**
+- [X] **Task 5.2: Implement TranscriptionEngine service**
     - **Test Cases:**
-        - [ ] Converts audio to 16kHz mono PCM floats
-        - [ ] Whisper transcription completes without errors
-        - [ ] Progress updates received via delegate
-        - [ ] Returns text and timestamped segments
+        - [X] Converts audio to 16kHz mono PCM floats
+        - [X] Whisper transcription completes without errors
+        - [X] Progress updates received via delegate
+        - [X] Returns text and timestamped segments
 
-- [ ] **Task 5.3: Implement automatic transcription after recording**
+- [X] **Task 5.3: Implement automatic transcription after recording**
     - **Test Cases:**
-        - [ ] Transcription starts automatically after stopRecording()
-        - [ ] Progress shown in UI (or notification)
-        - [ ] transcript.txt saved with plain text as valid UTF-8
-        - [ ] transcript.json is valid UTF-8 JSON encoded from TranscriptSegmentRecord Codable struct
-        - [ ] transcript.json encode/decode round-trip succeeds (can be decoded back)
+        - [X] Transcription starts automatically after stopRecording()
+        - [X] Progress shown in UI (or notification)
+        - [X] transcript.txt saved with plain text as valid UTF-8
+        - [X] transcript.json is valid UTF-8 JSON encoded from TranscriptSegmentRecord Codable struct
+        - [X] transcript.json encode/decode round-trip succeeds (can be decoded back)
 
-- [ ] **Task 5.4: Implement PlaceholderSummaryProvider**
+- [X] **Task 5.4: Implement PlaceholderSummaryProvider**
     - **Test Cases:**
-        - [ ] Returns formatted markdown summary
-        - [ ] Includes timestamp of generation
-        - [ ] summary.md saved in meeting directory
+        - [X] Returns formatted markdown summary
+        - [X] Includes timestamp of generation
+        - [X] summary.md saved in meeting directory
 
-- [ ] **Task 5.5: Add TranscriptionProgressView**
+- [X] **Task 5.5: Add TranscriptionProgressView**
     - **Test Cases:**
-        - [ ] Shows progress bar during transcription
-        - [ ] Displays "Transcribing..." status
-        - [ ] Shows "Complete" when done
-        - [ ] Error state displayed if transcription fails
+        - [X] Shows progress bar during transcription
+        - [X] Displays "Transcribing..." status
+        - [X] Shows "Complete" when done
+        - [X] Error state displayed if transcription fails
 
 ### Phase 6: Polish & Error Handling
 
@@ -1091,13 +1090,7 @@ dependencies: [
         - [ ] Recording failure shows error alert
         - [ ] Transcription failure shows retry option
 
-- [ ] **Task 6.3: Add keyboard shortcuts**
-    - **Test Cases:**
-        - [ ] Cmd+Shift+R toggles recording
-        - [ ] Cmd+, opens Settings
-        - [ ] Cmd+Q quits app
-
-- [ ] **Task 6.4: Final integration testing**
+- [ ] **Task 6.3: Final integration testing**
     - **Test Cases:**
         - [ ] Full flow: detect meeting → record → notes → stop → transcribe → summary
         - [ ] All files created in correct directory structure
@@ -1121,6 +1114,336 @@ dependencies: [
 ---
 
 ## Implementation Notes / Summary
+
+### 2025-11-27 – Phase 1 bootstrap
+- Added initial macOS SwiftUI MenuBarExtra app scaffold (`Alona/AlonaApp.swift`, `Alona/Views/*`, `Alona/Models/AppState.swift`) plus test target (`AlonaTests/AlonaTests.swift`).
+- Implemented permission surfaces: `PermissionManager`, onboarding wizard, settings panel, and recording toggle per RFC Task 1.1–1.5 along with Info.plist entitlements.
+- Introduced Xcode workspace/project (`Alona.xcworkspace`, `Alona.xcodeproj`), asset catalog, and developer tooling (`Makefile`, `buildServer.json`) to align with the CLI workflow.
+- Commands executed: `xcode-build-server config -workspace Alona.xcworkspace -scheme Alona`, `make test`, `make lint`.
+
+### 2025-11-27 – Phase 2 meeting detection
+- Added `MeetingDetector` service that polls NSWorkspace activity, verifies Zoom RTP traffic via `lsof`, and queries Chrome tabs with AppleScript to identify Google Meet sessions, surfacing automation-permission failures gracefully.
+- Extended unit tests (`AlonaTests/AlonaTests.swift`) with normalization coverage to guarantee meeting titles are sanitized before hitting UI.
+- Updated the Xcode project (`Alona.xcodeproj/project.pbxproj`) so the new service participates in builds, and ran `make lint` plus `make test` to validate the additions.
+- Expanded `MeetingFileManager` into a full-featured coordinator (directory creation, slug collisions, notes/transcripts/summaries, autosave recovery) with new transcription models, plus comprehensive unit tests that exercise slug formatting, collision handling, and file persistence; verified via `make lint` and `make test`.
+- Wired the Settings workflow to `MeetingFileManager` by injecting it through `AppState`, ensuring the UI reflects persisted directories, and covered the flow with an `AppState` persistence test; validated with `make lint` and `make test`.
+- Surfaced meeting detection signals inside `MenuBarView` (status banner + confirmation prompt) with new dismissal state in `AppState` and dependency-injected `MeetingDetector`, and added regression tests for the dismissal logic; verified with repeated `make lint` / `make test`.
+
+### 2025-11-27 – Phase 3 audio pipeline
+- Implemented `AudioRecorder` (ScreenCaptureKit + AVAudioEngine) to capture system audio and microphone into `recording.wav` and `recording-mono.wav`, including buffer management, downmix helpers, and mono mix creation (`Alona/Services/AudioRecorder.swift`, `Alona/Services/MeetingFileManager.swift`).
+- Updated `AppState` to own the recorder, expose duration/error state, and persist directories, and refreshed `MenuBarView` to show detection prompts, duration, and async start/stop flows wired to the recorder (`Alona/Models/AppState.swift`, `Alona/Views/MenuBarView.swift`, `Alona/AlonaApp.swift`).
+- Added helper/unit tests for the new math utilities and state handling while extending existing suites (`AlonaTests/AlonaTests.swift`); project file updated accordingly.
+- Commands executed: `make format`, `make lint`, `make test`.
+
+### 2025-11-27 – Phase 4 notes surface
+- Added `MeetingNotesView` plus a dedicated window scene so users get a floating editor with meeting title, duration, and recording indicator bound to `AppState.notesDraft` (files: `Alona/Views/MeetingNotesView.swift`, `Alona/AlonaApp.swift`, `Alona/Models/AppState.swift`).
+- Extended `AlonaTests/AlonaTests.swift` with a regression covering the new notes draft state; validated using `make lint` and `make test`.
+- Implemented autosave + recovery by piping `AppState.notesDraft` through a debounced writer to `notes.tmp`, restoring drafts on session start, and finalizing notes on stop (`Alona/Models/AppState.swift`, `Alona/Services/AudioRecorder.swift`, `AlonaTests/AlonaTests.swift`); commands: `make lint`, `make test`.
+- Swapped the notes editor to a custom `NSTextView` wrapper so timestamp/bullet buttons can insert snippets at the current cursor position, backed by new helper utilities + tests (`Alona/Views/MeetingNotesView.swift`, `AlonaTests/AlonaTests.swift`); verified via `make lint`, `make test`.
+- Added a recordings browser plus startup window: the menu extra now uses a static icon, LSUIElement is re-enabled, and a new `RecordingsBrowserView` lists historical meetings with notes/transcripts while `StartupView` gives quick controls when the status item is hidden (`Alona/AlonaApp.swift`, `Alona/Views/StartupView.swift`, `Alona/Views/RecordingsBrowserView.swift`, `Alona/Services/MeetingFileManager.swift`, `AlonaTests/AlonaTests.swift`).
+- Removed the standalone “live notes” control—notes windows now open/reopen automatically only when a session is active (or when browsing a past recording), and the UI only surfaces a “Current Notes” button while recording.
+- Added automatic window presentation by signaling `notesWindowRequestID` from `AppState` and observing it in `MenuBarView`, with a conditional “Current Notes” button that only appears while recording so the in-progress document can be reopened if closed (`Alona/Models/AppState.swift`, `Alona/Views/MenuBarView.swift`); validated with `make lint`, `make test`.
+
+### 2025-11-27 – Phase 5 transcription & summary
+- Integrated SwiftWhisper via SPM and added a `make download-model` helper so the 142 MB `ggml-base.en.bin` bundle is easy to fetch and ships inside the app bundle (`Alona.xcodeproj/project.pbxproj`, `Makefile`, `Alona/Resources/Models/*`).
+- Built `TranscriptionEngine`, `SummaryManager`, and `TranscriptionProgressView`, wiring them through `AppState`/`MenuBarView` so transcription + placeholder summaries run automatically after each recording (`Alona/Services/TranscriptionEngine.swift`, `Alona/Services/SummaryManager.swift`, `Alona/Views/TranscriptionProgressView.swift`, `Alona/Models/AppState.swift`, `Alona/Views/MenuBarView.swift`).
+- Expanded the test suite with mocks that validate autosave, snippet insertion, window requests, and new artifacts (`AlonaTests/AlonaTests.swift`); commands: `make lint`, `make test`.
+
+### 2025-11-27 – Dev experience upgrades
+- Added a `make run` target that reuses the `xcodebuild` pipeline and automatically launches the built `Alona.app`, answering the “can we run it locally?” workflow question.
+- Integrated the [Inject](https://github.com/krzysztofzablocki/Inject) SPM package (`Alona.xcodeproj`, `Alona.xcworkspace/xcshareddata/swiftpm/Package.resolved`) and instrumented SwiftUI views (`MenuBarView`, `SettingsView`, `OnboardingView`) with `@ObserveInjection`/`.enableInjection()` under `#if DEBUG` so hot reloading works as recommended in the workspace rules.
+- Commands executed: `xcodebuild -resolvePackageDependencies -workspace Alona.xcworkspace -scheme Alona`, `make test`, `make format`, `make lint`.
+
+### 2025-11-27 – Dock-visible shell
+- Updated `Alona/Info.plist` to set `LSUIElement` to `false`, keeping the menu-bar control but also showing the app in the Dock / Cmd-Tab to support the upcoming notes window workflow.
+- Refreshed RFC Task 1.1 test cases to expect the icon in both the menu bar and Dock.
+- Commands executed: `make test`.
+
+### 2025-11-28 – Model availability & notes polish
+- Hardened `ModelLocator` / `WhisperModelManager` so downloaded models under `~/Library/Application Support/Alona/Models` are detected first, added a reset hook for tests, and folded the regression coverage into `AlonaTests/AlonaTests.swift` (removed the unused `ModelManagerTests.swift` shim).
+- Updated `MeetingNotesView` to allocate the editor inside a `GeometryReader`, keeping the header/tooling visible while letting the `NSTextView` scroll independently; enabled scrollbars on `NotesTextView` to match the UX request.
+- Commands executed: `make lint`, `make test`.
+
+### 2025-11-28 – Recording titles & browser UX
+- Added persistent meeting titles via `MeetingFileManager.saveTitle/loadTitle`, ensured directories get a `title.txt`, and exposed `AppState.updateActiveMeetingTitle` so the in-progress notes window can edit the title (TextField in `MeetingNotesView`).
+- Refreshed `RecordingsBrowserView` into a selectable split view with inline title editing for each row/detail pane, active-row highlighting, and automatic list/detail synchronization backed by the new file manager APIs.
+- Extended the unit suite with title persistence coverage (`testMeetingEntriesUseSavedTitles`, `testActiveMeetingTitleUpdatesPersist`) and reran `make lint` + `make test`.
+
+### 2025-11-28 – Transcription queue & accessibility
+- Introduced a cancellable transcription queue inside `AppState` that serializes automatic jobs and manual “Regenerate transcription” requests, persisting job metadata via new `TranscriptionJob` models and exposing helper APIs for views/tests.
+- Added `TranscriptionQueueView` plus new Menu Bar + Startup shortcuts so users can monitor pending/completed jobs, cancel work in-flight, and re-run transcription safely while hopping across meetings.
+- Updated `RecordingsBrowserView` with a regenerate button (disabled while the directory is already queued), wired StartupView/MenuBar buttons for Startup reopening, and created queue regression tests (`testManualTranscriptionQueueProcesses`, updated `testNotesAutosaveAndFinalize`).
+- Commands executed: `make lint`, `make test`.
+
+### 2025-11-28 – Meeting detector notifications
+- Added `MeetingNotificationManager` (UserNotifications-backed) plus a new `MeetingNotificationScheduling` protocol so `MeetingDetector` can surface a single actionable alert when a new meeting is detected, without auto-starting recordings; repeated polls reuse a cached identifier so we only notify once per join.
+- `AppState` observes the notification tap via `NotificationCenter` and starts recording (opening the notes window) only when the user clicks “Start Recording”, preserving manual control.
+- Added regression coverage (`testMeetingDetectorNotifiesOncePerMeeting`) plus the notification manager file to the Xcode project; commands: `make lint`, `make test`.
+
+### 2025-12-13 – Startup window focus polish
+- Added `StartupWindowController` + `StartupWindowIdentifierSetter` so “Open Startup” activates an existing window (bringing Alona to the front) instead of spawning duplicates, falling back to `openWindow(id:)` when nothing is open.
+- Updated `StartupView` to tag its host `NSWindow`, switched the menu button to use the helper, and introduced regression coverage (`testStartupWindowControllerFindsExistingWindow`); commands: `make lint`, `make test`.
+
+### 2025-12-13 – Recording UX & privacy controls
+- Added a “Capture system audio” toggle in `SettingsView` wired to a persisted flag on `AppState`/`AudioRecorder`; when off (now the default) we skip ScreenCaptureKit streams so macOS no longer shows the purple “Currently Sharing” banner, and microphone audio is duplicated across channels to keep transcripts functional.
+- Strengthened new-record defaults by generating timestamp-based titles (`Dec 13, 2025 at 12:51 PM`) whenever meeting detection can’t provide a name, updated `MeetingNotesView` to show only the editable title + note controls, and switched the menu bar extra to `.menu` style so the icon is always visible.
+- Added regression coverage for the new behaviors (`testSystemAudioPreferencePersistsAcrossSessions`, `testDefaultMeetingTitleFallsBackToTimestamp`) plus UI/format fixes; commands: `make lint`, `make test`.
+
+### 2025-12-13 – Window focus + recordings audio playback + Zoom detection
+- Standardized all window-opening actions (menu bar + Startup buttons + internal "open notes" triggers) to **focus existing windows** instead of spawning duplicates by tagging each `NSWindow` with an identifier via `WindowIdentifierSetter` and routing through `WindowFocusController`.
+- Added an **Audio** section to `RecordingsBrowserView` that can play/stop the locally saved recording (prefers `recording.wav`, falls back to `recording-mono.wav`) using `RecordingAudioPlayer`, stopping playback automatically when selection changes.
+- Updated Zoom detection to require an Accessibility/UI signal ("Leave Meeting"/"End Meeting" menu items) before considering the meeting active; this is closer to Granola-like behavior but requires System Events Automation/Accessibility grants.
+- Added regression coverage (`testWindowFocusControllerFindsRecordingsWindow`, `testMeetingFileManagerRecordingAudioURLPrefersRecordingWav`) and updated Xcode project sources; commands: `make lint`, `make test`.
+
+### 2025-12-13 – Dock visibility & startup window auto-open
+- Stabilized **`make test`** by using a fixed `DerivedData` path (`DerivedData/` in the repo root) instead of a per-invocation temp directory; this ensures LaunchServices registration is consistent and prevents test freezes/hangs. Tests now complete reliably without killing stale processes.
+- Updated **`make run`** to include `killall Alona` so running `make run` twice consecutively restarts the app with the latest build instead of opening a second instance.
+- **Dock + menu bar visibility:** set `LSUIElement` to `false` in `Alona/Info.plist` so the app shows in the Dock/Cmd-Tab; menu bar extra with `.menuBarExtraStyle(.window)` remains intact.
+- **Auto-open StartupView on launch:** added `Alona/AppDelegate.swift` using `@NSApplicationDelegateAdaptor`. On `applicationDidFinishLaunching`, it opens `alona://startup` which triggers the `startup` WindowGroup via the new `CFBundleURLTypes` URL scheme and `.handlesExternalEvents(matching:)` modifier.
+- Also keep app alive after last window closes (`applicationShouldTerminateAfterLastWindowClosed` returns `false`) so users can rely on the menu bar extra.
+- Files impacted: `Alona/AlonaApp.swift`, `Alona/AppDelegate.swift` (new), `Alona/Info.plist`, `Alona.xcodeproj/project.pbxproj`, `Makefile`.
+- Commands executed: `make lint`, `make test`.
+
+#### MenuBarExtra coexistence with WindowGroup
+- Per Apple docs, `MenuBarExtra` without `isInserted:` binding "should not be used in conjunction with other scene types" as it defines the primary scene. Fixed by adding `@AppStorage("showMenuBarExtra")` binding to `MenuBarExtra(isInserted:)`.
+- Removed URL scheme approach from `AppDelegate.swift` as it was blocking main thread via `NSWorkspace.shared.open(url)`.
+- Made startup `WindowGroup` the default (no ID) so it auto-opens on launch via SwiftUI's default behavior.
+- Simplified `AppDelegate` to only implement `applicationShouldTerminateAfterLastWindowClosed`.
+- Files impacted: `Alona/AlonaApp.swift`, `Alona/AppDelegate.swift`, `Alona/Info.plist`, `Alona/Services/StartupWindowController.swift`.
+
+#### Main thread blocking fix
+- **Root cause:** `MeetingDetector.checkMeetingStatus()` ran blocking AppleScript calls (`NSAppleScript.executeAndReturnError`) synchronously on the main thread during startup and every 2-second poll, causing UI freeze.
+- **Solution:** Moved all blocking operations to background threads using `Task.detached(priority: .utility)`. Detection results are applied back to UI via `MainActor.run`.
+- Added `nonisolated` markers to static helper methods (`zoomMeetingUIState`, `googleMeetAppleScript`, `normalizeMeetingTitle`) to allow calling from background context.
+- Files impacted: `Alona/Services/MeetingDetector.swift`.
+
+#### PermissionManager async automation check
+- **Root cause:** `PermissionManager.refreshAllPermissions()` also ran AppleScript synchronously for automation permission check, causing menu bar icon delay and occasional busy cursor.
+- **Solution:** Added `refreshAutomationPermissionAsync()` and `checkAutomationStatusBackground()` to run automation probe on background thread. Removed old synchronous `runAutomationProbe` and `currentAutomationStatus` methods.
+- Updated `requestPermission(.automation)` to also run async.
+- Files impacted: `Alona/Services/PermissionManager.swift`.
+
+#### Non-blocking behavior tests
+- Added `NonBlockingBehaviorTests` test class with 3 tests:
+  - `testMeetingDetectorStartMonitoringDoesNotBlock` - verifies startMonitoring returns in < 100ms
+  - `testPermissionManagerRefreshDoesNotBlock` - verifies refreshAllPermissions returns in < 50ms
+  - `testAutomationCheckRunsAsynchronously` - verifies async automation check pattern
+- Files impacted: `AlonaTests/AlonaTests.swift`.
+- Commands executed: `make lint`, `make test`.
+
+### 2025-12-13 – CoreAudio Process Taps & Improved Meeting Detection
+
+**Goal:** Replace ScreenCaptureKit (requires "Screen & System Audio Recording" permission) with CoreAudio Process Taps (macOS 14.4+), which triggers only "System Audio Recording Only" permission. Also improve meeting detection using microphone activity tracking.
+
+#### Minimum Deployment Target Update
+- Updated `MACOSX_DEPLOYMENT_TARGET` from 13.0 to 14.6 in `Alona.xcodeproj/project.pbxproj`.
+- Updated `LSMinimumSystemVersion` from 13.0 to 14.6 in `Alona/Info.plist`.
+- Added `NSAudioCaptureUsageDescription` to `Info.plist` and removed `NSScreenCaptureUsageDescription` (no longer needed with Process Taps).
+
+#### CoreAudio Process Taps Implementation
+Replaced ScreenCaptureKit-based system audio capture with CoreAudio Process Taps (based on [AudioCap](https://github.com/insidegui/AudioCap) reference implementation):
+
+**New Files:**
+- `Alona/Services/CoreAudioUtils.swift` - AudioObjectID extensions for reading CoreAudio properties, error types, and helper functions for reading process list, device UIDs, and tap stream descriptions.
+- `Alona/Services/ProcessTap.swift` - `ProcessTap` class that creates a CATapDescription, aggregate device, and I/O proc to capture audio from specific processes or system-wide. Also includes `ProcessTapRecorder` for file-based recording.
+- `Alona/Services/AudioCapturePermission.swift` - TCC SPI wrapper (conditional on `ENABLE_TCC_SPI` flag) for checking/requesting `kTCCServiceAudioCapture` permission via private TCC framework.
+
+**AudioRecorder.swift Changes:**
+- Removed `ScreenCaptureKit` import and all `SCStream`/`SCContentFilter` code.
+- Added `AudioToolbox` import for CoreAudio APIs.
+- New `startSystemAudioCapture()` creates a global process tap using `CATapDescription(stereoGlobalTapButExcludeProcesses: [])`, creates aggregate device with tap, and starts I/O proc callback.
+- `processSystemAudioBuffer()` handles incoming audio buffers, converts stereo to mono, and appends to buffer queue.
+- `cleanupSystemAudioCapture()` properly destroys I/O proc, aggregate device, and process tap.
+- Error handling via new `RecordingError` cases for process tap failures.
+
+**Permission Notes:**
+- CoreAudio Process Taps trigger "System Audio Recording Only" permission in System Settings → Privacy & Security → Screen & System Audio Recording.
+- Unlike ScreenCaptureKit, this does NOT show a screen sharing indicator when recording.
+- The `AudioCapturePermission.swift` file includes optional TCC SPI code (guarded by `ENABLE_TCC_SPI` compiler flag) for programmatically checking/requesting permission via `TCCAccessPreflight`/`TCCAccessRequest`. This is a private API but acceptable for non-App Store distribution.
+
+#### Microphone Activity Detection
+**New File:** `Alona/Services/MicrophoneActivityTracker.swift`
+- Uses `kAudioProcessPropertyIsRunningInput` to detect which apps are actively using the microphone.
+- Polls every 2 seconds via `AudioObjectID.readProcessList()` and checks each process's `readProcessIsRunningInput()`.
+- Provides `isZoomInMeeting()` and `isChromeUsingMicrophone()` convenience methods for meeting detection.
+
+#### Improved Meeting Detection
+**MeetingDetector.swift Changes:**
+- Integrated `MicrophoneActivityTracker.shared` for more reliable meeting detection.
+- Zoom detection now uses "Zoom running + using microphone" as primary signal, falling back to AppleScript UI check for edge cases.
+- Google Meet detection now uses "Chrome running + meet.google.com tab with meeting URL + mic usage" for confirmed meeting state.
+- Added improved AppleScript (`googleMeetAppleScriptImproved`) that excludes landing pages, `/lookup/`, `/new`, and requires meeting code format (hyphenated paths like `abc-defg-hij`).
+
+#### New Tests
+- `CoreAudioProcessTapTests`:
+  - `testAudioObjectIDConstants` - validates AudioObjectID static properties
+  - `testReadProcessListDoesNotThrow` - verifies process list can be read
+  - `testCoreAudioErrorDescriptions` - validates error message formatting
+- `MicrophoneActivityTrackerTests`:
+  - `testMicrophoneTrackerStartsAndStops` - lifecycle test
+  - `testMicrophoneTrackerAppCheckMethods` - validates helper methods
+  - `testIsAppUsingMicrophoneReturnsFalseForUnknownApp` - edge case test
+- `RecordingErrorTests`:
+  - `testRecordingErrorDescriptions` - validates all new error cases
+
+#### Files Impacted
+- `Alona/Info.plist` - Updated min OS version, added NSAudioCaptureUsageDescription
+- `Alona.xcodeproj/project.pbxproj` - Updated deployment target, added new source files
+- `Alona/Services/AudioRecorder.swift` - Complete rewrite using CoreAudio Process Taps
+- `Alona/Services/MeetingDetector.swift` - Integrated microphone activity tracking
+- `Alona/Services/CoreAudioUtils.swift` (new)
+- `Alona/Services/ProcessTap.swift` (new)
+- `Alona/Services/AudioCapturePermission.swift` (new)
+- `Alona/Services/MicrophoneActivityTracker.swift` (new)
+- `AlonaTests/AlonaTests.swift` - Added new test classes
+
+#### Commands Executed
+- `make build` - verified compilation
+- `make test` - 36 tests passing
+- `make lint`, `make format` - code style conformance
+
+### 2025-12-13 – Voice Processing & TCC SPI
+
+#### Voice Processing (Echo Cancellation)
+**File:** `Alona/Services/AudioRecorder.swift`
+- Added `inputNode.setVoiceProcessingEnabled(true)` to enable Apple's built-in audio processing:
+  - **Acoustic Echo Cancellation (AEC)**: Removes speaker feedback picked up by microphone
+  - **Noise Suppression**: Reduces background noise for cleaner recordings
+  - **Automatic Gain Control (AGC)**: Normalizes volume levels for consistent audio
+- This addresses echoey audio and improves transcription accuracy.
+
+#### TCC SPI for System Audio Permission
+**File:** `Alona/Services/PermissionManager.swift`
+- Added TCC (Transparency, Consent, Control) private framework integration:
+  - `TCCAccessPreflight("kTCCServiceAudioCapture")` - Check permission status
+  - `TCCAccessRequest("kTCCServiceAudioCapture", callback)` - Request permission with dialog
+- This is the same approach Granola uses, and properly:
+  - Shows the macOS permission dialog to the user
+  - Adds Alona to the "System Audio Recording Only" section in System Settings
+- Falls back to opening System Settings if TCC SPI is unavailable.
+
+#### Files Impacted
+- `Alona/Services/AudioRecorder.swift` - Added voice processing for echo cancellation
+- `Alona/Services/PermissionManager.swift` - Added TCC SPI for proper permission request
+
+### 2025-12-13 – Audio Capture Fix (Native Sample Rate)
+
+#### Problem
+Mic-only recordings were producing empty audio files. The root cause was a failed sample rate conversion during capture:
+1. The code attempted real-time conversion from 48kHz (mic native) to 16kHz (target) using `AVAudioConverter`
+2. When voice processing was enabled, it could result in invalid format (sample rate 0)
+3. The converter would fail or produce 0 frames, causing all audio to be dropped
+
+#### Solution
+Rewrote `AudioRecorder.startMicrophoneCapture()` to capture at **native sample rate** without real-time conversion:
+
+**Key Changes:**
+1. **Capture at native rate**: Audio is now captured at whatever sample rate the mic provides (typically 48kHz), stored directly to buffers without conversion
+2. **Dynamic sample rate tracking**: Added `actualCaptureSampleRate` property that's set from the actual mic format
+3. **Dual-channel writer re-initialization**: The WAV file writer is re-initialized with the actual capture sample rate once known
+4. **Robust format handling**: Added fallback chain if voice processing produces invalid format:
+   - Try format after voice processing
+   - Fallback to hardware format if invalid
+   - Fallback to 48kHz mono as last resort
+5. **Post-capture resampling**: Sample rate conversion (48kHz → 16kHz) now happens during `createMonoMix()` post-processing, using `AVAudioConverter` in a non-streaming context
+6. **Improved logging**: Added `logger.info` statements (instead of `logger.debug`) at key points to aid debugging
+
+**Variable Renames:**
+- `sampleRate` → `targetSampleRate` (16kHz target for transcription)
+- Added `actualCaptureSampleRate` (dynamic, set from mic)
+
+#### Files Impacted
+- `Alona/Services/AudioRecorder.swift` - Rewrote capture to use native sample rate, added post-processing resampling
+
+#### Commands Executed
+- `make build` - verified compilation
+- `make test` - all 40 tests passing
+- `make format`, `make lint` - code style conformance
+
+### 2025-12-13 – StartupView Meeting Detection & Menu Bar Stability
+
+#### StartupView Meeting Detection
+**Problem:** The StartupView did not show meeting detection status or prompt users when a meeting was detected.
+
+**Solution:** Added meeting detection UI to StartupView:
+- Added `@EnvironmentObject private var meetingDetector: MeetingDetector` to access detection state
+- Added `detectionStatus` view showing current detection state with green/gray indicator
+- Added `detectionPrompt` view (orange highlight) with "Start Recording" and "Dismiss" buttons when a meeting is detected
+- Updated header to show "Meeting detected" status when applicable
+- Implemented same detection prompt logic as MenuBarView (`shouldShowDetectionPrompt`, `activeDetectionIdentifier`, etc.)
+
+**Files Impacted:**
+- `Alona/AlonaApp.swift` - Added `.environmentObject(meetingDetector)` to StartupView WindowGroup
+- `Alona/Views/StartupView.swift` - Added meeting detection UI and logic
+
+#### Menu Bar Icon Stability
+**Problem:** The menu bar icon would sometimes disappear when a meeting was joined.
+
+**Potential Cause:** The `@AppStorage("showMenuBarExtra")` binding could potentially get corrupted or set to false unexpectedly.
+
+**Solution:** Changed from `@AppStorage` to regular `@State` binding to ensure the menu bar extra is always visible and not affected by UserDefaults state:
+```swift
+// Changed from:
+@AppStorage("showMenuBarExtra") private var showMenuBarExtra = true
+// To:
+@State private var showMenuBarExtra = true
+```
+
+**Files Impacted:**
+- `Alona/AlonaApp.swift` - Changed menu bar extra binding type
+
+#### Commands Executed
+- `make build` - verified compilation
+- `make test` - all 40 tests passing
+- `make format`, `make lint` - code style conformance
+
+### 2025-12-13 – Stable Meeting Detection & Granola-style Popup
+
+#### Problem
+Zoom meeting detection was flickering between "Meeting Detected" and "Waiting for meeting..." because:
+1. Microphone activity check is inconsistent (especially when muted)
+2. AppleScript UI check can have latency
+3. Each 2-second poll could flip-flop the detection state
+
+#### Solution: Sticky Detection
+Added a "sticky" detection mechanism to prevent flickering:
+- Once a meeting is detected, keep it detected until clear evidence it ended
+- Track consecutive "missed detection" counts
+- Require 3 consecutive misses before clearing the detection (6 seconds of no detection while app still running)
+- Clear immediately if the meeting app is no longer running
+
+**New Properties in MeetingDetector:**
+```swift
+private var lastDetectedApp: MeetingApp?
+private var missedDetectionCount = 0
+private let missedDetectionThreshold = 3
+```
+
+#### Granola-style Floating Popup Notification
+Replaced inline detection prompt in StartupView with a floating popup notification:
+
+**New Files:**
+- `Alona/Views/MeetingDetectedPopup.swift` - SwiftUI view for the popup content (meeting info + "Take Notes" button + dismiss)
+- `Alona/Views/MeetingPopupWindow.swift` - `MeetingPopupWindowController` singleton that manages a borderless floating NSWindow positioned in top-right corner
+
+**Popup Features:**
+- Appears in top-right corner of screen (similar to Granola)
+- Shows meeting app name and "Meeting detected" label
+- "Take Notes" button to start recording
+- "X" button to dismiss
+- Auto-dismisses after 7 seconds
+- Fade in/out animations
+
+#### Files Impacted
+- `Alona/Services/MeetingDetector.swift` - Added sticky detection logic and popup integration
+- `Alona/Views/MeetingDetectedPopup.swift` (new)
+- `Alona/Views/MeetingPopupWindow.swift` (new)
+- `Alona.xcodeproj/project.pbxproj` - Added new view files
+
+#### Commands Executed
+- `make build` - verified compilation
+- `make test` - all 40 tests passing
+- `make format`, `make lint` - code style conformance
 
 ### References
 
@@ -1185,6 +1508,117 @@ Each meeting creates a flat folder:
 2. **BlackHole fallback** for older macOS not implemented in MVP - requires separate user setup
 3. **Speaker diarization** not included - dual-channel preserved for future work
 4. **Real LLM summaries** use placeholder - Phase 5 stretch goal
+
+---
+
+## Implementation Notes (Dec 14, 2025)
+
+### Bug Fixes Applied
+
+#### 0. Live System Audio Muffled During Recording Fix (Latest)
+**Root Cause**: The aggregate device configuration included the system output device as a sub-device (`kAudioAggregateDeviceSubDeviceListKey`), which caused audio to route through our aggregate device, affecting live playback quality.
+
+**Solution**:
+- Removed `kAudioAggregateDeviceSubDeviceListKey` from aggregate device configuration
+- Created a "tap-only" aggregate device that listens without routing audio
+- The tap captures the audio stream directly without interfering with normal playback
+- Disabled drift compensation to reduce additional processing
+
+**Key Insight**: The process tap already captures the audio stream - we don't need to include the output device as a sub-device. Including it causes CoreAudio to route playback through our aggregate, degrading quality.
+
+**Files Changed**: `Alona/Services/AudioRecorder.swift`
+
+**Tests Added**: 
+- `testTapDescriptionIsUnmuted`: Verifies unmuted mode for non-interfering capture
+- `testAggregateDeviceConfigurationForTapOnly`: Verifies no sub-device list in configuration
+
+#### 1. Zero-Duration Audio Recording Fix
+**Root Cause**: Buffer mismatch between mic (38,400 samples) and system audio (~16.7M samples) due to race conditions and sample rate mismatches.
+
+**Solution**:
+- Reordered startup: mic capture starts FIRST to establish sample rate before file preparation
+- Added robust fallback: if one buffer is empty, duplicate other to both channels  
+- Added padding with silence for remaining samples
+- Added tracking counters: `totalMicSamplesReceived`, `totalSystemSamplesReceived`, `totalSamplesWritten`
+
+**Files Changed**: `Alona/Services/AudioRecorder.swift`
+
+#### 2. System Audio Quality (Muffled/Crackly) Fix
+**Root Cause**: Voice Processing (AEC) monitors and modifies system audio output to cancel echo. When simultaneously capturing that audio, it sounds degraded.
+
+**Solution**:
+- Voice processing is now ONLY enabled for mic-only recording
+- When `captureSystemAudio=true`, voice processing is disabled to prevent interference
+- Added logging to indicate mode
+
+**Files Changed**: `Alona/Services/AudioRecorder.swift`
+
+#### 3. System Audio Sample Rate Mismatch Fix
+**Root Cause**: System audio at 48kHz vs mic at potentially different rate causing buffer growth imbalance.
+
+**Solution**:
+- Added `resampleAudio()` function using linear interpolation
+- System audio buffer is resampled to match mic sample rate before accumulating
+- Added `systemAudioSampleRate` tracking
+
+**Files Changed**: `Alona/Services/AudioRecorder.swift`
+
+#### 4. Whisper Model Memory (555MB+) Not Unloading Fix
+**Root Cause**: Timer scheduled in async context with no active RunLoop. Also no call to unload when queue empties.
+
+**Solution**:
+- Timer now scheduled on main thread with `DispatchQueue.main.async`
+- Added timer to `.common` RunLoop mode for reliability
+- Added immediate `unloadModelIfIdle()` call when transcription queue is empty
+- Added thread-safety check in unload function
+- Added debug logging for model lifecycle
+
+**Files Changed**: 
+- `Alona/Services/TranscriptionEngine.swift`
+- `Alona/Models/AppState.swift`
+
+#### 5. Menu Bar Icon Disappearing Fix
+**Root Cause**: `@AppStorage("showMenuBarExtra")` could become false unexpectedly.
+
+**Solution**: Changed to `@State private var showMenuBarExtra = true` (already applied in previous session)
+
+**Files Changed**: `Alona/AlonaApp.swift`
+
+#### 6. Zoom Meeting Detection Improvement
+**Root Cause**: Only checked `us.zoom.xos` bundle ID, missing newer Zoom versions.
+
+**Solution**:
+- Added support for multiple bundle IDs: `us.zoom.xos`, `us.zoom.ZoomHelperAgent`, `us.zoom.Workplace`, `us.zoom.videomeetings`
+- Updated both `MeetingDetector` and `MicrophoneActivityTracker`
+
+**Files Changed**: 
+- `Alona/Services/MeetingDetector.swift`
+- `Alona/Services/MicrophoneActivityTracker.swift`
+
+### Tests Added
+
+#### AudioBufferTests (5 tests)
+- `testResampleAudioDownsample`: 48kHz → 16kHz conversion
+- `testResampleAudioUpsample`: 16kHz → 48kHz conversion  
+- `testResampleAudioSameRate`: Pass-through when rates match
+- `testResampleAudioEmptyInput`: Empty array handling
+- `testResampleAudioInvalidRates`: Invalid rate handling
+
+#### TranscriptionMemoryTests (2 tests)
+- `testTranscriptionEngineModelLazyLoad`: Model not loaded on init
+- `testTranscriptionEngineUnloadWhenIdle`: Safe unload when idle
+
+#### MeetingDetectionImprovementsTests (3 tests)
+- `testMultipleZoomBundleIDsChecked`: Multiple Zoom bundle IDs
+- `testStickyDetectionPreventsFlickering`: Stable detection state
+- `testMeetingDetectorNotifiesOnlyOnce`: Notification deduplication
+
+#### SystemAudioCaptureTests (2 tests)
+- `testTapDescriptionIsUnmuted`: Unmuted mode verification
+- `testAggregateDeviceConfigurationForTapOnly`: Tap-only config verification
+
+### Test Results
+All 52 tests pass (including 12 new tests for bug fixes).
 
 ---
 

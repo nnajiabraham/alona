@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+
+jobs:
+  lint-build-test:
+    runs-on: macos-14
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: |
+          set -euo pipefail
+          # Select the latest Xcode (macos-14 runners have Xcode 15.x+)
+          XCODE_PATH=$(ls -d /Applications/Xcode*.app 2>/dev/null | sort -V | tail -1)
+          if [[ -n "$XCODE_PATH" ]]; then
+            sudo xcode-select -s "$XCODE_PATH"
+          fi
+          xcodebuild -version
+          swift --version
+
+      - name: Install lint tools
+        run: brew install swiftformat swiftlint
+
+      - name: SwiftFormat (lint)
+        run: swiftformat Alona AlonaTests --lint
+
+      - name: SwiftLint
+        run: swiftlint --strict
+
+      - name: Build (SPM)
+        run: swift build
+
+      - name: Test (SPM)
+        run: swift test --parallel

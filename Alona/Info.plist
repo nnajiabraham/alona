@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleIdentifier</key>
+    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    <key>CFBundleName</key>
+    <string>Alona</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>14.6</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Alona needs microphone access to capture your voice during meetings.</string>
+    <key>NSAudioCaptureUsageDescription</key>
+    <string>Alona captures meeting audio from other participants for transcription.</string>
+    <key>NSAppleEventsUsageDescription</key>
+    <string>Alona uses automation to detect Google Meet tabs in supported browsers.</string>
+    <key>NSAccessibilityUsageDescription</key>
+    <string>Alona uses accessibility APIs to detect Zoom activity.</string>
+    <key>LSUIElement</key>
+    <false/>
+</dict>
+</plist>
