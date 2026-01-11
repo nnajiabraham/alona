@@ -234,13 +234,92 @@ final class WhisperModelManager {
 
     enum ModelStatus: Equatable {
         case available
-        case downloading(progress: Double)
+        case downloading(progress: Double, info: DownloadInfo)
         case notDownloaded
         case failed(String)
 
         var isDownloading: Bool {
             if case .downloading = self { return true }
             return false
+        }
+
+        /// Helper to get just the progress value
+        var progressValue: Double {
+            if case let .downloading(progress, _) = self {
+                return progress
+            }
+            return 0
+        }
+    }
+
+    /// Detailed download progress information
+    struct DownloadInfo: Equatable {
+        var bytesDownloaded: Int64
+        var totalBytes: Int64
+        var bytesPerSecond: Double
+        var startTime: Date
+        var lastUpdateTime: Date
+
+        var formattedDownloaded: String {
+            ByteCountFormatter.string(fromByteCount: self.bytesDownloaded, countStyle: .file)
+        }
+
+        var formattedTotal: String {
+            ByteCountFormatter.string(fromByteCount: self.totalBytes, countStyle: .file)
+        }
+
+        var formattedSpeed: String {
+            let speedBytesPerSec = Int64(self.bytesPerSecond)
+            return "\(ByteCountFormatter.string(fromByteCount: speedBytesPerSec, countStyle: .file))/s"
+        }
+
+        var estimatedTimeRemaining: String {
+            guard self.bytesPerSecond > 0 else { return "Calculating..." }
+            let remaining = Double(self.totalBytes - self.bytesDownloaded)
+            let seconds = remaining / self.bytesPerSecond
+            if seconds < 60 {
+                return "\(Int(seconds))s remaining"
+            } else if seconds < 3600 {
+                return "\(Int(seconds / 60))m remaining"
+            } else {
+                return "\(Int(seconds / 3600))h \(Int((seconds.truncatingRemainder(dividingBy: 3600)) / 60))m"
+            }
+        }
+
+        var percentComplete: Int {
+            guard self.totalBytes > 0 else { return 0 }
+            return Int((Double(self.bytesDownloaded) / Double(self.totalBytes)) * 100)
+        }
+
+        static func initial(totalBytes: Int64) -> DownloadInfo {
+            DownloadInfo(
+                bytesDownloaded: 0,
+                totalBytes: totalBytes,
+                bytesPerSecond: 0,
+                startTime: Date(),
+                lastUpdateTime: Date())
+        }
+    }
+
+    /// Log entry for download activity
+    struct DownloadLogEntry: Identifiable, Equatable {
+        let id = UUID()
+        let timestamp: Date
+        let message: String
+        let type: LogType
+
+        enum LogType: Equatable {
+            case info
+            case progress
+            case warning
+            case error
+            case success
+        }
+
+        var formattedTimestamp: String {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "HH:mm:ss"
+            return formatter.string(from: self.timestamp)
         }
     }
 
@@ -257,8 +336,14 @@ final class WhisperModelManager {
     /// Status of each model (available, downloading, not downloaded)
     var modelStatuses: [WhisperModel: ModelStatus] = [:]
 
+    /// Download activity log (visible to user)
+    var downloadLogs: [DownloadLogEntry] = []
+
     /// Active download tasks
     private var downloadTasks: [WhisperModel: Task<Void, Never>] = [:]
+
+    /// Maximum log entries to keep
+    private let maxLogEntries = 100
 
     // MARK: - Initialization
 
@@ -316,27 +401,45 @@ final class WhisperModelManager {
     func downloadModel(_ model: WhisperModel) {
         guard self.downloadTasks[model] == nil else {
             self.logger.info("Download already in progress for \(model.displayName)")
+            self.addLog("Download already in progress", type: .warning)
             return
         }
 
         self.logger.info("Starting download of \(model.displayName) (\(model.formattedSize))")
-        self.modelStatuses[model] = .downloading(progress: 0)
+        self.addLog("Starting download: \(model.displayName) (\(model.formattedSize))", type: .info)
+
+        let expectedBytes = Int64(model.sizeInMB) * 1024 * 1024
+        let initialInfo = DownloadInfo.initial(totalBytes: expectedBytes)
+        self.modelStatuses[model] = .downloading(progress: 0, info: initialInfo)
 
         self.downloadTasks[model] = Task {
             do {
                 let (tempURL, _) = try await self.downloadWithProgress(model: model)
+
+                await MainActor.run {
+                    self.addLog("Saving model to disk...", type: .info)
+                }
+
                 try ModelLocator.persistUserModel(from: tempURL, for: model)
 
                 await MainActor.run {
                     self.modelStatuses[model] = .available
                     self.downloadTasks[model] = nil
                     self.logger.info("Successfully downloaded \(model.displayName)")
+                    self.addLog("✓ Download complete: \(model.displayName)", type: .success)
+                }
+            } catch is CancellationError {
+                await MainActor.run {
+                    self.modelStatuses[model] = .notDownloaded
+                    self.downloadTasks[model] = nil
+                    self.addLog("Download cancelled", type: .warning)
                 }
             } catch {
                 await MainActor.run {
                     self.modelStatuses[model] = .failed(error.localizedDescription)
                     self.downloadTasks[model] = nil
                     self.logger.error("Failed to download \(model.displayName): \(error.localizedDescription)")
+                    self.addLog("✗ Error: \(error.localizedDescription)", type: .error)
                 }
             }
         }
@@ -348,6 +451,7 @@ final class WhisperModelManager {
         self.downloadTasks[model] = nil
         self.modelStatuses[model] = .notDownloaded
         self.logger.info("Cancelled download of \(model.displayName)")
+        self.addLog("Cancelled download of \(model.displayName)", type: .warning)
     }
 
     /// Delete a downloaded model
@@ -356,20 +460,62 @@ final class WhisperModelManager {
             try ModelLocator.deleteUserModel(for: model)
             self.modelStatuses[model] = .notDownloaded
             self.logger.info("Deleted \(model.displayName)")
+            self.addLog("Deleted \(model.displayName)", type: .info)
         } catch {
             self.logger.error("Failed to delete \(model.displayName): \(error.localizedDescription)")
+            self.addLog("Failed to delete: \(error.localizedDescription)", type: .error)
+        }
+    }
+
+    /// Clear download logs
+    func clearLogs() {
+        self.downloadLogs.removeAll()
+    }
+
+    /// Add a log entry
+    private func addLog(_ message: String, type: DownloadLogEntry.LogType) {
+        let entry = DownloadLogEntry(timestamp: Date(), message: message, type: type)
+        self.downloadLogs.append(entry)
+        // Keep log size manageable
+        if self.downloadLogs.count > self.maxLogEntries {
+            self.downloadLogs.removeFirst(self.downloadLogs.count - self.maxLogEntries)
         }
     }
 
     // MARK: - Private Helpers
 
     private func downloadWithProgress(model: WhisperModel) async throws -> (URL, URLResponse) {
-        let request = URLRequest(url: model.downloadURL)
+        await MainActor.run {
+            self.addLog("Connecting to \(model.downloadURL.host ?? "server")...", type: .info)
+        }
+
+        var request = URLRequest(url: model.downloadURL)
+        request.timeoutInterval = 30
 
         let (asyncBytes, response) = try await URLSession.shared.bytes(for: request)
 
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw URLError(.badServerResponse)
+        }
+
+        await MainActor.run {
+            self.addLog("Connected (HTTP \(httpResponse.statusCode))", type: .info)
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw URLError(.badServerResponse)
+        }
+
         let expectedLength = response.expectedContentLength
         var receivedLength: Int64 = 0
+        let startTime = Date()
+        var lastLogTime = startTime
+        var lastLogBytes: Int64 = 0
+
+        await MainActor.run {
+            let total = ByteCountFormatter.string(fromByteCount: expectedLength, countStyle: .file)
+            self.addLog("Downloading \(total)...", type: .info)
+        }
 
         let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent(model.fullFileName)
 
@@ -382,11 +528,17 @@ final class WhisperModelManager {
         outputStream.open()
         defer { outputStream.close() }
 
-        let bufferSize = 65536
+        // Use larger buffer for efficiency (1MB)
+        let bufferSize = 1024 * 1024
         var buffer = [UInt8](repeating: 0, count: bufferSize)
         var bufferIndex = 0
 
+        // Progress update interval (update every ~1 second or 1MB, whichever comes first)
+        let progressUpdateInterval: TimeInterval = 1.0
+
         for try await byte in asyncBytes {
+            try Task.checkCancellation()
+
             buffer[bufferIndex] = byte
             bufferIndex += 1
 
@@ -395,11 +547,41 @@ final class WhisperModelManager {
                 receivedLength += Int64(bufferIndex)
                 bufferIndex = 0
 
-                if expectedLength > 0 {
-                    let progress = Double(receivedLength) / Double(expectedLength)
+                let now = Date()
+                let elapsed = now.timeIntervalSince(lastLogTime)
+
+                // Update progress and log periodically
+                if elapsed >= progressUpdateInterval {
+                    let totalElapsed = now.timeIntervalSince(startTime)
+                    let bytesPerSecond = totalElapsed > 0 ? Double(receivedLength) / totalElapsed : 0
+                    let progress = expectedLength > 0 ? Double(receivedLength) / Double(expectedLength) : 0
+
+                    let info = DownloadInfo(
+                        bytesDownloaded: receivedLength,
+                        totalBytes: expectedLength,
+                        bytesPerSecond: bytesPerSecond,
+                        startTime: startTime,
+                        lastUpdateTime: now)
+
                     await MainActor.run {
-                        self.modelStatuses[model] = .downloading(progress: progress)
+                        self.modelStatuses[model] = .downloading(progress: progress, info: info)
+
+                        // Log progress every ~10%
+                        let currentPercent = Int(progress * 100)
+                        let lastPercent = expectedLength > 0
+                            ? Int((Double(lastLogBytes) / Double(expectedLength)) * 100)
+                            : 0
+                        if currentPercent / 10 > lastPercent / 10 || elapsed >= 5.0 {
+                            let downloaded = ByteCountFormatter
+                                .string(fromByteCount: receivedLength, countStyle: .file)
+                            let speed = ByteCountFormatter
+                                .string(fromByteCount: Int64(bytesPerSecond), countStyle: .file)
+                            self.addLog("\(currentPercent)% - \(downloaded) @ \(speed)/s", type: .progress)
+                        }
                     }
+
+                    lastLogTime = now
+                    lastLogBytes = receivedLength
                 }
             }
         }
@@ -407,10 +589,24 @@ final class WhisperModelManager {
         // Write remaining bytes
         if bufferIndex > 0 {
             outputStream.write(buffer, maxLength: bufferIndex)
+            receivedLength += Int64(bufferIndex)
         }
 
+        let totalTime = Date().timeIntervalSince(startTime)
+        let avgSpeed = totalTime > 0 ? Double(receivedLength) / totalTime : 0
+
+        let finalInfo = DownloadInfo(
+            bytesDownloaded: receivedLength,
+            totalBytes: expectedLength,
+            bytesPerSecond: avgSpeed,
+            startTime: startTime,
+            lastUpdateTime: Date())
+
         await MainActor.run {
-            self.modelStatuses[model] = .downloading(progress: 1.0)
+            self.modelStatuses[model] = .downloading(progress: 1.0, info: finalInfo)
+            let time = String(format: "%.1f", totalTime)
+            let speed = ByteCountFormatter.string(fromByteCount: Int64(avgSpeed), countStyle: .file)
+            self.addLog("Download finished in \(time)s (avg \(speed)/s)", type: .success)
         }
 
         return (tempURL, response)

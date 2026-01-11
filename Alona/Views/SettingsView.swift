@@ -196,8 +196,10 @@ struct ModelSelectionView: View {
                 }
             } label: {
                 HStack(spacing: 4) {
-                    Text(self
-                        .showAllModels ? "Show Recommended Only" : "Show All Models (\(WhisperModel.allCases.count))")
+                    Text(
+                        self.showAllModels
+                            ? "Show Recommended Only"
+                            : "Show All Models (\(WhisperModel.allCases.count))")
                     Image(systemName: self.showAllModels ? "chevron.up" : "chevron.down")
                         .font(.caption2)
                 }
@@ -206,6 +208,23 @@ struct ModelSelectionView: View {
             }
             .buttonStyle(.plain)
             .foregroundStyle(.blue)
+
+            // Download log (only show if there are logs or a download is active)
+            if !self.modelManager.downloadLogs.isEmpty || self.isAnyDownloadActive {
+                Divider()
+                    .padding(.vertical, 4)
+
+                DownloadLogView(
+                    logs: self.modelManager.downloadLogs,
+                    onClear: { self.modelManager.clearLogs() })
+            }
+        }
+    }
+
+    private var isAnyDownloadActive: Bool {
+        self.modelManager.modelStatuses.values.contains { status in
+            if case .downloading = status { return true }
+            return false
         }
     }
 }
@@ -306,24 +325,38 @@ struct ModelRowView: View {
                 .fixedSize()
             }
 
-        case let .downloading(progress):
-            HStack(spacing: 6) {
-                ProgressView(value: progress)
-                    .progressViewStyle(.linear)
-                    .frame(width: 50)
+        case let .downloading(progress, info):
+            VStack(alignment: .trailing, spacing: 2) {
+                HStack(spacing: 6) {
+                    ProgressView(value: progress)
+                        .progressViewStyle(.linear)
+                        .frame(width: 60)
 
-                Text("\(Int(progress * 100))%")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .monospacedDigit()
-                    .frame(width: 32, alignment: .trailing)
+                    Text("\(info.percentComplete)%")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .monospacedDigit()
+                        .frame(width: 32, alignment: .trailing)
 
-                Button(action: self.onCancel) {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.system(size: 14))
-                        .foregroundStyle(.red.opacity(0.8))
+                    Button(action: self.onCancel) {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.system(size: 14))
+                            .foregroundStyle(.red.opacity(0.8))
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
+
+                // Speed and ETA
+                if info.bytesPerSecond > 0 {
+                    Text("\(info.formattedSpeed) • \(info.estimatedTimeRemaining)")
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+                        .lineLimit(1)
+                } else {
+                    Text("Starting...")
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+                }
             }
 
         case .notDownloaded:
@@ -348,6 +381,109 @@ struct ModelRowView: View {
                 .buttonStyle(.bordered)
                 .controlSize(.small)
             }
+        }
+    }
+}
+
+// MARK: - Download Log View
+
+struct DownloadLogView: View {
+    let logs: [WhisperModelManager.DownloadLogEntry]
+    let onClear: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("Download Log")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                if !self.logs.isEmpty {
+                    Button("Clear") {
+                        self.onClear()
+                    }
+                    .font(.caption)
+                    .buttonStyle(.plain)
+                    .foregroundStyle(.blue)
+                }
+            }
+
+            if self.logs.isEmpty {
+                Text("No download activity")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 12)
+            } else {
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        LazyVStack(alignment: .leading, spacing: 4) {
+                            ForEach(self.logs) { entry in
+                                HStack(alignment: .top, spacing: 8) {
+                                    Text(entry.formattedTimestamp)
+                                        .font(.caption2)
+                                        .foregroundStyle(.tertiary)
+                                        .monospacedDigit()
+                                        .frame(width: 55, alignment: .leading)
+
+                                    self.logIcon(for: entry.type)
+                                        .font(.caption2)
+                                        .frame(width: 12)
+
+                                    Text(entry.message)
+                                        .font(.caption)
+                                        .foregroundStyle(self.logColor(for: entry.type))
+                                        .lineLimit(2)
+                                }
+                                .id(entry.id)
+                            }
+                        }
+                        .padding(8)
+                    }
+                    .frame(height: 100)
+                    .background(Color.black.opacity(0.3))
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
+                    .onChange(of: self.logs.count) {
+                        if let lastEntry = self.logs.last {
+                            withAnimation {
+                                proxy.scrollTo(lastEntry.id, anchor: .bottom)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private func logIcon(for type: WhisperModelManager.DownloadLogEntry.LogType) -> some View {
+        Group {
+            switch type {
+            case .info:
+                Image(systemName: "info.circle")
+                    .foregroundStyle(.blue)
+            case .progress:
+                Image(systemName: "arrow.down.circle")
+                    .foregroundStyle(.cyan)
+            case .warning:
+                Image(systemName: "exclamationmark.triangle")
+                    .foregroundStyle(.orange)
+            case .error:
+                Image(systemName: "xmark.circle")
+                    .foregroundStyle(.red)
+            case .success:
+                Image(systemName: "checkmark.circle")
+                    .foregroundStyle(.green)
+            }
+        }
+    }
+
+    private func logColor(for type: WhisperModelManager.DownloadLogEntry.LogType) -> Color {
+        switch type {
+        case .info: .secondary
+        case .progress: .primary
+        case .warning: .orange
+        case .error: .red
+        case .success: .green
         }
     }
 }

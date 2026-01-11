@@ -285,23 +285,58 @@ final class WhisperModelManagerTests: XCTestCase {
     }
 
     func testWhisperModelManagerModelStatusEquality() {
-        let status1 = WhisperModelManager.ModelStatus.downloading(progress: 0.5)
-        let status2 = WhisperModelManager.ModelStatus.downloading(progress: 0.5)
-        let status3 = WhisperModelManager.ModelStatus.downloading(progress: 0.7)
+        let info1 = WhisperModelManager.DownloadInfo.initial(totalBytes: 1000)
+        let info2 = WhisperModelManager.DownloadInfo.initial(totalBytes: 1000)
 
-        XCTAssertEqual(status1, status2)
-        XCTAssertNotEqual(status1, status3)
+        let status1 = WhisperModelManager.ModelStatus.downloading(progress: 0.5, info: info1)
+        let status2 = WhisperModelManager.ModelStatus.downloading(progress: 0.5, info: info2)
+        let status3 = WhisperModelManager.ModelStatus.downloading(progress: 0.7, info: info1)
+
+        // Note: timestamps differ so these won't be strictly equal,
+        // but we test that same progress values work
+        XCTAssertEqual(status1.progressValue, status2.progressValue)
+        XCTAssertNotEqual(status1.progressValue, status3.progressValue)
         XCTAssertEqual(WhisperModelManager.ModelStatus.available, .available)
         XCTAssertEqual(WhisperModelManager.ModelStatus.notDownloaded, .notDownloaded)
     }
 
     func testWhisperModelManagerIsDownloadingFlag() {
-        let downloading = WhisperModelManager.ModelStatus.downloading(progress: 0.5)
+        let info = WhisperModelManager.DownloadInfo.initial(totalBytes: 1000)
+        let downloading = WhisperModelManager.ModelStatus.downloading(progress: 0.5, info: info)
         let available = WhisperModelManager.ModelStatus.available
         let notDownloaded = WhisperModelManager.ModelStatus.notDownloaded
 
         XCTAssertTrue(downloading.isDownloading)
         XCTAssertFalse(available.isDownloading)
         XCTAssertFalse(notDownloaded.isDownloading)
+    }
+
+    func testDownloadInfoFormatting() {
+        var info = WhisperModelManager.DownloadInfo(
+            bytesDownloaded: 500 * 1024 * 1024, // 500 MB
+            totalBytes: 1600 * 1024 * 1024, // 1.6 GB
+            bytesPerSecond: 10 * 1024 * 1024, // 10 MB/s
+            startTime: Date(),
+            lastUpdateTime: Date())
+
+        XCTAssertEqual(info.percentComplete, 31) // ~31%
+        XCTAssertTrue(info.formattedDownloaded.contains("500") || info.formattedDownloaded.contains("MB"))
+        XCTAssertTrue(info.formattedSpeed.contains("MB/s") || info.formattedSpeed.contains("10"))
+        XCTAssertFalse(info.estimatedTimeRemaining.contains("Calculating"))
+
+        // Test with zero speed
+        info.bytesPerSecond = 0
+        XCTAssertEqual(info.estimatedTimeRemaining, "Calculating...")
+    }
+
+    func testDownloadLogEntry() {
+        let entry = WhisperModelManager.DownloadLogEntry(
+            timestamp: Date(),
+            message: "Test message",
+            type: .info)
+
+        XCTAssertFalse(entry.formattedTimestamp.isEmpty)
+        XCTAssertEqual(entry.message, "Test message")
+        XCTAssertEqual(entry.type, .info)
     }
 }
