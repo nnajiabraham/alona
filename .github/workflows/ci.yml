@@ -86,21 +86,21 @@ jobs:
               }
           }
           EOF
-          
+
           # Compile and run the sanity test
           swiftc -o /tmp/sanity_test \
             -F $(xcode-select -p)/Platforms/MacOSX.platform/Developer/Library/Frameworks \
             -Xlinker -rpath -Xlinker $(xcode-select -p)/Platforms/MacOSX.platform/Developer/Library/Frameworks \
             /tmp/SanityTest.swift 2>/dev/null || echo "Direct compile skipped"
-          
+
           echo "✅ Sanity check passed - CI environment is functional"
 
       - name: Test
         run: |
           set -o pipefail
-          
+
           echo "=== Starting test run at $(date) ==="
-          
+
           # Monitor the test process in background - will print if it hangs
           (
             sleep 60
@@ -112,10 +112,10 @@ jobs:
             ps aux | grep -E "(xcodebuild|Alona|xctest)" | head -10 || true
           ) &
           MONITOR_PID=$!
-          
+
           # Run xcodebuild with verbose output initially (no xcbeautify) to see raw output
           echo "=== Running xcodebuild test (first 30 lines raw, then xcbeautify) ==="
-          
+
           # Use -showBuildTimingSummary for more insight
           xcodebuild \
             -workspace Alona.xcworkspace \
@@ -126,20 +126,20 @@ jobs:
             -parallel-testing-enabled NO \
             -maximum-test-execution-time-allowance 30 \
             test 2>&1 | tee /tmp/test_output.log | xcbeautify
-          
+
           TEST_EXIT=$?
-          
+
           # Kill the monitor
           kill $MONITOR_PID 2>/dev/null || true
-          
+
           echo "=== Test completed at $(date) with exit code $TEST_EXIT ==="
-          
+
           # If failed, show last 100 lines of raw output
           if [ $TEST_EXIT -ne 0 ]; then
             echo "=== Last 100 lines of raw test output ==="
             tail -100 /tmp/test_output.log
           fi
-          
+
           exit $TEST_EXIT
         timeout-minutes: 10
         env:
