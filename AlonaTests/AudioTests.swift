@@ -3,7 +3,7 @@ import AVFoundation
 import Combine
 import Foundation
 import XCTest
-@testable import Alona
+@testable import AlonaCore
 
 // MARK: - Audio Sample Math Tests
 

@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.build/master.swiftdeps"
+  },
+  "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.derived/runner.swift": {
+    "dependencies": "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.build/runner.d",
+    "object": "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.build/runner.swift.o",
+    "swiftmodule": "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.build/runner~partial.swiftmodule",
+    "swift-dependencies": "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.build/runner.swiftdeps",
+    "diagnostics": "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.build/runner.dia"
+  }
+}

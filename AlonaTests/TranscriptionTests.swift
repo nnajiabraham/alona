@@ -1,6 +1,6 @@
 import Foundation
 import XCTest
-@testable import Alona
+@testable import AlonaCore
 
 // MARK: - TranscriptionResult Tests
 

@@ -1,7 +1,7 @@
 import AppKit
 import Foundation
 import XCTest
-@testable import Alona
+@testable import AlonaCore
 
 // MARK: - Window Controller Tests
 

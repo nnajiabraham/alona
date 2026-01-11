@@ -1,0 +1,1933 @@
+{
+  "builtTestProducts" : [
+    {
+      "binaryPath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.xctest/Contents/MacOS/AlonaPackageTests",
+      "packagePath" : "/Users/manlikeabro/Documents/repos/alona",
+      "productName" : "AlonaPackageTests"
+    }
+  ],
+  "copyCommands" : {
+
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.AlonaCore-arm64-apple-macosx15.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/sources",
+      "importPath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Models/AppState.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Models/TranscriptionResult.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/AudioCapturePermission.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/AudioRecorder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/CoreAudioUtils.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/MeetingDetector.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/MeetingFileManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/MeetingNotificationManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/MicrophoneActivityTracker.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/ModelManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/PermissionManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/ProcessTap.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/RecordingAudioPlayer.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/StartupWindowController.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/SummaryManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/TranscriptionEngine.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Views/MeetingDetectedPopup.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Views/MeetingNotesView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Views/MeetingPopupWindow.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Views/MenuBarView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Views/OnboardingView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Views/RecordingsBrowserView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Views/SettingsView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Views/StartupView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Views/TranscriptionProgressView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Views/TranscriptionQueueView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Modules/SwiftWhisper.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Modules/Inject.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "AlonaCore",
+      "moduleOutputPath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Modules/AlonaCore.swiftmodule",
+      "objects" : [
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/AppState.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/TranscriptionResult.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/AudioCapturePermission.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/AudioRecorder.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/CoreAudioUtils.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/MeetingDetector.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/MeetingFileManager.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/MeetingNotificationManager.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/MicrophoneActivityTracker.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/ModelManager.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/PermissionManager.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/ProcessTap.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/RecordingAudioPlayer.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/StartupWindowController.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/SummaryManager.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/TranscriptionEngine.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/MeetingDetectedPopup.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/MeetingNotesView.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/MeetingPopupWindow.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/MenuBarView.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/OnboardingView.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/RecordingsBrowserView.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/SettingsView.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/StartupView.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/TranscriptionProgressView.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/TranscriptionQueueView.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.2",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j12",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-Xcc",
+        "-fmodule-map-file=/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/whisper_cpp.build/module.modulemap",
+        "-Xcc",
+        "-I",
+        "-Xcc",
+        "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/whisper_cpp/include",
+        "-module-cache-path",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/include/AlonaCore-Swift.h",
+        "-swift-version",
+        "6",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "alona"
+      ],
+      "outputFileMapPath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/AppState.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/TranscriptionResult.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/AudioCapturePermission.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/AudioRecorder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/CoreAudioUtils.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/MeetingDetector.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/MeetingFileManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/MeetingNotificationManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/MicrophoneActivityTracker.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/ModelManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/PermissionManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/ProcessTap.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/RecordingAudioPlayer.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/StartupWindowController.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/SummaryManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/TranscriptionEngine.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/MeetingDetectedPopup.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/MeetingNotesView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/MeetingPopupWindow.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/MenuBarView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/OnboardingView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/RecordingsBrowserView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/SettingsView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/StartupView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/TranscriptionProgressView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/TranscriptionQueueView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Modules/AlonaCore.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Models/AppState.swift",
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Models/TranscriptionResult.swift",
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Services/AudioCapturePermission.swift",
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Services/AudioRecorder.swift",
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Services/CoreAudioUtils.swift",
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Services/MeetingDetector.swift",
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Services/MeetingFileManager.swift",
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Services/MeetingNotificationManager.swift",
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Services/MicrophoneActivityTracker.swift",
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Services/ModelManager.swift",
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Services/PermissionManager.swift",
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Services/ProcessTap.swift",
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Services/RecordingAudioPlayer.swift",
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Services/StartupWindowController.swift",
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Services/SummaryManager.swift",
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Services/TranscriptionEngine.swift",
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Views/MeetingDetectedPopup.swift",
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Views/MeetingNotesView.swift",
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Views/MeetingPopupWindow.swift",
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Views/MenuBarView.swift",
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Views/OnboardingView.swift",
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Views/RecordingsBrowserView.swift",
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Views/SettingsView.swift",
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Views/StartupView.swift",
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Views/TranscriptionProgressView.swift",
+        "/Users/manlikeabro/Documents/repos/alona/Alona/Views/TranscriptionQueueView.swift"
+      ],
+      "tempsPath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.AlonaPackageTests-arm64-apple-macosx15.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.build/sources",
+      "importPath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.derived/runner.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Modules/AlonaTests.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "AlonaPackageTests",
+      "moduleOutputPath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Modules/AlonaPackageTests.swiftmodule",
+      "objects" : [
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.build/runner.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.2",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j12",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-Xcc",
+        "-fmodule-map-file=/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/whisper_cpp.build/module.modulemap",
+        "-Xcc",
+        "-I",
+        "-Xcc",
+        "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/whisper_cpp/include",
+        "-module-cache-path",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.build/include/AlonaPackageTests-Swift.h",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "alona"
+      ],
+      "outputFileMapPath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Modules/AlonaPackageTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.derived/runner.swift"
+      ],
+      "tempsPath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.AlonaTests-arm64-apple-macosx15.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/sources",
+      "importPath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/AlonaTests/AppStateTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/AlonaTests/AudioTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/AlonaTests/MeetingDetectorTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/AlonaTests/MeetingFileManagerTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/AlonaTests/MicrophoneTrackerTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/AlonaTests/NotificationTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/AlonaTests/PermissionTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/AlonaTests/SummaryManagerTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/AlonaTests/TestHelpers.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/AlonaTests/TranscriptionTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/AlonaTests/WindowControllerTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Modules/AlonaCore.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "AlonaTests",
+      "moduleOutputPath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Modules/AlonaTests.swiftmodule",
+      "objects" : [
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/AppStateTests.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/AudioTests.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/MeetingDetectorTests.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/MeetingFileManagerTests.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/MicrophoneTrackerTests.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/NotificationTests.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/PermissionTests.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/SummaryManagerTests.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/TestHelpers.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/TranscriptionTests.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/WindowControllerTests.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.2",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j12",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-Xcc",
+        "-fmodule-map-file=/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/whisper_cpp.build/module.modulemap",
+        "-Xcc",
+        "-I",
+        "-Xcc",
+        "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/whisper_cpp/include",
+        "-module-cache-path",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-swift-version",
+        "6",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "alona"
+      ],
+      "outputFileMapPath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/AppStateTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/AudioTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/MeetingDetectorTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/MeetingFileManagerTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/MicrophoneTrackerTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/NotificationTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/PermissionTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/SummaryManagerTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/TestHelpers.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/TranscriptionTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/WindowControllerTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Modules/AlonaTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/manlikeabro/Documents/repos/alona/AlonaTests/AppStateTests.swift",
+        "/Users/manlikeabro/Documents/repos/alona/AlonaTests/AudioTests.swift",
+        "/Users/manlikeabro/Documents/repos/alona/AlonaTests/MeetingDetectorTests.swift",
+        "/Users/manlikeabro/Documents/repos/alona/AlonaTests/MeetingFileManagerTests.swift",
+        "/Users/manlikeabro/Documents/repos/alona/AlonaTests/MicrophoneTrackerTests.swift",
+        "/Users/manlikeabro/Documents/repos/alona/AlonaTests/NotificationTests.swift",
+        "/Users/manlikeabro/Documents/repos/alona/AlonaTests/PermissionTests.swift",
+        "/Users/manlikeabro/Documents/repos/alona/AlonaTests/SummaryManagerTests.swift",
+        "/Users/manlikeabro/Documents/repos/alona/AlonaTests/TestHelpers.swift",
+        "/Users/manlikeabro/Documents/repos/alona/AlonaTests/TranscriptionTests.swift",
+        "/Users/manlikeabro/Documents/repos/alona/AlonaTests/WindowControllerTests.swift"
+      ],
+      "tempsPath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.Inject-arm64-apple-macosx15.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Inject.build/sources",
+      "importPath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/Inject/Sources/Inject/InjectConfiguration.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/Inject/Sources/Inject/Integrations/Hosts.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/Inject/Sources/Inject/Integrations/KitFrameworks.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/Inject/Sources/Inject/Integrations/SwiftUI.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Inject.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "Inject",
+      "moduleOutputPath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Modules/Inject.swiftmodule",
+      "objects" : [
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Inject.build/InjectConfiguration.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Inject.build/Hosts.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Inject.build/KitFrameworks.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Inject.build/SwiftUI.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.15",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j12",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Inject.build/include/Inject-Swift.h",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-suppress-warnings"
+      ],
+      "outputFileMapPath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Inject.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Inject.build/InjectConfiguration.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Inject.build/Hosts.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Inject.build/KitFrameworks.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Inject.build/SwiftUI.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Modules/Inject.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/Inject/Sources/Inject/InjectConfiguration.swift",
+        "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/Inject/Sources/Inject/Integrations/Hosts.swift",
+        "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/Inject/Sources/Inject/Integrations/KitFrameworks.swift",
+        "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/Inject/Sources/Inject/Integrations/SwiftUI.swift"
+      ],
+      "tempsPath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Inject.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.SwiftWhisper-arm64-apple-macosx15.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/sources",
+      "importPath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/Segment.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/Whisper.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/WhisperDelegate.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/WhisperError.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/WhisperLanguage.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/WhisperParams.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/WhisperSamplingStrategy.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/whisper_cpp.build/coreml/whisper-encoder-impl.m.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/whisper_cpp.build/coreml/whisper-encoder.mm.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/whisper_cpp.build/ggml.c.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/whisper_cpp.build/whisper.cpp.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "SwiftWhisper",
+      "moduleOutputPath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Modules/SwiftWhisper.swiftmodule",
+      "objects" : [
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/Segment.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/Whisper.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/WhisperDelegate.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/WhisperError.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/WhisperLanguage.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/WhisperParams.swift.o",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/WhisperSamplingStrategy.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j12",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-Xcc",
+        "-fmodule-map-file=/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/whisper_cpp.build/module.modulemap",
+        "-Xcc",
+        "-I",
+        "-Xcc",
+        "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/whisper_cpp/include",
+        "-module-cache-path",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/include/SwiftWhisper-Swift.h",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-suppress-warnings"
+      ],
+      "outputFileMapPath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/Segment.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/Whisper.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/WhisperDelegate.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/WhisperError.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/WhisperLanguage.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/WhisperParams.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/WhisperSamplingStrategy.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Modules/SwiftWhisper.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/Segment.swift",
+        "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/Whisper.swift",
+        "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/WhisperDelegate.swift",
+        "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/WhisperError.swift",
+        "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/WhisperLanguage.swift",
+        "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/WhisperParams.swift",
+        "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/WhisperSamplingStrategy.swift"
+      ],
+      "tempsPath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build",
+      "wholeModuleOptimization" : false
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "AlonaCore" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "AlonaCore",
+      "-package-name",
+      "alona",
+      "-c",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Models/AppState.swift",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Models/TranscriptionResult.swift",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Services/AudioCapturePermission.swift",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Services/AudioRecorder.swift",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Services/CoreAudioUtils.swift",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Services/MeetingDetector.swift",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Services/MeetingFileManager.swift",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Services/MeetingNotificationManager.swift",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Services/MicrophoneActivityTracker.swift",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Services/ModelManager.swift",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Services/PermissionManager.swift",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Services/ProcessTap.swift",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Services/RecordingAudioPlayer.swift",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Services/StartupWindowController.swift",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Services/SummaryManager.swift",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Services/TranscriptionEngine.swift",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Views/MeetingDetectedPopup.swift",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Views/MeetingNotesView.swift",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Views/MeetingPopupWindow.swift",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Views/MenuBarView.swift",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Views/OnboardingView.swift",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Views/RecordingsBrowserView.swift",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Views/SettingsView.swift",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Views/StartupView.swift",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Views/TranscriptionProgressView.swift",
+      "/Users/manlikeabro/Documents/repos/alona/Alona/Views/TranscriptionQueueView.swift",
+      "-I",
+      "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.2",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j12",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-Xcc",
+      "-fmodule-map-file=/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/whisper_cpp.build/module.modulemap",
+      "-Xcc",
+      "-I",
+      "-Xcc",
+      "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/whisper_cpp/include",
+      "-module-cache-path",
+      "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/include/AlonaCore-Swift.h",
+      "-swift-version",
+      "6",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "alona",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "AlonaPackageTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "AlonaPackageTests",
+      "-package-name",
+      "alona",
+      "-c",
+      "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.derived/runner.swift",
+      "-I",
+      "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.2",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j12",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-Xcc",
+      "-fmodule-map-file=/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/whisper_cpp.build/module.modulemap",
+      "-Xcc",
+      "-I",
+      "-Xcc",
+      "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/whisper_cpp/include",
+      "-module-cache-path",
+      "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.build/include/AlonaPackageTests-Swift.h",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "alona",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "AlonaTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "AlonaTests",
+      "-package-name",
+      "alona",
+      "-c",
+      "/Users/manlikeabro/Documents/repos/alona/AlonaTests/AppStateTests.swift",
+      "/Users/manlikeabro/Documents/repos/alona/AlonaTests/AudioTests.swift",
+      "/Users/manlikeabro/Documents/repos/alona/AlonaTests/MeetingDetectorTests.swift",
+      "/Users/manlikeabro/Documents/repos/alona/AlonaTests/MeetingFileManagerTests.swift",
+      "/Users/manlikeabro/Documents/repos/alona/AlonaTests/MicrophoneTrackerTests.swift",
+      "/Users/manlikeabro/Documents/repos/alona/AlonaTests/NotificationTests.swift",
+      "/Users/manlikeabro/Documents/repos/alona/AlonaTests/PermissionTests.swift",
+      "/Users/manlikeabro/Documents/repos/alona/AlonaTests/SummaryManagerTests.swift",
+      "/Users/manlikeabro/Documents/repos/alona/AlonaTests/TestHelpers.swift",
+      "/Users/manlikeabro/Documents/repos/alona/AlonaTests/TranscriptionTests.swift",
+      "/Users/manlikeabro/Documents/repos/alona/AlonaTests/WindowControllerTests.swift",
+      "-I",
+      "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.2",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j12",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-Xcc",
+      "-fmodule-map-file=/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/whisper_cpp.build/module.modulemap",
+      "-Xcc",
+      "-I",
+      "-Xcc",
+      "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/whisper_cpp/include",
+      "-module-cache-path",
+      "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-swift-version",
+      "6",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "alona",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "Inject" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "Inject",
+      "-c",
+      "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/Inject/Sources/Inject/InjectConfiguration.swift",
+      "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/Inject/Sources/Inject/Integrations/Hosts.swift",
+      "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/Inject/Sources/Inject/Integrations/KitFrameworks.swift",
+      "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/Inject/Sources/Inject/Integrations/SwiftUI.swift",
+      "-I",
+      "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.15",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j12",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Inject.build/include/Inject-Swift.h",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-suppress-warnings",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "SwiftWhisper" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "SwiftWhisper",
+      "-c",
+      "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/Segment.swift",
+      "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/Whisper.swift",
+      "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/WhisperDelegate.swift",
+      "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/WhisperError.swift",
+      "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/WhisperLanguage.swift",
+      "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/WhisperParams.swift",
+      "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/WhisperSamplingStrategy.swift",
+      "-I",
+      "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j12",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-Xcc",
+      "-fmodule-map-file=/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/whisper_cpp.build/module.modulemap",
+      "-Xcc",
+      "-I",
+      "-Xcc",
+      "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/whisper_cpp/include",
+      "-module-cache-path",
+      "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/include/SwiftWhisper-Swift.h",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-suppress-warnings",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "AlonaCore" : [
+      "Inject",
+      "SwiftWhisper",
+      "whisper_cpp"
+    ],
+    "AlonaPackageTests" : [
+      "AlonaTests",
+      "AlonaCore",
+      "Inject",
+      "SwiftWhisper",
+      "whisper_cpp"
+    ],
+    "AlonaTests" : [
+      "AlonaCore",
+      "Inject",
+      "SwiftWhisper",
+      "whisper_cpp"
+    ],
+    "Inject" : [
+
+    ],
+    "SwiftWhisper" : [
+      "whisper_cpp"
+    ],
+    "whisper_cpp" : [
+
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+    "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.derived/runner.swift" : {
+      "inputs" : [
+
+      ],
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.derived/runner.swift"
+        }
+      ]
+    }
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Models/AppState.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Models/TranscriptionResult.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/AudioCapturePermission.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/AudioRecorder.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/CoreAudioUtils.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/MeetingDetector.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/MeetingFileManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/MeetingNotificationManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/MicrophoneActivityTracker.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/ModelManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/PermissionManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/ProcessTap.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/RecordingAudioPlayer.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/StartupWindowController.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/SummaryManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Services/TranscriptionEngine.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Views/MeetingDetectedPopup.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Views/MeetingNotesView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Views/MeetingPopupWindow.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Views/MenuBarView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Views/OnboardingView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Views/RecordingsBrowserView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Views/SettingsView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Views/StartupView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Views/TranscriptionProgressView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/Alona/Views/TranscriptionQueueView.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/sources"
+    },
+    "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.derived/runner.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.build/sources"
+    },
+    "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/AppState.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/AudioCapturePermission.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/AudioRecorder.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/CoreAudioUtils.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/MeetingDetectedPopup.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/MeetingDetector.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/MeetingFileManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/MeetingNotesView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/MeetingNotificationManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/MeetingPopupWindow.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/MenuBarView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/MicrophoneActivityTracker.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/ModelManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/OnboardingView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/PermissionManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/ProcessTap.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/RecordingAudioPlayer.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/RecordingsBrowserView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/SettingsView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/StartupView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/StartupWindowController.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/SummaryManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/TranscriptionEngine.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/TranscriptionProgressView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/TranscriptionQueueView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaCore.build/TranscriptionResult.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/AppStateTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/AudioTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/MeetingDetectorTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/MeetingFileManagerTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/MicrophoneTrackerTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/NotificationTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/PermissionTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/SummaryManagerTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/TestHelpers.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/TranscriptionTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/WindowControllerTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Inject.build/Hosts.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Inject.build/InjectConfiguration.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Inject.build/KitFrameworks.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Inject.build/SwiftUI.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/Segment.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/Whisper.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/WhisperDelegate.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/WhisperError.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/WhisperLanguage.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/WhisperParams.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/WhisperSamplingStrategy.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/whisper_cpp.build/coreml/whisper-encoder-impl.m.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/whisper_cpp.build/coreml/whisper-encoder.mm.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/whisper_cpp.build/ggml.c.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/whisper_cpp.build/whisper.cpp.o"
+        }
+      ],
+      "outputFilePath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaPackageTests.product/Objects.LinkFileList"
+    },
+    "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/AlonaTests/AppStateTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/AlonaTests/AudioTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/AlonaTests/MeetingDetectorTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/AlonaTests/MeetingFileManagerTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/AlonaTests/MicrophoneTrackerTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/AlonaTests/NotificationTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/AlonaTests/PermissionTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/AlonaTests/SummaryManagerTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/AlonaTests/TestHelpers.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/AlonaTests/TranscriptionTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/AlonaTests/WindowControllerTests.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/AlonaTests.build/sources"
+    },
+    "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Inject.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/Inject/Sources/Inject/InjectConfiguration.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/Inject/Sources/Inject/Integrations/Hosts.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/Inject/Sources/Inject/Integrations/KitFrameworks.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/Inject/Sources/Inject/Integrations/SwiftUI.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Inject.build/sources"
+    },
+    "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/Segment.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/Whisper.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/WhisperDelegate.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/WhisperError.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/WhisperLanguage.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/WhisperParams.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/SwiftWhisper/WhisperSamplingStrategy.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/SwiftWhisper.build/sources"
+    },
+    "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+    }
+  }
+}

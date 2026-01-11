@@ -1,7 +1,7 @@
 import Foundation
 import UserNotifications
 import XCTest
-@testable import Alona
+@testable import AlonaCore
 
 // MARK: - MeetingNotificationManager Tests
 

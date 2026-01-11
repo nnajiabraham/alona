@@ -1,0 +1,3 @@
+module Inject {
+    header "/Users/manlikeabro/Documents/repos/alona/.build/arm64-apple-macosx/debug/Inject.build/include/Inject-Swift.h"
+}
