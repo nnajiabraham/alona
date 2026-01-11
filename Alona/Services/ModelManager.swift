@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import OSLog
 
@@ -339,8 +340,14 @@ final class WhisperModelManager {
     /// Download activity log (visible to user)
     var downloadLogs: [DownloadLogEntry] = []
 
-    /// Active download tasks
+    /// Active download tasks (Swift concurrency)
     private var downloadTasks: [WhisperModel: Task<Void, Never>] = [:]
+
+    /// Active URLSession download tasks
+    private var activeDownloads: [WhisperModel: URLSessionDownloadTask] = [:]
+
+    /// Download delegate handler
+    private var downloadDelegate: ModelDownloadDelegate?
 
     /// Maximum log entries to keep
     private let maxLogEntries = 100
@@ -399,7 +406,7 @@ final class WhisperModelManager {
 
     /// Start downloading a model
     func downloadModel(_ model: WhisperModel) {
-        guard self.downloadTasks[model] == nil else {
+        guard self.activeDownloads[model] == nil else {
             self.logger.info("Download already in progress for \(model.displayName)")
             self.addLog("Download already in progress", type: .warning)
             return
@@ -407,48 +414,50 @@ final class WhisperModelManager {
 
         self.logger.info("Starting download of \(model.displayName) (\(model.formattedSize))")
         self.addLog("Starting download: \(model.displayName) (\(model.formattedSize))", type: .info)
+        self.addLog("URL: \(model.downloadURL.absoluteString)", type: .info)
 
         let expectedBytes = Int64(model.sizeInMB) * 1024 * 1024
         let initialInfo = DownloadInfo.initial(totalBytes: expectedBytes)
         self.modelStatuses[model] = .downloading(progress: 0, info: initialInfo)
 
-        self.downloadTasks[model] = Task {
-            do {
-                let (tempURL, _) = try await self.downloadWithProgress(model: model)
-
-                await MainActor.run {
-                    self.addLog("Saving model to disk...", type: .info)
-                }
-
-                try ModelLocator.persistUserModel(from: tempURL, for: model)
-
-                await MainActor.run {
-                    self.modelStatuses[model] = .available
-                    self.downloadTasks[model] = nil
-                    self.logger.info("Successfully downloaded \(model.displayName)")
-                    self.addLog("✓ Download complete: \(model.displayName)", type: .success)
-                }
-            } catch is CancellationError {
-                await MainActor.run {
-                    self.modelStatuses[model] = .notDownloaded
-                    self.downloadTasks[model] = nil
-                    self.addLog("Download cancelled", type: .warning)
-                }
-            } catch {
-                await MainActor.run {
-                    self.modelStatuses[model] = .failed(error.localizedDescription)
-                    self.downloadTasks[model] = nil
-                    self.logger.error("Failed to download \(model.displayName): \(error.localizedDescription)")
-                    self.addLog("✗ Error: \(error.localizedDescription)", type: .error)
-                }
-            }
+        // Create download delegate if needed
+        if self.downloadDelegate == nil {
+            self.downloadDelegate = ModelDownloadDelegate(manager: self)
         }
+
+        // Configure session with longer timeouts for large files
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = 60 // 60s for initial response
+        config.timeoutIntervalForResource = 3600 // 1 hour for full download
+        config.httpMaximumConnectionsPerHost = 1
+        config.allowsExpensiveNetworkAccess = true
+        config.allowsConstrainedNetworkAccess = true
+
+        let session = URLSession(
+            configuration: config,
+            delegate: self.downloadDelegate,
+            delegateQueue: nil)
+
+        var request = URLRequest(url: model.downloadURL)
+        request.httpMethod = "GET"
+        // Add user agent to avoid potential CDN issues
+        request.setValue("Alona/1.0 (macOS)", forHTTPHeaderField: "User-Agent")
+
+        let task = session.downloadTask(with: request)
+        self.activeDownloads[model] = task
+        self.downloadDelegate?.registerDownload(task: task, for: model)
+
+        self.addLog("Connecting to \(model.downloadURL.host ?? "server")...", type: .info)
+        task.resume()
     }
 
     /// Cancel an in-progress download
     func cancelDownload(_ model: WhisperModel) {
-        self.downloadTasks[model]?.cancel()
-        self.downloadTasks[model] = nil
+        if let task = self.activeDownloads[model] {
+            task.cancel()
+            self.downloadDelegate?.unregisterDownload(for: model)
+        }
+        self.activeDownloads[model] = nil
         self.modelStatuses[model] = .notDownloaded
         self.logger.info("Cancelled download of \(model.displayName)")
         self.addLog("Cancelled download of \(model.displayName)", type: .warning)
@@ -472,8 +481,64 @@ final class WhisperModelManager {
         self.downloadLogs.removeAll()
     }
 
+    // MARK: - Internal Callbacks (from delegate)
+
+    func handleDownloadProgress(
+        for model: WhisperModel,
+        bytesWritten: Int64,
+        totalBytesWritten: Int64,
+        totalBytesExpected: Int64,
+        startTime: Date) {
+        let now = Date()
+        let elapsed = now.timeIntervalSince(startTime)
+        let bytesPerSecond = elapsed > 0 ? Double(totalBytesWritten) / elapsed : 0
+        let progress = totalBytesExpected > 0 ? Double(totalBytesWritten) / Double(totalBytesExpected) : 0
+
+        let info = DownloadInfo(
+            bytesDownloaded: totalBytesWritten,
+            totalBytes: totalBytesExpected,
+            bytesPerSecond: bytesPerSecond,
+            startTime: startTime,
+            lastUpdateTime: now)
+
+        self.modelStatuses[model] = .downloading(progress: progress, info: info)
+    }
+
+    func handleDownloadLog(for _: WhisperModel, message: String, type: DownloadLogEntry.LogType) {
+        self.addLog(message, type: type)
+    }
+
+    func handleDownloadComplete(for model: WhisperModel, tempURL: URL, startTime: Date) {
+        do {
+            self.addLog("Saving model to disk...", type: .info)
+            try ModelLocator.persistUserModel(from: tempURL, for: model)
+
+            let elapsed = Date().timeIntervalSince(startTime)
+            let avgSpeed = elapsed > 0 ? Double(model.sizeInMB * 1024 * 1024) / elapsed : 0
+            let time = String(format: "%.1f", elapsed)
+            let speed = ByteCountFormatter.string(fromByteCount: Int64(avgSpeed), countStyle: .file)
+
+            self.modelStatuses[model] = .available
+            self.activeDownloads[model] = nil
+            self.logger.info("Successfully downloaded \(model.displayName)")
+            self.addLog("✓ Complete in \(time)s (avg \(speed)/s)", type: .success)
+        } catch {
+            self.modelStatuses[model] = .failed(error.localizedDescription)
+            self.activeDownloads[model] = nil
+            self.logger.error("Failed to save \(model.displayName): \(error.localizedDescription)")
+            self.addLog("✗ Failed to save: \(error.localizedDescription)", type: .error)
+        }
+    }
+
+    func handleDownloadError(for model: WhisperModel, error: Error) {
+        self.modelStatuses[model] = .failed(error.localizedDescription)
+        self.activeDownloads[model] = nil
+        self.logger.error("Download failed for \(model.displayName): \(error.localizedDescription)")
+        self.addLog("✗ Error: \(error.localizedDescription)", type: .error)
+    }
+
     /// Add a log entry
-    private func addLog(_ message: String, type: DownloadLogEntry.LogType) {
+    func addLog(_ message: String, type: DownloadLogEntry.LogType) {
         let entry = DownloadLogEntry(timestamp: Date(), message: message, type: type)
         self.downloadLogs.append(entry)
         // Keep log size manageable
@@ -481,134 +546,175 @@ final class WhisperModelManager {
             self.downloadLogs.removeFirst(self.downloadLogs.count - self.maxLogEntries)
         }
     }
+}
 
-    // MARK: - Private Helpers
+// MARK: - Download Delegate
 
-    private func downloadWithProgress(model: WhisperModel) async throws -> (URL, URLResponse) {
-        await MainActor.run {
-            self.addLog("Connecting to \(model.downloadURL.host ?? "server")...", type: .info)
+/// Handles URLSession download delegate callbacks
+final class ModelDownloadDelegate: NSObject, URLSessionDownloadDelegate, @unchecked Sendable {
+    private weak var manager: WhisperModelManager?
+    private var taskModelMap: [Int: WhisperModel] = [:] // taskIdentifier -> Model
+    private var taskStartTimes: [Int: Date] = [:]
+    private var lastLogPercent: [Int: Int] = [:]
+    private let lock = NSLock()
+
+    init(manager: WhisperModelManager) {
+        self.manager = manager
+        super.init()
+    }
+
+    func registerDownload(task: URLSessionDownloadTask, for model: WhisperModel) {
+        self.lock.lock()
+        defer { self.lock.unlock() }
+        self.taskModelMap[task.taskIdentifier] = model
+        self.taskStartTimes[task.taskIdentifier] = Date()
+        self.lastLogPercent[task.taskIdentifier] = -1
+    }
+
+    func unregisterDownload(for model: WhisperModel) {
+        self.lock.lock()
+        defer { self.lock.unlock() }
+        if let taskId = self.taskModelMap.first(where: { $0.value == model })?.key {
+            self.taskModelMap.removeValue(forKey: taskId)
+            self.taskStartTimes.removeValue(forKey: taskId)
+            self.lastLogPercent.removeValue(forKey: taskId)
         }
+    }
 
-        var request = URLRequest(url: model.downloadURL)
-        request.timeoutInterval = 30
+    private func model(for task: URLSessionTask) -> WhisperModel? {
+        self.lock.lock()
+        defer { self.lock.unlock() }
+        return self.taskModelMap[task.taskIdentifier]
+    }
 
-        let (asyncBytes, response) = try await URLSession.shared.bytes(for: request)
+    private func startTime(for task: URLSessionTask) -> Date {
+        self.lock.lock()
+        defer { self.lock.unlock() }
+        return self.taskStartTimes[task.taskIdentifier] ?? Date()
+    }
 
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw URLError(.badServerResponse)
-        }
+    // MARK: - URLSessionDownloadDelegate
 
-        await MainActor.run {
-            self.addLog("Connected (HTTP \(httpResponse.statusCode))", type: .info)
-        }
+    func urlSession(
+        _: URLSession,
+        downloadTask: URLSessionDownloadTask,
+        didFinishDownloadingTo location: URL) {
+        guard let model = self.model(for: downloadTask) else { return }
+        let start = self.startTime(for: downloadTask)
 
-        guard (200...299).contains(httpResponse.statusCode) else {
-            throw URLError(.badServerResponse)
-        }
-
-        let expectedLength = response.expectedContentLength
-        var receivedLength: Int64 = 0
-        let startTime = Date()
-        var lastLogTime = startTime
-        var lastLogBytes: Int64 = 0
-
-        await MainActor.run {
-            let total = ByteCountFormatter.string(fromByteCount: expectedLength, countStyle: .file)
-            self.addLog("Downloading \(total)...", type: .info)
-        }
-
-        let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent(model.fullFileName)
-
-        // Remove existing temp file if present
+        // Copy to temp location before delegate cleanup
+        let tempURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent("\(model.fullFileName).download")
         try? FileManager.default.removeItem(at: tempURL)
+        try? FileManager.default.copyItem(at: location, to: tempURL)
 
-        guard let outputStream = OutputStream(url: tempURL, append: false) else {
-            throw URLError(.cannotCreateFile)
+        DispatchQueue.main.async { [weak self] in
+            self?.manager?.handleDownloadComplete(for: model, tempURL: tempURL, startTime: start)
+            self?.unregisterDownload(for: model)
         }
-        outputStream.open()
-        defer { outputStream.close() }
+    }
 
-        // Use larger buffer for efficiency (1MB)
-        let bufferSize = 1024 * 1024
-        var buffer = [UInt8](repeating: 0, count: bufferSize)
-        var bufferIndex = 0
+    func urlSession(
+        _: URLSession,
+        downloadTask: URLSessionDownloadTask,
+        didWriteData bytesWritten: Int64,
+        totalBytesWritten: Int64,
+        totalBytesExpectedToWrite: Int64) {
+        guard let model = self.model(for: downloadTask) else { return }
+        let start = self.startTime(for: downloadTask)
 
-        // Progress update interval (update every ~1 second or 1MB, whichever comes first)
-        let progressUpdateInterval: TimeInterval = 1.0
+        // Calculate progress for logging
+        let progress = totalBytesExpectedToWrite > 0
+            ? Double(totalBytesWritten) / Double(totalBytesExpectedToWrite)
+            : 0
+        let currentPercent = Int(progress * 100)
 
-        for try await byte in asyncBytes {
-            try Task.checkCancellation()
+        self.lock.lock()
+        let lastPercent = self.lastLogPercent[downloadTask.taskIdentifier] ?? -1
+        let shouldLog = currentPercent / 10 > lastPercent / 10
+        if shouldLog {
+            self.lastLogPercent[downloadTask.taskIdentifier] = currentPercent
+        }
+        self.lock.unlock()
 
-            buffer[bufferIndex] = byte
-            bufferIndex += 1
+        DispatchQueue.main.async { [weak self] in
+            self?.manager?.handleDownloadProgress(
+                for: model,
+                bytesWritten: bytesWritten,
+                totalBytesWritten: totalBytesWritten,
+                totalBytesExpected: totalBytesExpectedToWrite,
+                startTime: start)
 
-            if bufferIndex == bufferSize {
-                outputStream.write(buffer, maxLength: bufferIndex)
-                receivedLength += Int64(bufferIndex)
-                bufferIndex = 0
-
-                let now = Date()
-                let elapsed = now.timeIntervalSince(lastLogTime)
-
-                // Update progress and log periodically
-                if elapsed >= progressUpdateInterval {
-                    let totalElapsed = now.timeIntervalSince(startTime)
-                    let bytesPerSecond = totalElapsed > 0 ? Double(receivedLength) / totalElapsed : 0
-                    let progress = expectedLength > 0 ? Double(receivedLength) / Double(expectedLength) : 0
-
-                    let info = DownloadInfo(
-                        bytesDownloaded: receivedLength,
-                        totalBytes: expectedLength,
-                        bytesPerSecond: bytesPerSecond,
-                        startTime: startTime,
-                        lastUpdateTime: now)
-
-                    await MainActor.run {
-                        self.modelStatuses[model] = .downloading(progress: progress, info: info)
-
-                        // Log progress every ~10%
-                        let currentPercent = Int(progress * 100)
-                        let lastPercent = expectedLength > 0
-                            ? Int((Double(lastLogBytes) / Double(expectedLength)) * 100)
-                            : 0
-                        if currentPercent / 10 > lastPercent / 10 || elapsed >= 5.0 {
-                            let downloaded = ByteCountFormatter
-                                .string(fromByteCount: receivedLength, countStyle: .file)
-                            let speed = ByteCountFormatter
-                                .string(fromByteCount: Int64(bytesPerSecond), countStyle: .file)
-                            self.addLog("\(currentPercent)% - \(downloaded) @ \(speed)/s", type: .progress)
-                        }
-                    }
-
-                    lastLogTime = now
-                    lastLogBytes = receivedLength
-                }
+            // Log at 10% intervals
+            if shouldLog {
+                let elapsed = Date().timeIntervalSince(start)
+                let speed = elapsed > 0 ? Double(totalBytesWritten) / elapsed : 0
+                let downloaded = ByteCountFormatter
+                    .string(fromByteCount: totalBytesWritten, countStyle: .file)
+                let speedStr = ByteCountFormatter
+                    .string(fromByteCount: Int64(speed), countStyle: .file)
+                self?.manager?.handleDownloadLog(
+                    for: model,
+                    message: "\(currentPercent)% - \(downloaded) @ \(speedStr)/s",
+                    type: .progress)
             }
         }
+    }
 
-        // Write remaining bytes
-        if bufferIndex > 0 {
-            outputStream.write(buffer, maxLength: bufferIndex)
-            receivedLength += Int64(bufferIndex)
+    func urlSession(_: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        guard let model = self.model(for: task) else { return }
+
+        if let error {
+            // Check if it's a cancellation
+            let nsError = error as NSError
+            if nsError.code == NSURLErrorCancelled {
+                // Already handled by cancelDownload()
+                return
+            }
+
+            DispatchQueue.main.async { [weak self] in
+                self?.manager?.handleDownloadError(for: model, error: error)
+                self?.unregisterDownload(for: model)
+            }
         }
+    }
 
-        let totalTime = Date().timeIntervalSince(startTime)
-        let avgSpeed = totalTime > 0 ? Double(receivedLength) / totalTime : 0
-
-        let finalInfo = DownloadInfo(
-            bytesDownloaded: receivedLength,
-            totalBytes: expectedLength,
-            bytesPerSecond: avgSpeed,
-            startTime: startTime,
-            lastUpdateTime: Date())
-
-        await MainActor.run {
-            self.modelStatuses[model] = .downloading(progress: 1.0, info: finalInfo)
-            let time = String(format: "%.1f", totalTime)
-            let speed = ByteCountFormatter.string(fromByteCount: Int64(avgSpeed), countStyle: .file)
-            self.addLog("Download finished in \(time)s (avg \(speed)/s)", type: .success)
+    func urlSession(
+        _: URLSession,
+        task: URLSessionTask,
+        didReceive challenge: URLAuthenticationChallenge,
+        completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        // Accept server trust for HTTPS
+        if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust,
+           let serverTrust = challenge.protectionSpace.serverTrust {
+            completionHandler(.useCredential, URLCredential(trust: serverTrust))
+        } else {
+            completionHandler(.performDefaultHandling, nil)
         }
+    }
 
-        return (tempURL, response)
+    // Log when response is received
+    func urlSession(
+        _: URLSession,
+        dataTask: URLSessionDataTask,
+        didReceive response: URLResponse,
+        completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
+        if let httpResponse = response as? HTTPURLResponse,
+           let model = self.model(for: dataTask) {
+            DispatchQueue.main.async { [weak self] in
+                self?.manager?.handleDownloadLog(
+                    for: model,
+                    message: "Connected (HTTP \(httpResponse.statusCode))",
+                    type: .info)
+
+                let total = ByteCountFormatter
+                    .string(fromByteCount: response.expectedContentLength, countStyle: .file)
+                self?.manager?.handleDownloadLog(
+                    for: model,
+                    message: "Downloading \(total)...",
+                    type: .info)
+            }
+        }
+        completionHandler(.allow)
     }
 }
