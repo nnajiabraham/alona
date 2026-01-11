@@ -23,6 +23,11 @@ xcuserdata/
 *.xcworkspace/xcuserdata
 build/
 
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved
+
 # Python / virtual envs
 .venv/
 __pycache__/

@@ -1,4 +1,0 @@
-module whisper_cpp {
-    umbrella "/Users/manlikeabro/Documents/repos/alona/.build/checkouts/SwiftWhisper/Sources/whisper_cpp/include"
-    export *
-}
