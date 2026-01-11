@@ -204,8 +204,13 @@ final class AppStateTests: XCTestCase {
         XCTAssertNil(appState.dismissedDetectionIdentifier)
     }
 
-    func testNotesDraftDefaultsEmpty() {
-        let appState = AppState()
+    func testNotesDraftDefaultsEmpty() throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        let appState = AppState(
+            meetingFileManager: harness.manager,
+            observeNotifications: false)
         XCTAssertEqual(appState.notesDraft, "")
         appState.notesDraft = "Meeting notes"
         XCTAssertEqual(appState.notesDraft, "Meeting notes")

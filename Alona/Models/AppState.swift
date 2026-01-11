@@ -48,6 +48,9 @@ final class AppState {
     @ObservationIgnored private var activeUIJobID: UUID?
     @ObservationIgnored private var lastSavedNotesDraft: String = ""
 
+    /// Whether this AppState should react to system notifications (disabled during tests)
+    @ObservationIgnored private let observeNotifications: Bool
+
     init(
         meetingFileManager manager: MeetingFileManager = MeetingFileManager(),
         audioRecorder: AudioRecordingController? = nil,
@@ -56,7 +59,8 @@ final class AppState {
         notesAutosaveInterval: TimeInterval = 2.0,
         notesAutosaveScheduler: DispatchQueue = .main,
         userDefaults: UserDefaults = .standard,
-        nowProvider: @escaping () -> Date = Date.init) {
+        nowProvider: @escaping () -> Date = Date.init,
+        observeNotifications: Bool = true) {
         self.meetingFileManager = manager
         let recorder = audioRecorder ?? AudioRecorder(meetingFileManager: manager)
         self.audioRecorder = recorder
@@ -68,6 +72,7 @@ final class AppState {
         self.saveDirectory = manager.baseDirectory
         self.userDefaults = userDefaults
         self.nowProvider = nowProvider
+        self.observeNotifications = observeNotifications
 
         let storedCapture = userDefaults.object(forKey: Self.captureSystemAudioDefaultsKey) as? Bool ?? false
         self.captureSystemAudio = storedCapture
@@ -96,16 +101,20 @@ final class AppState {
 
         // Notes autosave is now handled via didSet + Task-based debouncing (see scheduleNotesAutosave)
 
-        self.notificationActionCancellable = NotificationCenter.default
-            .publisher(for: .meetingNotificationStartRecording)
-            .receive(on: RunLoop.main)
-            .sink { [weak self] notification in
-                guard let self, !self.isRecording else { return }
-                let title = notification.userInfo?["meetingTitle"] as? String
-                Task {
-                    await self.startRecording(meetingTitleOverride: title)
+        // Only subscribe to notifications in production, not during tests
+        // (Tests post notifications that would trigger real recordings in the test host)
+        if observeNotifications {
+            self.notificationActionCancellable = NotificationCenter.default
+                .publisher(for: .meetingNotificationStartRecording)
+                .receive(on: RunLoop.main)
+                .sink { [weak self] notification in
+                    guard let self, !self.isRecording else { return }
+                    let title = notification.userInfo?["meetingTitle"] as? String
+                    Task {
+                        await self.startRecording(meetingTitleOverride: title)
+                    }
                 }
-            }
+        }
     }
 
     func updateSaveDirectory(_ url: URL) {

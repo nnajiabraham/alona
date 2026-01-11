@@ -562,3 +562,26 @@ final class AudioRecorder: @unchecked Sendable {
 **Tests:** All 92 tests pass. **Lint:** Clean.
 
 ---
+
+#### Bug Fix: Tests Creating Production Recordings (2025-01-02)
+
+**Issue:** Running `make test` created recording directories (e.g., "Test Meeting") in the production `~/Documents/Alona/` directory, polluting real user data.
+
+**Root Cause:** The notification test `testMeetingNotificationPostsCorrectly()` posts a real `.meetingNotificationStartRecording` notification:
+
+```swift
+NotificationCenter.default.post(name: .meetingNotificationStartRecording, ...)
+```
+
+Since tests run hosted in the real app, the app's **real AppState** received this notification and started an actual recording with title "Test Meeting".
+
+**Fix:**
+1. Added `observeNotifications: Bool` parameter to `AppState.init()` (defaults to `true`)
+2. Updated `AlonaApp` to pass `observeNotifications: false` when `XCTestConfigurationFilePath` is present
+3. Updated `testNotesDraftDefaultsEmpty` to use the test harness instead of bare `AppState()`
+
+**Result:** Tests no longer create recordings in production directory.
+
+**Tests:** All 92 tests pass. **Lint:** Clean.
+
+---

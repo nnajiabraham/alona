@@ -3,7 +3,7 @@ import SwiftUI
 @main
 struct AlonaApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
-    @State private var appState = AppState()
+    @State private var appState: AppState
     @State private var permissionManager = PermissionManager()
     @State private var meetingDetector: MeetingDetector
     // Use a State binding to ensure menu bar extra is always visible
@@ -12,9 +12,15 @@ struct AlonaApp: App {
     private let isRunningTests = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
 
     init() {
+        let isTest = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+
+        // Disable notification observer during tests to prevent test notifications
+        // from triggering real recordings in the production directory
+        _appState = State(initialValue: AppState(observeNotifications: !isTest))
+
         let detector = MeetingDetector()
         _meetingDetector = State(initialValue: detector)
-        if !self.isRunningTests {
+        if !isTest {
             detector.startMonitoring()
         }
     }
