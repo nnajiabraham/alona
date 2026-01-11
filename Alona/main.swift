@@ -8,17 +8,20 @@ import SwiftUI
 let isRunningTests = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
 
 if isRunningTests {
-    // Minimal AppKit app for hosted tests - no SwiftUI, no windows
-    print("🧪 main.swift: Running in test mode - using minimal AppKit app")
+    // For hosted tests, XCTest injects the test bundle and runs tests
+    // We just need to set up NSApplication minimally and let XCTest drive
+    print("🧪 main.swift: Test mode - minimal AppKit setup")
 
-    // Create a minimal application
     let app = NSApplication.shared
-    app.setActivationPolicy(.accessory)
+    app.setActivationPolicy(.accessory) // No dock icon, no menu bar
 
-    // Set up a minimal delegate that does nothing
-    class MinimalAppDelegate: NSObject, NSApplicationDelegate {
+    class TestAppDelegate: NSObject, NSApplicationDelegate {
         func applicationDidFinishLaunching(_: Notification) {
-            print("🧪 MinimalAppDelegate: App launched for tests")
+            print("🧪 TestAppDelegate: Launched, XCTest will inject tests")
+            // Post notification that app is ready - XCTest waits for this
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: NSApplication.didFinishLaunchingNotification, object: NSApp)
+            }
         }
 
         func applicationShouldTerminateAfterLastWindowClosed(_: NSApplication) -> Bool {
@@ -26,14 +29,13 @@ if isRunningTests {
         }
     }
 
-    let delegate = MinimalAppDelegate()
+    let delegate = TestAppDelegate()
     app.delegate = delegate
 
-    print("🧪 main.swift: Starting minimal run loop for tests")
-    // Run the app - XCTest will inject tests and drive execution
-    app.run()
+    // Use NSApplicationMain for proper XCTest integration
+    // This allows XCTest to inject the test bundle
+    _ = NSApplicationMain(CommandLine.argc, CommandLine.unsafeArgv)
 } else {
     // Normal SwiftUI app launch
-    print("🚀 main.swift: Running normal SwiftUI app")
     AlonaApp.main()
 }
