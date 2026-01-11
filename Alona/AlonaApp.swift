@@ -1,4 +1,7 @@
+import OSLog
 import SwiftUI
+
+private let appLogger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "Alona", category: "AlonaApp")
 
 @main
 struct AlonaApp: App {
@@ -16,21 +19,32 @@ struct AlonaApp: App {
         let isTest = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
         self.isRunningTests = isTest
 
+        // Log startup for debugging CI issues
+        print("🚀 AlonaApp.init() starting, isTest=\(isTest)")
+        appLogger.info("🚀 AlonaApp.init() starting, isTest=\(isTest)")
+
         // Disable notification observer during tests to prevent test notifications
         // from triggering real recordings in the production directory
+        print("🚀 AlonaApp.init() creating AppState...")
         _appState = State(initialValue: AppState(observeNotifications: !isTest))
+        print("🚀 AlonaApp.init() AppState created")
 
         // Skip permission manager initialization during tests (avoids AppleScript/TCC calls)
+        print("🚀 AlonaApp.init() creating PermissionManager...")
         _permissionManager = State(initialValue: isTest ? PermissionManager(skipRefresh: true) : PermissionManager())
+        print("🚀 AlonaApp.init() PermissionManager created")
 
         // Hide menu bar extra during tests
         _showMenuBarExtra = State(initialValue: !isTest)
 
+        print("🚀 AlonaApp.init() creating MeetingDetector...")
         let detector = MeetingDetector()
         _meetingDetector = State(initialValue: detector)
         if !isTest {
             detector.startMonitoring()
         }
+        print("🚀 AlonaApp.init() complete")
+        appLogger.info("🚀 AlonaApp.init() complete")
     }
 
     var body: some Scene {
