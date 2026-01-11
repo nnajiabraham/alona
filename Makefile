@@ -51,14 +51,8 @@ build:
 		build | $(PIPE_CMD)
 
 test:
-	@killall Alona 2>/dev/null || true; \
-	set -o pipefail && xcodebuild \
-		-workspace $(WORKSPACE) \
-		-scheme $(SCHEME) \
-		-configuration $(CONFIGURATION) \
-		-derivedDataPath $(DERIVED_DATA_PATH) \
-		-destination $(DESTINATION) \
-		test | $(PIPE_CMD)
+	@killall Alona 2>/dev/null || true
+	swift test --parallel
 
 lint:
 ifeq ($(SWIFTFORMAT),)
