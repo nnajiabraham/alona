@@ -4,12 +4,12 @@ import SwiftUI
 struct AlonaApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @State private var appState: AppState
-    @State private var permissionManager = PermissionManager()
+    @State private var permissionManager: PermissionManager
     @State private var meetingDetector: MeetingDetector
     // Use a State binding to ensure menu bar extra is always visible
     // (Previously @AppStorage could cause the binding to become false unexpectedly)
-    @State private var showMenuBarExtra = true
-    private let isRunningTests = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+    // During tests, hide menu bar extra to avoid UI issues on CI
+    @State private var showMenuBarExtra: Bool
 
     init() {
         let isTest = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
@@ -17,6 +17,12 @@ struct AlonaApp: App {
         // Disable notification observer during tests to prevent test notifications
         // from triggering real recordings in the production directory
         _appState = State(initialValue: AppState(observeNotifications: !isTest))
+
+        // Skip permission manager initialization during tests (avoids AppleScript/TCC calls)
+        _permissionManager = State(initialValue: isTest ? PermissionManager(skipRefresh: true) : PermissionManager())
+
+        // Hide menu bar extra during tests
+        _showMenuBarExtra = State(initialValue: !isTest)
 
         let detector = MeetingDetector()
         _meetingDetector = State(initialValue: detector)
@@ -40,6 +46,7 @@ struct AlonaApp: App {
         }
 
         // Menu bar extra with isInserted binding allows coexistence with WindowGroup
+        // During tests, isInserted=false prevents menu bar from showing
         MenuBarExtra("Alona", systemImage: "note.text", isInserted: self.$showMenuBarExtra) {
             MenuBarView()
                 .environment(self.appState)

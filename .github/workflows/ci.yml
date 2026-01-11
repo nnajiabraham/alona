@@ -52,11 +52,17 @@ jobs:
       - name: Test
         run: |
           set -o pipefail
+          # Use -parallel-testing-enabled NO to avoid race conditions in headless env
+          # Use -test-timeouts-enabled YES with shorter timeouts to fail fast on hangs
+          # The TEST_HOST app (Alona.app) launches during tests - ensure it doesn't block
           xcodebuild \
             -workspace Alona.xcworkspace \
             -scheme Alona \
             -configuration Debug \
             -destination 'platform=macOS,arch=arm64' \
             -derivedDataPath DerivedData \
+            -parallel-testing-enabled NO \
+            -maximum-test-execution-time-allowance 60 \
             test \
             | xcbeautify
+        timeout-minutes: 10

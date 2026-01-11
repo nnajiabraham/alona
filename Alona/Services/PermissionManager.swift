@@ -69,10 +69,15 @@ final class PermissionManager {
     private(set) var statuses: [PermissionType: PermissionStatus] = [:]
     var lastAutomationCheckError: Error?
 
-    init() {
+    /// Initialize PermissionManager.
+    /// - Parameter skipRefresh: If true, skip permission checks on init (for tests/CI)
+    init(skipRefresh: Bool = false) {
         PermissionType.allCases.forEach { self.statuses[$0] = .notDetermined }
         // Refresh permissions on init so UI shows current status immediately
-        self.refreshAllPermissions()
+        // Skip during tests to avoid AppleScript execution that hangs on CI
+        if !skipRefresh {
+            self.refreshAllPermissions()
+        }
     }
 
     func refreshAllPermissions() {
