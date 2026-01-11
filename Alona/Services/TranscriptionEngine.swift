@@ -28,6 +28,9 @@ final class TranscriptionEngine: TranscriptionProcessing, @unchecked Sendable {
     private var activeTranscriptions = 0
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "Alona", category: "TranscriptionEngine")
 
+    /// Currently loaded model (if any)
+    private var loadedModel: WhisperModel?
+
     /// Time after which the model is unloaded if idle (default: 2 minutes)
     private let idleUnloadInterval: TimeInterval = 120
 
@@ -123,12 +126,33 @@ extension TranscriptionEngine: WhisperDelegate {
 }
 
 extension TranscriptionEngine {
-    private func loadModelIfNeeded() throws {
-        guard self.whisper == nil else { return }
-        guard let url = ModelLocator.existingModelURL() else {
+    /// Load model from a specific URL (call from MainActor context)
+    @MainActor
+    func loadModel(for model: WhisperModel) throws {
+        guard let url = ModelLocator.existingModelURL(for: model) else {
             throw TranscriptionError.modelNotFound
         }
+        // Unload existing model if different
+        if self.loadedModel != model {
+            self.whisper = nil
+            self.loadedModel = nil
+        }
+        guard self.whisper == nil else { return }
         self.whisper = Whisper(fromFileURL: url)
+        self.loadedModel = model
+    }
+
+    private func loadModelIfNeeded() throws {
+        guard self.whisper == nil else { return }
+        // Try to find any available model
+        for model in WhisperModel.allCases {
+            if let url = ModelLocator.existingModelURL(for: model) {
+                self.whisper = Whisper(fromFileURL: url)
+                self.loadedModel = model
+                return
+            }
+        }
+        throw TranscriptionError.modelNotFound
     }
 
     private func convertAudioToPCM(url: URL) async throws -> [Float] {

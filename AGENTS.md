@@ -218,11 +218,48 @@ Permission handling is in `Services/PermissionManager.swift`.
 
 ## Whisper Model
 
-The app uses `ggml-base.en.bin` for transcription:
+The app supports multiple Whisper models with **large-v3-turbo** as the default:
+
+| Model | Size | Speed | Quality |
+|-------|------|-------|---------|
+| tiny.en | 75 MB | ~10x | Basic |
+| base.en | 142 MB | ~7x | Good |
+| small.en | 466 MB | ~4x | Better |
+| **large-v3-turbo** | 1.6 GB | ~2x | Best (default) |
+| large-v3 | 2.9 GB | ~1x | Best |
+
+### Download Models
 
 ```bash
-make download-model   # Downloads to Alona/Resources/Models/
+# Download default model (large-v3-turbo)
+make download-model
+
+# Download specific model
+make download-model MODEL=base.en
+make download-model MODEL=small.en
+
+# Convenience targets
+make download-model-turbo  # large-v3-turbo
+make download-model-base   # base.en
+make download-model-small  # small.en
 ```
+
+### Model Selection
+
+Users can select and download models in **Settings > Transcription Model**:
+- View available models with size, speed, and quality info
+- Download models with progress tracking
+- Switch between downloaded models
+- Delete unused models to save space
+
+Model selection persists in UserDefaults (`selectedWhisperModel`).
+
+### Implementation
+
+- `WhisperModel` enum in `Services/ModelManager.swift` defines all models
+- `WhisperModelManager` handles selection, download, and status tracking
+- `ModelLocator` manages model file paths (bundle and user directory)
+- Models are stored in `~/Library/Application Support/Alona/Models/`
 
 Or manually download from: https://huggingface.co/ggerganov/whisper.cpp
 

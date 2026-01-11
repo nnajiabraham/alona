@@ -5,7 +5,7 @@ struct StartupView: View {
     @Environment(PermissionManager.self) private var permissionManager
     @Environment(MeetingDetector.self) private var meetingDetector
     @Environment(\.openWindow) private var openWindow
-    @StateObject private var modelManager = WhisperModelManager.shared
+    @State private var modelManager = WhisperModelManager.shared
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -26,7 +26,7 @@ struct StartupView: View {
         .task {
             // Skip during tests to avoid permission checks that hang on CI
             guard ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil else { return }
-            self.modelManager.refreshStatus()
+            self.modelManager.refreshAllStatuses()
             self.permissionManager.refreshAllPermissions()
         }
         .onChange(of: self.appState.notesWindowRequestID) {
@@ -186,10 +186,10 @@ struct StartupView: View {
                     .foregroundStyle(self.modelStatusColor)
                 if self.showDownloadButton {
                     Button("Download Model") {
-                        self.modelManager.downloadModel()
+                        self.modelManager.downloadModel(self.modelManager.selectedModel)
                     }
                 }
-                if case let .failed(message) = modelManager.status {
+                if case let .failed(message) = modelManager.status(for: modelManager.selectedModel) {
                     Text(message)
                         .font(.caption)
                         .foregroundStyle(.red)
@@ -217,35 +217,38 @@ struct StartupView: View {
     }
 
     private var modelStatusMessage: String {
-        switch self.modelManager.status {
+        let status = self.modelManager.status(for: self.modelManager.selectedModel)
+        switch status {
         case .available:
-            "Model installed"
+            return "\(self.modelManager.selectedModel.displayName) ready"
         case .downloading:
-            "Downloading..."
-        case .missing:
-            "Model missing"
+            return "Downloading..."
+        case .notDownloaded:
+            return "Model not downloaded"
         case .failed:
-            "Download failed"
+            return "Download failed"
         }
     }
 
     private var modelStatusColor: Color {
-        switch self.modelManager.status {
+        let status = self.modelManager.status(for: self.modelManager.selectedModel)
+        switch status {
         case .available:
-            .green
+            return .green
         case .downloading:
-            .orange
-        case .missing, .failed:
-            .red
+            return .orange
+        case .notDownloaded, .failed:
+            return .red
         }
     }
 
     private var showDownloadButton: Bool {
-        switch self.modelManager.status {
+        let status = self.modelManager.status(for: self.modelManager.selectedModel)
+        switch status {
         case .available, .downloading:
-            false
-        case .missing, .failed:
-            true
+            return false
+        case .notDownloaded, .failed:
+            return true
         }
     }
 

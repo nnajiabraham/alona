@@ -10,9 +10,13 @@ DERIVED_DATA_PATH ?= $(CURDIR)/DerivedData
 XCBEAUTIFY := $(shell command -v xcbeautify 2>/dev/null)
 SWIFTFORMAT := $(shell command -v swiftformat 2>/dev/null)
 SWIFTLINT := $(shell command -v swiftlint 2>/dev/null)
+# Whisper model configuration
+# Default to large-v3-turbo for best accuracy/speed balance
+# Override with MODEL=base.en or MODEL=small.en for smaller models
+MODEL ?= large-v3-turbo
 MODEL_DIR := Alona/Resources/Models
-MODEL_FILE := $(MODEL_DIR)/ggml-base.en.bin
-MODEL_URL := https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.en.bin
+MODEL_FILE := $(MODEL_DIR)/ggml-$(MODEL).bin
+MODEL_URL := https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-$(MODEL).bin
 
 ifeq ($(XCBEAUTIFY),)
 PIPE_CMD := cat
@@ -31,7 +35,8 @@ help:
 	@echo "  make format  # apply swiftformat"
 	@echo "  make clean   # clean derived data"
 	@echo "  make run     # build and launch the macOS app"
-	@echo "  make download-model # fetch ggml-base.en.bin into Resources/Models"
+	@echo "  make download-model # fetch Whisper model (default: large-v3-turbo)"
+	@echo "                      # Override: MODEL=base.en make download-model"
 
 setup:
 	xcode-build-server config -workspace $(WORKSPACE) -scheme $(SCHEME)
@@ -90,7 +95,20 @@ download-model:
 	@if [ -f $(MODEL_FILE) ]; then \
 		echo "Model already present at $(MODEL_FILE)"; \
 	else \
-		echo "Downloading Whisper base model..."; \
-		curl -L "$(MODEL_URL)" -o $(MODEL_FILE); \
+		echo "Downloading Whisper $(MODEL) model..."; \
+		curl -L --progress-bar "$(MODEL_URL)" -o $(MODEL_FILE); \
 		echo "Saved model to $(MODEL_FILE)"; \
 	fi
+
+# Convenience targets for specific models
+download-model-tiny:
+	$(MAKE) download-model MODEL=tiny.en
+
+download-model-base:
+	$(MAKE) download-model MODEL=base.en
+
+download-model-small:
+	$(MAKE) download-model MODEL=small.en
+
+download-model-turbo:
+	$(MAKE) download-model MODEL=large-v3-turbo
