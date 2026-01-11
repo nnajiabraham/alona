@@ -10,9 +10,11 @@ struct AlonaApp: App {
     // (Previously @AppStorage could cause the binding to become false unexpectedly)
     // During tests, hide menu bar extra to avoid UI issues on CI
     @State private var showMenuBarExtra: Bool
+    private let isRunningTests: Bool
 
     init() {
         let isTest = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+        self.isRunningTests = isTest
 
         // Disable notification observer during tests to prevent test notifications
         // from triggering real recordings in the production directory
@@ -33,11 +35,17 @@ struct AlonaApp: App {
 
     var body: some Scene {
         // Primary window - opens automatically on launch
+        // During tests, show minimal empty view to avoid UI blocking on CI
         WindowGroup {
-            StartupView()
-                .environment(self.appState)
-                .environment(self.permissionManager)
-                .environment(self.meetingDetector)
+            if self.isRunningTests {
+                Color.clear
+                    .frame(width: 1, height: 1)
+            } else {
+                StartupView()
+                    .environment(self.appState)
+                    .environment(self.permissionManager)
+                    .environment(self.meetingDetector)
+            }
         }
         .windowResizability(.contentSize)
         .commands {
@@ -57,33 +65,43 @@ struct AlonaApp: App {
         .defaultSize(width: 360, height: 320)
 
         WindowGroup(id: "onboarding") {
-            OnboardingView()
-                .environment(self.permissionManager)
+            if !self.isRunningTests {
+                OnboardingView()
+                    .environment(self.permissionManager)
+            }
         }
         .windowResizability(.contentSize)
 
         WindowGroup(id: "meeting-notes") {
-            MeetingNotesView()
-                .environment(self.appState)
+            if !self.isRunningTests {
+                MeetingNotesView()
+                    .environment(self.appState)
+            }
         }
         .defaultSize(width: 420, height: 380)
 
         WindowGroup(id: "recordings") {
-            RecordingsBrowserView()
-                .environment(self.appState)
+            if !self.isRunningTests {
+                RecordingsBrowserView()
+                    .environment(self.appState)
+            }
         }
         .defaultSize(width: 700, height: 420)
 
         WindowGroup(id: "settings-window") {
-            SettingsView()
-                .environment(self.permissionManager)
-                .environment(self.appState)
+            if !self.isRunningTests {
+                SettingsView()
+                    .environment(self.permissionManager)
+                    .environment(self.appState)
+            }
         }
         .defaultSize(width: 480, height: 360)
 
         WindowGroup(id: "transcription-queue") {
-            TranscriptionQueueView()
-                .environment(self.appState)
+            if !self.isRunningTests {
+                TranscriptionQueueView()
+                    .environment(self.appState)
+            }
         }
         .defaultSize(width: 480, height: 420)
     }
