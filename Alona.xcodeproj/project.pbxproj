@@ -49,6 +49,7 @@
 		AA0130 /* MicrophoneActivityTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1028 /* MicrophoneActivityTracker.swift */; };
 		AA0131 /* MeetingDetectedPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1029 /* MeetingDetectedPopup.swift */; };
 		AA0132 /* MeetingPopupWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1030 /* MeetingPopupWindow.swift */; };
+		AA0199 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1099 /* main.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -97,6 +98,7 @@
 		AA2018 /* WindowControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowControllerTests.swift; sourceTree = "<group>"; };
 		AA2019 /* SummaryManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryManagerTests.swift; sourceTree = "<group>"; };
 		AA2020 /* NotificationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTests.swift; sourceTree = "<group>"; };
+		AA1099 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,6 +147,7 @@
 				AA4005 /* Views */,
 				AA4006 /* Resources */,
 				AA1008 /* Info.plist */,
+				AA1099 /* main.swift */,
 				AA1000 /* AlonaApp.swift */,
 				AA1024 /* AppDelegate.swift */
 			);
@@ -323,6 +326,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA0199 /* main.swift in Sources */,
 				AA0100 /* AlonaApp.swift in Sources */,
 				AA0101 /* AppState.swift in Sources */,
 				AA0102 /* PermissionManager.swift in Sources */,

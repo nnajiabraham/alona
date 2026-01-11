@@ -3,7 +3,8 @@ import SwiftUI
 
 private let appLogger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "Alona", category: "AlonaApp")
 
-@main
+// Note: @main removed - see main.swift for custom entry point
+// This allows bypassing SwiftUI initialization during CI tests
 struct AlonaApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @State private var appState: AppState
