@@ -1,6 +1,6 @@
 # Alona
 
-[![CI](https://github.com/YOUR_USERNAME/alona/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/alona/actions/workflows/ci.yml)
+[![CI](https://github.com/nnajiabraham/alona/actions/workflows/ci.yml/badge.svg)](https://github.com/nnajiabraham/alona/actions/workflows/ci.yml)
 
 **Alona** is a macOS-native meeting assistant that captures, transcribes, and summarizes your meetings — entirely on-device.
 
@@ -8,7 +8,7 @@
 
 - **🎯 Meeting Detection** — Automatically detects active Zoom and Google Meet sessions
 - **🎙️ Audio Capture** — Records system audio (meeting participants) and microphone (your voice) using macOS CoreAudio Process Taps
-- **🗣️ Local Transcription** — Transcribes audio locally using Whisper (ggml-base.en) — no cloud uploads
+- **🗣️ Local Transcription** — Transcribes audio locally using Whisper (multiple models available, default: large-v3-turbo) — no cloud uploads
 - **📝 Notes & Summaries** — Take notes during meetings and generate AI-powered summaries
 - **📁 Organized Storage** — All meeting artifacts (audio, notes, transcripts, summaries) saved to a user-chosen directory
 
@@ -33,17 +33,30 @@
 ## Development
 
 ```bash
-# Build and run tests
+# Run all tests
 make test
+
+# Build and launch app
+make run
 
 # Format code
 make format
 
-# Check formatting without changes
+# Check formatting (swiftformat + swiftlint)
 make lint
 
 # Clean build artifacts
 make clean
+
+# Regenerate app icon from source PNG
+make icon
+
+# Download Whisper model (default: large-v3-turbo)
+make download-model
+
+# Download specific model
+make download-model MODEL=base.en
+make download-model MODEL=small.en
 ```
 
 See [AGENTS.md](AGENTS.md) for detailed development guidelines.
@@ -77,8 +90,24 @@ Alona/
 │   ├── MeetingNotesView.swift
 │   └── ...
 └── Resources/
+    ├── alona_icon_main.png  # Source icon (2048x2048)
+    ├── Assets.xcassets/     # Generated icon sizes
     └── Models/              # Whisper model files
 ```
+
+## Whisper Models
+
+Alona supports multiple Whisper models. Select and download models in **Settings > Transcription Model**.
+
+| Model | Size | Speed | Quality |
+|-------|------|-------|---------|
+| tiny.en | 75 MB | ~10x | Basic |
+| base.en | 142 MB | ~7x | Good |
+| small.en | 466 MB | ~4x | Better |
+| **large-v3-turbo** | 1.6 GB | ~2x | Best (default) |
+| large-v3 | 2.9 GB | ~1x | Best |
+
+Models are stored in `~/Library/Application Support/Alona/Models/`.
 
 ## Tech Stack
 
@@ -87,6 +116,7 @@ Alona/
 - **CoreAudio** Process Taps for non-interfering system audio capture
 - **SwiftWhisper** for local transcription
 - **Swift 6.0** with strict concurrency
+- **Swift Package Manager** for testing (`swift test`)
 
 ## Contributing
 

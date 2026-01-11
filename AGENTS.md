@@ -24,16 +24,17 @@ Guidelines for AI agents (Cursor, Copilot, Claude, etc.) and human contributors 
 
 ```bash
 # Full dev loop (preferred)
-make test                    # Kill app, build, run tests
+make test                    # Run all tests (uses swift test --parallel)
 
 # Individual commands
-make build                   # Build only
+make build                   # Build macOS app via xcodebuild
 make run                     # Build and launch app
-make lint                    # Check formatting (swiftformat --lint)
+make lint                    # Check formatting (swiftformat + swiftlint)
 make format                  # Apply formatting fixes
 make clean                   # Clean DerivedData
 make setup                   # Regenerate buildServer.json
-make download-model          # Fetch Whisper model if missing
+make icon                    # Regenerate app icon from source PNG
+make download-model          # Fetch Whisper model (default: large-v3-turbo)
 ```
 
 ### Verification Checklist
@@ -149,8 +150,10 @@ Use modern `onChange` syntax (macOS 14+):
 ### Running Tests
 
 ```bash
-make test   # Runs all tests, kills any running Alona instance first
+make test   # Runs swift test --parallel (kills any running Alona instance first)
 ```
+
+Tests use Swift Package Manager via `Package.swift` which defines `AlonaCore` as a library target. Test files import `@testable import AlonaCore`.
 
 ### Writing Tests
 
@@ -213,6 +216,23 @@ The app requires these macOS permissions:
 - **Automation** — Google Meet tab detection via AppleScript
 
 Permission handling is in `Services/PermissionManager.swift`.
+
+---
+
+## App Icon
+
+The app icon source is at `Alona/Resources/alona_icon_main.png` (2048x2048).
+
+### Updating the Icon
+
+```bash
+# Replace the source file, then regenerate all sizes
+cp /path/to/new_icon.png Alona/Resources/alona_icon_main.png
+make icon    # Generates 10 sizes (16x16 to 1024x1024)
+make run     # Build and launch with new icon
+```
+
+Icon sizes are generated in `Alona/Resources/Assets.xcassets/AppIcon.appiconset/`.
 
 ---
 
@@ -294,4 +314,6 @@ make run
 
 - [RFC-001: Alona MVP Implementation](docs/rfcs/RFC-001-alona-mvp-full-implementation.md)
 - [PRD: Alona macOS MVP](docs/PRD-alona-macos-mvp-2025-11-27.md)
+- [Design System Guidelines](docs/design_system/design_system_guidelines.md) — Colors, typography, spacing, component specs
+- [Design System Research](docs/research/design-system-research.md) — Detailed UI audit and component inventory
 
