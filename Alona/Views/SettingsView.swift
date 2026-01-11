@@ -13,36 +13,61 @@ struct SettingsView: View {
 
     var body: some View {
         @Bindable var appState = appState
-        Form {
-            Section("Recording") {
-                Toggle("Capture system audio", isOn: $appState.captureSystemAudio)
-                Text("Disabling this hides the macOS \"Currently Sharing\" banner and records microphone audio only.")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                // MARK: - Recording Section
 
-            Section("Transcription Model") {
-                ModelSelectionView(modelManager: self.modelManager, showAllModels: self.$showAllModels)
-            }
+                SettingsSectionView(title: "Recording") {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Toggle("Capture system audio", isOn: $appState.captureSystemAudio)
+                        Text(Self.systemAudioHelpText)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
 
-            Section("Storage") {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(appState.saveDirectory.path)
-                        .font(.caption)
-                        .textSelection(.enabled)
-                    Button("Choose Folder") {
-                        self.chooseDirectory()
+                Divider()
+
+                // MARK: - Transcription Model Section
+
+                SettingsSectionView(title: "Transcription Model") {
+                    ModelSelectionView(modelManager: self.modelManager, showAllModels: self.$showAllModels)
+                }
+
+                Divider()
+
+                // MARK: - Storage Section
+
+                SettingsSectionView(title: "Storage") {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(appState.saveDirectory.path)
+                            .font(.caption)
+                            .textSelection(.enabled)
+                            .padding(8)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(Color.primary.opacity(0.05))
+                            .clipShape(RoundedRectangle(cornerRadius: 6))
+                        Button("Choose Folder") {
+                            self.chooseDirectory()
+                        }
                     }
                 }
             }
+            .padding(20)
         }
-        .padding()
-        .frame(width: 480, height: 520)
+        .frame(width: 500, height: 560)
         .background(WindowIdentifierSetter(identifier: WindowFocusController.identifier(for: "settings-window")))
         #if DEBUG
             .enableInjection()
         #endif
     }
+
+    // MARK: - Constants
+
+    // swiftlint:disable:next line_length
+    private static let systemAudioHelpText = "Disabling this hides the macOS \"Currently Sharing\" banner and records microphone audio only."
+
+    // MARK: - Private Methods
 
     private func chooseDirectory() {
         let panel = NSOpenPanel()
@@ -60,6 +85,23 @@ struct SettingsView: View {
     }
 }
 
+// MARK: - Settings Section Container
+
+struct SettingsSectionView<Content: View>: View {
+    let title: String
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(self.title)
+                .font(.headline)
+                .foregroundStyle(.primary)
+
+            self.content
+        }
+    }
+}
+
 // MARK: - Model Selection View
 
 struct ModelSelectionView: View {
@@ -73,49 +115,94 @@ struct ModelSelectionView: View {
         return WhisperModel.recommendedModels
     }
 
+    // Calculate dynamic height based on model count
+    private var modelListHeight: CGFloat {
+        let rowHeight: CGFloat = 56
+        let maxVisibleRows: CGFloat = 5
+        let modelCount = CGFloat(self.displayedModels.count)
+        return min(modelCount * rowHeight, maxVisibleRows * rowHeight)
+    }
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            // Current selection
+        VStack(alignment: .leading, spacing: 16) {
+            // Current selection status
             HStack {
-                Text("Selected:")
-                    .foregroundStyle(.secondary)
-                Text(self.modelManager.selectedModel.displayName)
-                    .fontWeight(.medium)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Active Model")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    Text(self.modelManager.selectedModel.displayName)
+                        .fontWeight(.medium)
+                }
                 Spacer()
                 if self.modelManager.isSelectedModelAvailable {
                     Label("Ready", systemImage: "checkmark.circle.fill")
                         .foregroundStyle(.green)
                         .font(.caption)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background(Color.green.opacity(0.1))
+                        .clipShape(Capsule())
                 } else {
-                    Label("Not Downloaded", systemImage: "arrow.down.circle")
+                    Label("Download Required", systemImage: "arrow.down.circle")
                         .foregroundStyle(.orange)
                         .font(.caption)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background(Color.orange.opacity(0.1))
+                        .clipShape(Capsule())
                 }
             }
+            .padding(12)
+            .background(Color.primary.opacity(0.03))
+            .clipShape(RoundedRectangle(cornerRadius: 8))
 
-            Divider()
+            // Model list with scroll
+            VStack(alignment: .leading, spacing: 0) {
+                ScrollView {
+                    LazyVStack(spacing: 0) {
+                        ForEach(self.displayedModels) { model in
+                            VStack(spacing: 0) {
+                                ModelRowView(
+                                    model: model,
+                                    status: self.modelManager.status(for: model),
+                                    isSelected: model == self.modelManager.selectedModel,
+                                    onSelect: { self.modelManager.selectedModel = model },
+                                    onDownload: { self.modelManager.downloadModel(model) },
+                                    onCancel: { self.modelManager.cancelDownload(model) },
+                                    onDelete: { self.modelManager.deleteModel(model) })
 
-            // Model list
-            ForEach(self.displayedModels) { model in
-                ModelRowView(
-                    model: model,
-                    status: self.modelManager.status(for: model),
-                    isSelected: model == self.modelManager.selectedModel,
-                    onSelect: { self.modelManager.selectedModel = model },
-                    onDownload: { self.modelManager.downloadModel(model) },
-                    onCancel: { self.modelManager.cancelDownload(model) },
-                    onDelete: { self.modelManager.deleteModel(model) })
+                                // Divider between rows (except last)
+                                if model != self.displayedModels.last {
+                                    Divider()
+                                        .padding(.leading, 36)
+                                }
+                            }
+                        }
+                    }
+                }
+                .frame(height: self.modelListHeight)
             }
+            .background(Color.primary.opacity(0.02))
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(Color.primary.opacity(0.1), lineWidth: 1))
 
             // Show more/less toggle
             Button {
-                self.showAllModels.toggle()
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    self.showAllModels.toggle()
+                }
             } label: {
-                HStack {
-                    Text(self.showAllModels ? "Show Recommended Only" : "Show All Models")
+                HStack(spacing: 4) {
+                    Text(self
+                        .showAllModels ? "Show Recommended Only" : "Show All Models (\(WhisperModel.allCases.count))")
                     Image(systemName: self.showAllModels ? "chevron.up" : "chevron.down")
+                        .font(.caption2)
                 }
                 .font(.caption)
+                .fontWeight(.medium)
             }
             .buttonStyle(.plain)
             .foregroundStyle(.blue)
@@ -138,21 +225,23 @@ struct ModelRowView: View {
         HStack(spacing: 12) {
             // Selection indicator
             Image(systemName: self.isSelected ? "checkmark.circle.fill" : "circle")
-                .foregroundStyle(self.isSelected ? .blue : .secondary)
-                .onTapGesture { self.onSelect() }
+                .font(.system(size: 18))
+                .foregroundStyle(self.isSelected ? .blue : .secondary.opacity(0.5))
 
             // Model info
-            VStack(alignment: .leading, spacing: 2) {
-                HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(spacing: 6) {
                     Text(self.model.displayName)
                         .fontWeight(self.isSelected ? .semibold : .regular)
+                        .lineLimit(1)
 
                     if self.model == .largeV3Turbo {
                         Text("Recommended")
                             .font(.caption2)
+                            .fontWeight(.medium)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
-                            .background(.blue.opacity(0.2))
+                            .background(.blue.opacity(0.15))
                             .foregroundStyle(.blue)
                             .clipShape(Capsule())
                     }
@@ -160,31 +249,37 @@ struct ModelRowView: View {
                     if self.model.isQuantized {
                         Text("Quantized")
                             .font(.caption2)
+                            .fontWeight(.medium)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
-                            .background(.purple.opacity(0.2))
+                            .background(.purple.opacity(0.15))
                             .foregroundStyle(.purple)
                             .clipShape(Capsule())
                     }
                 }
 
-                HStack(spacing: 8) {
+                HStack(spacing: 6) {
                     Text(self.model.formattedSize)
                     Text("•")
+                        .foregroundStyle(.tertiary)
                     Text(self.model.speedMultiplier)
                     Text("•")
+                        .foregroundStyle(.tertiary)
                     Text(self.model.qualityDescription)
                 }
                 .font(.caption)
                 .foregroundStyle(.secondary)
             }
 
-            Spacer()
+            Spacer(minLength: 8)
 
             // Status / Action button
             self.statusView
+                .frame(minWidth: 90, alignment: .trailing)
         }
-        .padding(.vertical, 6)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
+        .background(self.isSelected ? Color.blue.opacity(0.05) : Color.clear)
         .contentShape(Rectangle())
         .onTapGesture { self.onSelect() }
     }
@@ -193,9 +288,10 @@ struct ModelRowView: View {
     private var statusView: some View {
         switch self.status {
         case .available:
-            HStack(spacing: 8) {
+            HStack(spacing: 6) {
                 Image(systemName: "checkmark.circle.fill")
                     .foregroundStyle(.green)
+                    .font(.system(size: 14))
 
                 Menu {
                     Button(role: .destructive, action: self.onDelete) {
@@ -203,26 +299,29 @@ struct ModelRowView: View {
                     }
                 } label: {
                     Image(systemName: "ellipsis.circle")
+                        .font(.system(size: 14))
                         .foregroundStyle(.secondary)
                 }
                 .menuStyle(.borderlessButton)
-                .frame(width: 24)
+                .fixedSize()
             }
 
         case let .downloading(progress):
-            HStack(spacing: 8) {
+            HStack(spacing: 6) {
                 ProgressView(value: progress)
                     .progressViewStyle(.linear)
-                    .frame(width: 60)
+                    .frame(width: 50)
 
                 Text("\(Int(progress * 100))%")
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                    .frame(width: 35, alignment: .trailing)
+                    .monospacedDigit()
+                    .frame(width: 32, alignment: .trailing)
 
                 Button(action: self.onCancel) {
                     Image(systemName: "xmark.circle.fill")
-                        .foregroundStyle(.red)
+                        .font(.system(size: 14))
+                        .foregroundStyle(.red.opacity(0.8))
                 }
                 .buttonStyle(.plain)
             }
@@ -230,18 +329,21 @@ struct ModelRowView: View {
         case .notDownloaded:
             Button(action: self.onDownload) {
                 Label("Download", systemImage: "arrow.down.circle")
+                    .font(.caption)
             }
             .buttonStyle(.bordered)
             .controlSize(.small)
 
         case let .failed(error):
-            HStack(spacing: 8) {
+            HStack(spacing: 6) {
                 Image(systemName: "exclamationmark.triangle.fill")
+                    .font(.system(size: 14))
                     .foregroundStyle(.red)
                     .help(error)
 
                 Button(action: self.onDownload) {
                     Text("Retry")
+                        .font(.caption)
                 }
                 .buttonStyle(.bordered)
                 .controlSize(.small)
