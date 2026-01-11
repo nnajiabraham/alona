@@ -28,6 +28,8 @@ struct MenuBarView: View {
         .padding(16)
         .frame(minWidth: 300)
         .task {
+            // Skip during tests to avoid permission checks that hang on CI
+            guard ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil else { return }
             self.permissionManager.refreshAllPermissions()
             self.syncMeetingTitleFromDetector()
         }

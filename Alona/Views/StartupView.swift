@@ -24,6 +24,8 @@ struct StartupView: View {
         .frame(minWidth: 420, minHeight: 380)
         .background(StartupWindowIdentifierSetter())
         .task {
+            // Skip during tests to avoid permission checks that hang on CI
+            guard ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil else { return }
             self.modelManager.refreshStatus()
             self.permissionManager.refreshAllPermissions()
         }
