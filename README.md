@@ -9,7 +9,7 @@
 - **🎯 Meeting Detection** — Automatically detects active Zoom and Google Meet sessions
 - **🎙️ Audio Capture** — Records system audio (meeting participants) and microphone (your voice) using macOS CoreAudio Process Taps
 - **🗣️ Local Transcription** — Transcribes audio locally using Whisper (multiple models available, default: large-v3-turbo) — no cloud uploads
-- **📝 Notes & Summaries** — Take notes during meetings and generate AI-powered summaries
+- **📝 Notes & Summaries** — Take notes during meetings and generate AI-powered summaries [not complete yet 🚧🚧🚧]
 - **📁 Organized Storage** — All meeting artifacts (audio, notes, transcripts, summaries) saved to a user-chosen directory
 
 ## Requirements
@@ -124,4 +124,4 @@ This repo is currently private and under active development. Please coordinate b
 
 ## License
 
-Private — All rights reserved.
+Private — For individual, personal use only. Can't be used for sold or rebranded or resold or included in a commercial product or service.
