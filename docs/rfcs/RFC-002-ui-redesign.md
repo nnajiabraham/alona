@@ -70,9 +70,12 @@ Systematically redesign all Alona UI screens/components to align with the design
 
 ### Phase 3: Supporting Views
 - [x] **MeetingNotesView** (Notes Editor)
-  - [x] Apply SF Mono for text editor (NSTextView already uses monospaced)
+  - [x] Apply SF Mono for text editor
   - [x] Standardize spacing
-  - Notes: Updated heading typography, standardized spacing. Tests pass, lint clean.
+  - [x] Add recording status bar with stop button
+  - [x] Add word count and auto-save indicator
+  - [x] Add action item toolbar button
+  - Notes: Complete redesign with recording status bar, word count footer, action items. Tests pass, lint clean.
 
 - [x] **TranscriptionProgressView** (Progress Component)
   - [x] Apply yellow-green (#C0CA33) for transcription
@@ -85,7 +88,7 @@ Systematically redesign all Alona UI screens/components to align with the design
   - Notes: 48pt hero waveform icon, status icons with semantic colors, yellow-green progress tint. Tests pass, lint clean.
 
 ### Phase 4: Validation
-- [x] Final `make test` passes (113 tests)
+- [x] Final `make test` passes (115 tests)
 - [x] Final `make lint` passes (0 files require formatting)
 - [ ] Visual review of all screens
 
@@ -122,6 +125,26 @@ Systematically redesign all Alona UI screens/components to align with the design
 - **MeetingDetectedPopup**: Updated to match floating popup mockup (Ignore/Record buttons)
 - Tests pass (113), lint clean
 
+### 2026-01-11 - Restore Missing Features (Phase 3)
+- **StartupView**: Restored permissions summary, model status section, detection prompt, secondary actions row
+- **SettingsView**: Added General tab with Recording settings (system audio toggle) and Storage settings (save directory)
+- **SettingsView**: Restored full model selection UI with download log, progress, show all/recommended toggle
+- **RecordingsBrowserView**: Better organized detail view with clear sections (Header, Audio, Transcript, Notes)
+- Tests pass (113), lint clean
+
+### 2026-01-11 - Notes Editor Redesign & Bug Fixes (Phase 4)
+- **MeetingNotesView**: Complete redesign with:
+  - Recording status bar (shows recording indicator, duration, stop button when recording)
+  - Better organized sections (header, toolbar, editor, footer)
+  - Word count display in footer
+  - Auto-save indicator
+  - Action item button (☐) added to toolbar
+  - Better styled text editor with border
+- **RecordingsBrowserView**: Notes section now **editable** with TextEditor (auto-saves on change)
+- **Bug Fix**: Notes window can now be reopened during active recording via `appState.requestNotesWindow()`
+- **New Tests**: `testRequestNotesWindowGeneratesNewID`, `testRequestNotesWindowCanBeCalledMultipleTimes`
+- Tests pass (115 total - 2 new), lint clean
+
 ---
 
 ## Final Summary
@@ -131,13 +154,13 @@ All UI views have been redesigned to match mockups in `docs/design_system/`:
 | View | Layout Changes |
 |------|----------------|
 | `DesignSystem.swift` | Centralized tokens (colors, typography, spacing, icons, animations) |
-| `StartupView` | **Complete redesign**: Hero status card with mic icon, 3 card navigation buttons, footer status bar |
-| `MenuBarView` | **Complete redesign**: Prominent meeting detection card (orange/red), recent recordings list, cleaner footer |
-| `SettingsView` | **Sidebar navigation** with tabbed content, cleaner model list with status/action columns |
+| `StartupView` | **Complete redesign**: Hero status card with mic icon, 3 card navigation buttons, permissions summary |
+| `MenuBarView` | **Complete redesign**: Prominent meeting detection card (orange/red), recent recordings list |
+| `SettingsView` | **Sidebar navigation** with General + Transcription Models tabs, full model list with download log |
 | `MeetingDetectedPopup` | **Simplified layout**: Video icon + title, two buttons (Ignore/Record) |
-| `RecordingsBrowserView` | SF Mono for transcripts, hero icon for empty state |
+| `RecordingsBrowserView` | **Editable notes**, SF Mono for transcripts, organized sections (Header/Audio/Transcript/Notes) |
 | `OnboardingView` | Permission badges with icons, semantic colors |
-| `MeetingNotesView` | SF Pro Rounded heading, standardized spacing |
+| `MeetingNotesView` | **Complete redesign**: Recording status bar, word count, action items, auto-save indicator |
 | `TranscriptionProgressView` | Yellow-green progress tint, status icons per state |
 | `TranscriptionQueueView` | 48pt hero icon, semantic colors per job state |
 

@@ -171,6 +171,12 @@ final class AppState {
         self.dismissedDetectionIdentifier = identifier
     }
 
+    /// Request the notes window to be shown/focused.
+    /// This works even if the window was previously closed during an active recording.
+    func requestNotesWindow() {
+        self.notesWindowRequestID = UUID()
+    }
+
     func resetDetectionDismissalIfNeeded(for identifier: String) {
         if identifier.isEmpty {
             self.dismissedDetectionIdentifier = nil

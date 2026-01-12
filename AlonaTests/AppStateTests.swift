@@ -286,6 +286,57 @@ final class AppStateTests: XCTestCase {
         XCTAssertNotNil(appState.notesWindowRequestID)
     }
 
+    func testRequestNotesWindowGeneratesNewID() async throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        let directory = try harness.manager.createMeetingDirectory(title: "Reopen")
+        let recorder = MockAudioRecorder(directory: directory)
+        let appState = AppState(
+            meetingFileManager: harness.manager,
+            audioRecorder: recorder,
+            transcriptionEngine: MockTranscriptionEngine(),
+            summaryProvider: MockSummaryProvider())
+
+        // Start recording (sets initial ID)
+        await appState.startRecording(meetingTitleOverride: "Reopen Test")
+        let firstID = appState.notesWindowRequestID
+        XCTAssertNotNil(firstID, "Should have notes window ID after recording starts")
+
+        // Request notes window again (simulates user clicking "Current Notes" button)
+        appState.requestNotesWindow()
+        let secondID = appState.notesWindowRequestID
+        XCTAssertNotNil(secondID, "Should have notes window ID after request")
+        XCTAssertNotEqual(firstID, secondID, "Should generate new ID to trigger window open")
+    }
+
+    func testRequestNotesWindowCanBeCalledMultipleTimes() async throws {
+        let harness = try MeetingFileManagerTestHarness()
+        defer { harness.cleanup() }
+
+        let directory = try harness.manager.createMeetingDirectory(title: "Multiple")
+        let recorder = MockAudioRecorder(directory: directory)
+        let appState = AppState(
+            meetingFileManager: harness.manager,
+            audioRecorder: recorder,
+            transcriptionEngine: MockTranscriptionEngine(),
+            summaryProvider: MockSummaryProvider())
+
+        await appState.startRecording(meetingTitleOverride: "Multiple Test")
+
+        var previousID = appState.notesWindowRequestID
+        XCTAssertNotNil(previousID)
+
+        // Call multiple times - each should generate a unique ID
+        for iteration in 1...3 {
+            appState.requestNotesWindow()
+            let currentID = appState.notesWindowRequestID
+            XCTAssertNotNil(currentID)
+            XCTAssertNotEqual(previousID, currentID, "Iteration \(iteration) should generate new ID")
+            previousID = currentID
+        }
+    }
+
     func testActiveMeetingTitleUpdatesPersist() async throws {
         let harness = try MeetingFileManagerTestHarness()
         defer { harness.cleanup() }

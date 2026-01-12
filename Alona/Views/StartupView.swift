@@ -10,21 +10,29 @@ struct StartupView: View {
     var body: some View {
         VStack(spacing: 0) {
             // Main content area
-            VStack(spacing: DesignSystem.Spacing.xl) {
-                // Hero status card
+            VStack(spacing: DesignSystem.Spacing.lg) {
+                // Hero status card (clickable to record)
                 self.heroStatusCard
+
+                // Detection prompt (when meeting detected)
+                if self.shouldShowDetectionPrompt {
+                    self.detectionPrompt
+                }
 
                 // Navigation buttons row
                 self.navigationButtonsRow
+
+                // Secondary actions row
+                self.secondaryActionsRow
             }
             .padding(DesignSystem.Spacing.xl)
 
             Spacer()
 
-            // Footer status bar
-            self.footerStatusBar
+            // Footer with model status and permissions
+            self.footerSection
         }
-        .frame(minWidth: 400, minHeight: 320)
+        .frame(minWidth: 440, minHeight: 420)
         .background(StartupWindowIdentifierSetter())
         .task {
             guard ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil else { return }
@@ -50,9 +58,23 @@ struct StartupView: View {
                     .frame(width: 14, height: 14)
                     .recordingPulse(isActive: self.appState.isRecording)
 
-                Text(self.statusText)
-                    .font(DesignSystem.Typography.heading(24))
-                    .foregroundStyle(.primary)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(self.statusText)
+                        .font(DesignSystem.Typography.heading(20))
+                        .foregroundStyle(.primary)
+
+                    if self.appState.isRecording {
+                        Text(self.recordingDurationText)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .monospacedDigit()
+                    } else if self.meetingDetector.isInMeeting {
+                        Text(self.detectedMeetingDescription)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                    }
+                }
             }
 
             Spacer()
@@ -99,6 +121,50 @@ struct StartupView: View {
             .recordingPulse(isActive: self.appState.isRecording)
     }
 
+    private var recordingDurationText: String {
+        let totalSeconds = Int(self.appState.recordingDuration)
+        let minutes = totalSeconds / 60
+        let seconds = totalSeconds % 60
+        return String(format: "%02d:%02d", minutes, seconds)
+    }
+
+    // MARK: - Detection Prompt
+
+    private var detectionPrompt: some View {
+        HStack(spacing: DesignSystem.Spacing.md) {
+            Image(systemName: "video.fill")
+                .font(.system(size: 24))
+                .foregroundStyle(DesignSystem.Colors.meetingDetected)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Meeting Detected!")
+                    .font(DesignSystem.Typography.heading(14))
+                Text(self.detectedMeetingDescription)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer()
+
+            HStack(spacing: DesignSystem.Spacing.sm) {
+                Button("Record") {
+                    self.startDetectedMeeting()
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.small)
+
+                Button("Dismiss") {
+                    self.dismissDetectedMeeting()
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.small)
+            }
+        }
+        .padding(DesignSystem.Spacing.md)
+        .background(DesignSystem.Colors.meetingDetected.opacity(0.15))
+        .clipShape(RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.button))
+    }
+
     // MARK: - Navigation Buttons Row
 
     private var navigationButtonsRow: some View {
@@ -123,34 +189,107 @@ struct StartupView: View {
         }
     }
 
-    // MARK: - Footer Status Bar
+    // MARK: - Secondary Actions Row
 
-    private var footerStatusBar: some View {
+    private var secondaryActionsRow: some View {
         HStack(spacing: DesignSystem.Spacing.sm) {
-            Image(systemName: self.modelStatusIcon)
-                .font(.system(size: DesignSystem.IconSize.inline))
-                .foregroundStyle(self.modelStatusColor)
+            Button {
+                WindowFocusController.focusOrOpen(windowID: "onboarding", openWindow: self.openWindow)
+            } label: {
+                Label("Permissions", systemImage: "lock.shield")
+            }
+            .buttonStyle(.bordered)
+            .controlSize(.small)
 
-            Text(self.modelStatusMessage)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-
-            Spacer()
-
-            if self.showDownloadButton {
-                Button("Download") {
-                    self.modelManager.downloadModel(self.modelManager.selectedModel)
+            if self.appState.currentMeetingDirectory != nil {
+                Button {
+                    self.appState.requestNotesWindow()
+                } label: {
+                    Label("Current Notes", systemImage: "note.text")
                 }
                 .buttonStyle(.bordered)
                 .controlSize(.small)
             }
+
+            Spacer()
         }
-        .padding(.horizontal, DesignSystem.Spacing.lg)
-        .padding(.vertical, DesignSystem.Spacing.md)
-        .background(Color(nsColor: .controlBackgroundColor).opacity(0.5))
     }
 
-    // MARK: - Detection Prompt Overlay
+    // MARK: - Footer Section
+
+    private var footerSection: some View {
+        VStack(alignment: .leading, spacing: DesignSystem.Spacing.lg) {
+            Divider()
+
+            // Model status
+            self.modelStatusRow
+
+            // Permissions summary
+            self.permissionsSummary
+        }
+        .padding(.horizontal, DesignSystem.Spacing.xl)
+        .padding(.bottom, DesignSystem.Spacing.lg)
+    }
+
+    private var modelStatusRow: some View {
+        VStack(alignment: .leading, spacing: DesignSystem.Spacing.xs) {
+            Text("Model status")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+
+            HStack(spacing: DesignSystem.Spacing.sm) {
+                Image(systemName: self.modelStatusIcon)
+                    .font(.system(size: DesignSystem.IconSize.inline))
+                    .foregroundStyle(self.modelStatusColor)
+
+                Text(self.modelStatusMessage)
+                    .foregroundStyle(self.modelStatusColor)
+
+                Spacer()
+
+                if self.showDownloadButton {
+                    Button("Download") {
+                        self.modelManager.downloadModel(self.modelManager.selectedModel)
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.small)
+                }
+            }
+        }
+    }
+
+    private var permissionsSummary: some View {
+        VStack(alignment: .leading, spacing: DesignSystem.Spacing.xs) {
+            Text("Permissions summary")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+
+            ForEach(Array(PermissionManager.PermissionType.allCases), id: \.self) { type in
+                HStack {
+                    Text(type.title)
+                        .font(.subheadline)
+                    Spacer()
+                    Text(self.permissionManager.statuses[type]?.displayName ?? "–")
+                        .font(.caption)
+                        .foregroundStyle(self.permissionStatusColor(for: type))
+                }
+            }
+        }
+    }
+
+    private func permissionStatusColor(for type: PermissionManager.PermissionType) -> Color {
+        guard let status = self.permissionManager.statuses[type] else { return .secondary }
+        switch status {
+        case .granted:
+            return DesignSystem.Colors.success
+        case .denied:
+            return DesignSystem.Colors.error
+        case .notDetermined:
+            return .secondary
+        }
+    }
+
+    // MARK: - Detection Helpers
 
     private var shouldShowDetectionPrompt: Bool {
         let identifier = self.activeDetectionIdentifier
@@ -161,6 +300,11 @@ struct StartupView: View {
     private var activeDetectionIdentifier: String {
         guard self.meetingDetector.isInMeeting else { return "" }
         return "\(self.meetingDetector.detectedApp?.rawValue ?? "unknown")|\(self.meetingDetector.meetingTitle)"
+    }
+
+    private var detectedMeetingDescription: String {
+        let appName = self.meetingDetector.detectedApp?.displayName ?? "Meeting"
+        return "\(appName) – \(self.meetingDetector.meetingTitle)"
     }
 
     private func startDetectedMeeting() {
@@ -184,9 +328,9 @@ struct StartupView: View {
         let status = self.modelManager.status(for: self.modelManager.selectedModel)
         switch status {
         case .available:
-            return "Whisper Model: Ready"
+            return "\(self.modelManager.selectedModel.displayName) ready"
         case .downloading:
-            return "Downloading model..."
+            return "Downloading..."
         case .notDownloaded:
             return "Model not downloaded"
         case .failed:
