@@ -86,8 +86,43 @@ final class PermissionManager {
         self.statuses[.systemAudio] = self.currentSystemAudioStatus()
         self.statuses[.accessibility] = self.currentAccessibilityStatus()
 
-        // Async check for automation (runs AppleScript, potentially slow)
+        // Async check for automation (runs AppleScript, potentially slow but with timeout protection)
         self.refreshAutomationPermissionAsync()
+    }
+
+    /// Check if Accessibility permission is granted (non-prompting)
+    var isAccessibilityGranted: Bool {
+        AXIsProcessTrusted()
+    }
+
+    /// Prompt for Accessibility permission if not already granted.
+    /// Returns true if already granted, false if prompt was shown.
+    @discardableResult
+    func promptForAccessibilityIfNeeded() -> Bool {
+        if AXIsProcessTrusted() {
+            self.statuses[.accessibility] = .granted
+            return true
+        }
+
+        // Show system prompt - use literal string to avoid Swift 6 concurrency warning
+        let options = ["AXTrustedCheckOptionPrompt": true] as CFDictionary
+        _ = AXIsProcessTrustedWithOptions(options)
+        self.statuses[.accessibility] = .denied
+
+        // Poll for permission grant
+        Task {
+            for _ in 0..<30 { // Poll for up to 30 seconds
+                try? await Task.sleep(nanoseconds: 1_000_000_000)
+                if AXIsProcessTrusted() {
+                    await MainActor.run {
+                        self.statuses[.accessibility] = .granted
+                    }
+                    break
+                }
+            }
+        }
+
+        return false
     }
 
     private func refreshAutomationPermissionAsync() {

@@ -72,6 +72,12 @@ final class MeetingDetector {
         let zoomUsingMic = self.microphoneTracker.isZoomInMeeting()
         let chromeUsingMic = self.microphoneTracker.isChromeUsingMicrophone()
 
+        // Debug: log mic usage state
+        if zoomUsingMic || chromeUsingMic {
+            // swiftformat:disable:next redundantSelf
+            logger.debug("Mic check - Zoom: \(zoomUsingMic), Chrome: \(chromeUsingMic)")
+        }
+
         Task.detached(priority: .utility) { [weak self] in
             await self?.checkMeetingStatusBackground(zoomUsingMic: zoomUsingMic, chromeUsingMic: chromeUsingMic)
         }
@@ -177,15 +183,20 @@ final class MeetingDetector {
             return .notDetected
         }
 
-        // If Zoom is using the microphone, it's likely in a meeting
+        // PRIMARY: If Zoom is using the microphone, it's definitely in a meeting
+        // This works even without Accessibility permission
         if isUsingMicrophone {
             return .detected(app: .zoom, title: "Zoom Meeting")
         }
 
-        // Fall back to AppleScript UI check for cases where mic might not be active yet
+        // FALLBACK: Use AppleScript UI check for cases where mic might not be active
         // This catches cases like muted in meeting or just joined
+        // NOTE: This requires Accessibility permission - if denied, we return .permissionDenied
+        // but this is OK because microphone detection above is the primary method
         switch zoomMeetingUIState() {
         case .permissionDenied:
+            // Return permissionDenied so UI can show a hint, but don't block
+            // If user is unmuted, microphone detection above will catch it
             return .permissionDenied
         case .inactive:
             return .notDetected
@@ -292,6 +303,12 @@ extension MeetingDetector {
     }
 
     nonisolated private static func zoomMeetingUIState() -> ZoomUIState {
+        // Check Accessibility permission FIRST to avoid hanging AppleScript
+        // AXIsProcessTrusted() is thread-safe and returns immediately
+        guard AXIsProcessTrusted() else {
+            return .permissionDenied
+        }
+
         var errorInfo: NSDictionary?
         let script = NSAppleScript(source: zoomMeetingAppleScript)
         let result = script?.executeAndReturnError(&errorInfo)
