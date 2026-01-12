@@ -6,32 +6,41 @@ struct MenuBarView: View {
     @Environment(MeetingDetector.self) private var meetingDetector
     @Environment(\.openWindow) private var openWindow
     @State private var recordingActionInFlight = false
+    @State private var recentRecordings: [MeetingEntry] = []
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 0) {
+            // Header
             self.header
-            self.detectionStatus
-            if self.shouldShowDetectionPrompt {
-                self.detectionPrompt
+                .padding(.horizontal, DesignSystem.Spacing.lg)
+                .padding(.top, DesignSystem.Spacing.lg)
+                .padding(.bottom, DesignSystem.Spacing.md)
+
+            // Meeting Detection Card (prominent when detected)
+            if self.meetingDetector.isInMeeting || self.appState.isRecording {
+                self.meetingDetectionCard
+                    .padding(.horizontal, DesignSystem.Spacing.lg)
+                    .padding(.bottom, DesignSystem.Spacing.md)
             }
-            self.recordingControls
-            if let error = appState.recordingError {
-                Text(error)
-                    .font(.caption)
-                    .foregroundStyle(.red)
-            }
-            Divider()
-            self.permissionSummary
-            Divider()
+
+            // Recent Recordings Section
+            self.recentRecordingsSection
+                .padding(.horizontal, DesignSystem.Spacing.lg)
+                .padding(.bottom, DesignSystem.Spacing.md)
+
+            Spacer(minLength: DesignSystem.Spacing.sm)
+
+            // Footer Actions
             self.footerActions
+                .padding(.horizontal, DesignSystem.Spacing.lg)
+                .padding(.bottom, DesignSystem.Spacing.lg)
         }
-        .padding(16)
-        .frame(minWidth: 300)
+        .frame(width: 300)
         .task {
-            // Skip during tests to avoid permission checks that hang on CI
             guard ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil else { return }
             self.permissionManager.refreshAllPermissions()
             self.syncMeetingTitleFromDetector()
+            self.loadRecentRecordings()
         }
         .onChange(of: self.meetingDetector.meetingTitle) {
             self.syncMeetingTitleFromDetector()
@@ -47,125 +56,173 @@ struct MenuBarView: View {
         }
     }
 
+    // MARK: - Header
+
     private var header: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 2) {
             Text("Alona")
-                .font(.headline)
-            Text(self.appState.meetingTitle)
+                .font(DesignSystem.Typography.heading(18))
+            Text(self.statusText)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         }
     }
 
-    private var detectionStatus: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Detection")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-            HStack(spacing: 8) {
-                Circle()
-                    .fill(self.meetingDetector.isInMeeting ? Color.green : Color.gray)
-                    .frame(width: 10, height: 10)
-                if self.meetingDetector.isInMeeting {
-                    Text(self.detectedMeetingDescription)
-                } else if self.meetingDetector.automationPermissionDenied {
-                    Text("Automation permission needed for meeting detection")
-                } else {
-                    Text("Idle – waiting for meeting")
-                }
-            }
-            .font(.caption)
+    private var statusText: String {
+        if self.appState.isRecording {
+            "Recording • \(self.recordingDurationText)"
+        } else if self.meetingDetector.isInMeeting {
+            "Meeting detected"
+        } else {
+            "Idle"
         }
     }
 
-    private var recordingControls: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Recording")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
+    // MARK: - Meeting Detection Card
+
+    private var meetingDetectionCard: some View {
+        VStack(spacing: DesignSystem.Spacing.md) {
+            // Icon
+            Image(systemName: self.appState.isRecording ? DesignSystem.StateIcon.recording : "video.fill")
+                .font(.system(size: 32))
+                .foregroundStyle(self.appState.isRecording ? DesignSystem.Colors.recording : .primary)
+                .recordingPulse(isActive: self.appState.isRecording)
+
+            // Title
+            Text(self.cardTitle)
+                .font(DesignSystem.Typography.heading(16))
+                .multilineTextAlignment(.center)
+
+            // Action Button
             Button(action: self.toggleRecording) {
-                Label(
-                    self.appState.isRecording ? "Stop Recording" : "Start Recording",
-                    systemImage: self.appState.isRecording ? "stop.circle.fill" : "record.circle")
-                    .foregroundColor(self.appState.isRecording ? .red : .primary)
+                HStack(spacing: DesignSystem.Spacing.sm) {
+                    Image(systemName: self.appState.isRecording ? "stop.circle" : "record.circle")
+                        .font(.system(size: DesignSystem.IconSize.inline))
+                    Text(self.appState.isRecording ? "Stop Recording" : "Start Recording")
+                        .fontWeight(.medium)
+                }
+                .padding(.horizontal, DesignSystem.Spacing.lg)
+                .padding(.vertical, DesignSystem.Spacing.sm)
+                .background(self.appState.isRecording ? Color.white.opacity(0.9) : Color.white.opacity(0.9))
+                .foregroundStyle(self.appState.isRecording ? DesignSystem.Colors.recording : .primary)
+                .clipShape(RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.button))
             }
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(.plain)
             .disabled(self.recordingActionInFlight)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(DesignSystem.Spacing.lg)
+        .background(self.cardBackgroundColor)
+        .clipShape(RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.container))
+    }
 
-            if self.appState.isRecording {
-                Text("Duration: \(self.recordingDurationText)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            if self.appState.transcriptionState != .idle {
-                TranscriptionProgressView(state: self.appState.transcriptionState)
-            }
+    private var cardTitle: String {
+        if self.appState.isRecording {
+            "Recording in Progress"
+        } else if let app = self.meetingDetector.detectedApp {
+            "\(app.displayName) Meeting Detected"
+        } else {
+            "Meeting Detected"
         }
     }
 
-    private var detectionPrompt: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Meeting detected")
+    private var cardBackgroundColor: Color {
+        if self.appState.isRecording {
+            DesignSystem.Colors.recording
+        } else {
+            DesignSystem.Colors.meetingDetected
+        }
+    }
+
+    // MARK: - Recent Recordings Section
+
+    private var recentRecordingsSection: some View {
+        VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
+            Text("Recent Recordings")
                 .font(.headline)
-            Text(self.detectedMeetingDescription)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-            HStack {
-                Button("Start Recording Now") {
-                    self.startDetectedMeeting()
+                .foregroundStyle(.primary)
+
+            if self.recentRecordings.isEmpty {
+                Text("No recordings yet")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .padding(.vertical, DesignSystem.Spacing.sm)
+            } else {
+                VStack(spacing: 0) {
+                    ForEach(self.recentRecordings.prefix(3)) { entry in
+                        Button {
+                            WindowFocusController.focusOrOpen(windowID: "recordings", openWindow: self.openWindow)
+                        } label: {
+                            HStack {
+                                Text(entry.title)
+                                    .font(.subheadline)
+                                    .foregroundStyle(.primary)
+                                    .lineLimit(1)
+                                Text("– \(self.formatDate(entry.createdAt))")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                                Spacer()
+                            }
+                            .padding(.vertical, DesignSystem.Spacing.sm)
+                            .padding(.horizontal, DesignSystem.Spacing.md)
+                            .background(Color(nsColor: .controlBackgroundColor))
+                        }
+                        .buttonStyle(.plain)
+
+                        if entry.id != self.recentRecordings.prefix(3).last?.id {
+                            Divider()
+                        }
+                    }
                 }
-                .buttonStyle(.borderedProminent)
-                Button("Dismiss") {
-                    self.dismissDetectedMeeting()
-                }
+                .clipShape(RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.button))
             }
         }
-        .padding(12)
-        .background(Color.orange.opacity(0.1))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
-    private var permissionSummary: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Permissions")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-            ForEach(Array(PermissionManager.PermissionType.allCases), id: \.self) { type in
-                HStack {
-                    Text(type.title)
-                    Spacer()
-                    Text(self.permissionManager.statuses[type]?.displayName ?? "–")
-                        .foregroundStyle(self.statusColor(for: type))
-                        .font(.caption)
-                }
-            }
+    private func formatDate(_ date: Date) -> String {
+        let calendar = Calendar.current
+        if calendar.isDateInToday(date) {
+            return date.formatted(date: .omitted, time: .shortened)
+        } else if calendar.isDateInYesterday(date) {
+            return "Yesterday"
+        } else {
+            let days = calendar.dateComponents([.day], from: date, to: Date()).day ?? 0
+            return "\(days) days ago"
         }
     }
+
+    private func loadRecentRecordings() {
+        self.recentRecordings = self.appState.meetingFileManager.meetingEntries()
+    }
+
+    // MARK: - Footer Actions
 
     private var footerActions: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: DesignSystem.Spacing.sm) {
             Button("Recordings") {
                 WindowFocusController.focusOrOpen(windowID: "recordings", openWindow: self.openWindow)
             }
-            Button("Open Startup") {
+            .buttonStyle(.bordered)
+
+            Spacer()
+
+            Button("Startup") {
                 StartupWindowController.focusOrOpen(openWindow: self.openWindow)
             }
-            Spacer()
+            .buttonStyle(.bordered)
+
             Button("Quit") {
                 NSApp.terminate(nil)
             }
+            .buttonStyle(.bordered)
             .keyboardShortcut("q")
         }
     }
 
+    // MARK: - Helper Methods
+
     private func openNotesWindow() {
         WindowFocusController.focusOrOpen(windowID: "meeting-notes", openWindow: self.openWindow)
-    }
-
-    private var shouldShowDetectionPrompt: Bool {
-        let identifier = self.activeDetectionIdentifier
-        guard !identifier.isEmpty, self.meetingDetector.isInMeeting, !self.appState.isRecording else { return false }
-        return self.appState.dismissedDetectionIdentifier != identifier
     }
 
     private var activeDetectionIdentifier: String {
@@ -173,44 +230,11 @@ struct MenuBarView: View {
         return "\(self.meetingDetector.detectedApp?.rawValue ?? "unknown")|\(self.meetingDetector.meetingTitle)"
     }
 
-    private var detectedMeetingDescription: String {
-        let appName = self.meetingDetector.detectedApp?.displayName ?? "Meeting"
-        return "\(appName) – \(self.meetingDetector.meetingTitle)"
-    }
-
-    private func startDetectedMeeting() {
-        let identifier = self.activeDetectionIdentifier
-        guard !identifier.isEmpty else { return }
-        self.recordingActionInFlight = true
-        Task {
-            await self.appState.startRecording(meetingTitleOverride: self.meetingDetector.meetingTitle)
-            self.appState.dismissDetection(identifier: identifier)
-            self.recordingActionInFlight = false
-        }
-    }
-
-    private func dismissDetectedMeeting() {
-        let identifier = self.activeDetectionIdentifier
-        guard !identifier.isEmpty else { return }
-        self.appState.dismissDetection(identifier: identifier)
-    }
-
     private func syncMeetingTitleFromDetector() {
         if self.meetingDetector.isInMeeting {
             self.appState.meetingTitle = self.meetingDetector.meetingTitle
         } else if !self.appState.isRecording {
             self.appState.meetingTitle = "No meeting detected"
-        }
-    }
-
-    private func statusColor(for type: PermissionManager.PermissionType) -> Color {
-        switch self.permissionManager.statuses[type] {
-        case .granted:
-            .green
-        case .denied:
-            .orange
-        default:
-            .secondary
         }
     }
 

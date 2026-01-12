@@ -49,6 +49,7 @@
 		AA0130 /* MicrophoneActivityTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1028 /* MicrophoneActivityTracker.swift */; };
 		AA0131 /* MeetingDetectedPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1029 /* MeetingDetectedPopup.swift */; };
 		AA0132 /* MeetingPopupWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1030 /* MeetingPopupWindow.swift */; };
+		AA0133 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1031 /* DesignSystem.swift */; };
 		AA0199 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1099 /* main.swift */; };
 /* End PBXBuildFile section */
 
@@ -86,6 +87,7 @@
 		AA1028 /* MicrophoneActivityTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneActivityTracker.swift; sourceTree = "<group>"; };
 		AA1029 /* MeetingDetectedPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingDetectedPopup.swift; sourceTree = "<group>"; };
 		AA1030 /* MeetingPopupWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingPopupWindow.swift; sourceTree = "<group>"; };
+		AA1031 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 		AA2003 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA2010 /* TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelpers.swift; sourceTree = "<group>"; };
 		AA2011 /* AppStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateTests.swift; sourceTree = "<group>"; };
@@ -149,7 +151,8 @@
 				AA1008 /* Info.plist */,
 				AA1099 /* main.swift */,
 				AA1000 /* AlonaApp.swift */,
-				AA1024 /* AppDelegate.swift */
+				AA1024 /* AppDelegate.swift */,
+				AA1031 /* DesignSystem.swift */
 			);
 			path = Alona;
 			sourceTree = "<group>";
@@ -354,7 +357,8 @@
 				AA0129 /* AudioCapturePermission.swift in Sources */,
 				AA0130 /* MicrophoneActivityTracker.swift in Sources */,
 				AA0131 /* MeetingDetectedPopup.swift in Sources */,
-				AA0132 /* MeetingPopupWindow.swift in Sources */
+				AA0132 /* MeetingPopupWindow.swift in Sources */,
+				AA0133 /* DesignSystem.swift in Sources */
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

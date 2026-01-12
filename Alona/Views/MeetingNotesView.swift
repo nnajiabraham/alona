@@ -7,17 +7,17 @@ struct MeetingNotesView: View {
 
     var body: some View {
         @Bindable var appState = appState
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: DesignSystem.Spacing.lg) {
             self.header
             self.toolbar
             GeometryReader { editorProxy in
                 NotesTextView(text: $appState.notesDraft, selectedRange: self.$selectedRange)
                     .frame(width: editorProxy.size.width, height: editorProxy.size.height)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .clipShape(RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.button))
             }
             .frame(minHeight: 280)
         }
-        .padding(20)
+        .padding(DesignSystem.Spacing.lg + DesignSystem.Spacing.xs) // 20pt
         .frame(minWidth: 420, minHeight: 360, alignment: .topLeading)
         .background(WindowIdentifierSetter(identifier: WindowFocusController.identifier(for: "meeting-notes")))
     }
@@ -27,17 +27,17 @@ struct MeetingNotesView: View {
             get: { self.appState.meetingTitle },
             set: { self.appState.updateActiveMeetingTitle($0) }))
             .textFieldStyle(.plain)
-            .font(.title3)
-            .bold()
+            .font(DesignSystem.Typography.heading(16))
             .disabled(self.appState.currentMeetingDirectory == nil)
     }
 
     private var toolbar: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: DesignSystem.Spacing.md) {
             Button {
                 self.insertTimestamp()
             } label: {
                 Label("Timestamp", systemImage: "clock")
+                    .font(.system(size: DesignSystem.IconSize.inline))
             }
             .buttonStyle(.bordered)
 
@@ -45,6 +45,7 @@ struct MeetingNotesView: View {
                 self.insertBullet()
             } label: {
                 Label("Bullet", systemImage: "list.bullet")
+                    .font(.system(size: DesignSystem.IconSize.inline))
             }
             .buttonStyle(.bordered)
 

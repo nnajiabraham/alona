@@ -4,33 +4,37 @@ struct TranscriptionQueueView: View {
     @Environment(AppState.self) private var appState
 
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: DesignSystem.Spacing.md) {
             HStack {
                 Text("Transcription Queue")
-                    .font(.title3)
-                    .bold()
+                    .font(DesignSystem.Typography.heading(16))
                 Spacer()
                 if let active = activeJobTitle {
-                    Text("Processing: \(active)")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+                    HStack(spacing: DesignSystem.Spacing.xs) {
+                        Image(systemName: DesignSystem.StateIcon.transcribing)
+                            .font(.system(size: DesignSystem.IconSize.inline))
+                            .foregroundStyle(DesignSystem.Colors.transcription)
+                        Text("Processing: \(active)")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
                 }
             }
             List {
                 if self.appState.transcriptionJobs.isEmpty {
-                    VStack(spacing: 8) {
+                    VStack(spacing: DesignSystem.Spacing.sm) {
                         Image(systemName: "waveform")
-                            .font(.largeTitle)
+                            .font(.system(size: DesignSystem.IconSize.hero))
                             .foregroundStyle(.secondary)
                         Text("No queued jobs")
-                            .font(.headline)
+                            .font(DesignSystem.Typography.heading(15))
                         Text("New transcriptions appear here automatically or when you regenerate from Recordings.")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
                     }
                     .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.vertical, 24)
+                    .padding(.vertical, DesignSystem.Spacing.xl)
                 } else {
                     ForEach(self.appState.transcriptionJobs) { job in
                         self.jobRow(job)
@@ -39,7 +43,7 @@ struct TranscriptionQueueView: View {
             }
             .listStyle(.inset)
         }
-        .padding(20)
+        .padding(DesignSystem.Spacing.lg + DesignSystem.Spacing.xs) // 20pt
         .frame(minWidth: 460, minHeight: 420)
         .background(WindowIdentifierSetter(identifier: WindowFocusController.identifier(for: "transcription-queue")))
     }
@@ -54,23 +58,32 @@ struct TranscriptionQueueView: View {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(job.title)
-                        .font(.headline)
+                        .font(DesignSystem.Typography.heading(14))
                     Text(job.requestedAt.formatted(date: .abbreviated, time: .shortened))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
-                Text(job.state.displayName)
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(job.state.statusColor)
+                HStack(spacing: DesignSystem.Spacing.xs) {
+                    Image(systemName: job.state.statusIcon)
+                        .font(.system(size: DesignSystem.IconSize.inline))
+                    Text(job.state.displayName)
+                        .font(.subheadline.weight(.semibold))
+                }
+                .foregroundStyle(job.state.statusColor)
             }
             if let progress = job.state.progressValue {
                 ProgressView(value: progress)
+                    .tint(DesignSystem.Colors.transcription)
             }
             if let error = job.state.errorDescription {
-                Text(error)
-                    .font(.caption)
-                    .foregroundStyle(.red)
+                HStack(spacing: DesignSystem.Spacing.xs) {
+                    Image(systemName: DesignSystem.StateIcon.error)
+                        .font(.system(size: DesignSystem.IconSize.inline))
+                    Text(error)
+                        .font(.caption)
+                }
+                .foregroundStyle(DesignSystem.Colors.error)
             }
             if job.state.isBusy {
                 Button("Cancel") {
@@ -79,7 +92,7 @@ struct TranscriptionQueueView: View {
                 .buttonStyle(.bordered)
             }
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, DesignSystem.Spacing.xs)
     }
 }
 
@@ -103,14 +116,29 @@ extension TranscriptionJob.State {
         }
     }
 
+    fileprivate var statusIcon: String {
+        switch self {
+        case .pending:
+            "clock"
+        case .preparing, .processing, .summarizing:
+            DesignSystem.StateIcon.transcribing
+        case .completed:
+            DesignSystem.StateIcon.success
+        case .failed:
+            DesignSystem.StateIcon.error
+        case .cancelled:
+            "xmark.circle"
+        }
+    }
+
     fileprivate var statusColor: Color {
         switch self {
         case .pending, .preparing, .processing, .summarizing:
-            .accentColor
+            DesignSystem.Colors.transcription
         case .completed:
-            .green
+            DesignSystem.Colors.success
         case .failed:
-            .red
+            DesignSystem.Colors.error
         case .cancelled:
             .secondary
         }

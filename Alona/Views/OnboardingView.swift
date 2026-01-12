@@ -11,9 +11,9 @@ struct OnboardingView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: DesignSystem.Spacing.lg) {
                 Text("Welcome to Alona")
-                    .font(.title)
+                    .font(DesignSystem.Typography.heading(24))
                 Text("Grant the required permissions so Alona can detect meetings, capture audio, and manage notes.")
                     .foregroundStyle(.secondary)
                 self.permissionsList
@@ -27,7 +27,7 @@ struct OnboardingView: View {
                     }
                 }
             }
-            .padding(24)
+            .padding(DesignSystem.Spacing.xl)
         }
         .frame(minWidth: 420, minHeight: 420)
         .background(WindowIdentifierSetter(identifier: WindowFocusController.identifier(for: "onboarding")))
@@ -37,7 +37,7 @@ struct OnboardingView: View {
     }
 
     private var permissionsList: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: DesignSystem.Spacing.md) {
             ForEach(Array(PermissionManager.PermissionType.allCases), id: \.self) { type in
                 PermissionRow(type: type)
             }
@@ -52,18 +52,24 @@ struct OnboardingView: View {
         #endif
 
         var body: some View {
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
                 HStack {
                     Text(self.type.title)
-                        .font(.headline)
+                        .font(DesignSystem.Typography.heading(14))
                     Spacer()
-                    Text(self.permissionManager.statuses[self.type]?.displayName ?? "–")
-                        .font(.caption)
-                        .padding(6)
-                        .background(self.statusColor.opacity(0.2))
-                        .clipShape(RoundedRectangle(cornerRadius: 6))
+                    HStack(spacing: DesignSystem.Spacing.xs) {
+                        Image(systemName: self.statusIcon)
+                            .font(.system(size: DesignSystem.IconSize.inline))
+                            .foregroundStyle(self.statusColor)
+                        Text(self.permissionManager.statuses[self.type]?.displayName ?? "–")
+                            .font(.caption)
+                    }
+                    .padding(.horizontal, DesignSystem.Spacing.sm)
+                    .padding(.vertical, 6)
+                    .background(self.statusColor.opacity(0.15))
+                    .clipShape(RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.button))
                 }
-                HStack {
+                HStack(spacing: DesignSystem.Spacing.sm) {
                     Button("Request Access") {
                         self.permissionManager.requestPermission(self.type)
                     }
@@ -73,19 +79,33 @@ struct OnboardingView: View {
                 }
                 .buttonStyle(.bordered)
             }
-            .padding(12)
+            .padding(DesignSystem.Spacing.md)
             .background(Color.gray.opacity(0.08))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.container))
             #if DEBUG
                 .enableInjection()
             #endif
         }
 
+        private var statusIcon: String {
+            switch self.permissionManager.statuses[self.type] {
+            case .granted:
+                DesignSystem.StateIcon.success
+            case .denied:
+                DesignSystem.StateIcon.error
+            default:
+                "questionmark.circle"
+            }
+        }
+
         private var statusColor: Color {
             switch self.permissionManager.statuses[self.type] {
-            case .granted: .green
-            case .denied: .orange
-            default: .gray
+            case .granted:
+                DesignSystem.Colors.success
+            case .denied:
+                DesignSystem.Colors.meetingDetected
+            default:
+                .gray
             }
         }
     }

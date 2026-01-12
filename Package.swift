@@ -37,7 +37,8 @@ let package = Package(
                 "Models",
                 "Services",
                 "Views",
-                "Utilities"
+                "Utilities",
+                "DesignSystem.swift"
             ],
             swiftSettings: [
                 .swiftLanguageMode(.v6)

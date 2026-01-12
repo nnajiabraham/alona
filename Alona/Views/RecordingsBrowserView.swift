@@ -13,15 +13,15 @@ struct RecordingsBrowserView: View {
         NavigationSplitView {
             List(selection: self.$selectedEntryID) {
                 ForEach(self.entries) { entry in
-                    VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading, spacing: DesignSystem.Spacing.xs) {
                         TextField("Title", text: self.binding(for: entry))
                             .textFieldStyle(.plain)
-                            .font(.headline)
+                            .font(DesignSystem.Typography.heading(14))
                         Text(entry.createdAt.formatted(date: .abbreviated, time: .shortened))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
-                    .padding(.vertical, 4)
+                    .padding(.vertical, DesignSystem.Spacing.xs)
                     .listRowBackground(self.selectionBackground(for: entry))
                     .tag(entry.id)
                 }
@@ -33,12 +33,12 @@ struct RecordingsBrowserView: View {
         } detail: {
             if let entry = selectedEntry {
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 16) {
+                    VStack(alignment: .leading, spacing: DesignSystem.Spacing.lg) {
                         TextField("Title", text: self.binding(for: entry), onEditingChanged: { editing in
                             self.isEditingTitleFromDetail = editing
                         })
                         .textFieldStyle(.plain)
-                        .font(.title2)
+                        .font(DesignSystem.Typography.heading(18))
                         Text(entry.createdAt.formatted(date: .long, time: .shortened))
                             .foregroundStyle(.secondary)
                         if self.notesText.isEmpty {
@@ -46,19 +46,24 @@ struct RecordingsBrowserView: View {
                                 .foregroundStyle(.secondary)
                         } else {
                             Text("Notes")
-                                .font(.headline)
+                                .font(DesignSystem.Typography.heading(14))
                             Text(self.notesText)
                                 .textSelection(.enabled)
-                                .font(.body)
+                                .font(DesignSystem.Typography.mono(13))
                         }
                         self.audioSection(for: entry)
                         self.transcriptSection(for: entry)
                     }
-                    .padding()
+                    .padding(DesignSystem.Spacing.lg)
                 }
             } else {
-                Text("Select a recording")
-                    .foregroundStyle(.secondary)
+                VStack(spacing: DesignSystem.Spacing.sm) {
+                    Image(systemName: "doc.text")
+                        .font(.system(size: DesignSystem.IconSize.hero))
+                        .foregroundStyle(.secondary)
+                    Text("Select a recording")
+                        .foregroundStyle(.secondary)
+                }
             }
         }
         .onAppear(perform: self.loadEntries)
@@ -103,7 +108,7 @@ struct RecordingsBrowserView: View {
     private func transcriptSection(for entry: MeetingEntry) -> some View {
         HStack {
             Text("Transcript")
-                .font(.headline)
+                .font(DesignSystem.Typography.heading(14))
             Spacer()
             Button {
                 self.appState.regenerateTranscription(for: entry.directory, notes: self.notesText)
@@ -115,34 +120,45 @@ struct RecordingsBrowserView: View {
         }
 
         if self.appState.isJobActive(for: entry.directory) {
-            Text("Transcription queued…")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+            HStack(spacing: DesignSystem.Spacing.xs) {
+                Image(systemName: DesignSystem.StateIcon.transcribing)
+                    .font(.system(size: DesignSystem.IconSize.inline))
+                    .foregroundStyle(DesignSystem.Colors.transcription)
+                Text("Transcription queued…")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
 
         if self.transcriptText.isEmpty {
             Text("No transcript found")
                 .foregroundStyle(.secondary)
         } else {
+            // SF Mono for transcripts per design system
             Text(self.transcriptText)
                 .textSelection(.enabled)
-                .font(.body)
+                .font(DesignSystem.Typography.mono(13))
         }
     }
 
     @ViewBuilder
     private func audioSection(for entry: MeetingEntry) -> some View {
         Text("Audio")
-            .font(.headline)
+            .font(DesignSystem.Typography.heading(14))
 
         if let error = audioPlayer.lastError {
-            Text(error)
-                .font(.caption)
-                .foregroundStyle(.red)
+            HStack(spacing: DesignSystem.Spacing.xs) {
+                Image(systemName: DesignSystem.StateIcon.error)
+                    .font(.system(size: DesignSystem.IconSize.inline))
+                    .foregroundStyle(DesignSystem.Colors.error)
+                Text(error)
+                    .font(.caption)
+                    .foregroundStyle(DesignSystem.Colors.error)
+            }
         }
 
         if let url = appState.meetingFileManager.recordingAudioURL(in: entry.directory) {
-            HStack(spacing: 12) {
+            HStack(spacing: DesignSystem.Spacing.md) {
                 Button {
                     if self.audioPlayer.isPlaying, self.audioPlayer.playingURL == url {
                         self.audioPlayer.stop()
@@ -158,7 +174,7 @@ struct RecordingsBrowserView: View {
                 .buttonStyle(.bordered)
 
                 Text(url.lastPathComponent)
-                    .font(.caption)
+                    .font(DesignSystem.Typography.mono(11))
                     .foregroundStyle(.secondary)
                     .textSelection(.enabled)
             }

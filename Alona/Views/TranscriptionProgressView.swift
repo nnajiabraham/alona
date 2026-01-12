@@ -4,19 +4,62 @@ struct TranscriptionProgressView: View {
     let state: TranscriptionState
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(self.title)
-                .font(.footnote)
-                .foregroundStyle(.secondary)
+        VStack(alignment: .leading, spacing: DesignSystem.Spacing.sm) {
+            HStack(spacing: DesignSystem.Spacing.sm) {
+                Image(systemName: self.statusIcon)
+                    .font(.system(size: DesignSystem.IconSize.inline))
+                    .foregroundStyle(self.iconColor)
+                Text(self.title)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
             ProgressView(value: self.progress)
                 .progressViewStyle(.linear)
+                .tint(self.progressColor)
             Text(self.message)
                 .font(.caption)
                 .foregroundStyle(self.messageColor)
         }
-        .padding(12)
+        .padding(DesignSystem.Spacing.md)
         .background(Color.gray.opacity(0.08))
-        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .clipShape(RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.container))
+    }
+
+    private var statusIcon: String {
+        switch self.state {
+        case .idle:
+            DesignSystem.StateIcon.idle
+        case .preparing, .processing, .summarizing:
+            DesignSystem.StateIcon.transcribing
+        case .completed:
+            DesignSystem.StateIcon.success
+        case .failed:
+            DesignSystem.StateIcon.error
+        }
+    }
+
+    private var iconColor: Color {
+        switch self.state {
+        case .idle:
+            .secondary
+        case .preparing, .processing, .summarizing:
+            DesignSystem.Colors.transcription
+        case .completed:
+            DesignSystem.Colors.success
+        case .failed:
+            DesignSystem.Colors.error
+        }
+    }
+
+    private var progressColor: Color {
+        switch self.state {
+        case .failed:
+            DesignSystem.Colors.error
+        case .completed:
+            DesignSystem.Colors.success
+        default:
+            DesignSystem.Colors.transcription
+        }
     }
 
     private var title: String {
@@ -72,7 +115,7 @@ struct TranscriptionProgressView: View {
 
     private var messageColor: Color {
         if case .failed = self.state {
-            return .red
+            return DesignSystem.Colors.error
         }
         return .secondary
     }
