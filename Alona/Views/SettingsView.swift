@@ -71,7 +71,10 @@ struct GeneralSettingsView: View {
                         Toggle("Capture system audio", isOn: $appState.captureSystemAudio)
 
                         Text(
-                            "Disabling this hides the macOS \"Currently Sharing\" banner and records microphone audio only.")
+                            """
+                            Disabling this hides the macOS "Currently Sharing" \
+                            banner and records microphone audio only.
+                            """)
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
