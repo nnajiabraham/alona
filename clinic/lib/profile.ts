@@ -1,5 +1,5 @@
-import type { NotesProfile } from '../core/notes';
-import type { NoteTemplate, TenantConfig } from '../tenants/schema';
+import type { NotesProfile } from '../../core/notes';
+import type { NoteTemplate, TenantConfig } from '../../tenants/schema';
 
 export const NOT_DISCUSSED = 'Not discussed.';
 

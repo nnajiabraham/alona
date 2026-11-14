@@ -1,8 +1,8 @@
-import type { Service } from '../core/service';
-import type { MeetingStore } from '../core/store';
-import type { NotesProfile } from '../core/notes';
-import { isTierId } from '../core/types';
-import type { TenantConfig } from '../tenants/schema';
+import type { Service } from '../../core/service';
+import type { MeetingStore } from '../../core/store';
+import type { NotesProfile } from '../../core/notes';
+import { isTierId } from '../../core/types';
+import type { TenantConfig } from '../../tenants/schema';
 import { templateOf, templateProfile } from './profile';
 
 /**

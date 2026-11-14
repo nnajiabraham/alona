@@ -227,7 +227,9 @@ async function materialize(slug) {
   mkdirSync(app, { recursive: true });
   for (const name of ['app.ts', 'app.test.contract']) put(join(app, name), readFileSync(join(CLINIC, name)));
   put(join(app, 'app.contract'), withWaveformTint(readFileSync(join(CLINIC, 'app.contract'), 'utf8'), tenant));
-  mirror(join(CLINIC, 'lib'), join(app, 'lib'), (name) => name.endsWith('.test.ts'));
+  // At clinic/lib, as in the repo, so its `../../core` and `../../tenants` reach the mounted directories in both places.
+  rmSync(join(app, 'lib'), { recursive: true, force: true });
+  mirror(join(CLINIC, 'lib'), join(app, 'clinic', 'lib'), (name) => name.endsWith('.test.ts'));
   if (!existsSync(join(ROOT, 'modules', 'web', 'worker.js'))) fail('the web engine is not built: run `bun tools/build-web-engine.mjs`');
   mirror(join(ROOT, 'modules'), join(app, 'modules'), (name) => name.endsWith('.xcframework'));
   for (const name of ['exact.mjs', 'bun.lock', 'gradle.lockfile', 'gradle-verification.xml']) {

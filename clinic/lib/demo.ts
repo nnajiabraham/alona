@@ -1,4 +1,4 @@
-import type { Segment } from '../core/types';
+import type { Segment } from '../../core/types';
 
 /** A synthetic consultation the demo engine returns as every transcript. No real person. */
 export const DEMO_CONSULTATION: Segment[] = [

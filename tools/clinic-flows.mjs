@@ -35,7 +35,7 @@ function flows(tenant) {
   const READY = ['clock data', 'tap continue', 'clock data', 'clock +6000', 'clock data'];
   const RECORDED = [
     ...READY,
-    'tap new-note-button', 'clock settle', 'type new-ref Bed 4', `tap template-${second.id}`, 'tap start-recording',
+    'tap new-note-button', 'clock settle', 'type new-ref Bed 4', `tap template-${second.id}`, 'clock settle', 'tap start-recording',
     'clock data', 'clock settle', 'type record-jottings - L knee, 2 weeks',
     'clock +5000', 'tap stop-recording', 'clock data', 'clock settle', 'clock +12000', 'clock data',
   ];
@@ -48,7 +48,7 @@ function flows(tenant) {
     record: [
       ...READY,
       'tap new-note-button', 'clock settle', shot('new-note-sheet'),
-      'type new-ref Bed 4', `tap template-${second.id}`, shot('reference-and-template'),
+      'type new-ref Bed 4', `tap template-${second.id}`, 'clock settle', shot('reference-and-template'),
       'tap start-recording', 'clock data', 'clock settle', check('rec.state', 'recording'), check('recRef', 'Bed 4'),
       check('recTemplate', second.id), shot('recording-started'),
       'type record-jottings - L knee, 2 weeks', 'clock +5000', shot('jottings-while-recording'),

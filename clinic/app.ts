@@ -1,7 +1,7 @@
 import type { Answer, NativeModule, Sources, Storage } from './app.contract.d.ts';
 import { hostService } from './core/host';
-import { demoDraft, DEMO_CONSULTATION } from './lib/demo';
-import { brandView, clinicService, profileFor, type ClinicService } from './lib/service';
+import { demoDraft, DEMO_CONSULTATION } from './clinic/lib/demo';
+import { brandView, clinicService, profileFor, type ClinicService } from './clinic/lib/service';
 import { TENANT } from './tenant';
 import { meetingStore } from './core/store';
 
