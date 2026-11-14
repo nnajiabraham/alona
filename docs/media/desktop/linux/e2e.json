@@ -1,0 +1,78 @@
+{
+  "date": "2026-11-14T22:50:30.813Z",
+  "platform": "linux",
+  "app": "/opt/Alona/alona",
+  "fixture": "tools/fixture/meeting-fixture.wav (53 s, 16 kHz mono)",
+  "checks": {
+    "noError": true,
+    "oneWindowTitledAlona": true,
+    "crossOriginIsolated": true,
+    "firstLaunchShowsDeviceCheck": true,
+    "appRecordedTheMicrophone": true,
+    "notesOnScreenHaveFiveHeadings": true,
+    "werAtMost15": "not applicable: demo engine",
+    "notesHaveFiveHeadings": "not applicable: demo engine",
+    "otherOriginsRefused": true,
+    "networkOnlyAppAndModelHosts": true
+  },
+  "window": {
+    "count": 1,
+    "title": "Alona",
+    "size": [
+      1040,
+      760
+    ],
+    "minimumSize": [
+      420,
+      560
+    ]
+  },
+  "page": {
+    "url": "alona://app/",
+    "crossOriginIsolated": true,
+    "sharedArrayBuffer": true,
+    "webdriver": false,
+    "userAgent": "Mozilla/5.0 (X11; Linux aarch64) AppleWebKit/537.36 (KHTML, like Gecko) Alona/0.1.0 Chrome/156.0.8078.75 Electron/45.2.1 Safari/537.36",
+    "webgpuAdapter": {
+      "vendor": "google",
+      "architecture": "swiftshader",
+      "description": "",
+      "shaderF16": false
+    }
+  },
+  "probe": {
+    "host": "web",
+    "memoryGB": 8,
+    "cores": 12,
+    "gpu": false,
+    "gpuMaxBufferGB": 0,
+    "storageFreeGB": 1000.368128,
+    "formFactor": "desktop",
+    "appleSilicon": false,
+    "iosBrowser": false,
+    "description": "Chrome on Linux",
+    "demo": true,
+    "demoReason": "This browser has no WebGPU, so Alona cannot run its models here."
+  },
+  "engine": "demo",
+  "download": {
+    "seconds": 2.424
+  },
+  "recording": {
+    "found": true,
+    "path": "app:/data/meetings/m1794696633604/audio.m4a",
+    "bytes": 132953
+  },
+  "stopToNotesSeconds": 8.374,
+  "notesOnScreen": "▎ These are sample notes from the demo engine. No model ran, and they do not describe your recording.\n\nSummary\n\nThe team reviewed open bugs and agreed to launch the mobile app on March 15, provided the login fix lands by Friday.\n\nKey points\n\n\n• The Android build is stable and the settings crash is fixed.\n\n• The login issue on older phones is still open.\n\n• Onboarding screens are final.\n\n\nDecisions\n\n\n• Launch on March 15 if the login fix lands by Friday.\n\n\nAction items\n\n\n☐ Daniel: finish and test the login fix by Friday\n\n☐ Karen: send the updated icons by Thursday\n\n\nOpen questions\n\n\n• None recorded.",
+  "missingHeadingsOnScreen": [],
+  "settingsDevice": "Demo device · 8 GB memory · GPU",
+  "blockedLinks": {
+    "windows": 1,
+    "url": "alona://app/settings"
+  },
+  "peakMemoryMB": 734,
+  "console": [],
+  "mainProcess": [],
+  "networkOrigins": []
+}
