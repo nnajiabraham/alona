@@ -121,16 +121,29 @@ describe('notes planning', () => {
 describe('finishing notes', () => {
   test('the title line becomes the title and leaves the notes', () => {
     const notes = finishNotes('Title: Launch planning\n\n## Summary\nWe agreed.');
-    expect(notes).toEqual({ title: 'Launch planning', markdown: '## Summary\nWe agreed.' });
+    expect(notes.title).toBe('Launch planning');
+    expect(notes.markdown.startsWith('## Summary\nWe agreed.')).toBe(true);
+  });
+
+  test('a section the model left out is added and says nothing was recorded', () => {
+    const { markdown } = finishNotes('Title: Sync\n## Summary\nShort.\n\n## Key points\n- One\n\n## Decisions\n- Ship\n\n## Action items\n- [ ] Ana: ship');
+    expect(markdown.endsWith('## Action items\n- [ ] Ana: ship\n\n## Open questions\n- None recorded.')).toBe(true);
+    expect(markdown.match(/^## /gm)?.length).toBe(5);
+  });
+
+  test('sections the model wrote are never duplicated', () => {
+    const full = '## Summary\nA.\n## Key points\n- b\n## Decisions\n- c\n## Action items\n- d\n## Open questions\n- e';
+    expect(finishNotes(full).markdown).toBe(full);
   });
 
   test('reasoning blocks and code fences are removed', () => {
     const notes = finishNotes('<think>let me plan</think>\n```markdown\n**Title:** Sync\n## Summary\nShort.\n```');
-    expect(notes).toEqual({ title: 'Sync', markdown: '## Summary\nShort.' });
+    expect(notes.title).toBe('Sync');
+    expect(notes.markdown.startsWith('## Summary\nShort.')).toBe(true);
   });
 
   test('a first-level heading is taken as the title when no title line is given', () => {
-    expect(finishNotes('# Launch planning\n\n## Summary\nWe agreed.')).toEqual({ title: 'Launch planning', markdown: '## Summary\nWe agreed.' });
+    expect(finishNotes('# Launch planning\n\n## Summary\nWe agreed.').title).toBe('Launch planning');
   });
 
   test('a title that only repeats the instruction is dropped, so the meeting keeps its own name', () => {

@@ -1,0 +1,77 @@
+{
+  "host": "macos",
+  "tier": "balanced",
+  "date": "2026-11-14T19:26:12.394Z",
+  "method": {
+    "audio": "tools/fixture/meeting-fixture.wav (53 s synthetic three-speaker meeting), copied over the recorded take",
+    "wer": "lowercase, punctuation stripped, word-level edit distance, no number normalization",
+    "timing": "wall time between agent replies polled once a second, so each figure is accurate to about one second",
+    "memory": "physical footprint of the app process (proc_pid_rusage), sampled every 250 ms; idle is the lowest sample in the 3 s that end a cycle, about a minute after the notes finish"
+  },
+  "downloadSeconds": 7,
+  "wer": {
+    "errors": 8,
+    "words": 168,
+    "rate": 0.0476
+  },
+  "title": "Mobile App Launch Review",
+  "transcript": "Thanks everyone. Today we need to decide the launch date for the mobile app and review the open bugs. The Android build is stable. We fixed the crash on the settings screen yesterday, and battery usage is down by 20%. Good, what about the login issue on older phones? That one is still open. I need two more days to finish the fix and test it. From the design side, the onboarding screens are final. I will send the updated icons to the team by Thursday. Then let us agree on the plan. We launch on the 15th of March. As long as the login fix lands by Friday. Agreed. I will also prepare the release notes and the store screenshots. I will own the login fix, and I will run the full regression suite on Friday morning. Great. To summarize, the launch date is March 15, Daniel own the login fix, and Karen own the icons, the release notes, and the screenshots. Thanks everyone.",
+  "notes": "## Summary\nThe team is deciding the mobile app launch date and reviewing open bugs. The Android build is stable with improved battery usage, though a login issue on older phones remains unresolved. A decision was made to proceed with the March 15th launch pending the fix for the login bug.\n\n## Key points\n*   **Launch Date:** March 15 (Agreed).\n*   **Login Fix Status:** Two days remaining; requires testing by Friday.\n*   **Android Build:** Stable; battery usage reduced by 20%.\n*   **Design Assets:** Onboarding screens are final; icons to be sent Thursday.\n\n## Decisions\n*   Mobile app launch date is set for March 15.\n*   Launch will proceed as long as the login fix lands by Friday.\n*   All agreed upon milestones have been accepted and scheduled.\n\n## Action items\n- [ ] **Owner:** Daniel (Due: End of Day) - Fix the login issue on older phones; run regression suite on Friday morning.\n- [ ] **Owner:** Karen (Due: Thursday) - Send updated icons to the design team.\n\n## Open questions\n- None recorded.",
+  "runs": [
+    {
+      "cycle": 1,
+      "transcribeSeconds": 5.196,
+      "notesSeconds": 3.08,
+      "totalSeconds": 8.276,
+      "peakMB": 1389,
+      "idleMB": 116,
+      "finished": true
+    },
+    {
+      "cycle": 2,
+      "transcribeSeconds": 5.153,
+      "notesSeconds": 3.087,
+      "totalSeconds": 8.24,
+      "peakMB": 1402,
+      "idleMB": 104,
+      "finished": true
+    },
+    {
+      "cycle": 3,
+      "transcribeSeconds": 5.181,
+      "notesSeconds": 3.091,
+      "totalSeconds": 8.272,
+      "peakMB": 1099,
+      "idleMB": 103,
+      "finished": true
+    },
+    {
+      "cycle": 4,
+      "transcribeSeconds": 5.185,
+      "notesSeconds": 3.08,
+      "totalSeconds": 8.265,
+      "peakMB": 1087,
+      "idleMB": 103,
+      "finished": true
+    },
+    {
+      "cycle": 5,
+      "transcribeSeconds": 5.182,
+      "notesSeconds": 3.081,
+      "totalSeconds": 8.263,
+      "peakMB": 1092,
+      "idleMB": 103,
+      "finished": true
+    },
+    {
+      "cycle": 6,
+      "transcribeSeconds": 5.173,
+      "notesSeconds": 3.079,
+      "totalSeconds": 8.252,
+      "peakMB": 1086,
+      "idleMB": 103,
+      "finished": true
+    }
+  ],
+  "failures": []
+}

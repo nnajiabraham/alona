@@ -1,7 +1,7 @@
 import type { Answer, NativeModule, Sources, Storage } from './app.contract.d.ts';
-import { engineOver, type EngineRequest } from './core/engine';
+import { engineOver, parseDeviceFacts, type DeviceFacts, type EngineRequest } from './core/engine';
 import { service, type Service } from './core/service';
-import { simEngine } from './core/sim-engine';
+import { SIM_DEVICE, simEngine } from './core/sim-engine';
 import { meetingStore, type Files } from './core/store';
 
 const DIR = 'app:/data';
@@ -30,10 +30,20 @@ const demoShelf = (files: Files) => ({
  */
 async function build(storage: Storage, native: NativeModule | null | undefined): Promise<Service> {
   const store = meetingStore(storage.fs);
-  const demo = (): Service => service(simEngine({ polls: 3, shelf: demoShelf(storage.fs) }), store, true);
+  const demo = (device: DeviceFacts = SIM_DEVICE): Service =>
+    service(simEngine({ polls: 3, shelf: demoShelf(storage.fs), device }), store, true);
   if (native?.available !== true) return demo();
-  const probe = await native.later({ op: 'probe' });
-  if (probe.demo === true) return demo();
+  // Android reports a native module because the recording packages are native, but nothing there
+  // answers the engine protocol yet, so its probe fails. It is the only such host.
+  const probe = await native.later({ op: 'probe' }).catch(() => null);
+  if (probe === null || typeof probe.host !== 'string') {
+    return demo({ ...SIM_DEVICE, host: 'android', formFactor: 'phone' });
+  }
+  if (probe.demo === true) {
+    // The demo keeps its sample memory and GPU, so captures match on every machine, but speaks as the real host.
+    const real = parseDeviceFacts(probe);
+    return demo({ ...SIM_DEVICE, host: real.host, formFactor: real.formFactor, appleSilicon: real.appleSilicon });
+  }
   return service(engineOver((request: EngineRequest) => native.later({ ...request })), store, false);
 }
 

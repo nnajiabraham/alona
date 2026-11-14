@@ -11,15 +11,17 @@
 // real-time capture. With the demo engine the transcript and notes are samples.
 import { spawnSync } from 'node:child_process';
 import { mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { homedir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 
 const ROOT = resolve(dirname(new URL(import.meta.url).pathname), '..');
 const BUN = process.execPath;
+const APP_ID = 'com.alona.app';
 
 const TARGETS = {
   web: { host: 'web', flags: ['--size', '1100x760'] },
   'web-phone': { host: 'web', flags: ['--size', '390x844'] },
-  macos: { host: 'macos', flags: [] },
+  macos: { host: 'macos', flags: [], demoMarker: true },
   android: { host: 'android', flags: [] },
   ios: { host: 'ios', flags: [] },
 };
@@ -43,7 +45,7 @@ const FLOWS = {
   ],
   record: [
     ...READY,
-    'tap start-recording', 'clock data', 'clock settle', check('recorderId', 'recorder-1'), shot('recording-started'),
+    'tap start-recording', 'clock data', 'clock settle', check('rec.state', 'recording'), shot('recording-started'),
     'type record-title Launch sync', 'type record-notes - Ask about the login fix',
     'clock +5000', shot('notes-while-recording'),
     'tap stop-recording', 'clock data', 'clock settle', check('lib.0.status', 'recorded'), shot('saved-and-queued'),
@@ -100,7 +102,16 @@ function run(targetName, flowName) {
   }
 
   const storage = `flow-${flowName}-${Date.now()}`;
-  const args = ['exact.mjs', 'agent', target.host, ...target.flags, '--storage', storage, '--reset-storage',
+  const fresh = [];
+  if (target.demoMarker) {
+    // The Apple engine runs real models unless its data folder holds this file (modules/apple/Engine.swift).
+    const data = join(homedir(), 'Library', 'Caches', 'exact', APP_ID, 'agent', storage, 'data');
+    mkdirSync(data, { recursive: true });
+    writeFileSync(join(data, 'demo-engine'), '');
+  } else {
+    fresh.push('--reset-storage');
+  }
+  const args = ['exact.mjs', 'agent', target.host, ...target.flags, '--storage', storage, ...fresh,
     '--permission', 'microphone=granted', '--json', ...ops];
   const result = spawnSync(BUN, args, { cwd: ROOT, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
   const replies = result.stdout.split('\n').filter((l) => l.trim() !== '');
