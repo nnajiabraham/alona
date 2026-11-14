@@ -1,0 +1,64 @@
+{
+  "date": "2026-11-14T23:32:59.616Z",
+  "tenant": "quillmoor-pilot",
+  "template": "physio-initial",
+  "fixture": "tools/fixture/clinic-fixture.wav (56 s, 16 kHz mono, macOS say)",
+  "checks": {
+    "noError": true,
+    "werAtMost15": true,
+    "exactlyTheTemplateHeadings": true
+  },
+  "microphone": "Chrome fake capture device playing the fixture",
+  "probe": {
+    "host": "web",
+    "memoryGB": 32,
+    "cores": 12,
+    "gpu": true,
+    "gpuMaxBufferGB": 3.9999999962747097,
+    "storageFreeGB": 10.73741824,
+    "formFactor": "desktop",
+    "appleSilicon": false,
+    "iosBrowser": false,
+    "description": "Chrome on macOS",
+    "demo": false,
+    "demoReason": ""
+  },
+  "download": {
+    "seconds": 13.504,
+    "bytes": 761444246
+  },
+  "recording": "recorded by the app: app:/data/meetings/m1794699198680/audio.m4a (870148 bytes)",
+  "pipelineSeconds": 38.084,
+  "transcript": "Hello, I am the physiotherapist seeing you today. What brings you in? My right shoulder has been painful for about three weeks. It started after I painted the ceiling at home. Does anything make it better or worse? Reaching overhead makes it worse, and it aches at night when I lie on that side, resting it helps a little. Have you had problems with this shoulder before? No, never. I am otherwise healthy and I swim twice a week, but I have stopped since the pain started. On examination, you can lift your arm to about 120 degrees before the pain starts. Strength is good, and the painful arc test is positive. My impression is a rotator cuff irritation from the painting. The plan is gentle pendulum exercises three times a day, avoid reaching overhead for two weeks, and come back in two weeks so we can check your progress. Thank you, I will do the exercises.",
+  "wer": {
+    "errors": 4,
+    "words": 160,
+    "wer": 0.025
+  },
+  "draft": "## Presenting complaint\nYou mentioned your right shoulder has been painful for about three weeks, and it started after you painted the ceiling at home. The problem is worse with reaching overhead, aches at night when lying on that side, and resting helps a little. What makes it better or worse? Reach overhead makes it worse, and it aches at night when I lie on that side, resting it helps a little. Have you had problems with this shoulder before? No, never. Otherwise, I am healthy and I swim twice a week, but I have stopped since the pain started.\n\n## History\nPast episodes, general health, and activity the patient described. You mentioned your right shoulder has been painful for about three weeks, and it started after you painted the ceiling at home. The problem is worse with reaching overhead, aches at night when lying on that side, and resting it helps a little. What makes it better or worse? Reach overhead makes it worse, and it aches at night when I lie on that side, resting it helps a little. Have you had problems with this shoulder before? No, never. Otherwise, I am healthy and I swim twice a week, but I have stopped since the pain started.\n\n## Findings\nRange of movement, strength, and tests the clinician reported aloud. You can lift your arm to about 120 degrees before the pain starts. Strength is good, and the painful arc test is positive. My impression is a rotator cuff irritation from the painting. Range of movement is good. Strength is good, and the painful arc test is positive.\n\n## Impression\nThe clinician's stated working impression. The problem is worse with reaching overhead, aches at night when lying on that side, and resting it helps a little. What makes it better or worse? Reach overhead makes it worse, and it aches at night when I lie on that side, resting it helps a little. Have you had problems with this shoulder before? No, never. Otherwise, I am healthy and I swim twice a week, but I have stopped since the pain started.\n\n## Treatment plan\nExercises, treatment and advice given, with frequency if said. Plan is gentle pendulum exercises three times a day, avoid reaching overhead for two weeks, and come back in two weeks so we can check your progress. Thank you, I will do the exercises.",
+  "headings": [
+    "Presenting complaint",
+    "History",
+    "Findings",
+    "Impression",
+    "Treatment plan"
+  ],
+  "transcribe": {
+    "loadMs": 1184,
+    "transcribeMs": 3692,
+    "audioSeconds": 58,
+    "windows": 4,
+    "decodeMs": 82
+  },
+  "generate": [
+    {
+      "loadMs": 1438,
+      "promptTokens": 498,
+      "tokens": 491,
+      "ttftMs": 15451,
+      "generateMs": 27037,
+      "tokensPerSecond": 42.29
+    }
+  ],
+  "console": []
+}

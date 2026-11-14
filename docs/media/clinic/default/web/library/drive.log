@@ -16,6 +16,8 @@ type new-ref Bed 4
   {"at":[550,150],"typed":80,"target":"new-ref","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":28,"incarnation":1}
 tap template-consultation
   {"at":[550,383],"tapped":93,"target":"template-consultation","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":29,"incarnation":1}
+clock settle
+  {"clock":6400,"settled":true}
 tap start-recording
   {"at":[550,694],"tapped":101,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":42,"incarnation":1}
 clock data
