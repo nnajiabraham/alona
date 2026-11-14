@@ -144,6 +144,82 @@ window.ALONA = {
     "video": "../media/android/settings/settings.mp4"
    }
   },
+  "desktop": {
+   "linux": {
+    "shots": [
+     {
+      "src": "../media/desktop/linux/01-first-launch-device-check.png",
+      "label": "first launch device check"
+     },
+     {
+      "src": "../media/desktop/linux/02-downloading.png",
+      "label": "downloading"
+     },
+     {
+      "src": "../media/desktop/linux/03-ready-to-record.png",
+      "label": "ready to record"
+     },
+     {
+      "src": "../media/desktop/linux/04-recording.png",
+      "label": "recording"
+     },
+     {
+      "src": "../media/desktop/linux/05-recording-end.png",
+      "label": "recording end"
+     },
+     {
+      "src": "../media/desktop/linux/06-notes.png",
+      "label": "notes"
+     },
+     {
+      "src": "../media/desktop/linux/07-transcript.png",
+      "label": "transcript"
+     },
+     {
+      "src": "../media/desktop/linux/08-settings.png",
+      "label": "settings"
+     }
+    ],
+    "video": "../media/desktop/linux/e2e.mp4"
+   },
+   "macos": {
+    "shots": [
+     {
+      "src": "../media/desktop/macos/01-first-launch-device-check.png",
+      "label": "first launch device check"
+     },
+     {
+      "src": "../media/desktop/macos/02-downloading.png",
+      "label": "downloading"
+     },
+     {
+      "src": "../media/desktop/macos/03-ready-to-record.png",
+      "label": "ready to record"
+     },
+     {
+      "src": "../media/desktop/macos/04-recording.png",
+      "label": "recording"
+     },
+     {
+      "src": "../media/desktop/macos/05-recording-end.png",
+      "label": "recording end"
+     },
+     {
+      "src": "../media/desktop/macos/06-notes.png",
+      "label": "notes"
+     },
+     {
+      "src": "../media/desktop/macos/07-transcript.png",
+      "label": "transcript"
+     },
+     {
+      "src": "../media/desktop/macos/08-settings.png",
+      "label": "settings"
+     }
+    ],
+    "video": "../media/desktop/macos/e2e.mp4"
+   }
+  },
   "macos": {
    "leaving": {
     "shots": [
@@ -857,6 +933,1142 @@ window.ALONA = {
     "Download": "761 MB in 13 s",
     "Device": "Chrome on macOS"
    }
+  },
+  {
+   "target": "desktop",
+   "file": "docs/media/desktop/linux/e2e.json",
+   "host": "desktop shell on linux",
+   "tier": "lite",
+   "date": "2026-11-14T22:50:30.813Z",
+   "method": {
+    "audio": "tools/fixture/meeting-fixture.wav (53 s, 16 kHz mono)",
+    "recording": "recorded by the app: app:/data/meetings/m1794696633604/audio.m4a (132953 bytes)",
+    "timing": "wall time from stopping the recording to the notes on screen",
+    "engine": "the demo engine, because this machine gave no real WebGPU adapter"
+   },
+   "title": "",
+   "transcript": "",
+   "notes": "",
+   "failures": [],
+   "runs": [
+    {
+     "cycle": 1,
+     "transcribeSeconds": null,
+     "notesSeconds": null,
+     "totalSeconds": 8.4,
+     "peakMB": 734,
+     "idleMB": null
+    }
+   ]
+  },
+  {
+   "target": "desktop",
+   "file": "docs/media/desktop/macos/e2e.json",
+   "host": "desktop shell on macos",
+   "tier": "lite",
+   "date": "2026-11-14T22:56:54.837Z",
+   "method": {
+    "audio": "tools/fixture/meeting-fixture.wav (53 s, 16 kHz mono)",
+    "recording": "recorded by the app: app:/data/meetings/m1794697029030/audio.m4a (912320 bytes)",
+    "timing": "wall time from stopping the recording to the notes on screen",
+    "engine": "real models"
+   },
+   "wer": {
+    "errors": 9,
+    "words": 168,
+    "rate": 0.0536
+   },
+   "title": "",
+   "transcript": "Thanks for joining everyone. Today we need to decide the launch date for the mobile app and review the open bugs. The Android build is stable. We fixed the crash on the settings screen yesterday, and battery usage is down by 20%. Good. What about the login issue on older phones? That one is still open. I need two more days to finish the fix and test it. From the design side, the onboarding screens of final, I will send the updated icons to the team by Thursday. Then let us agree on the plan. We launch on the 15th of March, as long as the login fix lands by Friday. Agreed. I will also prepare the release notes and the store screen shots. I will own the login fix and I will run the full regression suite on Friday morning. Great. To summarize the launch date is March 15. Daniel owns the login fix and Karen owns the icons, the release notes and the screen shots. Thanks, everyone.",
+   "notes": "Title: Meeting on App Launch, Bugs, and Release Plan\n## Summary\nThe team discussed the mobile app launch date of March 15th to ensure the login fix lands by Friday, while also reviewing open bugs and updating design icons.\n## Key points\n- The Android build is stable regarding the crash on the settings screen.\n- Battery usage will be down by 20%.\n- The design team will provide updated icons by Thursday.\n- The launch plans are decided by agreeing with Daniel on the login fix.\n## Decisions\n- \"None recorded.\"\n## Action items\n- [ ] Owner: Task assigned to the group regarding the release notes and screen shots.\n- [ ] Owner: Task assigned to Daniel regarding the login fix.\n- [ ] Owner: Task assigned to Karen regarding the updated icons and release notes.\n- [ ] Owner: Task assigned to the group regarding the March 15th launch plan.\n## Open questions\n- \"None recorded.\"",
+   "failures": [],
+   "runs": [
+    {
+     "cycle": 1,
+     "transcribeSeconds": null,
+     "notesSeconds": null,
+     "totalSeconds": 29.5,
+     "peakMB": 4595,
+     "idleMB": null
+    }
+   ]
+  },
+  {
+   "target": "clinic",
+   "file": "docs/media/clinic/quillmoor-pilot/web-real/e2e.json",
+   "host": "clinical app, quillmoor-pilot, web",
+   "tier": "lite",
+   "date": "2026-11-14T23:32:59.616Z",
+   "method": {
+    "audio": "tools/fixture/clinic-fixture.wav (56 s, 16 kHz mono, macOS say)",
+    "recording": "recorded by the app: app:/data/meetings/m1794699198680/audio.m4a (870148 bytes)",
+    "timing": "wall time from stopping the recording to the notes on screen",
+    "engine": "real models"
+   },
+   "wer": {
+    "errors": 4,
+    "words": 160,
+    "rate": 0.025
+   },
+   "title": "",
+   "transcript": "Hello, I am the physiotherapist seeing you today. What brings you in? My right shoulder has been painful for about three weeks. It started after I painted the ceiling at home. Does anything make it better or worse? Reaching overhead makes it worse, and it aches at night when I lie on that side, resting it helps a little. Have you had problems with this shoulder before? No, never. I am otherwise healthy and I swim twice a week, but I have stopped since the pain started. On examination, you can lift your arm to about 120 degrees before the pain starts. Strength is good, and the painful arc test is positive. My impression is a rotator cuff irritation from the painting. The plan is gentle pendulum exercises three times a day, avoid reaching overhead for two weeks, and come back in two weeks so we can check your progress. Thank you, I will do the exercises.",
+   "notes": "## Presenting complaint\nYou mentioned your right shoulder has been painful for about three weeks, and it started after you painted the ceiling at home. The problem is worse with reaching overhead, aches at night when lying on that side, and resting helps a little. What makes it better or worse? Reach overhead makes it worse, and it aches at night when I lie on that side, resting it helps a little. Have you had problems with this shoulder before? No, never. Otherwise, I am healthy and I swim twice a week, but I have stopped since the pain started.\n\n## History\nPast episodes, general health, and activity the patient described. You mentioned your right shoulder has been painful for about three weeks, and it started after you painted the ceiling at home. The problem is worse with reaching overhead, aches at night when lying on that side, and resting it helps a little. What makes it better or worse? Reach overhead makes it worse, and it aches at night when I lie on that side, resting it helps a little. Have you had problems with this shoulder before? No, never. Otherwise, I am healthy and I swim twice a week, but I have stopped since the pain started.\n\n## Findings\nRange of movement, strength, and tests the clinician reported aloud. You can lift your arm to about 120 degrees before the pain starts. Strength is good, and the painful arc test is positive. My impression is a rotator cuff irritation from the painting. Range of movement is good. Strength is good, and the painful arc test is positive.\n\n## Impression\nThe clinician's stated working impression. The problem is worse with reaching overhead, aches at night when lying on that side, and resting it helps a little. What makes it better or worse? Reach overhead makes it worse, and it aches at night when I lie on that side, resting it helps a little. Have you had problems with this shoulder before? No, never. Otherwise, I am healthy and I swim twice a week, but I have stopped since the pain started.\n\n## Treatment plan\nExercises, treatment and advice given, with frequency if said. Plan is gentle pendulum exercises three times a day, avoid reaching overhead for two weeks, and come back in two weeks so we can check your progress. Thank you, I will do the exercises.",
+   "failures": [],
+   "runs": [
+    {
+     "cycle": 1,
+     "transcribeSeconds": null,
+     "notesSeconds": null,
+     "totalSeconds": 38.1,
+     "peakMB": null,
+     "idleMB": null
+    }
+   ]
   }
- ]
+ ],
+ "clinic": {
+  "default": {
+   "android": {
+    "leaving": {
+     "shots": [
+      {
+       "src": "../media/clinic/default/android/leaving/01-recording.png",
+       "label": "recording"
+      },
+      {
+       "src": "../media/clinic/default/android/leaving/02-back-stopped-and-saved.png",
+       "label": "back stopped and saved"
+      },
+      {
+       "src": "../media/clinic/default/android/leaving/03-notes-after-back.png",
+       "label": "notes after back"
+      },
+      {
+       "src": "../media/clinic/default/android/leaving/04-edits-kept.png",
+       "label": "edits kept"
+      }
+     ],
+     "video": "../media/clinic/default/android/leaving/leaving.mp4"
+    },
+    "onboarding": {
+     "shots": [
+      {
+       "src": "../media/clinic/default/android/onboarding/01-welcome.png",
+       "label": "welcome"
+      },
+      {
+       "src": "../media/clinic/default/android/onboarding/02-downloading-models.png",
+       "label": "downloading models"
+      },
+      {
+       "src": "../media/clinic/default/android/onboarding/03-ready.png",
+       "label": "ready"
+      }
+     ],
+     "video": "../media/clinic/default/android/onboarding/onboarding.mp4"
+    },
+    "record": {
+     "shots": [
+      {
+       "src": "../media/clinic/default/android/record/01-new-note-sheet.png",
+       "label": "new note sheet"
+      },
+      {
+       "src": "../media/clinic/default/android/record/02-reference-and-template.png",
+       "label": "reference and template"
+      },
+      {
+       "src": "../media/clinic/default/android/record/03-recording-started.png",
+       "label": "recording started"
+      }
+     ],
+     "video": "../media/clinic/default/android/record/record.mp4"
+    },
+    "review": {
+     "shots": [
+      {
+       "src": "../media/clinic/default/android/review/01-ai-draft.png",
+       "label": "ai draft"
+      },
+      {
+       "src": "../media/clinic/default/android/review/02-editor.png",
+       "label": "editor"
+      },
+      {
+       "src": "../media/clinic/default/android/review/03-edit-saved.png",
+       "label": "edit saved"
+      },
+      {
+       "src": "../media/clinic/default/android/review/04-edited-note.png",
+       "label": "edited note"
+      },
+      {
+       "src": "../media/clinic/default/android/review/05-reviewed.png",
+       "label": "reviewed"
+      },
+      {
+       "src": "../media/clinic/default/android/review/06-copied.png",
+       "label": "copied"
+      },
+      {
+       "src": "../media/clinic/default/android/review/07-confirm-replace-edits.png",
+       "label": "confirm replace edits"
+      },
+      {
+       "src": "../media/clinic/default/android/review/08-writing-again.png",
+       "label": "writing again"
+      },
+      {
+       "src": "../media/clinic/default/android/review/09-fresh-draft.png",
+       "label": "fresh draft"
+      }
+     ],
+     "video": "../media/clinic/default/android/review/review.mp4"
+    },
+    "settings": {
+     "shots": [
+      {
+       "src": "../media/clinic/default/android/settings/01-settings.png",
+       "label": "settings"
+      },
+      {
+       "src": "../media/clinic/default/android/settings/02-lite-picked.png",
+       "label": "lite picked"
+      }
+     ],
+     "video": "../media/clinic/default/android/settings/settings.mp4"
+    }
+   },
+   "web": {
+    "leaving": {
+     "shots": [
+      {
+       "src": "../media/clinic/default/web/leaving/01-recording.png",
+       "label": "recording"
+      },
+      {
+       "src": "../media/clinic/default/web/leaving/02-back-stopped-and-saved.png",
+       "label": "back stopped and saved"
+      },
+      {
+       "src": "../media/clinic/default/web/leaving/03-notes-after-back.png",
+       "label": "notes after back"
+      },
+      {
+       "src": "../media/clinic/default/web/leaving/04-edits-kept.png",
+       "label": "edits kept"
+      }
+     ],
+     "video": "../media/clinic/default/web/leaving/leaving.mp4"
+    },
+    "library": {
+     "shots": [
+      {
+       "src": "../media/clinic/default/web/library/01-notes.png",
+       "label": "notes"
+      },
+      {
+       "src": "../media/clinic/default/web/library/02-notes-dark.png",
+       "label": "notes dark"
+      },
+      {
+       "src": "../media/clinic/default/web/library/03-note-dark.png",
+       "label": "note dark"
+      },
+      {
+       "src": "../media/clinic/default/web/library/04-confirm-delete.png",
+       "label": "confirm delete"
+      },
+      {
+       "src": "../media/clinic/default/web/library/05-deleted.png",
+       "label": "deleted"
+      }
+     ],
+     "video": "../media/clinic/default/web/library/library.mp4"
+    },
+    "onboarding": {
+     "shots": [
+      {
+       "src": "../media/clinic/default/web/onboarding/01-welcome.png",
+       "label": "welcome"
+      },
+      {
+       "src": "../media/clinic/default/web/onboarding/02-downloading-models.png",
+       "label": "downloading models"
+      },
+      {
+       "src": "../media/clinic/default/web/onboarding/03-ready.png",
+       "label": "ready"
+      }
+     ],
+     "video": "../media/clinic/default/web/onboarding/onboarding.mp4"
+    },
+    "record": {
+     "shots": [
+      {
+       "src": "../media/clinic/default/web/record/01-new-note-sheet.png",
+       "label": "new note sheet"
+      },
+      {
+       "src": "../media/clinic/default/web/record/02-reference-and-template.png",
+       "label": "reference and template"
+      },
+      {
+       "src": "../media/clinic/default/web/record/03-recording-started.png",
+       "label": "recording started"
+      },
+      {
+       "src": "../media/clinic/default/web/record/04-jottings-while-recording.png",
+       "label": "jottings while recording"
+      },
+      {
+       "src": "../media/clinic/default/web/record/05-saved-and-queued.png",
+       "label": "saved and queued"
+      },
+      {
+       "src": "../media/clinic/default/web/record/06-transcribing.png",
+       "label": "transcribing"
+      },
+      {
+       "src": "../media/clinic/default/web/record/07-writing-draft.png",
+       "label": "writing draft"
+      },
+      {
+       "src": "../media/clinic/default/web/record/08-draft-ready.png",
+       "label": "draft ready"
+      },
+      {
+       "src": "../media/clinic/default/web/record/09-transcript.png",
+       "label": "transcript"
+      }
+     ],
+     "video": "../media/clinic/default/web/record/record.mp4"
+    },
+    "review": {
+     "shots": [
+      {
+       "src": "../media/clinic/default/web/review/01-ai-draft.png",
+       "label": "ai draft"
+      },
+      {
+       "src": "../media/clinic/default/web/review/02-editor.png",
+       "label": "editor"
+      },
+      {
+       "src": "../media/clinic/default/web/review/03-edit-saved.png",
+       "label": "edit saved"
+      },
+      {
+       "src": "../media/clinic/default/web/review/04-edited-note.png",
+       "label": "edited note"
+      },
+      {
+       "src": "../media/clinic/default/web/review/05-reviewed.png",
+       "label": "reviewed"
+      },
+      {
+       "src": "../media/clinic/default/web/review/06-copied.png",
+       "label": "copied"
+      },
+      {
+       "src": "../media/clinic/default/web/review/07-confirm-replace-edits.png",
+       "label": "confirm replace edits"
+      },
+      {
+       "src": "../media/clinic/default/web/review/08-writing-again.png",
+       "label": "writing again"
+      },
+      {
+       "src": "../media/clinic/default/web/review/09-fresh-draft.png",
+       "label": "fresh draft"
+      }
+     ],
+     "video": "../media/clinic/default/web/review/review.mp4"
+    },
+    "settings": {
+     "shots": [
+      {
+       "src": "../media/clinic/default/web/settings/01-settings.png",
+       "label": "settings"
+      },
+      {
+       "src": "../media/clinic/default/web/settings/02-lite-picked.png",
+       "label": "lite picked"
+      }
+     ],
+     "video": "../media/clinic/default/web/settings/settings.mp4"
+    }
+   },
+   "web-phone": {
+    "leaving": {
+     "shots": [
+      {
+       "src": "../media/clinic/default/web-phone/leaving/01-recording.png",
+       "label": "recording"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/leaving/02-back-stopped-and-saved.png",
+       "label": "back stopped and saved"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/leaving/03-notes-after-back.png",
+       "label": "notes after back"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/leaving/04-edits-kept.png",
+       "label": "edits kept"
+      }
+     ],
+     "video": "../media/clinic/default/web-phone/leaving/leaving.mp4"
+    },
+    "library": {
+     "shots": [
+      {
+       "src": "../media/clinic/default/web-phone/library/01-notes.png",
+       "label": "notes"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/library/02-notes-dark.png",
+       "label": "notes dark"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/library/03-note-dark.png",
+       "label": "note dark"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/library/04-confirm-delete.png",
+       "label": "confirm delete"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/library/05-deleted.png",
+       "label": "deleted"
+      }
+     ],
+     "video": "../media/clinic/default/web-phone/library/library.mp4"
+    },
+    "onboarding": {
+     "shots": [
+      {
+       "src": "../media/clinic/default/web-phone/onboarding/01-welcome.png",
+       "label": "welcome"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/onboarding/02-downloading-models.png",
+       "label": "downloading models"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/onboarding/03-ready.png",
+       "label": "ready"
+      }
+     ],
+     "video": "../media/clinic/default/web-phone/onboarding/onboarding.mp4"
+    },
+    "record": {
+     "shots": [
+      {
+       "src": "../media/clinic/default/web-phone/record/01-new-note-sheet.png",
+       "label": "new note sheet"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/record/02-reference-and-template.png",
+       "label": "reference and template"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/record/03-recording-started.png",
+       "label": "recording started"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/record/04-jottings-while-recording.png",
+       "label": "jottings while recording"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/record/05-saved-and-queued.png",
+       "label": "saved and queued"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/record/06-transcribing.png",
+       "label": "transcribing"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/record/07-writing-draft.png",
+       "label": "writing draft"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/record/08-draft-ready.png",
+       "label": "draft ready"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/record/09-transcript.png",
+       "label": "transcript"
+      }
+     ],
+     "video": "../media/clinic/default/web-phone/record/record.mp4"
+    },
+    "review": {
+     "shots": [
+      {
+       "src": "../media/clinic/default/web-phone/review/01-ai-draft.png",
+       "label": "ai draft"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/review/02-editor.png",
+       "label": "editor"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/review/03-edit-saved.png",
+       "label": "edit saved"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/review/04-edited-note.png",
+       "label": "edited note"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/review/05-reviewed.png",
+       "label": "reviewed"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/review/06-copied.png",
+       "label": "copied"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/review/07-confirm-replace-edits.png",
+       "label": "confirm replace edits"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/review/08-writing-again.png",
+       "label": "writing again"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/review/09-fresh-draft.png",
+       "label": "fresh draft"
+      }
+     ],
+     "video": "../media/clinic/default/web-phone/review/review.mp4"
+    },
+    "settings": {
+     "shots": [
+      {
+       "src": "../media/clinic/default/web-phone/settings/01-settings.png",
+       "label": "settings"
+      },
+      {
+       "src": "../media/clinic/default/web-phone/settings/02-lite-picked.png",
+       "label": "lite picked"
+      }
+     ],
+     "video": "../media/clinic/default/web-phone/settings/settings.mp4"
+    }
+   }
+  },
+  "quillmoor-pilot": {
+   "android": {
+    "leaving": {
+     "shots": [
+      {
+       "src": "../media/clinic/quillmoor-pilot/android/leaving/01-recording.png",
+       "label": "recording"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/android/leaving/02-back-stopped-and-saved.png",
+       "label": "back stopped and saved"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/android/leaving/03-notes-after-back.png",
+       "label": "notes after back"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/android/leaving/04-edits-kept.png",
+       "label": "edits kept"
+      }
+     ],
+     "video": "../media/clinic/quillmoor-pilot/android/leaving/leaving.mp4"
+    },
+    "library": {
+     "shots": [
+      {
+       "src": "../media/clinic/quillmoor-pilot/android/library/01-notes.png",
+       "label": "notes"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/android/library/02-notes-dark.png",
+       "label": "notes dark"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/android/library/03-note-dark.png",
+       "label": "note dark"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/android/library/04-confirm-delete.png",
+       "label": "confirm delete"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/android/library/05-deleted.png",
+       "label": "deleted"
+      }
+     ],
+     "video": "../media/clinic/quillmoor-pilot/android/library/library.mp4"
+    },
+    "onboarding": {
+     "shots": [
+      {
+       "src": "../media/clinic/quillmoor-pilot/android/onboarding/01-welcome.png",
+       "label": "welcome"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/android/onboarding/02-downloading-models.png",
+       "label": "downloading models"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/android/onboarding/03-ready.png",
+       "label": "ready"
+      }
+     ],
+     "video": "../media/clinic/quillmoor-pilot/android/onboarding/onboarding.mp4"
+    },
+    "record": {
+     "shots": [
+      {
+       "src": "../media/clinic/quillmoor-pilot/android/record/01-new-note-sheet.png",
+       "label": "new note sheet"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/android/record/02-reference-and-template.png",
+       "label": "reference and template"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/android/record/03-recording-started.png",
+       "label": "recording started"
+      }
+     ],
+     "video": "../media/clinic/quillmoor-pilot/android/record/record.mp4"
+    },
+    "settings": {
+     "shots": [
+      {
+       "src": "../media/clinic/quillmoor-pilot/android/settings/01-settings.png",
+       "label": "settings"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/android/settings/02-lite-picked.png",
+       "label": "lite picked"
+      }
+     ],
+     "video": "../media/clinic/quillmoor-pilot/android/settings/settings.mp4"
+    }
+   },
+   "web": {
+    "leaving": {
+     "shots": [
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/leaving/01-recording.png",
+       "label": "recording"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/leaving/02-back-stopped-and-saved.png",
+       "label": "back stopped and saved"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/leaving/03-notes-after-back.png",
+       "label": "notes after back"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/leaving/04-edits-kept.png",
+       "label": "edits kept"
+      }
+     ],
+     "video": "../media/clinic/quillmoor-pilot/web/leaving/leaving.mp4"
+    },
+    "library": {
+     "shots": [
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/library/01-notes.png",
+       "label": "notes"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/library/02-notes-dark.png",
+       "label": "notes dark"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/library/03-note-dark.png",
+       "label": "note dark"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/library/04-confirm-delete.png",
+       "label": "confirm delete"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/library/05-deleted.png",
+       "label": "deleted"
+      }
+     ],
+     "video": "../media/clinic/quillmoor-pilot/web/library/library.mp4"
+    },
+    "onboarding": {
+     "shots": [
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/onboarding/01-welcome.png",
+       "label": "welcome"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/onboarding/02-downloading-models.png",
+       "label": "downloading models"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/onboarding/03-ready.png",
+       "label": "ready"
+      }
+     ],
+     "video": "../media/clinic/quillmoor-pilot/web/onboarding/onboarding.mp4"
+    },
+    "record": {
+     "shots": [
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/record/01-new-note-sheet.png",
+       "label": "new note sheet"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/record/02-reference-and-template.png",
+       "label": "reference and template"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/record/03-recording-started.png",
+       "label": "recording started"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/record/04-jottings-while-recording.png",
+       "label": "jottings while recording"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/record/05-saved-and-queued.png",
+       "label": "saved and queued"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/record/06-transcribing.png",
+       "label": "transcribing"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/record/07-writing-draft.png",
+       "label": "writing draft"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/record/08-draft-ready.png",
+       "label": "draft ready"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/record/09-transcript.png",
+       "label": "transcript"
+      }
+     ],
+     "video": "../media/clinic/quillmoor-pilot/web/record/record.mp4"
+    },
+    "review": {
+     "shots": [
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/review/01-ai-draft.png",
+       "label": "ai draft"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/review/02-editor.png",
+       "label": "editor"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/review/03-edit-saved.png",
+       "label": "edit saved"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/review/04-edited-note.png",
+       "label": "edited note"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/review/05-reviewed.png",
+       "label": "reviewed"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/review/06-copied.png",
+       "label": "copied"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/review/07-confirm-replace-edits.png",
+       "label": "confirm replace edits"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/review/08-writing-again.png",
+       "label": "writing again"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/review/09-fresh-draft.png",
+       "label": "fresh draft"
+      }
+     ],
+     "video": "../media/clinic/quillmoor-pilot/web/review/review.mp4"
+    },
+    "settings": {
+     "shots": [
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/settings/01-settings.png",
+       "label": "settings"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web/settings/02-lite-picked.png",
+       "label": "lite picked"
+      }
+     ],
+     "video": "../media/clinic/quillmoor-pilot/web/settings/settings.mp4"
+    }
+   },
+   "web-phone": {
+    "leaving": {
+     "shots": [
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/leaving/01-recording.png",
+       "label": "recording"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/leaving/02-back-stopped-and-saved.png",
+       "label": "back stopped and saved"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/leaving/03-notes-after-back.png",
+       "label": "notes after back"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/leaving/04-edits-kept.png",
+       "label": "edits kept"
+      }
+     ],
+     "video": "../media/clinic/quillmoor-pilot/web-phone/leaving/leaving.mp4"
+    },
+    "library": {
+     "shots": [
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/library/01-notes.png",
+       "label": "notes"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/library/02-notes-dark.png",
+       "label": "notes dark"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/library/03-note-dark.png",
+       "label": "note dark"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/library/04-confirm-delete.png",
+       "label": "confirm delete"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/library/05-deleted.png",
+       "label": "deleted"
+      }
+     ],
+     "video": "../media/clinic/quillmoor-pilot/web-phone/library/library.mp4"
+    },
+    "onboarding": {
+     "shots": [
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/onboarding/01-welcome.png",
+       "label": "welcome"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/onboarding/02-downloading-models.png",
+       "label": "downloading models"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/onboarding/03-ready.png",
+       "label": "ready"
+      }
+     ],
+     "video": "../media/clinic/quillmoor-pilot/web-phone/onboarding/onboarding.mp4"
+    },
+    "record": {
+     "shots": [
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/record/01-new-note-sheet.png",
+       "label": "new note sheet"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/record/02-reference-and-template.png",
+       "label": "reference and template"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/record/03-recording-started.png",
+       "label": "recording started"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/record/04-jottings-while-recording.png",
+       "label": "jottings while recording"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/record/05-saved-and-queued.png",
+       "label": "saved and queued"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/record/06-transcribing.png",
+       "label": "transcribing"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/record/07-writing-draft.png",
+       "label": "writing draft"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/record/08-draft-ready.png",
+       "label": "draft ready"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/record/09-transcript.png",
+       "label": "transcript"
+      }
+     ],
+     "video": "../media/clinic/quillmoor-pilot/web-phone/record/record.mp4"
+    },
+    "review": {
+     "shots": [
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/review/01-ai-draft.png",
+       "label": "ai draft"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/review/02-editor.png",
+       "label": "editor"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/review/03-edit-saved.png",
+       "label": "edit saved"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/review/04-edited-note.png",
+       "label": "edited note"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/review/05-reviewed.png",
+       "label": "reviewed"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/review/06-copied.png",
+       "label": "copied"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/review/07-confirm-replace-edits.png",
+       "label": "confirm replace edits"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/review/08-writing-again.png",
+       "label": "writing again"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/review/09-fresh-draft.png",
+       "label": "fresh draft"
+      }
+     ],
+     "video": "../media/clinic/quillmoor-pilot/web-phone/review/review.mp4"
+    },
+    "settings": {
+     "shots": [
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/settings/01-settings.png",
+       "label": "settings"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-phone/settings/02-lite-picked.png",
+       "label": "lite picked"
+      }
+     ],
+     "video": "../media/clinic/quillmoor-pilot/web-phone/settings/settings.mp4"
+    }
+   },
+   "web-real": {
+    "real-run": {
+     "shots": [
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-real/01-welcome.png",
+       "label": "welcome"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-real/02-downloading.png",
+       "label": "downloading"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-real/03-new-note.png",
+       "label": "new note"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-real/04-recording.png",
+       "label": "recording"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-real/05-draft.png",
+       "label": "draft"
+      },
+      {
+       "src": "../media/clinic/quillmoor-pilot/web-real/06-transcript.png",
+       "label": "transcript"
+      }
+     ],
+     "video": "../media/clinic/quillmoor-pilot/web-real/e2e.mp4"
+    }
+   }
+  },
+  "tidewell": {
+   "web": {
+    "leaving": {
+     "shots": [
+      {
+       "src": "../media/clinic/tidewell/web/leaving/01-recording.png",
+       "label": "recording"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/leaving/02-back-stopped-and-saved.png",
+       "label": "back stopped and saved"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/leaving/03-notes-after-back.png",
+       "label": "notes after back"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/leaving/04-edits-kept.png",
+       "label": "edits kept"
+      }
+     ],
+     "video": "../media/clinic/tidewell/web/leaving/leaving.mp4"
+    },
+    "library": {
+     "shots": [
+      {
+       "src": "../media/clinic/tidewell/web/library/01-notes.png",
+       "label": "notes"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/library/02-notes-dark.png",
+       "label": "notes dark"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/library/03-note-dark.png",
+       "label": "note dark"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/library/04-confirm-delete.png",
+       "label": "confirm delete"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/library/05-deleted.png",
+       "label": "deleted"
+      }
+     ],
+     "video": "../media/clinic/tidewell/web/library/library.mp4"
+    },
+    "onboarding": {
+     "shots": [
+      {
+       "src": "../media/clinic/tidewell/web/onboarding/01-welcome.png",
+       "label": "welcome"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/onboarding/02-downloading-models.png",
+       "label": "downloading models"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/onboarding/03-ready.png",
+       "label": "ready"
+      }
+     ],
+     "video": "../media/clinic/tidewell/web/onboarding/onboarding.mp4"
+    },
+    "record": {
+     "shots": [
+      {
+       "src": "../media/clinic/tidewell/web/record/01-new-note-sheet.png",
+       "label": "new note sheet"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/record/02-reference-and-template.png",
+       "label": "reference and template"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/record/03-recording-started.png",
+       "label": "recording started"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/record/04-jottings-while-recording.png",
+       "label": "jottings while recording"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/record/05-saved-and-queued.png",
+       "label": "saved and queued"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/record/06-transcribing.png",
+       "label": "transcribing"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/record/07-writing-draft.png",
+       "label": "writing draft"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/record/08-draft-ready.png",
+       "label": "draft ready"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/record/09-transcript.png",
+       "label": "transcript"
+      }
+     ],
+     "video": "../media/clinic/tidewell/web/record/record.mp4"
+    },
+    "review": {
+     "shots": [
+      {
+       "src": "../media/clinic/tidewell/web/review/01-ai-draft.png",
+       "label": "ai draft"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/review/02-editor.png",
+       "label": "editor"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/review/03-edit-saved.png",
+       "label": "edit saved"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/review/04-edited-note.png",
+       "label": "edited note"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/review/05-reviewed.png",
+       "label": "reviewed"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/review/06-copied.png",
+       "label": "copied"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/review/07-confirm-replace-edits.png",
+       "label": "confirm replace edits"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/review/08-writing-again.png",
+       "label": "writing again"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/review/09-fresh-draft.png",
+       "label": "fresh draft"
+      }
+     ],
+     "video": "../media/clinic/tidewell/web/review/review.mp4"
+    },
+    "settings": {
+     "shots": [
+      {
+       "src": "../media/clinic/tidewell/web/settings/01-settings.png",
+       "label": "settings"
+      },
+      {
+       "src": "../media/clinic/tidewell/web/settings/02-lite-picked.png",
+       "label": "lite picked"
+      }
+     ],
+     "video": "../media/clinic/tidewell/web/settings/settings.mp4"
+    }
+   }
+  }
+ }
 };

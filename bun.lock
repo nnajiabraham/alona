@@ -8,11 +8,16 @@
         "@exact/media-capture": "file:../exact/packages/media-capture",
         "@exact/recording": "file:../exact/packages/recording",
       },
+      "devDependencies": {
+        "typescript": "5.9.3",
+      },
     },
   },
   "packages": {
     "@exact/media-capture": ["@exact/media-capture@file:../exact/packages/media-capture", {}],
 
     "@exact/recording": ["@exact/recording@file:../exact/packages/recording", { "peerDependencies": { "@exact/media-capture": "1.0.0" }, "optionalPeers": ["@exact/media-capture"] }],
+
+    "typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
   }
 }

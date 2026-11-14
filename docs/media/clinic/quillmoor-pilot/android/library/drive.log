@@ -1,0 +1,86 @@
+clock data
+  {"clock":0,"settled":true,"epoch":2,"incarnation":1}
+tap continue
+  {"tapped":28,"at":[205.71,760.33],"target":"continue","delivery":"platform","carrier":"android","mode":"agent","epoch":3,"incarnation":1,"clock":0}
+clock data
+  {"clock":0,"settled":true,"epoch":3,"incarnation":1}
+clock +6000
+  {"clock":6000,"epoch":8,"incarnation":1}
+clock data
+  {"clock":6000,"settled":true,"epoch":8,"incarnation":1}
+tap new-note-button
+  {"tapped":63,"at":[205.71,223],"target":"new-note-button","delivery":"platform","carrier":"android","mode":"agent","epoch":9,"incarnation":1,"clock":6000}
+clock settle
+  {"clock":6350,"settled":true,"epoch":9,"incarnation":1}
+type new-ref Bed 4
+  {"typed":99,"value":"Bed 4","target":"new-ref","delivery":"platform","carrier":"android","mode":"agent","epoch":10,"incarnation":1,"clock":6350}
+tap template-physio-follow-up
+  {"tapped":112,"at":[205.71,409.5],"target":"template-physio-follow-up","delivery":"platform","carrier":"android","mode":"agent","epoch":11,"incarnation":1,"clock":6350}
+clock settle
+  {"clock":6500,"settled":true,"epoch":11,"incarnation":1}
+tap start-recording
+  {"tapped":120,"at":[205.71,809],"target":"start-recording","delivery":"platform","carrier":"android","mode":"agent","epoch":12,"incarnation":1,"clock":6500}
+clock data
+  {"clock":6500,"settled":false,"reason":"requests","epoch":14,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
+clock settle
+  {"clock":6500,"settled":false,"reason":"requests","epoch":16,"incarnation":1,"diagnostic":"clock settle gave up on requests still in flight at its bound (20 s native); state shows them under pending, and logs a `request N` with no `fulfil N`"}
+type record-jottings - L knee, 2 weeks
+  {"typed":143,"value":"- L knee, 2 weeks","target":"record-jottings","delivery":"platform","carrier":"android","mode":"agent","epoch":17,"incarnation":1,"clock":6500}
+clock +5000
+  {"clock":11500,"inflight":1,"epoch":18,"incarnation":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+tap stop-recording
+  {"tapped":137,"at":[205.71,306],"target":"stop-recording","delivery":"platform","carrier":"android","mode":"agent","epoch":21,"incarnation":1,"clock":11500}
+clock data
+  {"clock":11500,"settled":false,"reason":"requests","epoch":25,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
+clock settle
+  {"clock":11700,"settled":true,"epoch":25,"incarnation":1}
+clock +12000
+  {"clock":23700,"epoch":40,"incarnation":1}
+clock data
+  {"clock":23700,"settled":true,"epoch":40,"incarnation":1}
+back
+  {"back":"route","delivery":"platform","carrier":"android","epoch":41,"incarnation":1,"clock":23700}
+clock data
+  {"clock":23700,"settled":true,"epoch":41,"incarnation":1}
+clock settle
+  {"clock":24000,"settled":true,"epoch":41,"incarnation":1}
+state lib.length
+  1
+state lib.0.patientRef
+  "Bed 4"
+state lib.0.templateName
+  "Follow-up session"
+state lib.0.state
+  "draft"
+screenshot docs/media/clinic/quillmoor-pilot/android/library/01-notes.png
+  {"screenshot":"docs/media/clinic/quillmoor-pilot/android/library/01-notes.png","device":true,"epoch":41,"incarnation":1,"clock":24000}
+prefer prefers-color-scheme dark
+  {"fold":{"device-posture":"continuous","horizontal-viewport-segments":1,"vertical-viewport-segments":1,"viewport-segments":[]},"media":{"color-gamut":"srgb","dynamic-range":"standard","hover":"none","pointer":"coarse","prefers-color-scheme":"dark","prefers-contrast":"no-preference","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference"},"mode":{},"page":{"can-open-files":true,"can-share":true,"can-share-files":true,"can-share-pictures":true,"display-scale":2.625,"frozen":false,"gpu-tier":"high","has-focus":true,"iframe-partition":false,"online":true,"root-font-size":16,"visibility-state":"visible"},"epoch":41,"incarnation":1,"clock":24000}
+screenshot docs/media/clinic/quillmoor-pilot/android/library/02-notes-dark.png
+  {"screenshot":"docs/media/clinic/quillmoor-pilot/android/library/02-notes-dark.png","device":true,"epoch":41,"incarnation":1,"clock":24000}
+tap "Bed 4"
+  {"tapped":161,"at":[179.21,330.5],"target":"Bed 4","delivery":"platform","carrier":"android","mode":"agent","epoch":42,"incarnation":1,"clock":24000}
+clock data
+  {"clock":24000,"settled":true,"epoch":42,"incarnation":1}
+clock settle
+  {"clock":24300,"settled":true,"epoch":42,"incarnation":1}
+screenshot docs/media/clinic/quillmoor-pilot/android/library/03-note-dark.png
+  {"screenshot":"docs/media/clinic/quillmoor-pilot/android/library/03-note-dark.png","device":true,"epoch":42,"incarnation":1,"clock":24300}
+prefer prefers-color-scheme light
+  {"fold":{"device-posture":"continuous","horizontal-viewport-segments":1,"vertical-viewport-segments":1,"viewport-segments":[]},"media":{"color-gamut":"srgb","dynamic-range":"standard","hover":"none","pointer":"coarse","prefers-color-scheme":"light","prefers-contrast":"no-preference","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference"},"mode":{},"page":{"can-open-files":true,"can-share":true,"can-share-files":true,"can-share-pictures":true,"display-scale":2.625,"frozen":false,"gpu-tier":"high","has-focus":true,"iframe-partition":false,"online":true,"root-font-size":16,"visibility-state":"visible"},"epoch":42,"incarnation":1,"clock":24300}
+tap delete-note
+  {"tapped":204,"bar":"top","target":"delete-note","delivery":"platform","carrier":"android","mode":"agent","epoch":42,"incarnation":1,"clock":24300}
+clock settle
+  {"clock":24300,"settled":true,"epoch":42,"incarnation":1}
+screenshot docs/media/clinic/quillmoor-pilot/android/library/04-confirm-delete.png
+  {"screenshot":"docs/media/clinic/quillmoor-pilot/android/library/04-confirm-delete.png","device":true,"epoch":42,"incarnation":1,"clock":24300}
+tap delete-confirm
+  {"tapped":36,"surface":1,"target":"delete-confirm","delivery":"platform","carrier":"android","mode":"agent","epoch":44,"incarnation":1,"clock":24300}
+clock data
+  {"clock":24300,"settled":true,"epoch":44,"incarnation":1}
+clock settle
+  {"clock":24600,"settled":true,"epoch":44,"incarnation":1}
+state lib.length
+  0
+screenshot docs/media/clinic/quillmoor-pilot/android/library/05-deleted.png
+  {"screenshot":"docs/media/clinic/quillmoor-pilot/android/library/05-deleted.png","device":true,"epoch":44,"incarnation":1,"clock":24600}

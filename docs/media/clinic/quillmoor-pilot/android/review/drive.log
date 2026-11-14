@@ -1,0 +1,120 @@
+clock data
+  {"clock":0,"settled":true,"epoch":2,"incarnation":1}
+tap continue
+  {"tapped":28,"at":[205.71,760.33],"target":"continue","delivery":"platform","carrier":"android","mode":"agent","epoch":3,"incarnation":1,"clock":0}
+clock data
+  {"clock":0,"settled":true,"epoch":3,"incarnation":1}
+clock +6000
+  {"clock":6000,"epoch":8,"incarnation":1}
+clock data
+  {"clock":6000,"settled":true,"epoch":8,"incarnation":1}
+tap new-note-button
+  {"tapped":63,"at":[205.71,223],"target":"new-note-button","delivery":"platform","carrier":"android","mode":"agent","epoch":9,"incarnation":1,"clock":6000}
+clock settle
+  {"clock":6350,"settled":true,"epoch":9,"incarnation":1}
+type new-ref Bed 4
+  {"typed":99,"value":"Bed 4","target":"new-ref","delivery":"platform","carrier":"android","mode":"agent","epoch":10,"incarnation":1,"clock":6350}
+tap template-physio-follow-up
+  {"tapped":112,"at":[205.71,409.5],"target":"template-physio-follow-up","delivery":"platform","carrier":"android","mode":"agent","epoch":11,"incarnation":1,"clock":6350}
+clock settle
+  {"clock":6500,"settled":true,"epoch":11,"incarnation":1}
+tap start-recording
+  {"tapped":120,"at":[205.71,809],"target":"start-recording","delivery":"platform","carrier":"android","mode":"agent","epoch":12,"incarnation":1,"clock":6500}
+clock data
+  {"clock":6500,"settled":false,"reason":"requests","epoch":12,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
+clock settle
+  {"clock":6500,"settled":false,"reason":"requests","epoch":14,"incarnation":1,"diagnostic":"clock settle gave up on requests still in flight at its bound (20 s native); state shows them under pending, and logs a `request N` with no `fulfil N`"}
+type record-jottings - L knee, 2 weeks
+  (no reply)
+clock +5000
+  (no reply)
+tap stop-recording
+  (no reply)
+clock data
+  (no reply)
+clock settle
+  (no reply)
+clock +12000
+  (no reply)
+clock data
+  (no reply)
+state detail.state
+  (no reply)
+screenshot docs/media/clinic/quillmoor-pilot/android/review/01-ai-draft.png
+  (no reply)
+tap edit-note
+  (no reply)
+clock settle
+  (no reply)
+screenshot docs/media/clinic/quillmoor-pilot/android/review/02-editor.png
+  (no reply)
+type note-editor Checked and edited by the clinician.
+  (no reply)
+clock +1000
+  (no reply)
+clock data
+  (no reply)
+state editDirty
+  (no reply)
+state detail.hasEdits
+  (no reply)
+screenshot docs/media/clinic/quillmoor-pilot/android/review/03-edit-saved.png
+  (no reply)
+tap done-editing
+  (no reply)
+clock data
+  (no reply)
+clock settle
+  (no reply)
+state editing
+  (no reply)
+state detail.note
+  (no reply)
+screenshot docs/media/clinic/quillmoor-pilot/android/review/04-edited-note.png
+  (no reply)
+tap mark-reviewed
+  (no reply)
+clock data
+  (no reply)
+state detail.state
+  (no reply)
+state lib.0.state
+  (no reply)
+screenshot docs/media/clinic/quillmoor-pilot/android/review/05-reviewed.png
+  (no reply)
+tap copy-note
+  (no reply)
+clock settle
+  (no reply)
+state copied
+  (no reply)
+screenshot docs/media/clinic/quillmoor-pilot/android/review/06-copied.png
+  (no reply)
+tap write-again
+  (no reply)
+clock settle
+  (no reply)
+screenshot docs/media/clinic/quillmoor-pilot/android/review/07-confirm-replace-edits.png
+  (no reply)
+tap replace-confirm
+  (no reply)
+clock data
+  (no reply)
+clock +1000
+  (no reply)
+clock data
+  (no reply)
+state detail.status
+  (no reply)
+screenshot docs/media/clinic/quillmoor-pilot/android/review/08-writing-again.png
+  (no reply)
+clock +6000
+  (no reply)
+clock data
+  (no reply)
+state detail.state
+  (no reply)
+state detail.hasEdits
+  (no reply)
+screenshot docs/media/clinic/quillmoor-pilot/android/review/09-fresh-draft.png
+  (no reply)

@@ -2,12 +2,17 @@ import { describe, expect, test } from 'bun:test';
 import { assess, effectiveTier } from './device';
 import type { Artifact, DeviceFacts } from './engine';
 import { parseJobView } from './engine';
-import { finishNotes, planNotes, stepCount, stepRequest } from './notes';
+import { ALONA_NOTES, chatPrompt, finishNotes, planNotes, stepCount, stepRequest } from './notes';
 import { advance, isWorking, retranscribe, retry, type PipelineIO } from './pipeline';
 import { service } from './service';
 import { meetingStore } from './store';
 import { SIM_DEVICE, SIM_SEGMENTS, simEngine, type SimOptions } from './sim-engine';
 import { displayTitle, type Meeting, type Segment } from './types';
+import golden from './fixtures/alona-notes.golden.json';
+import { planCases, rawReplies } from './fixtures/golden-inputs';
+import type { NotesProfile } from './notes';
+import { memoryFiles } from './fixtures/memory-files';
+import { hostService } from './host';
 
 const ALL = ['lite', 'balanced', 'quality'] as const;
 const device = (over: Partial<DeviceFacts>): DeviceFacts => ({ ...SIM_DEVICE, ...over });
@@ -87,7 +92,7 @@ describe('notes planning', () => {
     const plan = planNotes(SIM_SEGMENTS, 'Ask about the login fix', 'lite');
     expect(plan.kind).toBe('oneShot');
     expect(stepCount(plan)).toBe(1);
-    const request = stepRequest(plan, 0, [], 'Ask about the login fix');
+    const request = stepRequest(ALONA_NOTES, plan, 0, [], 'Ask about the login fix');
     expect(request.prompt).toContain('[0:28] We launch on the fifteenth of March');
     expect(request.prompt).toContain('Ask about the login fix');
   });
@@ -98,7 +103,7 @@ describe('notes planning', () => {
     if (plan.kind !== 'mapReduce') return;
     expect(plan.chunks.length).toBeGreaterThan(3);
     expect(stepCount(plan)).toBe(plan.chunks.length + 1);
-    const merge = stepRequest(plan, plan.chunks.length, ['- decided A', '- decided B'], '');
+    const merge = stepRequest(ALONA_NOTES, plan, plan.chunks.length, ['- decided A', '- decided B'], '');
     expect(merge.prompt).toContain('Part 2:\n- decided B');
   });
 
@@ -118,41 +123,102 @@ describe('notes planning', () => {
   });
 });
 
+// The golden file was written by notes.ts as it was before note formats became
+// profiles (commit a378354), so these prove Alona's prompts and notes did not change.
+describe("Alona's notes profile", () => {
+  test('every request Alona sends is the same as before profiles', () => {
+    for (const c of planCases) {
+      const plan = planNotes(c.segments, c.userNotes, c.tier);
+      const expected = golden.plans.find((p) => p.name === c.name);
+      expect(plan.kind).toBe(expected?.kind ?? '');
+      const partials = Array.from({ length: stepCount(plan) }, (_, i) => `- fact ${i}`);
+      const requests = partials.map((_, i) => {
+        const r = stepRequest(ALONA_NOTES, plan, i, partials.slice(0, i), c.userNotes);
+        return { ...r, chat: chatPrompt(r) };
+      });
+      expect(requests).toEqual(expected?.requests ?? []);
+    }
+  });
+
+  test('every reply is finished into the same notes as before profiles', () => {
+    expect(rawReplies.map((raw) => ({ raw, notes: finishNotes(ALONA_NOTES, raw) }))).toEqual(golden.finished);
+    expect(ALONA_NOTES.emptyResult).toBe(golden.noSpeech);
+  });
+});
+
+describe('another notes profile', () => {
+  const visit: NotesProfile = {
+    ...ALONA_NOTES,
+    recording: 'consultation',
+    intro: 'Write the consultation note in Markdown.',
+    titleRule: '',
+    sections: [
+      { heading: 'Reason (for visit)', guidance: 'why the patient came.' },
+      { heading: 'Plan', guidance: 'what was agreed next.' },
+    ],
+    closing: 'Under a section with nothing said, write "Not discussed."',
+    missingSection: 'Not discussed.',
+    extractHeadings: ['Reason (for visit)', 'Plan'],
+    ownNotesLabel: "The clinician's jottings:",
+  };
+  const short: Segment[] = [{ start: 0, end: 4, text: 'My knee hurts.' }];
+
+  test('the prompt lists its own sections, in order, with no title line', () => {
+    const r = stepRequest(visit, planNotes(short, '- left knee', 'lite'), 0, [], '- left knee');
+    expect(r.prompt).toStartWith('Write the consultation note in Markdown.\n\nWrite these two sections in this order.');
+    expect(r.prompt).toContain('"## Reason (for visit)": why the patient came.\n"## Plan": what was agreed next.\n\nUnder a section');
+    expect(r.prompt).not.toContain('Title');
+    expect(r.prompt).toEndWith("The clinician's jottings:\n- left knee");
+  });
+
+  test('long recordings are read for its own headings', () => {
+    const long = Array.from({ length: 200 }, (_, i) => ({ start: i, end: i + 1, text: 'word '.repeat(20) }));
+    const r = stepRequest(visit, planNotes(long, '', 'lite'), 0, [], '');
+    expect(r.prompt).toContain('of a consultation transcript');
+    expect(r.prompt).toContain('Reason (for visit):\nPlan:\n');
+  });
+
+  test('a missing section, even one with brackets in its heading, is added with its own empty text', () => {
+    expect(finishNotes(visit, '## Plan\nRest.').markdown).toBe('## Plan\nRest.\n\n## Reason (for visit)\nNot discussed.');
+    expect(finishNotes(visit, '## Reason (for visit)\nKnee.\n## Plan\nRest.').markdown).toBe('## Reason (for visit)\nKnee.\n## Plan\nRest.');
+  });
+});
+
 describe('finishing notes', () => {
   test('the title line becomes the title and leaves the notes', () => {
-    const notes = finishNotes('Title: Launch planning\n\n## Summary\nWe agreed.');
+    const notes = finishNotes(ALONA_NOTES, 'Title: Launch planning\n\n## Summary\nWe agreed.');
     expect(notes.title).toBe('Launch planning');
     expect(notes.markdown.startsWith('## Summary\nWe agreed.')).toBe(true);
   });
 
   test('a section the model left out is added and says nothing was recorded', () => {
-    const { markdown } = finishNotes('Title: Sync\n## Summary\nShort.\n\n## Key points\n- One\n\n## Decisions\n- Ship\n\n## Action items\n- [ ] Ana: ship');
+    const { markdown } = finishNotes(ALONA_NOTES, 'Title: Sync\n## Summary\nShort.\n\n## Key points\n- One\n\n## Decisions\n- Ship\n\n## Action items\n- [ ] Ana: ship');
     expect(markdown.endsWith('## Action items\n- [ ] Ana: ship\n\n## Open questions\n- None recorded.')).toBe(true);
     expect(markdown.match(/^## /gm)?.length).toBe(5);
   });
 
   test('sections the model wrote are never duplicated', () => {
     const full = '## Summary\nA.\n## Key points\n- b\n## Decisions\n- c\n## Action items\n- d\n## Open questions\n- e';
-    expect(finishNotes(full).markdown).toBe(full);
+    expect(finishNotes(ALONA_NOTES, full).markdown).toBe(full);
   });
 
   test('reasoning blocks and code fences are removed', () => {
-    const notes = finishNotes('<think>let me plan</think>\n```markdown\n**Title:** Sync\n## Summary\nShort.\n```');
+    const notes = finishNotes(ALONA_NOTES, '<think>let me plan</think>\n```markdown\n**Title:** Sync\n## Summary\nShort.\n```');
     expect(notes.title).toBe('Sync');
     expect(notes.markdown.startsWith('## Summary\nShort.')).toBe(true);
   });
 
   test('a first-level heading is taken as the title when no title line is given', () => {
-    expect(finishNotes('# Launch planning\n\n## Summary\nWe agreed.').title).toBe('Launch planning');
+    expect(finishNotes(ALONA_NOTES, '# Launch planning\n\n## Summary\nWe agreed.').title).toBe('Launch planning');
   });
 
   test('a title that only repeats the instruction is dropped, so the meeting keeps its own name', () => {
-    expect(finishNotes('# a short title for the meeting, on one line\n\n## Summary\nWe agreed.').title).toBe('');
-    expect(finishNotes('Title: names what this meeting was about in three to six words\n## Summary\nOk.').title).toBe('');
+    expect(finishNotes(ALONA_NOTES, '# a short title for the meeting, on one line\n\n## Summary\nWe agreed.').title).toBe('');
+    expect(finishNotes(ALONA_NOTES, 'Title: names what this meeting was about in three to six words\n## Summary\nOk.').title).toBe('');
   });
 
   test('a reply cut off inside its reasoning yields the no-speech notes, not the reasoning', () => {
-    expect(finishNotes('<think>still thinking about').markdown).toContain('No speech was detected');
+    expect(finishNotes(ALONA_NOTES, '<think>still thinking about').markdown).toContain('No speech was detected');
   });
 });
 
@@ -165,6 +231,7 @@ function harness(options: SimOptions = {}) {
     engine,
     stt: artifact('stt'),
     llm: artifact('llm'),
+    profile: ALONA_NOTES,
     readUserNotes: async () => files.userNotes,
     readTranscript: async () => files.transcript,
     writeTranscript: async (_m, segments) => void (files.transcript = segments),
@@ -276,20 +343,7 @@ describe('engine replies', () => {
 
 describe('model downloads', () => {
   function app(options: SimOptions = {}) {
-    const dirs = new Map<string, Uint8Array>();
-    const files = {
-      readFile: async (path: string) => {
-        const data = dirs.get(path);
-        if (!data) throw Object.assign(new Error('missing'), { code: 'ENOENT' });
-        return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength) as ArrayBuffer;
-      },
-      atomicWriteFile: async (path: string, data: Uint8Array) => void dirs.set(path, data),
-      readdir: async (path: string) => [...new Set([...dirs.keys()].filter((k) => k.startsWith(`${path}/`)).map((k) => k.slice(path.length + 1).split('/')[0]))],
-      mkdir: async () => {},
-      rm: async (path: string) => {
-        for (const k of [...dirs.keys()]) if (k.startsWith(`${path}/`)) dirs.delete(k);
-      },
-    };
+    const files = memoryFiles();
     const engine = simEngine(options);
     return Object.assign(service(engine, meetingStore(files), 'Demo.'), { engine, files });
   }
@@ -435,5 +489,67 @@ describe('running a meeting again', () => {
   test('a meeting still being processed is not restarted', () => {
     const h = harness();
     expect(retranscribe(h.meeting)).toBe(h.meeting);
+  });
+});
+
+describe('a service with its own note format', () => {
+  const plan: NotesProfile = {
+    ...ALONA_NOTES,
+    titleRule: '',
+    sections: [{ heading: 'Plan', guidance: 'what happens next.' }],
+    missingSection: 'Not discussed.',
+  };
+
+  test('each meeting is written in the format the app picks for it, and the engine is given that format', async () => {
+    const prompts: string[] = [];
+    const engine = simEngine({ polls: 1, notes: (prompt) => (prompts.push(prompt), '## Summary\nSaid things.') });
+    const store = meetingStore(memoryFiles());
+    const s = service(engine, store, 'Demo.', { profileOf: async (m) => (m.title === 'plan' ? plan : ALONA_NOTES) });
+    await s.downloadTier('balanced');
+    for (let i = 0; i < 5; i++) await s.setup('auto');
+    await s.create('a', 'plan', 'app:/data/meetings/a/audio.wav', 1000, '', 1, 'balanced');
+    await s.create('b', 'alona', 'app:/data/meetings/b/audio.wav', 1000, '', 2, 'balanced');
+    for (let i = 0; i < 30; i++) await s.tick('auto');
+    expect(prompts.some((p) => p.includes('"## Plan": what happens next.') && !p.includes('Key points'))).toBe(true);
+    expect((await s.detail('a')).aiNotes).toBe('## Summary\nSaid things.\n\n## Plan\nNot discussed.');
+    expect((await s.detail('b')).aiNotes).toContain('## Open questions\n- None recorded.');
+  });
+
+  test("an app's own files sit beside a meeting's, and the store's own names are refused", async () => {
+    const files = memoryFiles();
+    const store = meetingStore(files);
+    await store.writeExtra('a', 'review.json', '{}');
+    expect(await store.readExtra('a', 'review.json')).toBe('{}');
+    expect(await store.readExtra('a', 'edited.md')).toBe('');
+    expect(() => store.writeExtra('a', 'ai-notes.md', 'x')).toThrow('not a file an app may add');
+    expect(() => store.writeExtra('a', '../b/notes.md', 'x')).toThrow('not a file an app may add');
+    await store.remove('a');
+    expect(files.paths()).toEqual([]);
+  });
+});
+
+describe('choosing the engine at launch', () => {
+  test('without a native module, the demo engine answers and says why', async () => {
+    const { service: s } = await hostService(memoryFiles(), null, { sampleLine: 'Samples.' });
+    const setup = await s.setup('auto');
+    expect([setup.demo, setup.demoNote]).toEqual([true, 'This build has no on-device models. Samples.']);
+  });
+
+  test("Android's recording-only module fails the probe, so the demo engine runs as a phone", async () => {
+    const native = { available: true, later: async () => ({ error: 'NotSupportedError' }) };
+    const setup = await (await hostService(memoryFiles(), native)).service.setup('auto');
+    expect(setup.demo).toBe(true);
+    expect(setup.demoNote).toStartWith('The Android app has no on-device models.');
+  });
+
+  test('a native engine that answers its probe is used, with no demo note', async () => {
+    const replies: Record<string, unknown> = {
+      probe: { ...SIM_DEVICE, host: 'macos', memoryGB: 32, appleSilicon: true },
+      installed: { ids: [] },
+      job: { id: 'j', state: 'unknown' },
+    };
+    const native = { available: true, later: async (r: Record<string, unknown>) => replies[String(r.op)] ?? {} };
+    const setup = await (await hostService(memoryFiles(), native)).service.setup('auto');
+    expect([setup.demo, setup.demoNote]).toEqual([false, '']);
   });
 });

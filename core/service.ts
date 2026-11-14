@@ -1,7 +1,7 @@
 import { assess, effectiveTier, type Assessment } from './device';
 import type { Artifact, DeviceFacts, Engine, JobView } from './engine';
 import { demoArtifacts, downloadBytes, LINEUP, shippedTiers, sizeLabel, tierArtifacts, type TierArtifacts } from './models';
-import { clock } from './notes';
+import { ALONA_NOTES, clock, type NotesProfile } from './notes';
 import { advance, isWorking, regenerate, retranscribe, retry, type PipelineIO } from './pipeline';
 import type { MeetingStore, StoredMeeting } from './store';
 import { displayTitle, isTierId, TIERS, type Meeting, type Stage, type TierId } from './types';
@@ -122,12 +122,18 @@ interface TierState {
   error: string;
 }
 
+export interface ServiceOptions {
+  /** The note format of one meeting. Alona's for every meeting when absent. */
+  profileOf?: (meeting: StoredMeeting) => Promise<NotesProfile>;
+}
+
 /**
  * The app's operations over one host's engine and the meeting store. `demo`
  * is true when the host has no inference module and the stand-in engine
  * answers instead.
  */
-export function service(engine: Engine, store: MeetingStore, demoNote: string) {
+export function service(engine: Engine, store: MeetingStore, demoNote: string, options: ServiceOptions = {}) {
+  const profileOf = options.profileOf ?? (async () => ALONA_NOTES);
   const demo = demoNote !== '';
   let facts: DeviceFacts | null = null;
   let ticking = false;
@@ -270,6 +276,7 @@ export function service(engine: Engine, store: MeetingStore, demoNote: string) {
           engine,
           stt,
           llm,
+          profile: await profileOf(next),
           readUserNotes: (m) => store.readUserNotes(m.id),
           readTranscript: (m) => store.readTranscript(m.id),
           writeTranscript: (m, segments) => store.writeTranscript(m.id, segments),

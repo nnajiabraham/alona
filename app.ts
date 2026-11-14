@@ -1,59 +1,18 @@
 import type { Answer, NativeModule, Sources, Storage } from './app.contract.d.ts';
-import { engineOver, parseDeviceFacts, type DeviceFacts, type EngineRequest } from './core/engine';
-import { service, type Service } from './core/service';
-import { SIM_DEVICE, simEngine } from './core/sim-engine';
-import { meetingStore, type Files } from './core/store';
+import { hostService } from './core/host';
+import type { Service } from './core/service';
 
 const DIR = 'app:/data';
 export const grants = `device.microphone purpose.microphone\nfs.read ${DIR}\nfs.write ${DIR}`;
 
 let current: Promise<Service> | null = null;
 
-const DEMO_SHELF = `${DIR}/demo-models.json`;
-
-const demoShelf = (files: Files) => ({
-  load: async (): Promise<string[]> => {
-    try {
-      const ids: unknown = JSON.parse(new TextDecoder().decode(await files.readFile(DEMO_SHELF)));
-      return Array.isArray(ids) ? ids.filter((id): id is string => typeof id === 'string') : [];
-    } catch {
-      return [];
-    }
-  },
-  save: (ids: string[]): Promise<void> => files.atomicWriteFile(DEMO_SHELF, new TextEncoder().encode(JSON.stringify(ids))),
-});
-
-/**
- * A host's engine may answer its probe with `demo: true` to say it cannot run
- * models where it is, as the web engine does under browser automation. The
- * app then uses the demo engine and says so on screen.
- */
-async function build(storage: Storage, native: NativeModule | null | undefined): Promise<Service> {
-  const store = meetingStore(storage.fs);
-  const demo = (why: string, device: DeviceFacts = SIM_DEVICE): Service =>
-    service(simEngine({ polls: 3, shelf: demoShelf(storage.fs), device }), store, `${why} Transcripts and notes shown here are samples.`);
-  if (native?.available !== true) return demo('This build has no on-device models.');
-  // Android's native module serves recording only, so a probe there fails. It is the only host
-  // that reports a native module and has no engine.
-  const probe = await native.later({ op: 'probe' }).catch(() => null);
-  if (probe === null || typeof probe.host !== 'string') {
-    return demo('The Android app has no on-device models.', { ...SIM_DEVICE, host: 'android', formFactor: 'phone' });
-  }
-  if (probe.demo === true) {
-    // The demo keeps its sample memory and GPU, so captures match on every machine, but speaks as the real host.
-    const real = parseDeviceFacts(probe);
-    const why = typeof probe.demoReason === 'string' && probe.demoReason !== '' ? probe.demoReason : 'Models cannot run here.';
-    return demo(why, { ...SIM_DEVICE, host: real.host, formFactor: real.formFactor, appleSilicon: real.appleSilicon });
-  }
-  return service(engineOver((request: EngineRequest) => native.later({ ...request })), store, '');
-}
-
 /**
  * One service for the life of the module, so the pipeline's "a tick is
  * already running" guard and the demo engine's jobs survive between calls.
  */
 const app = (storage: Storage, native: NativeModule | null | undefined): Promise<Service> =>
-  (current ??= build(storage, native));
+  (current ??= hostService(storage.fs, native).then((host) => host.service));
 
 const sources: Sources = {
   loadSetup: async ([picked], _store, storage, native) => (await app(storage, native)).setup(picked),

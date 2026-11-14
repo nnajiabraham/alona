@@ -126,6 +126,7 @@ footer { color: var(--muted); font-size: 0.86rem; }
   <a href="#pipeline">The pipeline</a>
   <a href="#models">Models and tiers</a>
   <a href="#flows">App flows</a>
+  <a href="#clinic">Clinical app</a>
   <a href="#checks">Measured results</a>
   <a href="#brand">Brand guide</a>
   <a href="#dev">Developer onboarding</a>
@@ -155,7 +156,9 @@ footer { color: var(--muted); font-size: 0.86rem; }
     <tbody id="status-rows">
       <tr><td><b>macOS</b></td><td><span class="pill ok">6 of 6 flows</span></td><td><span class="pill ok">All three tiers</span></td><td>Swift engine with sherpa-onnx and llama.cpp. The real-model check feeds a spoken fixture in place of the recorded take, so a hardware microphone has not been exercised. Capturing other apps' audio needs an Exact permission that does not exist yet.</td></tr>
       <tr><td><b>Web</b></td><td><span class="pill ok">6 of 6 flows</span></td><td><span class="pill ok">Lite tier, in Chrome</span></td><td>WebGPU engine in a worker. The real-model run records through the browser's own recorder from Chrome's fake microphone, which plays the fixture. A hardware microphone, Safari, and Firefox are untested.</td></tr>
-      <tr><td><b>Android</b></td><td><span class="pill ok">6 of 6 flows</span></td><td><span class="pill no">Demo engine</span></td><td>Driven on an emulator. Real models need a Kotlin bridge to the native runtimes, which is not built. The audio player does not draw on Android.</td></tr>
+      <tr><td><b>Android</b></td><td><span class="pill part">6 of 6, with a flake</span></td><td><span class="pill no">Demo engine</span></td><td>Driven on an emulator. The recording flow fails about one run in four there: the recorder starts but its reply never reaches the app. The cause is below the app and not found. Real models need a Kotlin bridge to the native runtimes, which is not built. The audio player does not draw on Android.</td></tr>
+      <tr><td><b>Linux</b></td><td><span class="pill part">In a container</span></td><td><span class="pill no">Demo engine</span></td><td>A <code>.deb</code> for x64 and arm64, built as an Electron shell around the web build because Exact's Linux host cannot edit text or be packaged. The arm64 package installs on Ubuntu 24.04 and passes the flows in a container, which has no GPU. Real models on Linux and the x64 package are not verified.</td></tr>
+      <tr><td><b>Windows</b></td><td><span class="pill no">Not run</span></td><td><span class="pill no">Not run</span></td><td>An x64 installer from the same shell, built on a Mac. Nothing has been run on Windows. The steps to verify it are in <code>docs/rewrite/desktop-shell.md</code>.</td></tr>
       <tr><td><b>iOS</b></td><td><span class="pill no">Not built</span></td><td><span class="pill no">Not run</span></td><td>Exact's iOS host needs Xcode 27.1 and this Mac has 26.1.1. The Apple engine source is shared with macOS and has never been compiled for iOS.</td></tr>
     </tbody>
   </table>
@@ -271,6 +274,45 @@ footer { color: var(--muted); font-size: 0.86rem; }
   <div id="flow-list" style="display:flex;flex-direction:column;gap:18px"></div>
 </section>
 
+<section id="clinic">
+  <span class="eyebrow">The same foundations, a second app</span>
+  <h2>Clinical app</h2>
+  <p>A patient note-taking and transcription app for health professionals, on web, Android, and iOS. It shares Alona's core, pipeline, and engines. What differs is the note: the clinician picks a template, records a consultation, and gets a draft with that template's sections, written only from what was said. The draft stays marked as an AI draft until the clinician reviews it, and only a reviewed note can be copied or shared.</p>
+  <div class="grid">
+    <div class="tile"><h3>One file per tenant</h3><p>A tenant is one typed file under <code>tenants/</code>: name, tagline, bundle id, thirteen colors in light and dark, wording, note templates, defaults, and feature switches. The types reject a missing field or a default template that does not exist.</p></div>
+    <div class="tile"><h3>Checked before it builds</h3><p><code>tenant.mjs check</code> catches what types cannot: text contrast under 4.5 to 1, white on the accent under 3 to 1, duplicate template ids, a malformed bundle id, a missing icon. Each error names the field and the fix.</p></div>
+    <div class="tile"><h3>Edits belong to the clinician</h3><p>The model's draft and the clinician's edits are separate files. The pipeline never overwrites an edit, and "Write again" asks before replacing one.</p></div>
+    <div class="tile"><h3>No compliance claim</h3><p>The app says what it does: audio, transcripts, and notes are processed and stored on the device. Whether that meets a regulation is for the owner to establish before real patients.</p></div>
+  </div>
+<pre><code># tenants/riverbend.ts
+import { defineTenant } from './schema';
+
+export default defineTenant({
+  slug: 'riverbend',
+  app: { name: 'Riverbend Notes', shortName: 'Riverbend', tagline: 'Visit notes, drafted on this device.',
+         bundleId: 'org.example.riverbend', version: '0.1.0' },
+  colors: { accent: { light: '#1f6f66', dark: '#4fa79b' }, /* twelve more tokens */ },
+  copy: { welcomeTitle: 'Welcome', welcomeBody: '…', person: { singular: 'patient', plural: 'patients' },
+          reviewDisclaimer: 'Check every line before you use it.', privacy: '…' },
+  templates: [{ id: 'soap', name: 'SOAP', description: '…', sections: [
+    { heading: 'Subjective', guidance: 'What the patient reported.' }, /* … */ ] }],
+  defaults: { template: 'soap', tier: 'auto' },
+  features: { jottings: true, copy: true, share: true, playback: true },
+  icon: 'icons/riverbend.png',
+});</code></pre>
+<pre><code>bun tools/tenant.mjs icon riverbend          # a placeholder icon, if you have none
+bun tools/tenant.mjs check riverbend         # types, contrast, ids, icon
+bun tools/tenant.mjs build riverbend web     # or android, ios
+bun tools/tenant.mjs verify riverbend web    # Exact's checks on that tenant's build
+bun tools/tenant.mjs flows riverbend web     # every clinical flow, with captures</code></pre>
+  <p>Three tenants ship as examples: a neutral default, a test partner, and a counselling practice that says "clients" and uses different templates. Pick one to see its captures.</p>
+  <div class="tabs" id="clinic-tenants" role="group" aria-label="Tenant"></div>
+  <div class="tabs" id="clinic-targets" role="group" aria-label="Platform"></div>
+  <p class="note" id="clinic-note">These captures use the demo engine, so the transcript and draft are samples. On the Android emulator the flows that record are unreliable, so some are missing there.</p>
+  <div id="clinic-list" style="display:flex;flex-direction:column;gap:18px"></div>
+  <p class="note">On real models the Lite tier's clinical draft passed the format check and added nothing that was not said, but it was a poor note: it copied guidance sentences and repeated the history under the impression. Treat Lite drafts as a starting point until accuracy is measured on real consultations.</p>
+</section>
+
 <section id="checks">
   <span class="eyebrow">Real models, real numbers</span>
   <h2>Measured results</h2>
@@ -316,6 +358,7 @@ bun install
 bun exact.mjs update                            # point exact.mjs at your checkout
 tools/fetch-apple-frameworks.sh                 # sherpa-onnx, ONNX Runtime, llama.cpp
 bun tools/build-web-engine.mjs                  # bundle the web worker</code></pre>
+  <p>For the Windows and Linux packages, <code>bun tools/build-desktop.mjs</code> builds the web app, wraps it in the Electron shell under <code>desktop/</code>, and writes the two <code>.deb</code> files and the Windows installer. It runs on a Mac.</p>
   <h3>3. Run it</h3>
 <pre><code>bun exact.mjs web          # the web app, rebuilt on save
 bun exact.mjs mac --run    # the macOS app
@@ -330,6 +373,8 @@ bun exact.mjs android      # build and install on the emulator or phone in ANDRO
       <tr><td><code>bun tools/flows.mjs web</code></td><td>Every flow with state checks, and fresh screenshots and videos. Also takes <code>web-phone</code>, <code>macos</code>, and <code>android</code>.</td></tr>
       <tr><td><code>bun tools/e2e-native.mjs lite</code></td><td>The macOS app on real models: word error rate, the notes' five sections, timing, and memory over three runs.</td></tr>
       <tr><td><code>bun tools/e2e-web.mjs</code></td><td>The web app on real models in Chrome, with the fixture played as the microphone.</td></tr>
+      <tr><td><code>bun tools/e2e-desktop.mjs</code></td><td>The desktop shell on real models, with the network it used.</td></tr>
+      <tr><td><code>bun tools/tenant.mjs flows &lt;slug&gt; web</code></td><td>Every clinical flow for one tenant, with captures.</td></tr>
       <tr><td><code>bun tools/explainer-data.mjs</code></td><td>Refreshes this page's media list and measured results.</td></tr>
     </tbody>
   </table>
@@ -345,6 +390,8 @@ bun exact.mjs android      # build and install on the emulator or phone in ANDRO
       <tr><td><code>core/</code></td><td>Shared TypeScript: <code>service</code>, <code>pipeline</code>, <code>notes</code>, <code>device</code>, <code>models</code>, <code>store</code>, <code>engine</code> (the protocol), <code>sim-engine</code>, and <code>artifacts.json</code>.</td></tr>
       <tr><td><code>modules/apple/</code></td><td>The Swift engine for macOS and iOS.</td></tr>
       <tr><td><code>modules/web/</code>, <code>engine/web/</code></td><td>The web engine's seam and its Worker source.</td></tr>
+      <tr><td><code>clinic/</code>, <code>tenants/</code></td><td>The clinical app's view and logic, and one typed config file per tenant.</td></tr>
+      <tr><td><code>desktop/</code></td><td>The Electron shell for the Windows and Linux packages.</td></tr>
       <tr><td><code>tools/</code></td><td>Flow runner, real-model checks, model pinning, framework fetch, the Exact patch.</td></tr>
       <tr><td><code>docs/</code></td><td>This guide, captured media, research, spike reports, and the decision trail.</td></tr>
       <tr><td><code>legacy/macos-swift/</code></td><td>The original Swift app, kept as reference for system-audio capture and meeting detection.</td></tr>
@@ -376,6 +423,8 @@ bun exact.mjs android      # build and install on the emulator or phone in ANDRO
   <div class="grid">
     <div class="tile"><span class="pill no">Blocked</span><h3>Other participants' audio on macOS</h3><p>The Swift app captured meeting audio with a Core Audio process tap. Exact has no permission entry for audio capture and refuses hand-written Info.plist keys, so the new app records the microphone only.</p></div>
     <div class="tile"><span class="pill no">Blocked</span><h3>iOS</h3><p>Needs Xcode 27.1 on the build machine. Nothing about iOS has been compiled or run.</p></div>
+    <div class="tile"><span class="pill part">Unverified</span><h3>Windows, and Linux on a real GPU</h3><p>The Windows installer has never been run. The Linux package has only run in a container without a GPU, where it falls back to samples. Both packages are unsigned and carry the Lite tier only.</p></div>
+    <div class="tile"><span class="pill part">Owner decisions</span><h3>Clinical use</h3><p>Before real patients: a regulatory review, accuracy measured on real consultations, whether to screen the patient reference for identifiers, and whether audio is deleted after review.</p></div>
     <div class="tile"><span class="pill part">Not built</span><h3>Android inference</h3><p>Needs a Kotlin extension package that bridges to sherpa-onnx and llama.cpp. The spike report lists the route and its risks.</p></div>
     <div class="tile"><span class="pill part">Not built</span><h3>Meeting detection and menu bar</h3><p>Zoom and Meet detection and the menu bar item from the Swift app are not ported. Detection of Meet needs an Apple Events permission Exact cannot declare.</p></div>
     <div class="tile"><span class="pill part">Unmeasured</span><h3>Long meetings</h3><p>The chunked path is unit-tested, but no hour-long recording has been run through real models, and no eval set scores notes quality.</p></div>
@@ -399,6 +448,7 @@ bun exact.mjs android      # build and install on the emulator or phone in ANDRO
     ['macos', 'macOS', ''],
     ['macos-real', 'macOS, real models', 'The notes screen after the real-model check, one capture per tier.'],
     ['android', 'Android', 'Android runs the demo engine: the transcript and notes shown are samples.'],
+    ['desktop', 'Windows and Linux shell', 'The Electron shell that the Windows and Linux packages use. The macOS run used real models. The Linux run was in a container with no GPU, so it shows the demo engine.'],
   ];
   var DEMO = 'These captures use the demo engine, so the transcript and notes are samples. The agent owns the clock, so each video is one frame per step.';
   var FLOWS = [
@@ -409,6 +459,8 @@ bun exact.mjs android      # build and install on the emulator or phone in ANDRO
     ['settings', 'Settings and models', ['See what this device is and what Alona recommends.', 'Pick a lighter tier, download it, or remove one to free space.', 'A tier the device cannot run is disabled and says why.']],
     ['leaving', 'Leaving mid-task', ['Back during a recording stops it and saves the meeting, so the microphone never stays on.', 'Notes typed just before Back are saved to the meeting they belong to.']],
     ['real-time', 'Real-time capture', ['Screen recordings of the installed app, driven by real taps.']],
+    ['macos', 'The shell on a Mac, real models', ['First launch, download, a recording from a fake microphone, the notes, the transcript, and Settings.']],
+    ['linux', 'The installed .deb on Ubuntu', ['The same steps in a container. With no GPU the app says so and shows samples.']],
     ['real-run', 'A run on real models', ['The built app, real models, and the spoken fixture: first launch, download, record, transcript, notes.']],
   ];
   var el = function (tag, attrs, children) {
@@ -453,6 +505,59 @@ bun exact.mjs android      # build and install on the emulator or phone in ANDRO
       tabs.appendChild(b);
     });
     show(available[0]);
+  }
+
+  var CLINIC_FLOWS = [
+    ['onboarding', 'First launch', ['The tenant\'s welcome, the device check, and the model download.']],
+    ['record', 'New note', ['A patient reference and a note template, then recording with a pad for jottings.', 'Stop saves the note, then it is transcribed and the draft is written.']],
+    ['review', 'Review and sign off', ['Edit the draft, mark it reviewed, then copy or share it.', '"Write again" asks before it replaces edits.']],
+    ['library', 'Notes list', ['Newest first, with the reference, the note type, and whether it is a draft or reviewed.']],
+    ['leaving', 'Leaving mid-task', ['Back during a recording stops it and saves the note. Edits typed before Back are kept.']],
+    ['settings', 'Settings', ['Models, the tenant\'s privacy statement and support contact, the app\'s name and version.']],
+    ['real-run', 'A run on real models', ['A synthetic consultation played as the microphone, transcribed and drafted with the Lite models.']],
+  ];
+  var clinic = data.clinic || {};
+  var tenantTabs = document.getElementById('clinic-tenants'), clinicTargets = document.getElementById('clinic-targets'), clinicList = document.getElementById('clinic-list');
+  var TARGET_NAMES = { web: 'Web, desktop', 'web-phone': 'Web, phone size', android: 'Android', 'web-real': 'Web, real models' };
+  function press(group, key) {
+    Array.prototype.forEach.call(group.children, function (b) { b.setAttribute('aria-pressed', String(b.dataset.key === key)); });
+  }
+  function showClinic(slug, target) {
+    press(tenantTabs, slug);
+    clinicTargets.replaceChildren();
+    var targets = Object.keys(clinic[slug] || {});
+    if (targets.indexOf(target) < 0) target = targets[0];
+    targets.forEach(function (t) {
+      var b = el('button', { type: 'button', 'data-key': t, text: TARGET_NAMES[t] || t });
+      b.addEventListener('click', function () { showClinic(slug, t); });
+      clinicTargets.appendChild(b);
+    });
+    press(clinicTargets, target);
+    document.getElementById('clinic-note').hidden = target === 'web-real';
+    clinicList.replaceChildren();
+    var flows = (clinic[slug] || {})[target] || {};
+    CLINIC_FLOWS.filter(function (f) { return flows[f[0]]; }).forEach(function (f) {
+      var media = flows[f[0]];
+      var strip = el('div', { class: 'strip' + (target === 'web' ? '' : ' phone') });
+      media.shots.forEach(function (shot) {
+        strip.appendChild(el('figure', {}, [el('img', { src: shot.src, alt: f[1] + ': ' + shot.label, loading: 'lazy' }), el('figcaption', { text: shot.label })]));
+      });
+      var parts = [el('h3', { text: f[1] }), el('ol', {}, f[2].map(function (step) { return el('li', { text: step }); }))];
+      if (media.shots.length) parts.push(strip);
+      if (media.video) parts.push(el('video', { src: media.video, controls: '', preload: 'metadata', 'aria-label': f[1] + ' video' }));
+      clinicList.appendChild(el('div', { class: 'flow' }, parts));
+    });
+  }
+  var slugs = Object.keys(clinic);
+  if (slugs.length === 0) {
+    clinicList.appendChild(el('p', { class: 'empty', text: 'No clinical captures yet. Run bun tools/tenant.mjs flows default web, then bun tools/explainer-data.mjs.' }));
+  } else {
+    slugs.forEach(function (slug) {
+      var b = el('button', { type: 'button', 'data-key': slug, text: slug });
+      b.addEventListener('click', function () { showClinic(slug, 'web-phone'); });
+      tenantTabs.appendChild(b);
+    });
+    showClinic(slugs[0], 'web-phone');
   }
 
   var checks = document.getElementById('check-list');

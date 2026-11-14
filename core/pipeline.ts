@@ -1,5 +1,5 @@
 import type { Artifact, Engine, JobView } from './engine';
-import { chatPrompt, finishNotes, NO_SPEECH_NOTES, planNotes, stepCount, stepRequest } from './notes';
+import { chatPrompt, finishNotes, planNotes, stepCount, stepRequest, type NotesProfile } from './notes';
 import type { FailedDuring, Meeting, Segment, Stage } from './types';
 
 /** Everything the pipeline touches outside the meeting record itself. */
@@ -7,6 +7,8 @@ export interface PipelineIO {
   engine: Engine;
   stt: Artifact;
   llm: Artifact;
+  /** The note format this meeting's notes are written in. */
+  profile: NotesProfile;
   readUserNotes(meeting: Meeting): Promise<string>;
   readTranscript(meeting: Meeting): Promise<Segment[]>;
   writeTranscript(meeting: Meeting, segments: Segment[]): Promise<void>;
@@ -39,10 +41,10 @@ async function startNotesStep(m: Meeting, io: PipelineIO, step: number, partials
   const plan = planNotes(segments, userNotes, m.tier);
   const steps = stepCount(plan);
   if (steps === 0) {
-    await io.writeAiNotes(m, NO_SPEECH_NOTES);
+    await io.writeAiNotes(m, io.profile.emptyResult);
     return at(m, { kind: 'done' }, 1);
   }
-  const request = stepRequest(plan, step, partials, userNotes);
+  const request = stepRequest(io.profile, plan, step, partials, userNotes);
   const job = notesJob(m, step);
   await io.engine.generate(job, io.llm, chatPrompt(request), request.maxTokens);
   return at(m, { kind: 'summarizing', job, step, steps, partials }, TRANSCRIBE_SHARE + ((1 - TRANSCRIBE_SHARE) * step) / steps);
@@ -65,7 +67,7 @@ async function summarizing(m: Meeting, io: PipelineIO, stage: Extract<Stage, { k
       return at(m, stage, TRANSCRIBE_SHARE + ((1 - TRANSCRIBE_SHARE) * (stage.step + view.progress)) / steps);
     case 'done': {
       if (stage.step + 1 < steps) return startNotesStep(m, io, stage.step + 1, [...stage.partials, view.text]);
-      const notes = finishNotes(view.text);
+      const notes = finishNotes(io.profile, view.text);
       await io.writeAiNotes(m, notes.markdown);
       return at({ ...m, suggestedTitle: notes.title }, { kind: 'done' }, 1);
     }

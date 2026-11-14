@@ -85,42 +85,90 @@ export interface GenerateRequest {
   maxTokens: number;
 }
 
-const FORMAT = `Write the meeting notes in Markdown.
+/** One section of the notes: its heading, and what the model writes under it. */
+export interface NoteSection {
+  heading: string;
+  guidance: string;
+}
 
-Begin with one line that starts with "Title: " and then names what this meeting was about in three to six words.
+/**
+ * What a notes model is asked to write, as data, so one pipeline serves
+ * Alona's meeting notes and other apps' formats.
+ */
+export interface NotesProfile {
+  /** What the recording is, as the prompts name it: "meeting", "consultation". */
+  recording: string;
+  system: string;
+  extractSystem: string;
+  /** The format's first line. */
+  intro: string;
+  /** The instruction for a title line, or `''` when the notes have none. */
+  titleRule: string;
+  sections: readonly NoteSection[];
+  /** Instructions after the section list, or `''`. */
+  closing: string;
+  /** What goes under a section the model left out. */
+  missingSection: string;
+  /** What each part of a long recording is read for. */
+  extractHeadings: readonly string[];
+  /** The notes of a recording with no speech. */
+  emptyResult: string;
+  /** Introduces the person's own notes in the prompt. */
+  ownNotesLabel: string;
+}
 
-After the title, write these five sections in this order. Each section starts with its heading on its own line.
+export const ALONA_NOTES: NotesProfile = {
+  recording: 'meeting',
+  system: `You write meeting notes from a transcript. Use only what was said. Never invent names, dates, numbers, or decisions. If the person's own notes are given, treat them as what matters most to them and cover those topics first. Reply with the notes only, in the meeting's language.`,
+  extractSystem: `You extract facts from one part of a meeting transcript. Use only what was said in this part. Never invent names, dates, numbers, or decisions. Reply with short bullets only.`,
+  intro: 'Write the meeting notes in Markdown.',
+  titleRule: 'Begin with one line that starts with "Title: " and then names what this meeting was about in three to six words.',
+  sections: [
+    { heading: 'Summary', guidance: 'two to four sentences.' },
+    { heading: 'Key points', guidance: 'one bullet per point.' },
+    { heading: 'Decisions', guidance: 'one bullet per decision that was made. If none was made, write "- None recorded."' },
+    { heading: 'Action items', guidance: 'one line per task, written as "- [ ] Owner: task", with the due date if one was said. If there are none, write "- None recorded."' },
+    { heading: 'Open questions', guidance: 'one bullet per question left unanswered. If there are none, write "- None recorded."' },
+  ],
+  closing: '',
+  missingSection: '- None recorded.',
+  extractHeadings: ['Topics', 'Decisions', 'Action items', 'Open questions'],
+  emptyResult: '## Summary\nNo speech was detected in this recording.',
+  ownNotesLabel: "The person's own notes from the meeting:",
+};
 
-"## Summary": two to four sentences.
-"## Key points": one bullet per point.
-"## Decisions": one bullet per decision that was made. If none was made, write "- None recorded."
-"## Action items": one line per task, written as "- [ ] Owner: task", with the due date if one was said. If there are none, write "- None recorded."
-"## Open questions": one bullet per question left unanswered. If there are none, write "- None recorded."`;
+const NUMBER_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
+const count = (n: number): string => NUMBER_WORDS[n] ?? String(n);
 
-const SYSTEM = `You write meeting notes from a transcript. Use only what was said. Never invent names, dates, numbers, or decisions. If the person's own notes are given, treat them as what matters most to them and cover those topics first. Reply with the notes only, in the meeting's language.`;
+function format(p: NotesProfile): string {
+  const n = p.sections.length;
+  const which = `${count(n)} section${n === 1 ? '' : 's'}`;
+  const order = p.titleRule === ''
+    ? `Write these ${which} in this order.`
+    : `${p.titleRule}\n\nAfter the title, write these ${which} in this order.`;
+  const list = p.sections.map((s) => `"## ${s.heading}": ${s.guidance}`).join('\n');
+  const closing = p.closing === '' ? '' : `\n\n${p.closing}`;
+  return `${p.intro}\n\n${order} Each section starts with its heading on its own line.\n\n${list}${closing}`;
+}
 
-const EXTRACT_SYSTEM = `You extract facts from one part of a meeting transcript. Use only what was said in this part. Never invent names, dates, numbers, or decisions. Reply with short bullets only.`;
+const ownNotes = (p: NotesProfile, userNotes: string): string =>
+  userNotes.trim() === '' ? '' : `\n\n${p.ownNotesLabel}\n${userNotes.trim()}`;
 
-const ownNotes = (userNotes: string): string =>
-  userNotes.trim() === '' ? '' : `\n\nThe person's own notes from the meeting:\n${userNotes.trim()}`;
-
-function oneShot(transcript: string, userNotes: string): GenerateRequest {
+function oneShot(p: NotesProfile, transcript: string, userNotes: string): GenerateRequest {
   return {
-    system: SYSTEM,
-    prompt: `${FORMAT}\n\nTranscript:\n${transcript}${ownNotes(userNotes)}`,
+    system: p.system,
+    prompt: `${format(p)}\n\nTranscript:\n${transcript}${ownNotes(p, userNotes)}`,
     maxTokens: 900,
   };
 }
 
-function extract(chunkText: string, index: number, total: number): GenerateRequest {
+function extract(p: NotesProfile, chunkText: string, index: number, total: number): GenerateRequest {
+  const headings = p.extractHeadings.map((h) => `${h}:`).join('\n');
   return {
-    system: EXTRACT_SYSTEM,
-    prompt: `This is part ${index + 1} of ${total} of a meeting transcript. List what this part contains under these headings, one bullet each, keeping who said it and the time in brackets:
+    system: p.extractSystem,
+    prompt: `This is part ${index + 1} of ${total} of a ${p.recording} transcript. List what this part contains under these headings, one bullet each, keeping who said it and the time in brackets:
 
-Topics:
-Decisions:
-Action items:
-Open questions:
+${headings}
 
 Write "- none" under a heading with nothing to list.
 
@@ -130,11 +178,11 @@ ${chunkText}`,
   };
 }
 
-function merge(partials: string[], userNotes: string): GenerateRequest {
-  const parts = partials.map((p, i) => `Part ${i + 1}:\n${p.trim()}`).join('\n\n');
+function merge(p: NotesProfile, partials: string[], userNotes: string): GenerateRequest {
+  const parts = partials.map((part, i) => `Part ${i + 1}:\n${part.trim()}`).join('\n\n');
   return {
-    system: SYSTEM,
-    prompt: `${FORMAT}\n\nThe meeting was long, so it was read in parts. These are the facts extracted from each part, in order. Merge them, remove repeats, and when two parts disagree keep the later one.\n\n${parts}${ownNotes(userNotes)}`,
+    system: p.system,
+    prompt: `${format(p)}\n\nThe ${p.recording} was long, so it was read in parts. These are the facts extracted from each part, in order. Merge them, remove repeats, and when two parts disagree keep the later one.\n\n${parts}${ownNotes(p, userNotes)}`,
     maxTokens: 900,
   };
 }
@@ -147,16 +195,16 @@ export const chatPrompt = (request: GenerateRequest): string =>
   `<|im_start|>system\n${request.system}<|im_end|>\n<|im_start|>user\n${request.prompt}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n`;
 
 /** The `generate` request for one step of the plan. `partials` are the outputs of the steps before it. */
-export function stepRequest(plan: NotesPlan, step: number, partials: string[], userNotes: string): GenerateRequest {
+export function stepRequest(profile: NotesProfile, plan: NotesPlan, step: number, partials: string[], userNotes: string): GenerateRequest {
   switch (plan.kind) {
     case 'empty':
       throw new Error('An empty transcript has no notes step.');
     case 'oneShot':
-      return oneShot(plan.transcript, userNotes);
+      return oneShot(profile, plan.transcript, userNotes);
     case 'mapReduce':
       return step < plan.chunks.length
-        ? extract(plan.chunks[step], step, plan.chunks.length)
-        : merge(partials, userNotes);
+        ? extract(profile, plan.chunks[step], step, plan.chunks.length)
+        : merge(profile, partials, userNotes);
   }
 }
 
@@ -165,13 +213,11 @@ export interface FinishedNotes {
   markdown: string;
 }
 
-export const NO_SPEECH_NOTES = '## Summary\nNo speech was detected in this recording.';
-
 /**
  * Turns the model's raw reply into the notes file. Small models wrap replies
  * in reasoning blocks and code fences, and sometimes skip the title line.
  */
-export function finishNotes(raw: string): FinishedNotes {
+export function finishNotes(profile: NotesProfile, raw: string): FinishedNotes {
   let text = raw.replace(/<think>[\s\S]*?<\/think>/g, '').replace(/<think>[\s\S]*$/, '');
   text = text.replace(/^\s*```(?:markdown|md)?\s*\n/, '').replace(/\n```\s*$/, '').trim();
   const labelled = /^\s*(?:#+\s*)?\**Title:?\**:?\s*(.+)$/im.exec(text);
@@ -179,19 +225,19 @@ export function finishNotes(raw: string): FinishedNotes {
   const found = labelled ?? heading;
   const title = found ? cleanTitle(found[1]) : '';
   const markdown = (found ? text.replace(found[0], '') : text).trim();
-  return { title, markdown: markdown === '' ? NO_SPEECH_NOTES : withEverySection(markdown) };
+  return { title, markdown: markdown === '' ? profile.emptyResult : withEverySection(profile, markdown) };
 }
 
-const SECTIONS = ['Summary', 'Key points', 'Decisions', 'Action items', 'Open questions'] as const;
+const escape = (text: string): string => text.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
 
 /**
  * Models often leave out a section that has nothing in it. The notes always
- * show all five, so a missing one is added and says so.
+ * show every section, so a missing one is added and says so.
  */
-function withEverySection(markdown: string): string {
-  const has = (name: string): boolean => new RegExp(`^#{1,3}\\s*${name}\\s*$`, 'im').test(markdown);
-  const missing = SECTIONS.filter((name) => !has(name));
-  return [markdown, ...missing.map((name) => `## ${name}\n- None recorded.`)].join('\n\n');
+function withEverySection(profile: NotesProfile, markdown: string): string {
+  const has = (name: string): boolean => new RegExp(`^#{1,3}\\s*${escape(name)}\\s*$`, 'im').test(markdown);
+  const missing = profile.sections.filter((s) => !has(s.heading));
+  return [markdown, ...missing.map((s) => `## ${s.heading}\n${profile.missingSection}`)].join('\n\n');
 }
 
 /** A title the model wrote, or `''` when it only repeated the instruction it was given. */
