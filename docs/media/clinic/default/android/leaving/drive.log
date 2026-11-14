@@ -1,0 +1,76 @@
+clock data
+  {"clock":0,"settled":true,"epoch":2,"incarnation":1}
+tap continue
+  {"tapped":28,"at":[205.71,760.33],"target":"continue","delivery":"platform","carrier":"android","mode":"agent","epoch":3,"incarnation":1,"clock":0}
+clock data
+  {"clock":0,"settled":true,"epoch":3,"incarnation":1}
+clock +6000
+  {"clock":6000,"epoch":8,"incarnation":1}
+clock data
+  {"clock":6000,"settled":true,"epoch":8,"incarnation":1}
+tap new-note-button
+  {"tapped":63,"at":[205.71,223],"target":"new-note-button","delivery":"platform","carrier":"android","mode":"agent","epoch":9,"incarnation":1,"clock":6000}
+clock settle
+  {"clock":6350,"settled":true,"epoch":9,"incarnation":1}
+tap start-recording
+  {"tapped":120,"at":[205.71,809],"target":"start-recording","delivery":"platform","carrier":"android","mode":"agent","epoch":10,"incarnation":1,"clock":6350}
+clock data
+  {"clock":6350,"settled":false,"reason":"requests","epoch":12,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
+clock settle
+  {"clock":6350,"settled":false,"reason":"requests","epoch":14,"incarnation":1,"diagnostic":"clock settle gave up on requests still in flight at its bound (20 s native); state shows them under pending, and logs a `request N` with no `fulfil N`"}
+clock +3000
+  {"clock":9350,"inflight":1,"epoch":15,"incarnation":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+state rec.state
+  "recording"
+screenshot docs/media/clinic/default/android/leaving/01-recording.png
+  {"screenshot":"docs/media/clinic/default/android/leaving/01-recording.png","device":true,"epoch":16,"incarnation":1,"clock":9350}
+back
+  {"back":"route","delivery":"platform","carrier":"android","epoch":17,"incarnation":1,"clock":9350}
+clock data
+  {"clock":9350,"settled":false,"reason":"requests","epoch":17,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
+clock settle
+  {"clock":9350,"settled":false,"reason":"requests","epoch":22,"incarnation":1,"diagnostic":"clock settle gave up on requests still in flight at its bound (20 s native); state shows them under pending, and logs a `request N` with no `fulfil N`"}
+state recorderId
+  ""
+state trackId
+  ""
+state lib.length
+  1
+screenshot docs/media/clinic/default/android/leaving/02-back-stopped-and-saved.png
+  {"screenshot":"docs/media/clinic/default/android/leaving/02-back-stopped-and-saved.png","device":true,"epoch":22,"incarnation":1,"clock":9350}
+clock +12000
+  {"clock":21350,"epoch":37,"incarnation":1}
+clock data
+  {"clock":21350,"settled":true,"epoch":37,"incarnation":1}
+state detail.state
+  "draft"
+tap edit-note
+  {"tapped":192,"at":[51,760.33],"target":"edit-note","scrolled":{"from":[51,958.38],"to":[51,958.38]},"delivery":"platform","carrier":"android","mode":"agent","epoch":38,"incarnation":1,"clock":21350}
+clock settle
+  {"clock":21350,"settled":true,"epoch":38,"incarnation":1}
+type note-editor ## Typed just before Back
+  {"typed":202,"value":"## Typed just before Back","target":"note-editor","delivery":"platform","carrier":"android","mode":"agent","epoch":39,"incarnation":1,"clock":21350}
+back
+  {"back":"route","delivery":"platform","carrier":"android","epoch":40,"incarnation":1,"clock":21350}
+clock data
+  {"clock":21350,"settled":true,"epoch":40,"incarnation":1}
+clock +1500
+  {"clock":22850,"epoch":40,"incarnation":1}
+clock data
+  {"clock":22850,"settled":true,"epoch":40,"incarnation":1}
+state lib.length
+  1
+screenshot docs/media/clinic/default/android/leaving/03-notes-after-back.png
+  {"screenshot":"docs/media/clinic/default/android/leaving/03-notes-after-back.png","device":true,"epoch":40,"incarnation":1,"clock":22850}
+tap "No patient reference"
+  {"tapped":160,"at":[179.21,330.5],"target":"No patient reference","delivery":"platform","carrier":"android","mode":"agent","epoch":42,"incarnation":1,"clock":22850}
+clock data
+  {"clock":22850,"settled":true,"epoch":42,"incarnation":1}
+clock settle
+  {"clock":23150,"settled":true,"epoch":42,"incarnation":1}
+state detail.hasEdits
+  true
+state detail.note
+  "## Typed just before Back"
+screenshot docs/media/clinic/default/android/leaving/04-edits-kept.png
+  {"screenshot":"docs/media/clinic/default/android/leaving/04-edits-kept.png","device":true,"epoch":42,"incarnation":1,"clock":23150}

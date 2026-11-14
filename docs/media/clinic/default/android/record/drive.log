@@ -1,0 +1,102 @@
+clock data
+  {"clock":0,"settled":true,"epoch":2,"incarnation":1}
+tap continue
+  {"tapped":28,"at":[205.71,760.33],"target":"continue","delivery":"platform","carrier":"android","mode":"agent","epoch":3,"incarnation":1,"clock":0}
+clock data
+  {"clock":0,"settled":true,"epoch":3,"incarnation":1}
+clock +6000
+  {"clock":6000,"epoch":8,"incarnation":1}
+clock data
+  {"clock":6000,"settled":true,"epoch":8,"incarnation":1}
+tap new-note-button
+  {"tapped":63,"at":[205.71,223],"target":"new-note-button","delivery":"platform","carrier":"android","mode":"agent","epoch":9,"incarnation":1,"clock":6000}
+clock settle
+  {"clock":6350,"settled":true,"epoch":9,"incarnation":1}
+screenshot docs/media/clinic/default/android/record/01-new-note-sheet.png
+  {"screenshot":"docs/media/clinic/default/android/record/01-new-note-sheet.png","device":true,"epoch":9,"incarnation":1,"clock":6350}
+type new-ref Bed 4
+  {"typed":99,"value":"Bed 4","target":"new-ref","delivery":"platform","carrier":"android","mode":"agent","epoch":10,"incarnation":1,"clock":6350}
+tap template-consultation
+  {"tapped":112,"at":[205.71,402.5],"target":"template-consultation","delivery":"platform","carrier":"android","mode":"agent","epoch":11,"incarnation":1,"clock":6350}
+clock settle
+  {"clock":6500,"settled":true,"epoch":11,"incarnation":1}
+screenshot docs/media/clinic/default/android/record/02-reference-and-template.png
+  {"screenshot":"docs/media/clinic/default/android/record/02-reference-and-template.png","device":true,"epoch":11,"incarnation":1,"clock":6500}
+tap start-recording
+  {"tapped":120,"at":[205.71,809],"target":"start-recording","delivery":"platform","carrier":"android","mode":"agent","epoch":12,"incarnation":1,"clock":6500}
+clock data
+  {"clock":6500,"settled":false,"reason":"requests","epoch":12,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
+clock settle
+  {"clock":6500,"settled":false,"reason":"requests","epoch":14,"incarnation":1,"diagnostic":"clock settle gave up on requests still in flight at its bound (20 s native); state shows them under pending, and logs a `request N` with no `fulfil N`"}
+state rec.state
+  "inactive"
+state recRef
+  "Bed 4"
+state recTemplate
+  "consultation"
+screenshot docs/media/clinic/default/android/record/03-recording-started.png
+  {"screenshot":"docs/media/clinic/default/android/record/03-recording-started.png","device":true,"epoch":15,"incarnation":1,"clock":6500}
+type record-jottings - L knee, 2 weeks
+  (no reply)
+clock +5000
+  (no reply)
+screenshot docs/media/clinic/default/android/record/04-jottings-while-recording.png
+  (no reply)
+tap stop-recording
+  (no reply)
+clock data
+  (no reply)
+clock settle
+  (no reply)
+state lib.0.state
+  (no reply)
+screenshot docs/media/clinic/default/android/record/05-saved-and-queued.png
+  (no reply)
+clock +3000
+  (no reply)
+clock data
+  (no reply)
+state detail.status
+  (no reply)
+screenshot docs/media/clinic/default/android/record/06-transcribing.png
+  (no reply)
+clock +2000
+  (no reply)
+clock data
+  (no reply)
+state detail.status
+  (no reply)
+screenshot docs/media/clinic/default/android/record/07-writing-draft.png
+  (no reply)
+clock +6000
+  (no reply)
+clock data
+  (no reply)
+state detail.state
+  (no reply)
+state detail.patientRef
+  (no reply)
+state detail.templateName
+  (no reply)
+state detail.jottings
+  (no reply)
+state detail.note
+  (no reply)
+state detail.note
+  (no reply)
+state detail.note
+  (no reply)
+state detail.note
+  (no reply)
+state detail.note
+  (no reply)
+state detail.note
+  (no reply)
+screenshot docs/media/clinic/default/android/record/08-draft-ready.png
+  (no reply)
+tap pane-transcript
+  (no reply)
+state pane
+  (no reply)
+screenshot docs/media/clinic/default/android/record/09-transcript.png
+  (no reply)
