@@ -1,7 +1,7 @@
 {
   "host": "macos",
   "tier": "lite",
-  "date": "2026-11-14T18:11:43.298Z",
+  "date": "2026-11-14T18:25:20.915Z",
   "method": {
     "audio": "tools/fixture/meeting-fixture.wav (53 s synthetic three-speaker meeting), copied over the recorded take",
     "wer": "lowercase, punctuation stripped, word-level edit distance, no number normalization",
@@ -20,29 +20,29 @@
   "runs": [
     {
       "cycle": 1,
-      "transcribeSeconds": 4.409,
-      "notesSeconds": 6.296,
-      "totalSeconds": 10.705,
-      "peakRssMB": 994,
-      "idleRssMB": 395,
+      "transcribeSeconds": 4.215,
+      "notesSeconds": 2.053,
+      "totalSeconds": 6.268,
+      "peakRssMB": 989,
+      "idleRssMB": 379,
       "finished": true
     },
     {
       "cycle": 2,
-      "transcribeSeconds": 4.153,
-      "notesSeconds": 2.055,
-      "totalSeconds": 6.208,
-      "peakRssMB": 1415,
-      "idleRssMB": 481,
+      "transcribeSeconds": 4.177,
+      "notesSeconds": 2.052,
+      "totalSeconds": 6.229,
+      "peakRssMB": 1405,
+      "idleRssMB": 472,
       "finished": true
     },
     {
       "cycle": 3,
-      "transcribeSeconds": 4.162,
-      "notesSeconds": 2.062,
-      "totalSeconds": 6.224,
-      "peakRssMB": 1416,
-      "idleRssMB": 482,
+      "transcribeSeconds": 4.161,
+      "notesSeconds": 2.058,
+      "totalSeconds": 6.219,
+      "peakRssMB": 1412,
+      "idleRssMB": 493,
       "finished": true
     }
   ],

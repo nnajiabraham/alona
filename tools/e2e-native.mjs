@@ -11,7 +11,8 @@
 //
 // Results go to docs/media/macos-real/e2e-<tier>.json. Exit code 0 means every
 // check held.
-import { spawn } from 'node:child_process';
+import { dlopen, ptr } from 'bun:ffi';
+import { spawn, spawnSync } from 'node:child_process';
 import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
@@ -31,7 +32,7 @@ const dataDir = join(homedir(), 'Library', 'Caches', 'exact', APP_ID, 'agent', s
 const out = join(ROOT, 'docs', 'media', 'macos-real');
 
 /** Runs one agent drive. Returns each op's reply with the time it arrived. */
-function drive(ops, { fresh = false } = {}) {
+function drive(ops, { fresh = false, onReply = () => {} } = {}) {
   return new Promise((done, fail) => {
     const child = spawn(process.execPath, ['exact.mjs', 'agent', 'macos', '--storage', storage,
       fresh ? '--reset-storage' : '--keep-storage', '--permission', 'microphone=granted', '--json', ...ops], { cwd: ROOT });
@@ -41,10 +42,18 @@ function drive(ops, { fresh = false } = {}) {
       buffer += chunk;
       const lines = buffer.split('\n');
       buffer = lines.pop();
-      for (const line of lines) if (line.trim() !== '') replies.push({ at: Date.now(), raw: line });
+      for (const line of lines) {
+        if (line.trim() === '') continue;
+        replies.push({ at: Date.now(), raw: line });
+        onReply(replies.length);
+      }
     });
     child.stderr.on('data', (chunk) => (stderr += chunk));
-    child.on('close', (code) => (code === 0 ? done(replies) : fail(new Error(`drive exited ${code}: ${stderr.trim().split('\n').slice(-4).join(' | ')}`))));
+    child.on('close', (code) => {
+      if (code === 0) return done(replies);
+      const reason = stderr.split('\n').filter((line) => line.trim() !== '' && !line.startsWith('    at ') && !line.startsWith('exact:'));
+      fail(new Error(`drive exited ${code} after ${replies.length} of ${ops.length} ops: ${reason.slice(-3).join(' | ')}`));
+    });
   });
 }
 
@@ -56,13 +65,23 @@ const value = (reply) => {
   }
 };
 
-function appRssMB() {
-  return new Promise((done) => {
-    const ps = spawn('sh', ['-c', `ps -axo rss=,command= | grep '/${APP_ID}/macos/' | grep -v grep | awk '{s+=$1} END {print s+0}'`]);
-    let text = '';
-    ps.stdout.on('data', (chunk) => (text += chunk));
-    ps.on('close', () => done(Number(text.trim()) / 1024));
-  });
+// Memory is the process's physical footprint, the figure Activity Monitor shows. Resident size is not
+// used: it also counts freed pages the allocator keeps mapped until the system wants them back, which
+// made an idle app look 900 MB large when its footprint was 103 MB.
+const libproc = dlopen('libproc.dylib', { proc_pid_rusage: { args: ['i32', 'i32', 'ptr'], returns: 'i32' } });
+const RUSAGE_INFO_V2 = 2, PHYS_FOOTPRINT_OFFSET = 72;
+
+function appPid() {
+  const found = spawnSync('pgrep', ['-f', `/${APP_ID}/macos/`], { encoding: 'utf8' }).stdout.trim().split('\n')[0];
+  return found ? Number(found) : 0;
+}
+
+function appFootprintMB() {
+  const pid = appPid();
+  if (!pid) return 0;
+  const info = new BigUint64Array(64);
+  if (libproc.symbols.proc_pid_rusage(pid, RUSAGE_INFO_V2, ptr(info)) !== 0) return 0;
+  return Number(new DataView(info.buffer).getBigUint64(PHYS_FOOTPRINT_OFFSET, true)) / 1048576;
 }
 
 const words = (text) => text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter((w) => w !== '');
@@ -86,8 +105,10 @@ const need = (ok, message) => {
 };
 
 console.log(`e2e macos ${tier}: preparing models`);
-await drive(['clock data', 'tap skip-download', 'clock data', 'tap open-settings', 'clock data', `tap pick-${tier}`, 'clock data',
-  `state setup.activeInstalled`], { fresh: true });
+// The welcome screen offers "Not now" only while the recommended tier is not on this machine yet.
+const welcome = await drive(['clock data', 'state setup.activeInstalled'], { fresh: true });
+await drive(['clock data', value(welcome[1]) === true ? 'tap continue' : 'tap skip-download', 'clock data',
+  'tap open-settings', 'clock data', `tap pick-${tier}`, 'clock data']);
 let installed = false;
 const downloadStarted = Date.now();
 for (let attempt = 0; attempt < 120 && !installed; attempt++) {
@@ -123,12 +144,19 @@ for (let c = 0; c < cycles; c++) {
   marks.at(-1).idle = ops.length;
 }
 const tail = ops.length;
-ops.push('state detail.segments', 'state detail.aiNotes', 'state detail.title', 'tap pane-ai', `screenshot ${join(out, `notes-${tier}.png`)} window`);
+ops.push('state detail.segments', 'state detail.aiNotes', 'state detail.title');
 
 mkdirSync(out, { recursive: true });
 const samples = [];
-const sampler = setInterval(async () => samples.push({ at: Date.now(), mb: await appRssMB() }), 250);
-const replies = await drive(ops);
+const sampler = setInterval(() => samples.push({ at: Date.now(), mb: appFootprintMB() }), 250);
+// With VMMAP_OUT set, a memory map of the app is written while it idles after the last cycle.
+const mapAt = marks.at(-1).idle - 1;
+const replies = await drive(ops, {
+  onReply: (count) => {
+    if (count !== mapAt || !process.env.VMMAP_OUT) return;
+    spawn('sh', ['-c', `vmmap --summary ${appPid()} > '${process.env.VMMAP_OUT}' 2>&1`]);
+  },
+});
 clearInterval(sampler);
 
 const segments = value(replies[tail]);
@@ -137,7 +165,7 @@ const title = String(value(replies[tail + 2]));
 const transcript = Array.isArray(segments) ? segments.map((s) => s.text).join(' ') : '';
 const wer = wordErrorRate(readFileSync(REFERENCE, 'utf8'), transcript);
 
-const between = (from, to) => samples.filter((s) => s.at >= from && s.at <= to).map((s) => s.mb);
+const between = (from, to) => samples.filter((s) => s.at >= from && s.at <= to && s.mb > 0).map((s) => s.mb);
 const runs = marks.map((m) => {
   const started = replies[m.start].at;
   const statuses = [];
@@ -150,8 +178,8 @@ const runs = marks.map((m) => {
     transcribeSeconds: summarizing ? (summarizing - started) / 1000 : null,
     notesSeconds: done && summarizing ? (done - summarizing) / 1000 : null,
     totalSeconds: done ? (done - started) / 1000 : null,
-    peakRssMB: Math.round(Math.max(0, ...between(started, done ?? idleTo))),
-    idleRssMB: Math.round(Math.min(...between(idleFrom, idleTo), Infinity)),
+    peakMB: Math.round(Math.max(0, ...between(started, done ?? idleTo))),
+    idleMB: Math.round(Math.min(...between(idleFrom, idleTo), Infinity)),
     finished: Boolean(done),
   };
 });
@@ -160,7 +188,7 @@ for (const run of runs) need(run.finished, `cycle ${run.cycle} did not reach don
 need(wer.rate <= WER_LIMIT, `word error rate ${(wer.rate * 100).toFixed(1)}% is over ${WER_LIMIT * 100}%`);
 for (const heading of HEADINGS) need(notes.includes(heading), `the notes lack "${heading}"`);
 need(title !== '' && title !== 'Untitled meeting', 'the notes model proposed no title');
-const idle = runs.map((r) => r.idleRssMB).filter(Number.isFinite);
+const idle = runs.map((r) => r.idleMB).filter(Number.isFinite);
 if (idle.length >= 2) {
   need(idle.at(-1) <= idle[0] * 1.25 + 100, `idle memory grew from ${idle[0]} MB after cycle 1 to ${idle.at(-1)} MB after cycle ${idle.length}`);
 }
@@ -171,7 +199,7 @@ const result = {
     audio: 'tools/fixture/meeting-fixture.wav (53 s synthetic three-speaker meeting), copied over the recorded take',
     wer: 'lowercase, punctuation stripped, word-level edit distance, no number normalization',
     timing: 'wall time between agent replies polled once a second, so each figure is accurate to about one second',
-    memory: 'ps resident set size of the app process, sampled every 250 ms; idle is the lowest sample in the 3 s after a cycle',
+    memory: 'physical footprint of the app process (proc_pid_rusage), sampled every 250 ms; idle is the lowest sample in the 3 s that end a cycle, about a minute after the notes finish',
   },
   downloadSeconds: Math.round(downloadSeconds),
   wer: { ...wer, rate: Number(wer.rate.toFixed(4)) },
@@ -179,10 +207,14 @@ const result = {
 };
 writeFileSync(join(out, `e2e-${tier}.json`), `${JSON.stringify(result, null, 2)}\n`);
 
+// Best effort: a sleeping display or a locked screen gives no picture, and that must not cost the measurements.
+await drive(['clock data', `tap "${title}"`, 'clock data', `screenshot ${join(out, `notes-${tier}.png`)}`])
+  .catch((e) => console.log(`no screenshot: ${e.message.split(':').slice(0, 2).join(':')}`));
+
 console.log(`word error rate: ${(wer.rate * 100).toFixed(1)}% (${wer.errors} of ${wer.words})`);
 console.log(`title: ${title}`);
 for (const r of runs) {
-  console.log(`cycle ${r.cycle}: transcribe ${r.transcribeSeconds} s, notes ${r.notesSeconds} s, total ${r.totalSeconds} s, peak ${r.peakRssMB} MB, idle after ${r.idleRssMB} MB`);
+  console.log(`cycle ${r.cycle}: transcribe ${r.transcribeSeconds} s, notes ${r.notesSeconds} s, total ${r.totalSeconds} s, peak ${r.peakMB} MB, idle after ${r.idleMB} MB`);
 }
 for (const f of failures) console.log(`FAIL ${f}`);
 console.log(failures.length === 0 ? 'e2e: ok' : `e2e: ${failures.length} failed`);

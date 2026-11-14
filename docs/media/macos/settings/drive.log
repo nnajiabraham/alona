@@ -1,27 +1,27 @@
 clock data
-  {"clock":0,"epoch":2,"incarnation":1,"settled":true}
+  {"epoch":2,"settled":true,"clock":0,"incarnation":1}
 tap continue
-  {"at":[210,832],"tapped":28,"delivery":"platform","target":"continue","carrier":"macos","mode":"agent","epoch":3,"incarnation":1,"clock":0}
+  {"delivery":"platform","at":[210,832],"tapped":28,"target":"continue","carrier":"macos","mode":"agent","epoch":3,"incarnation":1,"clock":0}
 clock data
-  {"settled":true,"incarnation":1,"epoch":3,"clock":0}
+  {"clock":0,"settled":true,"epoch":3,"incarnation":1}
 clock +6000
-  {"epoch":8,"clock":6000,"incarnation":1}
+  {"clock":6000,"incarnation":1,"epoch":8}
 clock data
-  {"clock":6000,"epoch":8,"incarnation":1,"settled":true}
+  {"incarnation":1,"settled":true,"epoch":8,"clock":6000}
 tap open-settings
   {"tapped":43,"delivery":"platform","at":[384,21],"target":"open-settings","carrier":"macos","mode":"agent","epoch":9,"incarnation":1,"clock":6000}
 clock data
-  {"incarnation":1,"settled":true,"epoch":9,"clock":6000}
+  {"clock":6000,"epoch":9,"incarnation":1,"settled":true}
 state picked
   "auto"
 state setup.active
   "balanced"
 screenshot docs/media/macos/settings/01-models.png
-  {"h":900,"screenshot":"docs/media/macos/settings/01-models.png","clock":6000,"epoch":9,"incarnation":1,"w":420,"scale":1}
+  {"h":900,"w":420,"screenshot":"docs/media/macos/settings/01-models.png","clock":6000,"incarnation":1,"epoch":9,"scale":1}
 tap pick-lite
-  {"tapped":101,"at":[210,286],"delivery":"platform","target":"pick-lite","carrier":"macos","mode":"agent","epoch":10,"incarnation":1,"clock":6000}
+  {"tapped":101,"delivery":"platform","at":[210,286],"target":"pick-lite","carrier":"macos","mode":"agent","epoch":10,"incarnation":1,"clock":6000}
 clock data
-  {"epoch":10,"settled":true,"incarnation":1,"clock":6000}
+  {"incarnation":1,"clock":6000,"settled":true,"epoch":10}
 state picked
   "lite"
 state setup.active
@@ -29,36 +29,36 @@ state setup.active
 state setup.activeInstalled
   false
 screenshot docs/media/macos/settings/02-lite-picked.png
-  {"h":900,"screenshot":"docs/media/macos/settings/02-lite-picked.png","incarnation":1,"w":420,"epoch":10,"clock":6000,"scale":1}
+  {"incarnation":1,"epoch":10,"w":420,"screenshot":"docs/media/macos/settings/02-lite-picked.png","h":900,"clock":6000,"scale":1}
 tap download-lite
-  {"delivery":"platform","tapped":108,"at":[347.5,342],"target":"download-lite","carrier":"macos","mode":"agent","epoch":11,"incarnation":1,"clock":6000}
+  {"at":[347.5,342],"delivery":"platform","tapped":108,"target":"download-lite","carrier":"macos","mode":"agent","epoch":11,"incarnation":1,"clock":6000}
 clock data
-  {"epoch":11,"incarnation":1,"clock":6000,"settled":true}
+  {"incarnation":1,"settled":true,"epoch":11,"clock":6000}
 clock +6000
-  {"clock":12000,"epoch":16,"incarnation":1}
+  {"incarnation":1,"epoch":16,"clock":12000}
 clock data
-  {"incarnation":1,"epoch":16,"settled":true,"clock":12000}
+  {"settled":true,"clock":12000,"incarnation":1,"epoch":16}
 state setup.activeInstalled
   true
 screenshot docs/media/macos/settings/03-lite-downloaded.png
-  {"incarnation":1,"h":900,"clock":12000,"epoch":16,"w":420,"screenshot":"docs/media/macos/settings/03-lite-downloaded.png","scale":1}
+  {"epoch":16,"incarnation":1,"clock":12000,"w":420,"screenshot":"docs/media/macos/settings/03-lite-downloaded.png","h":900,"scale":1}
 tap remove-balanced
-  {"tapped":117,"delivery":"platform","at":[353.5,454],"target":"remove-balanced","carrier":"macos","mode":"agent","epoch":16,"incarnation":1,"clock":12000}
+  {"at":[353.5,454],"delivery":"platform","tapped":117,"target":"remove-balanced","carrier":"macos","mode":"agent","epoch":16,"incarnation":1,"clock":12000}
 clock data
-  {"incarnation":1,"settled":true,"epoch":17,"clock":12000}
+  {"incarnation":1,"epoch":17,"settled":true,"clock":12000}
 state setup.tiers.1.installed
   false
 screenshot docs/media/macos/settings/04-balanced-removed.png
-  {"h":900,"epoch":17,"w":420,"screenshot":"docs/media/macos/settings/04-balanced-removed.png","incarnation":1,"clock":12000,"scale":1}
+  {"h":900,"clock":12000,"w":420,"incarnation":1,"epoch":17,"screenshot":"docs/media/macos/settings/04-balanced-removed.png","scale":1}
 tap tier-auto
   {"at":[210,226.5],"tapped":96,"delivery":"platform","target":"tier-auto","carrier":"macos","mode":"agent","epoch":18,"incarnation":1,"clock":12000}
 clock data
-  {"clock":12000,"epoch":18,"settled":true,"incarnation":1}
+  {"epoch":18,"settled":true,"incarnation":1,"clock":12000}
 state setup.active
   "balanced"
 back
   {"delivery":"platform","back":"route","carrier":"macos","epoch":19,"incarnation":1,"clock":12000}
 clock data
-  {"settled":true,"incarnation":1,"clock":12000,"epoch":19}
+  {"incarnation":1,"settled":true,"epoch":19,"clock":12000}
 screenshot docs/media/macos/settings/05-needs-models-again.png
-  {"epoch":19,"h":900,"clock":12000,"w":420,"screenshot":"docs/media/macos/settings/05-needs-models-again.png","incarnation":1,"scale":1}
+  {"h":900,"clock":12000,"screenshot":"docs/media/macos/settings/05-needs-models-again.png","incarnation":1,"w":420,"epoch":19,"scale":1}

@@ -258,7 +258,7 @@ component Alona
 
   view
     main navigationKey=`${top(nav).id}` navigate=follow testId="app" width="100%" height="100%"
-      background-color="surface.page" color="text.primary"
+      background-color="surface.page" color="text.primary" accent-color="moss.fill"
       for e in stack(nav) key=e.id
         if e.name == "home"
           if welcomed
@@ -374,7 +374,7 @@ component Alona
                       text detail.error color="clay.ink" font="-exact-footnote" testId="failed-error"
                       button press=retry buttonStyle="bordered" disabled=pending(retried) testId="retry"
                         text "Try again"
-                  row role="radiogroup" aria-label="Show"
+                  row role="radiogroup" aria-label="Show" width="100%"
                     button role="radio" aria-checked=(pane == "ai") press=showPane("ai") flex=1 testId="pane-ai"
                       text "AI notes"
                     button role="radio" aria-checked=(pane == "mine") press=showPane("mine") flex=1 testId="pane-mine"
@@ -451,8 +451,8 @@ component Alona
               section
                 header
                   text "Privacy"
-                row
-                  text "Recordings, transcripts and notes are stored and processed on this device. Alona only goes online to download models." flex=1
+                footer
+                  text "Recordings, transcripts and notes are stored and processed on this device. Alona only goes online to download models."
       dialog id="delete-meeting" role="alertdialog" aria-label="Delete this meeting?"
         text "Its recording, transcript and notes are removed from this device."
         button press=remove(aimed) destructive=true commandfor="delete-meeting" command="close" testId="delete-confirm"

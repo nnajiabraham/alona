@@ -33,7 +33,12 @@ async function build(storage: Storage, native: NativeModule | null | undefined):
   const demo = (device: DeviceFacts = SIM_DEVICE): Service =>
     service(simEngine({ polls: 3, shelf: demoShelf(storage.fs), device }), store, true);
   if (native?.available !== true) return demo();
-  const probe = await native.later({ op: 'probe' });
+  // Android reports a native module because the recording packages are native, but nothing there
+  // answers the engine protocol yet, so its probe fails. It is the only such host.
+  const probe = await native.later({ op: 'probe' }).catch(() => null);
+  if (probe === null || typeof probe.host !== 'string') {
+    return demo({ ...SIM_DEVICE, host: 'android', formFactor: 'phone' });
+  }
   if (probe.demo === true) {
     // The demo keeps its sample memory and GPU, so captures match on every machine, but speaks as the real host.
     const real = parseDeviceFacts(probe);
