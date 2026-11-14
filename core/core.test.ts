@@ -198,9 +198,9 @@ describe('the meeting pipeline', () => {
     const h = harness();
     const { meeting, progress } = await h.run(h.meeting);
     expect(meeting.stage).toEqual({ kind: 'done' });
-    expect(displayTitle(meeting)).toBe('Mobile app launch planning');
+    expect(displayTitle(meeting)).toBe('Sample notes');
     expect(h.files.transcript).toEqual(SIM_SEGMENTS);
-    expect(h.files.aiNotes.startsWith('## Summary')).toBe(true);
+    expect(h.files.aiNotes).toContain('## Summary');
     expect(progress.at(-1)).toBe(1);
     expect(progress).toEqual([...progress].sort((a, b) => a - b));
   });
@@ -249,7 +249,7 @@ describe('the meeting pipeline', () => {
     expect(stuck.stage.kind).toBe('failed');
     expect(h.files.transcript).toEqual(SIM_SEGMENTS);
     const retried = retry(stuck);
-    expect(retried.stage).toEqual({ kind: 'summarizing', job: '', step: 0, partials: [] });
+    expect(retried.stage).toEqual({ kind: 'summarizing', job: '', step: 0, steps: 0, partials: [] });
     const { meeting } = await h.run(retried);
     expect(meeting.stage).toEqual({ kind: 'done' });
   });
@@ -291,7 +291,7 @@ describe('model downloads', () => {
       },
     };
     const engine = simEngine(options);
-    return Object.assign(service(engine, meetingStore(files), true), { engine });
+    return Object.assign(service(engine, meetingStore(files), 'Demo.'), { engine, files });
   }
 
   test('a tier is not installed until its download finishes, then stays installed', async () => {
@@ -334,7 +334,7 @@ describe('model downloads', () => {
     for (let i = 0; i < 12; i++) await s.tick('auto');
     const detail = await s.detail('m1');
     expect(detail.status).toBe('done');
-    expect(detail.title).toBe('Mobile app launch planning');
+    expect(detail.title).toBe('Sample notes');
     expect(detail.userNotes).toBe('my note');
     expect(detail.segments[1]).toEqual({ id: '1', at: '0:07', text: SIM_SEGMENTS[1].text });
   });
@@ -354,6 +354,40 @@ describe('model downloads', () => {
     expect(s.engine.unloadCount()).toBe(1);
   });
 
+  test('a download that failed can be started again', async () => {
+    const s = app({ polls: 1 });
+    await s.downloadTier('lite');
+    await s.engine.cancel('dl.demo-lite-stt');
+    expect((await s.engine.job('dl.demo-lite-stt')).state).toBe('failed');
+    await s.downloadTier('lite');
+    expect((await s.engine.job('dl.demo-lite-stt')).state).not.toBe('failed');
+    await s.setup('lite');
+    expect((await s.setup('lite')).activeInstalled).toBe(true);
+  });
+
+  test('notes for a meeting that does not exist are refused and leave the library readable', async () => {
+    const s = app();
+    await s.create('m1', 'One', 'app:/data/meetings/m1/audio.wav', 5000, '', 1000, 'lite');
+    expect(await s.saveNotes('', 'lost draft')).toEqual({ ok: false, error: 'That meeting is gone.' });
+    expect(await s.saveNotes('../m1', 'x')).toEqual({ ok: false, error: 'That meeting is gone.' });
+    expect((await s.rows()).map((r) => r.title)).toEqual(['One']);
+  });
+
+  test('a recording left without a meeting record is recovered at launch', async () => {
+    const s = app();
+    await s.files.atomicWriteFile('app:/data/meetings/m1700000000000/audio.m4a', new Uint8Array([1]));
+    const rows = await s.rows();
+    expect(rows.map((r) => [r.id, r.title, r.status])).toEqual([['m1700000000000', 'Recovered recording', 'recorded']]);
+    expect((await s.detail('m1700000000000')).audio).toBe('app:/data/meetings/m1700000000000/audio.m4a');
+  });
+
+  test('a recording that starts after launch is not adopted while it is in progress', async () => {
+    const s = app();
+    expect(await s.rows()).toEqual([]);
+    await s.files.atomicWriteFile('app:/data/meetings/m2/audio.m4a', new Uint8Array([1]));
+    expect(await s.rows()).toEqual([]);
+  });
+
   test('deleting a meeting removes it from the library', async () => {
     const s = app();
     await s.create('m1', 'One', 'app:/data/meetings/m1/audio.wav', 5000, '', 1000, 'lite');
@@ -362,6 +396,25 @@ describe('model downloads', () => {
     await s.remove('m1');
     expect((await s.rows()).map((r) => r.title)).toEqual(['Two']);
     expect((await s.detail('m1')).found).toBe(false);
+  });
+});
+
+describe('a plan that changes mid-summary', () => {
+  test('notes edited during a long summary restart it, so one part is never taken for the whole', async () => {
+    const h = harness({ polls: 1 });
+    let m: Meeting = { ...h.meeting, stage: { kind: 'recorded' } };
+    while (m.stage.kind !== 'summarizing') m = (await advance(m, h.io)).meeting;
+    h.files.transcript = longMeeting(60);
+    m = (await advance({ ...m, stage: { kind: 'summarizing', job: '', step: 0, steps: 0, partials: [] } }, h.io)).meeting;
+    m = (await advance(m, h.io)).meeting;
+    expect(m.stage.kind === 'summarizing' && m.stage.steps > 2).toBe(true);
+    const attempt = m.attempt;
+    h.files.transcript = SIM_SEGMENTS;
+    m = (await advance(m, h.io)).meeting;
+    expect(m.stage).toMatchObject({ kind: 'summarizing', step: 0, steps: 1, partials: [] });
+    expect(m.attempt).toBe(attempt + 1);
+    const { meeting } = await h.run(m);
+    expect(meeting.stage).toEqual({ kind: 'done' });
   });
 });
 
@@ -376,7 +429,7 @@ describe('running a meeting again', () => {
     const { meeting } = await h.run(again);
     expect(meeting.stage).toEqual({ kind: 'done' });
     expect(h.files.transcript).toEqual(SIM_SEGMENTS);
-    expect(h.files.aiNotes.startsWith('## Summary')).toBe(true);
+    expect(h.files.aiNotes).toContain('## Summary');
   });
 
   test('a meeting still being processed is not restarted', () => {

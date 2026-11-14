@@ -56,7 +56,8 @@ export type EngineRequest =
 
 /**
  * The inference engine of one host. Starting a job is idempotent by job id:
- * starting an id that already exists returns its current view.
+ * starting an id that is running or done returns its current view, and
+ * starting one that failed runs it again.
  */
 export interface Engine {
   probe(): Promise<DeviceFacts>;
@@ -72,7 +73,7 @@ export interface Engine {
   unload(): Promise<void>;
 }
 
-export class EngineReplyError extends Error {}
+class EngineReplyError extends Error {}
 
 function record(raw: unknown, what: string): Record<string, unknown> {
   if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) {

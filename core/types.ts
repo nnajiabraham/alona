@@ -14,12 +14,13 @@ export type FailedDuring = 'transcribing' | 'summarizing';
 
 /**
  * Where a meeting is in the record, transcribe, summarize pipeline. A job id
- * of `''` means the stage's job has not been started yet.
+ * of `''` means the stage's job has not been started yet. `steps` is how many
+ * notes requests the plan had when the current one started.
  */
 export type Stage =
   | { kind: 'recorded' }
   | { kind: 'transcribing'; job: string }
-  | { kind: 'summarizing'; job: string; step: number; partials: string[] }
+  | { kind: 'summarizing'; job: string; step: number; steps: number; partials: string[] }
   | { kind: 'done' }
   | { kind: 'failed'; during: FailedDuring; error: string };
 
@@ -40,6 +41,4 @@ export interface Meeting {
 export const displayTitle = (m: Pick<Meeting, 'title' | 'suggestedTitle'>): string =>
   m.title !== '' ? m.title : m.suggestedTitle !== '' ? m.suggestedTitle : 'Untitled meeting';
 
-export function isTierId(value: unknown): value is TierId {
-  return value === 'lite' || value === 'balanced' || value === 'quality';
-}
+export const isTierId = (value: unknown): value is TierId => TIERS.some((tier) => tier === value);

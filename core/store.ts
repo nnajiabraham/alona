@@ -10,9 +10,9 @@ export interface Files {
   rm(path: string): Promise<void>;
 }
 
-export const MEETINGS_DIR = 'app:/data/meetings';
+const MEETINGS_DIR = 'app:/data/meetings';
 
-export const meetingDir = (id: string): string => `${MEETINGS_DIR}/${id}`;
+const meetingDir = (id: string): string => `${MEETINGS_DIR}/${id}`;
 
 /**
  * A meeting is a folder. The person's actions write `meeting.json` and
@@ -50,7 +50,9 @@ export interface StoredMeeting extends Meeting {
 
 const isMissing = (e: unknown): boolean => {
   const code = typeof e === 'object' && e !== null && 'code' in e ? (e as { code: unknown }).code : undefined;
-  return code === 'ENOENT' || code === 'bake';
+  // 'bake' is Exact's code for storage at build time, when no file exists. ENOTDIR is a stray file
+  // in the meetings folder being read as if it were a meeting's folder.
+  return code === 'ENOENT' || code === 'ENOTDIR' || code === 'bake';
 };
 
 async function readText(files: Files, path: string): Promise<string | null> {
@@ -102,6 +104,7 @@ function parseStage(raw: unknown): Stage {
         kind: 'summarizing',
         job: str(r.job),
         step: num(r.step),
+        steps: num(r.steps),
         partials: Array.isArray(r.partials) ? r.partials.map(str) : [],
       };
     case 'done':
@@ -118,7 +121,7 @@ function parseProgress(raw: unknown): Progress {
   return { stage: parseStage(r.stage), attempt: num(r.attempt), progress: num(r.progress), suggestedTitle: str(r.suggestedTitle) };
 }
 
-export function parseSegments(raw: unknown): Segment[] {
+function parseSegments(raw: unknown): Segment[] {
   if (!Array.isArray(raw)) return [];
   return raw.flatMap((item) => {
     const r = obj(item);
@@ -169,8 +172,35 @@ export function meetingStore(files: Files) {
       return meetings.filter((m): m is StoredMeeting => m !== null).sort((a, b) => b.createdAt - a.createdAt);
     },
 
+    /**
+     * Folders that hold a recording but no `meeting.json`: the app quit, or the save failed,
+     * before the recording became a meeting. Each is given a record so the person can see it.
+     */
+    async adoptOrphans(): Promise<void> {
+      let ids: string[];
+      try {
+        ids = await files.readdir(MEETINGS_DIR);
+      } catch (e) {
+        if (isMissing(e)) return;
+        throw e;
+      }
+      for (const id of ids) {
+        if ((await readText(files, paths(id).identity)) !== null) continue;
+        const entries = await files.readdir(meetingDir(id)).catch(() => []);
+        const audio = entries.find((name) => name.startsWith('audio'));
+        if (!audio) continue;
+        const createdAt = Number(id.replace(/^m/, ''));
+        const identity: Identity = {
+          id, title: 'Recovered recording', createdAt: Number.isFinite(createdAt) ? createdAt : 0,
+          durationS: 0, audio: `${meetingDir(id)}/${audio}`, tier: 'lite',
+        };
+        await writeText(files, paths(id).identity, JSON.stringify(identity));
+      }
+    },
+
     async create(m: NewMeeting): Promise<void> {
       const p = paths(m.id);
+      // mkdir refuses a folder that exists, and the recorder has usually made this one already.
       await files.mkdir(MEETINGS_DIR).catch(() => {});
       await files.mkdir(meetingDir(m.id)).catch(() => {});
       await writeText(files, p.userNotes, m.userNotes);

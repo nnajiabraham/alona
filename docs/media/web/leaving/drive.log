@@ -1,0 +1,70 @@
+clock data
+  {"clock":0,"settled":true}
+tap continue
+  {"at":[550,674],"tapped":28,"target":"continue","delivery":"platform","carrier":"web","mode":"agent","clock":0,"epoch":17,"incarnation":1}
+clock data
+  {"clock":0,"settled":true}
+clock +6000
+  {"clock":6000}
+clock data
+  {"clock":6000,"settled":true}
+tap start-recording
+  {"at":[550,198.59375],"tapped":52,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6000,"epoch":38,"incarnation":1}
+clock data
+  {"clock":6000,"settled":true}
+clock settle
+  {"clock":6400,"settled":true}
+clock +3000
+  {"clock":9400}
+state rec.state
+  "recording"
+screenshot docs/media/web/leaving/01-recording.png
+  {"clock":9400,"epoch":49,"incarnation":1,"screenshot":"docs/media/web/leaving/01-recording.png","w":1100,"h":760}
+back
+  {"history":-1,"delivery":"platform","back":"sheet","refused":"the app kept the route: its Back control is disabled, its closedby is \"none\", or its navigate changed nothing (logs say which)","carrier":"web","clock":9400,"epoch":55,"incarnation":1}
+clock data
+  {"clock":9400,"settled":true}
+clock settle
+  {"clock":9800,"settled":true}
+state recorderId
+  ""
+state trackId
+  ""
+state lib.length
+  1
+screenshot docs/media/web/leaving/02-back-stopped-and-saved.png
+  {"clock":9800,"epoch":67,"incarnation":1,"screenshot":"docs/media/web/leaving/02-back-stopped-and-saved.png","w":1100,"h":760}
+clock +12000
+  {"clock":21800}
+clock data
+  {"clock":21800,"settled":true}
+state detail.status
+  "done"
+tap pane-mine
+  {"at":[542.6484375,247],"tapped":117,"target":"pane-mine","delivery":"platform","carrier":"web","mode":"agent","clock":21800,"epoch":105,"incarnation":1}
+type my-notes ## Typed just before Back
+  {"at":[550,411],"typed":126,"target":"my-notes","delivery":"platform","carrier":"web","mode":"agent","clock":21800,"epoch":106,"incarnation":1}
+back
+  {"history":-1,"delivery":"platform","back":"route","carrier":"web","clock":21800,"epoch":107,"incarnation":1}
+clock data
+  {"clock":21800,"settled":true}
+clock +1500
+  {"clock":23300}
+clock data
+  {"clock":23300,"settled":true}
+state lib.length
+  1
+screenshot docs/media/web/leaving/03-library-after-back.png
+  {"clock":23300,"epoch":109,"incarnation":1,"screenshot":"docs/media/web/leaving/03-library-after-back.png","w":1100,"h":760}
+tap "Sample notes"
+  {"at":[502.8671875,302.59375],"tapped":87,"target":"Sample notes","delivery":"platform","carrier":"web","mode":"agent","clock":23300,"epoch":113,"incarnation":1}
+clock data
+  {"clock":23300,"settled":true}
+clock settle
+  {"clock":23300,"settled":true}
+state detail.userNotes
+  "## Typed just before Back"
+tap pane-mine
+  {"at":[542.6484375,247],"tapped":144,"target":"pane-mine","delivery":"platform","carrier":"web","mode":"agent","clock":23300,"epoch":114,"incarnation":1}
+screenshot docs/media/web/leaving/04-notes-kept.png
+  {"clock":23300,"epoch":114,"incarnation":1,"screenshot":"docs/media/web/leaving/04-notes-kept.png","w":1100,"h":760}

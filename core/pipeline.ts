@@ -24,6 +24,8 @@ const TRANSCRIBE_SHARE = 0.5;
 const sttJob = (m: Meeting): string => `${m.id}.a${m.attempt}.stt`;
 const notesJob = (m: Meeting, step: number): string => `${m.id}.a${m.attempt}.notes${step}`;
 
+const NOTES_NOT_STARTED: Stage = { kind: 'summarizing', job: '', step: 0, steps: 0, partials: [] };
+
 const failed = (m: Meeting, during: FailedDuring, error: string): Advance => ({
   meeting: { ...m, stage: { kind: 'failed', during, error: error === '' ? 'The engine stopped without saying why.' : error } },
   progress: 0,
@@ -43,14 +45,17 @@ async function startNotesStep(m: Meeting, io: PipelineIO, step: number, partials
   const request = stepRequest(plan, step, partials, userNotes);
   const job = notesJob(m, step);
   await io.engine.generate(job, io.llm, chatPrompt(request), request.maxTokens);
-  return at(m, { kind: 'summarizing', job, step, partials }, TRANSCRIBE_SHARE + ((1 - TRANSCRIBE_SHARE) * step) / steps);
+  return at(m, { kind: 'summarizing', job, step, steps, partials }, TRANSCRIBE_SHARE + ((1 - TRANSCRIBE_SHARE) * step) / steps);
 }
 
 async function summarizing(m: Meeting, io: PipelineIO, stage: Extract<Stage, { kind: 'summarizing' }>): Promise<Advance> {
   if (stage.job === '') return startNotesStep(m, io, stage.step, stage.partials);
-  const view = await io.engine.job(stage.job);
   const plan = planNotes(await io.readTranscript(m), await io.readUserNotes(m), m.tier);
-  const steps = Math.max(1, stepCount(plan));
+  const steps = stepCount(plan);
+  // The plan depends on the person's notes and the tier, and both can change while a long summary
+  // runs. Parts extracted under one plan do not fit another, so the summary starts over.
+  if (steps !== stage.steps) return startNotesStep({ ...m, attempt: m.attempt + 1 }, io, 0, []);
+  const view = await io.engine.job(stage.job);
   switch (view.state) {
     case 'unknown':
       return startNotesStep(m, io, stage.step, stage.partials);
@@ -111,14 +116,14 @@ export async function advance(m: Meeting, io: PipelineIO): Promise<Advance> {
 export function retry(m: Meeting): Meeting {
   if (m.stage.kind !== 'failed') return m;
   const stage: Stage =
-    m.stage.during === 'transcribing' ? { kind: 'recorded' } : { kind: 'summarizing', job: '', step: 0, partials: [] };
+    m.stage.during === 'transcribing' ? { kind: 'recorded' } : NOTES_NOT_STARTED;
   return { ...m, attempt: m.attempt + 1, stage };
 }
 
 /** Regenerates the AI notes of a finished meeting, for example after the person edits their notes or switches tier. */
 export function regenerate(m: Meeting): Meeting {
   if (m.stage.kind !== 'done') return m;
-  return { ...m, attempt: m.attempt + 1, stage: { kind: 'summarizing', job: '', step: 0, partials: [] } };
+  return { ...m, attempt: m.attempt + 1, stage: NOTES_NOT_STARTED };
 }
 
 /** Runs the whole pipeline again on a finished or failed meeting, for example after switching tier. */

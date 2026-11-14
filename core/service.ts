@@ -1,9 +1,10 @@
 import { assess, effectiveTier, type Assessment } from './device';
 import type { Artifact, DeviceFacts, Engine, JobView } from './engine';
 import { demoArtifacts, downloadBytes, LINEUP, shippedTiers, sizeLabel, tierArtifacts, type TierArtifacts } from './models';
+import { clock } from './notes';
 import { advance, isWorking, regenerate, retranscribe, retry, type PipelineIO } from './pipeline';
 import type { MeetingStore, StoredMeeting } from './store';
-import { displayTitle, isTierId, TIERS, type Stage, type TierId } from './types';
+import { displayTitle, isTierId, TIERS, type Meeting, type Stage, type TierId } from './types';
 
 export interface TierView {
   id: string;
@@ -23,6 +24,8 @@ export interface TierView {
 export interface SetupView {
   ready: boolean;
   demo: boolean;
+  /** Why the demo engine is in use, shown wherever sample content appears. Empty with a real engine. */
+  demoNote: string;
   deviceLine: string;
   recommended: string;
   recommendedLabel: string;
@@ -67,6 +70,10 @@ export interface Reply {
 }
 
 const OK: Reply = { ok: true, error: '' };
+const GONE = 'That meeting is gone.';
+
+/** A meeting id as the view makes it. Anything else must not reach a file path. */
+const isMeetingId = (id: string): boolean => /^[A-Za-z0-9_-]+$/.test(id);
 const refused = (error: string): Reply => ({ ok: false, error });
 
 const downloadJob = (artifact: Artifact): string => `dl.${artifact.id}`;
@@ -84,12 +91,6 @@ function statusLabel(stage: Stage): string {
     case 'failed':
       return stage.during === 'transcribing' ? 'Transcription failed' : 'Notes failed';
   }
-}
-
-function clock(seconds: number): string {
-  const total = Math.max(0, Math.floor(seconds));
-  const s = total % 60;
-  return `${Math.floor(total / 60)}:${s < 10 ? '0' : ''}${s}`;
 }
 
 const row = (m: StoredMeeting): MeetingRow => ({
@@ -126,9 +127,25 @@ interface TierState {
  * is true when the host has no inference module and the stand-in engine
  * answers instead.
  */
-export function service(engine: Engine, store: MeetingStore, demo: boolean) {
+export function service(engine: Engine, store: MeetingStore, demoNote: string) {
+  const demo = demoNote !== '';
   let facts: DeviceFacts | null = null;
   let ticking = false;
+  let adopted: Promise<void> | null = null;
+
+  /** Orphaned recordings are adopted once, at the first read after launch, when none can be in progress. */
+  const meetings = async (): Promise<StoredMeeting[]> => {
+    await (adopted ??= store.adoptOrphans());
+    return store.list();
+  };
+
+  const change = async (id: string, next: (m: StoredMeeting) => Meeting): Promise<Reply> => {
+    const m = isMeetingId(id) ? await store.load(id) : null;
+    if (!m) return refused(GONE);
+    const changed = next(m);
+    if (changed !== m) await store.saveProgress({ ...m, ...changed, progress: 0 });
+    return OK;
+  };
 
   const device = async (): Promise<DeviceFacts> => (facts ??= await engine.probe());
 
@@ -196,6 +213,7 @@ export function service(engine: Engine, store: MeetingStore, demo: boolean) {
       return {
         ready: true,
         demo,
+        demoNote,
         deviceLine: deviceLine(d),
         recommended: a.recommended,
         recommendedLabel: LINEUP[a.recommended].label,
@@ -239,7 +257,7 @@ export function service(engine: Engine, store: MeetingStore, demo: boolean) {
       if (ticking) return { working: true };
       ticking = true;
       try {
-        const waiting = (await store.list()).filter(isWorking).sort((x, y) => x.createdAt - y.createdAt);
+        const waiting = (await meetings()).filter(isWorking).sort((x, y) => x.createdAt - y.createdAt);
         const next = waiting[0];
         if (!next) return { working: false };
         const active = await activeArtifacts(picked);
@@ -247,7 +265,7 @@ export function service(engine: Engine, store: MeetingStore, demo: boolean) {
         const { stt, llm } = active.artifacts;
         const have = await engine.installed([stt, llm]);
         if (!have.includes(stt.id) || !have.includes(llm.id)) return { working: true };
-        const meeting = next.stage.kind === 'recorded' ? { ...next, tier: active.tier } : next;
+        const meeting = { ...next, tier: active.tier };
         const io: PipelineIO = {
           engine,
           stt,
@@ -267,10 +285,10 @@ export function service(engine: Engine, store: MeetingStore, demo: boolean) {
       }
     },
 
-    rows: async (): Promise<MeetingRow[]> => (await store.list()).map(row),
+    rows: async (): Promise<MeetingRow[]> => (await meetings()).map(row),
 
     async detail(id: string): Promise<MeetingDetail> {
-      const m = id === '' ? null : await store.load(id);
+      const m = isMeetingId(id) ? await store.load(id) : null;
       if (!m) return MISSING;
       const segments = await store.readTranscript(id);
       return {
@@ -285,41 +303,34 @@ export function service(engine: Engine, store: MeetingStore, demo: boolean) {
     },
 
     async create(id: string, title: string, audio: string, durationMs: number, userNotes: string, createdAt: number, tier: string): Promise<Reply> {
-      if (id === '' || audio === '') return refused('The recording was not saved.');
+      if (!isMeetingId(id) || audio === '') return refused('The recording was not saved.');
       await store.create({ id, title, audio, durationS: durationMs / 1000, userNotes, createdAt, tier: isTierId(tier) ? tier : 'lite' });
       return OK;
     },
 
-    saveNotes: async (id: string, text: string): Promise<Reply> => (await store.writeUserNotes(id, text), OK),
-    rename: async (id: string, title: string): Promise<Reply> => (await store.rename(id, title), OK),
+    async saveNotes(id: string, text: string): Promise<Reply> {
+      if (!isMeetingId(id) || !(await store.load(id))) return refused(GONE);
+      await store.writeUserNotes(id, text);
+      return OK;
+    },
+
+    async rename(id: string, title: string): Promise<Reply> {
+      if (!isMeetingId(id)) return refused(GONE);
+      await store.rename(id, title);
+      return OK;
+    },
 
     async remove(id: string): Promise<Reply> {
+      if (!isMeetingId(id)) return refused(GONE);
       const m = await store.load(id);
       if (m && (m.stage.kind === 'transcribing' || m.stage.kind === 'summarizing')) await engine.cancel(m.stage.job);
       await store.remove(id);
       return OK;
     },
 
-    async retry(id: string): Promise<Reply> {
-      const m = await store.load(id);
-      if (!m) return refused('That meeting is gone.');
-      await store.saveProgress({ ...retry(m), progress: 0 });
-      return OK;
-    },
-
-    async regenerate(id: string): Promise<Reply> {
-      const m = await store.load(id);
-      if (!m) return refused('That meeting is gone.');
-      await store.saveProgress({ ...regenerate(m), progress: 0 });
-      return OK;
-    },
-
-    async retranscribe(id: string): Promise<Reply> {
-      const m = await store.load(id);
-      if (!m) return refused('That meeting is gone.');
-      await store.saveProgress({ ...retranscribe(m), progress: 0 });
-      return OK;
-    },
+    retry: (id: string): Promise<Reply> => change(id, retry),
+    regenerate: (id: string): Promise<Reply> => change(id, regenerate),
+    retranscribe: (id: string): Promise<Reply> => change(id, retranscribe),
   };
 }
 

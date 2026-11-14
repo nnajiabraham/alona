@@ -13,13 +13,16 @@ struct Artifact {
     let id: String, runtime: String, files: [ModelFile]
 
     init?(_ raw: Any?) {
-        guard let d = raw as? [String: Any], let id = d["id"] as? String, !id.isEmpty,
+        guard let d = raw as? [String: Any], let id = d["id"] as? String, !id.isEmpty, !id.contains("/"), id != ".", id != "..",
               let runtime = d["runtime"] as? String, let list = d["files"] as? [[String: Any]] else { return nil }
         var files: [ModelFile] = []
         for f in list {
+            // Every file is pinned by size and checksum, and its name is one path component.
             guard let s = f["url"] as? String, let url = URL(string: s), let name = f["name"] as? String,
-                  !name.isEmpty, !name.contains("/") else { return nil }
-            files.append(ModelFile(url: url, name: name, bytes: (f["bytes"] as? NSNumber)?.int64Value ?? 0, sha256: f["sha256"] as? String ?? ""))
+                  !name.isEmpty, !name.contains("/"), name != ".", name != "..",
+                  let bytes = (f["bytes"] as? NSNumber)?.int64Value, bytes > 0,
+                  let sha256 = f["sha256"] as? String, !sha256.isEmpty else { return nil }
+            files.append(ModelFile(url: url, name: name, bytes: bytes, sha256: sha256))
         }
         self.id = id; self.runtime = runtime; self.files = files
     }
@@ -51,7 +54,7 @@ enum ModelStore {
     static func installed(_ artifact: Artifact) -> Bool {
         artifact.files.allSatisfy { f in
             let size = (try? FileManager.default.attributesOfItem(atPath: path(artifact, f.name))[.size] as? NSNumber)?.int64Value
-            return size != nil && (f.bytes == 0 || size == f.bytes)
+            return size == f.bytes
         }
     }
 
@@ -75,7 +78,7 @@ enum ModelStore {
         for file in artifact.files {
             let dest = dir(artifact).appendingPathComponent(file.name)
             let have = (try? FileManager.default.attributesOfItem(atPath: dest.path)[.size] as? NSNumber)?.int64Value
-            if have == nil || (file.bytes != 0 && have != file.bytes) {
+            if have != file.bytes {
                 let base = before
                 try FileDownload(dest: dest, cancelled: cancelled) { got in progress(Double(base + got) / Double(total)) }.run(file)
             }
@@ -100,8 +103,8 @@ private final class FileDownload: NSObject, URLSessionDataDelegate {
         let fm = FileManager.default
         if !fm.fileExists(atPath: part.path) { fm.createFile(atPath: part.path, contents: nil) }
         have = (try? fm.attributesOfItem(atPath: part.path)[.size] as? NSNumber)?.int64Value ?? 0
-        if file.bytes != 0, have > file.bytes { try Data().write(to: part); have = 0 }
-        if file.bytes == 0 || have < file.bytes {
+        if have > file.bytes { try Data().write(to: part); have = 0 }
+        if have < file.bytes {
             var request = URLRequest(url: file.url)
             if have > 0 { request.setValue("bytes=\(have)-", forHTTPHeaderField: "Range") }
             let session = URLSession(configuration: .ephemeral, delegate: self, delegateQueue: nil)
@@ -110,10 +113,10 @@ private final class FileDownload: NSObject, URLSessionDataDelegate {
             session.finishTasksAndInvalidate()
             if let failure { throw failure }
         }
-        if file.bytes != 0, have != file.bytes {
+        if have != file.bytes {
             throw EngineError("\(file.name) stopped at \(have) of \(file.bytes) bytes. Try the download again.")
         }
-        if !file.sha256.isEmpty, try ModelStore.sha256(of: part) != file.sha256 {
+        if try ModelStore.sha256(of: part) != file.sha256 {
             try? fm.removeItem(at: part)
             throw EngineError("\(file.name) did not match its checksum and was discarded. Try the download again.")
         }

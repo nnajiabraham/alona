@@ -72,6 +72,17 @@ const FLOWS = {
     'tap "Launch sync"', 'clock data', 'clock settle', 'tap delete-meeting', 'clock settle', shot('confirm-delete'),
     'tap delete-confirm', 'clock data', 'clock settle', check('lib.length', 0), shot('deleted'),
   ],
+  // Leaving a screen by the platform's Back runs no action of the app's, so these two paths need their own proof.
+  leaving: [
+    ...READY,
+    'tap start-recording', 'clock data', 'clock settle', 'clock +3000', check('rec.state', 'recording'), shot('recording'),
+    'back', 'clock data', 'clock settle', check('recorderId', ''), check('trackId', ''), check('lib.length', 1), shot('back-stopped-and-saved'),
+    'clock +12000', 'clock data', check('detail.status', 'done'),
+    'tap pane-mine', 'type my-notes ## Typed just before Back', 'back', 'clock data', 'clock +1500', 'clock data',
+    check('lib.length', 1), shot('library-after-back'),
+    'tap "Sample notes"', 'clock data', 'clock settle', check('detail.userNotes', '## Typed just before Back'),
+    'tap pane-mine', shot('notes-kept'),
+  ],
   settings: [
     ...READY,
     'tap open-settings', 'clock data', 'clock settle', check('picked', 'auto'), check('setup.active', 'balanced'), shot('models'),

@@ -19,15 +19,15 @@ state rec.state
 screenshot docs/media/web/record/01-recording-started.png
   {"clock":6400,"epoch":43,"incarnation":1,"screenshot":"docs/media/web/record/01-recording-started.png","w":1100,"h":760}
 type record-title Launch sync
-  {"at":[550,330],"typed":76,"target":"record-title","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":46,"incarnation":1}
+  {"at":[550,341],"typed":78,"target":"record-title","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":46,"incarnation":1}
 type record-notes - Ask about the login fix
-  {"at":[550,519],"typed":62,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":47,"incarnation":1}
+  {"at":[550,530],"typed":62,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":47,"incarnation":1}
 clock +5000
   {"clock":11400}
 screenshot docs/media/web/record/02-notes-while-recording.png
   {"clock":11400,"epoch":53,"incarnation":1,"screenshot":"docs/media/web/record/02-notes-while-recording.png","w":1100,"h":760}
 tap stop-recording
-  {"at":[550,262],"tapped":73,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":11400,"epoch":68,"incarnation":1}
+  {"at":[550,273],"tapped":75,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":11400,"epoch":68,"incarnation":1}
 clock data
   {"clock":11400,"settled":true}
 clock settle

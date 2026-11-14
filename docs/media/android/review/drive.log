@@ -1,86 +1,86 @@
 clock data
-  {"clock":0,"settled":true,"epoch":1,"incarnation":1}
-tap continue
-  {"tapped":28,"at":[205.71,760.33],"target":"continue","delivery":"platform","carrier":"android","mode":"agent","epoch":2,"incarnation":1,"clock":0}
-clock data
   {"clock":0,"settled":true,"epoch":2,"incarnation":1}
+tap continue
+  {"tapped":28,"at":[205.71,760.33],"target":"continue","delivery":"platform","carrier":"android","mode":"agent","epoch":3,"incarnation":1,"clock":0}
+clock data
+  {"clock":0,"settled":true,"epoch":3,"incarnation":1}
 clock +6000
-  {"clock":6000,"epoch":7,"incarnation":1}
+  {"clock":6000,"epoch":8,"incarnation":1}
 clock data
-  {"clock":6000,"settled":true,"epoch":7,"incarnation":1}
+  {"clock":6000,"settled":true,"epoch":8,"incarnation":1}
 tap start-recording
-  {"tapped":55,"at":[205.71,209],"target":"start-recording","delivery":"platform","carrier":"android","mode":"agent","epoch":11,"incarnation":1,"clock":6000}
+  {"tapped":55,"at":[205.71,223],"target":"start-recording","delivery":"platform","carrier":"android","mode":"agent","epoch":10,"incarnation":1,"clock":6000}
 clock data
-  {"clock":6000,"settled":false,"reason":"requests","epoch":12,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
+  {"clock":6000,"settled":false,"reason":"requests","epoch":11,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
 clock settle
-  {"clock":6350,"settled":false,"reason":"requests","epoch":12,"incarnation":1,"diagnostic":"clock settle gave up on requests still in flight at its bound (20 s native); state shows them under pending, and logs a `request N` with no `fulfil N`"}
+  {"clock":6000,"settled":false,"reason":"requests","epoch":13,"incarnation":1,"diagnostic":"clock settle gave up on requests still in flight at its bound (20 s native); state shows them under pending, and logs a `request N` with no `fulfil N`"}
 type record-title Launch sync
-  {"typed":93,"value":"Launch sync","target":"record-title","delivery":"platform","carrier":"android","mode":"agent","epoch":13,"incarnation":1,"clock":6350}
+  {"typed":95,"value":"Launch sync","target":"record-title","delivery":"platform","carrier":"android","mode":"agent","epoch":14,"incarnation":1,"clock":6000}
 type record-notes - Ask about the login fix
-  {"typed":97,"value":"- Ask about the login fix","target":"record-notes","delivery":"platform","carrier":"android","mode":"agent","epoch":14,"incarnation":1,"clock":6350}
+  {"typed":99,"value":"- Ask about the login fix","target":"record-notes","delivery":"platform","carrier":"android","mode":"agent","epoch":15,"incarnation":1,"clock":6000}
 clock +5000
-  {"clock":11350,"inflight":1,"epoch":15,"incarnation":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+  {"clock":11000,"inflight":1,"epoch":16,"incarnation":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
 tap stop-recording
-  {"tapped":90,"at":[205.71,272],"target":"stop-recording","delivery":"platform","carrier":"android","mode":"agent","epoch":17,"incarnation":1,"clock":11350}
+  {"tapped":92,"at":[205.71,143],"target":"stop-recording","delivery":"platform","carrier":"android","mode":"agent","epoch":18,"incarnation":1,"clock":11000}
 clock data
-  {"clock":11350,"settled":false,"reason":"requests","epoch":17,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
+  {"clock":11000,"settled":false,"reason":"requests","epoch":18,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
 clock settle
-  {"clock":11350,"settled":false,"reason":"requests","epoch":22,"incarnation":1,"diagnostic":"clock settle gave up on requests still in flight at its bound (20 s native); state shows them under pending, and logs a `request N` with no `fulfil N`"}
+  {"clock":11000,"settled":false,"reason":"requests","epoch":23,"incarnation":1,"diagnostic":"clock settle gave up on requests still in flight at its bound (20 s native); state shows them under pending, and logs a `request N` with no `fulfil N`"}
 clock +12000
-  {"clock":23350,"epoch":37,"incarnation":1}
+  {"clock":23000,"epoch":38,"incarnation":1}
 clock data
-  {"clock":23350,"settled":true,"epoch":37,"incarnation":1}
+  {"clock":23000,"settled":true,"epoch":38,"incarnation":1}
 state detail.status
   "done"
 screenshot docs/media/android/review/01-ai-notes.png
-  {"screenshot":"docs/media/android/review/01-ai-notes.png","device":true,"epoch":37,"incarnation":1,"clock":23350}
+  {"screenshot":"docs/media/android/review/01-ai-notes.png","device":true,"epoch":38,"incarnation":1,"clock":23000}
 tap pane-transcript
-  {"tapped":134,"at":[332.19,229.38],"target":"pane-transcript","delivery":"platform","carrier":"android","mode":"agent","epoch":38,"incarnation":1,"clock":23350}
+  {"tapped":137,"at":[332.19,274.38],"target":"pane-transcript","delivery":"platform","carrier":"android","mode":"agent","epoch":39,"incarnation":1,"clock":23000}
 state pane
   "transcript"
 screenshot docs/media/android/review/02-transcript.png
-  {"screenshot":"docs/media/android/review/02-transcript.png","device":true,"epoch":38,"incarnation":1,"clock":23350}
+  {"screenshot":"docs/media/android/review/02-transcript.png","device":true,"epoch":39,"incarnation":1,"clock":23000}
 tap pane-mine
-  {"tapped":132,"at":[205.71,229.38],"target":"pane-mine","delivery":"platform","carrier":"android","mode":"agent","epoch":39,"incarnation":1,"clock":23350}
+  {"tapped":135,"at":[205.71,274.38],"target":"pane-mine","delivery":"platform","carrier":"android","mode":"agent","epoch":40,"incarnation":1,"clock":23000}
 type my-notes ## Follow up
-  {"typed":165,"value":"## Follow up","target":"my-notes","delivery":"platform","carrier":"android","mode":"agent","epoch":40,"incarnation":1,"clock":23350}
+  {"typed":168,"value":"## Follow up","target":"my-notes","delivery":"platform","carrier":"android","mode":"agent","epoch":41,"incarnation":1,"clock":23000}
 clock +1000
-  {"clock":24350,"inflight":1,"background":1,"epoch":40,"incarnation":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+  {"clock":24000,"inflight":1,"background":1,"epoch":41,"incarnation":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
 clock data
-  {"clock":24350,"settled":true,"epoch":41,"incarnation":1}
+  {"clock":24000,"settled":true,"epoch":42,"incarnation":1}
 state detail.userNotes
   "## Follow up"
 state noteDirty
   false
 screenshot docs/media/android/review/03-my-notes-saved.png
-  {"screenshot":"docs/media/android/review/03-my-notes-saved.png","device":true,"epoch":41,"incarnation":1,"clock":24350}
+  {"screenshot":"docs/media/android/review/03-my-notes-saved.png","device":true,"epoch":42,"incarnation":1,"clock":24000}
 type title-field Q1 launch plan
-  {"typed":123,"value":"Q1 launch plan","target":"title-field","delivery":"platform","carrier":"android","mode":"agent","epoch":41,"incarnation":1,"clock":24350}
+  {"typed":125,"value":"Q1 launch plan","target":"title-field","scrolled":{"from":[205.71,54.76],"to":[205.71,54.76]},"delivery":"platform","carrier":"android","mode":"agent","epoch":42,"incarnation":1,"clock":24000}
 type title-field key Enter
-  {"typed":123,"delivery":"recognized","target":"title-field","carrier":"android","mode":"agent","epoch":41,"incarnation":1,"clock":24350}
+  {"typed":125,"delivery":"recognized","target":"title-field","carrier":"android","mode":"agent","epoch":42,"incarnation":1,"clock":24000}
 clock data
-  {"clock":24350,"settled":true,"epoch":43,"incarnation":1}
+  {"clock":24000,"settled":true,"epoch":44,"incarnation":1}
 state detail.title
   "Q1 launch plan"
 screenshot docs/media/android/review/04-renamed.png
-  {"screenshot":"docs/media/android/review/04-renamed.png","device":true,"epoch":43,"incarnation":1,"clock":24350}
+  {"screenshot":"docs/media/android/review/04-renamed.png","device":true,"epoch":44,"incarnation":1,"clock":24000}
 tap pane-ai
-  {"tapped":130,"at":[79.24,229.38],"target":"pane-ai","delivery":"platform","carrier":"android","mode":"agent","epoch":44,"incarnation":1,"clock":24350}
+  {"tapped":133,"at":[79.24,274.38],"target":"pane-ai","delivery":"platform","carrier":"android","mode":"agent","epoch":45,"incarnation":1,"clock":24000}
 tap regenerate
-  {"tapped":169,"at":[205.71,812.83],"target":"regenerate","scrolled":{"from":[205.71,879.88],"to":[205.71,879.88]},"delivery":"platform","carrier":"android","mode":"agent","epoch":46,"incarnation":1,"clock":24350}
+  {"tapped":172,"at":[205.71,812.83],"target":"regenerate","scrolled":{"from":[205.71,1002.88],"to":[205.71,1002.88]},"delivery":"platform","carrier":"android","mode":"agent","epoch":48,"incarnation":1,"clock":24000}
 clock data
-  {"clock":24350,"settled":true,"epoch":48,"incarnation":1}
+  {"clock":24000,"settled":true,"epoch":49,"incarnation":1}
 clock +1000
-  {"clock":25350,"inflight":1,"background":1,"epoch":48,"incarnation":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+  {"clock":25000,"inflight":1,"background":1,"epoch":49,"incarnation":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
 clock data
-  {"clock":25350,"settled":true,"epoch":50,"incarnation":1}
+  {"clock":25000,"settled":true,"epoch":51,"incarnation":1}
 state detail.status
   "summarizing"
 screenshot docs/media/android/review/05-writing-again.png
-  {"screenshot":"docs/media/android/review/05-writing-again.png","device":true,"epoch":50,"incarnation":1,"clock":25350}
+  {"screenshot":"docs/media/android/review/05-writing-again.png","device":true,"epoch":51,"incarnation":1,"clock":25000}
 clock +6000
-  {"clock":31350,"epoch":56,"incarnation":1}
+  {"clock":31000,"epoch":57,"incarnation":1}
 clock data
-  {"clock":31350,"settled":true,"epoch":56,"incarnation":1}
+  {"clock":31000,"settled":true,"epoch":57,"incarnation":1}
 state detail.status
   "done"

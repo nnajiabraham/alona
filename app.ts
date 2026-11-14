@@ -30,21 +30,22 @@ const demoShelf = (files: Files) => ({
  */
 async function build(storage: Storage, native: NativeModule | null | undefined): Promise<Service> {
   const store = meetingStore(storage.fs);
-  const demo = (device: DeviceFacts = SIM_DEVICE): Service =>
-    service(simEngine({ polls: 3, shelf: demoShelf(storage.fs), device }), store, true);
-  if (native?.available !== true) return demo();
-  // Android reports a native module because the recording packages are native, but nothing there
-  // answers the engine protocol yet, so its probe fails. It is the only such host.
+  const demo = (why: string, device: DeviceFacts = SIM_DEVICE): Service =>
+    service(simEngine({ polls: 3, shelf: demoShelf(storage.fs), device }), store, `${why} Transcripts and notes shown here are samples.`);
+  if (native?.available !== true) return demo('This build has no on-device models.');
+  // Android's native module serves recording only, so a probe there fails. It is the only host
+  // that reports a native module and has no engine.
   const probe = await native.later({ op: 'probe' }).catch(() => null);
   if (probe === null || typeof probe.host !== 'string') {
-    return demo({ ...SIM_DEVICE, host: 'android', formFactor: 'phone' });
+    return demo('The Android app has no on-device models.', { ...SIM_DEVICE, host: 'android', formFactor: 'phone' });
   }
   if (probe.demo === true) {
     // The demo keeps its sample memory and GPU, so captures match on every machine, but speaks as the real host.
     const real = parseDeviceFacts(probe);
-    return demo({ ...SIM_DEVICE, host: real.host, formFactor: real.formFactor, appleSilicon: real.appleSilicon });
+    const why = typeof probe.demoReason === 'string' && probe.demoReason !== '' ? probe.demoReason : 'Models cannot run here.';
+    return demo(why, { ...SIM_DEVICE, host: real.host, formFactor: real.formFactor, appleSilicon: real.appleSilicon });
   }
-  return service(engineOver((request: EngineRequest) => native.later({ ...request })), store, false);
+  return service(engineOver((request: EngineRequest) => native.later({ ...request })), store, '');
 }
 
 /**

@@ -23,8 +23,9 @@ final class Engine: ExactModule {
     private let work = DispatchQueue(label: "alona.engine.work", qos: .userInitiated)
     private let net = DispatchQueue(label: "alona.engine.net", qos: .utility, attributes: .concurrent)
     private let lock = NSLock()
-    private var jobs: [String: Job] = [:]
+    private var jobs: [String: Job] = [:], order: [String] = []
     private var loaded: Loaded?
+    private static let keptJobs = 24
 
     override func later(_ request: [String: Any], reply: ExactReply) {
         switch request["op"] as? String ?? "" {
@@ -83,17 +84,26 @@ final class Engine: ExactModule {
         }
     }
 
-    override func destroy() { work.sync { loaded = nil } }
+    override func destroy() {
+        lock.lock(); jobs.values.forEach { $0.cancelled = true }; lock.unlock()
+        work.sync { loaded = nil }
+    }
 
-    /// Starts `body` as the job the request names, unless that job already exists: starting is idempotent by id.
+    /// Starts `body` as the job the request names, unless that job is running or done: starting is
+    /// idempotent by id, and a failed job runs again.
     private func start(_ request: [String: Any], _ artifact: Artifact, _ reply: ExactReply, on queue: DispatchQueue,
                        _ body: @escaping (Job) throws -> Void) {
         guard let id = request["job"] as? String, !id.isEmpty else { return reply.fail("a job needs an id") }
         lock.lock()
-        if let existing = jobs[id] { lock.unlock(); return reply.send(existing.view) }
+        if let existing = jobs[id], existing.state != "failed" { lock.unlock(); return reply.send(existing.view) }
         let job = Job(id: id)
         job.artifact = artifact.id
         jobs[id] = job
+        order.removeAll { $0 == id }
+        order.append(id)
+        // Finished jobs hold a transcript or notes. Only the newest few are kept.
+        let finished = order.filter { jobs[$0]?.state != "running" }
+        for old in finished.dropLast(Engine.keptJobs) { jobs[old] = nil; order.removeAll { $0 == old } }
         lock.unlock()
         reply.send(job.view)
         queue.async {

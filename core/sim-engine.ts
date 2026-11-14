@@ -9,7 +9,9 @@ export const SIM_SEGMENTS: Segment[] = [
   { start: 28, end: 36, text: 'We launch on the fifteenth of March, as long as the login fix lands by Friday.' },
 ];
 
-export const SIM_NOTES = `Title: Mobile app launch planning
+const SIM_NOTES = `Title: Sample notes
+
+> These are sample notes from the demo engine. No model ran, and they do not describe your recording.
 
 ## Summary
 The team reviewed open bugs and agreed to launch the mobile app on March 15, provided the login fix lands by Friday.
@@ -95,6 +97,7 @@ export function simEngine(options: SimOptions = {}): Engine & { forget(): void; 
   };
 
   const start = (id: string, kind: SimJob['kind'], artifact: Artifact): JobView => {
+    if (view(id).state === 'failed') jobs.delete(id);
     if (!jobs.has(id)) jobs.set(id, { kind, polled: 0, artifact: artifact.id, cancelled: false });
     return view(id);
   };

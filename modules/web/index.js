@@ -55,8 +55,9 @@ function artifactOf(raw) {
     throw new Error('The request names no model artifact.');
   }
   const files = raw.files.map((f) => {
-    if (typeof f?.url !== 'string' || typeof f?.name !== 'string') throw new Error(`The artifact ${raw.id} has a malformed file.`);
-    return { url: f.url, name: f.name, bytes: Number(f.bytes) || 0, sha256: typeof f.sha256 === 'string' ? f.sha256 : '' };
+    const pinned = typeof f?.url === 'string' && typeof f?.name === 'string' && Number(f?.bytes) > 0 && typeof f?.sha256 === 'string' && f.sha256 !== '';
+    if (!pinned) throw new Error(`The artifact ${raw.id} has a file without a pinned size and checksum.`);
+    return { url: f.url, name: f.name, bytes: Number(f.bytes), sha256: f.sha256 };
   });
   return { id: raw.id, runtime: typeof raw.runtime === 'string' ? raw.runtime : '', files };
 }
@@ -126,7 +127,10 @@ async function probe() {
   // test runs use headless Chrome on a software GPU and must never download
   // models. tools/e2e-web.mjs drives a real Chrome that is not flagged as
   // automated, so it gets this engine.
-  return { ...facts, demo: nav.webdriver === true || gpu === null };
+  const demoReason = nav.webdriver === true
+    ? 'This browser is under automation, so no models are loaded.'
+    : gpu === null ? 'This browser has no WebGPU, so Alona cannot run its models here.' : '';
+  return { ...facts, demo: demoReason !== '', demoReason };
 }
 
 // ---- Model files ----
@@ -180,7 +184,7 @@ async function fetchFile(cache, file, signal, onBytes) {
   }
   parts.push(new Blob(pending));
   if (got !== file.bytes) throw new Error(`${file.name} arrived with ${got} bytes, not ${file.bytes}.`);
-  if (file.sha256 !== '' && hash.hex() !== file.sha256) throw new Error(`${file.name} failed its checksum.`);
+  if (hash.hex() !== file.sha256) throw new Error(`${file.name} failed its checksum.`);
   const body = new Blob(parts);
   await cache.put(file.url, new Response(body, { headers: { 'content-type': 'application/octet-stream', 'content-length': String(got) } }));
 }
@@ -315,7 +319,7 @@ function workerFor(artifact) {
   };
   next.onerror = (event) => {
     event.preventDefault();
-    const why = new Error(`The engine stopped: ${event.message || 'the browser ended it, perhaps for lack of memory'}.`);
+    const why = new Error(`The engine stopped: ${event.message || 'the browser ended it'}.`);
     for (const [, wait] of waiting) wait.reject(why);
     waiting.clear();
     worker?.terminate();
@@ -361,13 +365,23 @@ async function generate(job, artifact, prompt, maxTokens) {
 // ---- Jobs ----
 
 /**
- * Starts `body` as the job `id`, unless that job already exists: starting is
- * idempotent by id. Model jobs wait their turn in `queue`; downloads do not.
+ * Starts `body` as the job `id`, unless that job is running or done: starting is
+ * idempotent by id, and a failed job runs again. Model jobs wait their turn in
+ * `queue`; downloads do not.
  */
+const KEPT_JOBS = 24;
+
+/** Finished jobs hold a transcript or notes. Only the newest few are kept, oldest dropped first. */
+function forgetOldJobs() {
+  const finished = [...jobs.values()].filter((job) => job.state !== 'running');
+  for (const job of finished.slice(0, Math.max(0, finished.length - KEPT_JOBS))) jobs.delete(job.id);
+}
+
 function start(id, kind, artifact, body) {
   if (typeof id !== 'string' || id === '') throw new Error('A job needs an id.');
   const existing = jobs.get(id);
-  if (existing) return view(existing);
+  if (existing && existing.state !== 'failed') return view(existing);
+  forgetOldJobs();
   /** @type {Job} */
   const job = {
     id, kind, artifact: artifact.id, state: 'running', progress: 0, text: '', segments: [], error: '',

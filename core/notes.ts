@@ -9,12 +9,12 @@ const BUDGETS: Record<TierId, { oneShot: number; chunk: number }> = {
 
 const TOKENS_PER_WORD = 1.3;
 
-export function estimateTokens(text: string): number {
+function estimateTokens(text: string): number {
   const words = text.split(/\s+/).filter((w) => w !== '').length;
   return Math.ceil(words * TOKENS_PER_WORD);
 }
 
-function clock(seconds: number): string {
+export function clock(seconds: number): string {
   const total = Math.max(0, Math.floor(seconds));
   const m = Math.floor(total / 60);
   const s = total % 60;
@@ -23,7 +23,7 @@ function clock(seconds: number): string {
 
 const line = (s: Segment): string => `[${clock(s.start)}] ${s.text.trim()}`;
 
-export function transcriptText(segments: Segment[]): string {
+function transcriptText(segments: Segment[]): string {
   return segments.map(line).join('\n');
 }
 

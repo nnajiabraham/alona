@@ -32,6 +32,7 @@ shape TierView
 shape Setup
   ready: bool
   demo: bool
+  demoNote: string
   deviceLine: string
   recommended: string
   recommendedLabel: string
@@ -104,6 +105,9 @@ component Alona
   state noteDraft = ""
   state noteDirty = false
   state noteSent = ""
+  // The meeting the draft belongs to. The platform's Back leaves a meeting without running an action,
+  // so a save must not depend on which meeting is on screen when it fires.
+  state noteFor = ""
   state titleDraft = ""
   state aimed = ""
 
@@ -133,7 +137,7 @@ component Alona
   derive startFailure = match failure(started) { case some(f) => f.code, case none => "" }
   derive anyWorking = lib.filter(m => working(m.status)).length > 0
   derive busy = anyWorking or setup.activeDownloading or not setup.ready
-  derive shownNotes = noteDirty ? noteDraft : detail.userNotes
+  derive shownNotes = noteDirty and noteFor == selected ? noteDraft : detail.userNotes
   derive today = time.epochAtZero + now
 
   task pump when busy
@@ -160,14 +164,14 @@ component Alona
     picked = tier
 
   action follow(url: string)
-    if noteDirty
-      send notesSaved = saveNotes(selected, noteDraft)
+    if noteDirty and noteFor != ""
+      send notesSaved = saveNotes(noteFor, noteDraft)
     noteDirty = false
     pane = "ai"
     nav = top(nav).name == "meeting" and url.startsWith("/meeting/") ? replace(nav, url) : go(nav, url)
   action back
-    if noteDirty
-      send notesSaved = saveNotes(selected, noteDraft)
+    if noteDirty and noteFor != ""
+      send notesSaved = saveNotes(noteFor, noteDraft)
     noteDirty = false
     nav = back(nav)
   action openSettings
@@ -230,10 +234,11 @@ component Alona
   action editNote(v: string)
     noteDraft = v
     noteDirty = true
+    noteFor = selected
   action saveNote
-    if noteDirty and selected != ""
+    if noteDirty and noteFor != ""
       noteSent = noteDraft
-      send notesSaved = saveNotes(selected, noteDraft)
+      send notesSaved = saveNotes(noteFor, noteDraft)
   action afterNotesSaved
     if noteDraft == noteSent
       noteDirty = false
@@ -257,7 +262,7 @@ component Alona
       nav = back(nav)
 
   view
-    main navigationKey=`${top(nav).id}` navigate=follow testId="app" width="100%" height="100%"
+    main navigationKey=`${top(nav).id}` navigationBack="back" navigate=follow testId="app" width="100%" height="100%"
       background-color="surface.page" color="text.primary" accent-color="moss.fill"
       for e in stack(nav) key=e.id
         if e.name == "home"
@@ -274,7 +279,7 @@ component Alona
                   RecordCard(recording=recording, opening=(pending(opened) or pending(started)), denied=micDenied,
                     available=mic.available, failure=startFailure, start=startRecording, openSystemSettings=openSystemSettings)
                   if failed(lib)
-                    EmptyState(symbol="symbol:alert", title="Can’t open your meetings", message="Something went wrong reading them.")
+                    EmptyState(symbol="symbol:alert", title="Can’t open your meetings", message="The meetings folder could not be read.")
                   else if lib.length == 0 and not pending(lib)
                     EmptyState(symbol="symbol:waveform", title="No meetings yet", message="Record one and Alona writes the notes on this device.")
                   else
@@ -308,8 +313,7 @@ component Alona
                         text `${t.sttName} for transcripts, ${t.llmName} for notes.${downloadOnce(t.downloadLabel)}`
                           font="-exact-footnote" color="text.muted" testId="recommended-models"
                       if setup.demo
-                        text "Demo engine: this build has no on-device models, so transcripts and notes are samples."
-                          font="-exact-footnote" color="ochre.ink" testId="demo-note"
+                        text setup.demoNote font="-exact-footnote" color="ochre.ink" testId="demo-note"
                     else
                       row gap=8 align-items="center"
                         progress aria-label="Checking this device"
@@ -328,6 +332,9 @@ component Alona
           column navigationKey=`${e.id}` navigationPresentation="modal" navigationScroll="record-scroll" position="absolute" inset=0
             display="flex" flex-direction="column" testId="record-screen"
             header display="flex" align-items="center" padding="8px 16px"
+              // Back, a swipe down and Escape press this, so leaving the screen always stops the recorder.
+              button id="back" press=stopRecording disabled=pending(saved) aria-label="Stop and write notes" testId="record-back"
+                image "symbol:stop-fill"
               text "Recording" role="heading" aria-level=2
             scroll id="record-scroll" flex=1 min-height=0
               column gap=16 padding=16 max-width="45rem" width="100%" margin="0 auto" box-sizing="border-box"
@@ -364,6 +371,8 @@ component Alona
                       font="-exact-footnote" color="text.muted" testId="detail-meta"
                   if detail.audio != ""
                     audio src=detail.audio controls=true preload="metadata" width="100%" testId="player"
+                  if setup.demo
+                    text setup.demoNote font="-exact-footnote" color="ochre.ink" testId="detail-demo-note"
                   if working(detail.status)
                     column gap=8 padding=14 border-radius=14 background-color="moss.soft" testId="working-card"
                       text detail.statusLabel color="moss.ink" font="-exact-headline" testId="working-label"
@@ -479,7 +488,7 @@ component ModelBanner
     column gap=8
       if setup.demo
         row gap=8 padding=12 border-radius=14 background-color="ochre.soft" testId="demo-banner"
-          text "Demo engine: transcripts and notes are samples on this build." color="ochre.ink" font="-exact-footnote" flex=1 min-width=0
+          text setup.demoNote color="ochre.ink" font="-exact-footnote" flex=1 min-width=0
       if setup.ready and setup.activeDownloading
         column gap=8 padding=14 border-radius=14 background-color="moss.soft" testId="download-card"
           text `Downloading ${setup.activeLabel} models · ${percent(setup.activeProgress)}` color="moss.ink" font="-exact-headline" testId="download-label"

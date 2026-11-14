@@ -1,6 +1,27 @@
 window.ALONA = {
  "flows": {
   "android": {
+   "leaving": {
+    "shots": [
+     {
+      "src": "../media/android/leaving/01-recording.png",
+      "label": "recording"
+     },
+     {
+      "src": "../media/android/leaving/02-back-stopped-and-saved.png",
+      "label": "back stopped and saved"
+     },
+     {
+      "src": "../media/android/leaving/03-library-after-back.png",
+      "label": "library after back"
+     },
+     {
+      "src": "../media/android/leaving/04-notes-kept.png",
+      "label": "notes kept"
+     }
+    ],
+    "video": "../media/android/leaving/leaving.mp4"
+   },
    "library": {
     "shots": [
      {
@@ -124,6 +145,27 @@ window.ALONA = {
    }
   },
   "macos": {
+   "leaving": {
+    "shots": [
+     {
+      "src": "../media/macos/leaving/01-recording.png",
+      "label": "recording"
+     },
+     {
+      "src": "../media/macos/leaving/02-back-stopped-and-saved.png",
+      "label": "back stopped and saved"
+     },
+     {
+      "src": "../media/macos/leaving/03-library-after-back.png",
+      "label": "library after back"
+     },
+     {
+      "src": "../media/macos/leaving/04-notes-kept.png",
+      "label": "notes kept"
+     }
+    ],
+    "video": "../media/macos/leaving/leaving.mp4"
+   },
    "library": {
     "shots": [
      {
@@ -262,6 +304,27 @@ window.ALONA = {
    }
   },
   "web": {
+   "leaving": {
+    "shots": [
+     {
+      "src": "../media/web/leaving/01-recording.png",
+      "label": "recording"
+     },
+     {
+      "src": "../media/web/leaving/02-back-stopped-and-saved.png",
+      "label": "back stopped and saved"
+     },
+     {
+      "src": "../media/web/leaving/03-library-after-back.png",
+      "label": "library after back"
+     },
+     {
+      "src": "../media/web/leaving/04-notes-kept.png",
+      "label": "notes kept"
+     }
+    ],
+    "video": "../media/web/leaving/leaving.mp4"
+   },
    "library": {
     "shots": [
      {
@@ -753,45 +816,45 @@ window.ALONA = {
    "file": "docs/media/web-real/e2e.json",
    "host": "web",
    "tier": "lite",
-   "date": "2026-11-14T18:58:59.074Z",
+   "date": "2026-11-14T21:56:47.641Z",
    "method": {
-    "audio": "tools/fixture/meeting-fixture.wav (53 s, 16 kHz mono). NOT recorded by the app: no file at app:/data/meetings/m1794682789525/audio.m4a; the fixture WAV was written there. Microphone and recorder path NOT VERIFIED.",
-    "microphone": "Chrome's fake capture device failed (no answer in 8 s); getUserMedia was replaced by a Web Audio stream playing the fixture. Hardware capture NOT VERIFIED; the app's MediaRecorder recording path ran.",
+    "audio": "tools/fixture/meeting-fixture.wav (53 s, 16 kHz mono). recorded by the app: app:/data/meetings/m1794693423080/audio.m4a (910286 bytes)",
+    "microphone": "Chrome fake capture device playing the fixture (--use-file-for-fake-audio-capture)",
     "timing": "performance.now() in the worker; total is from stopping the recording to notes on screen",
     "memory": "ps resident size of the renderer and GPU processes, sampled every 0.5 s; idle is read 3 s after unload. Resident size also counts freed pages, so it overstates the idle figure",
     "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36"
    },
    "wer": {
-    "errors": 7,
+    "errors": 9,
     "words": 168,
-    "rate": 0.0417
+    "rate": 0.0536
    },
    "title": "",
-   "transcript": "Thanks for joining everyone. Today we need to decide the launch date for the mobile app and review the open bugs. The Android build is stable. We fixed the crash on the settings screen yesterday, and battery usage is down by 20%. Good. What about the login issue on older phones? That one is still open. I need two more days to finish the fix and test it. From the design side, the onboarding screens of final, I will send the updated icons to the team by Thursday. Then let us agree on the plan. We launch on the 15th of March, as long as the login fix lands by Friday. Agreed. I will also prepare the release notes and the store screen shots. I will own the login fix and I will run the full regression suite on Friday morning. Great. To summarize the launch date is March 15. Daniel owns the login fix and Karen owns the icons, the release notes and the screenshots. Thanks everyone.",
-   "notes": "# Title: Meeting on App Launch and Bug Resolution\n# Today's meeting was to decide the launch date for the mobile app and review open bugs.\n\n## Summary\nThe meeting agreed on launching the app on March 15th, with a condition that the login fix must be resolved by Friday before then. We also confirmed that Daniel will own the fix while Karen handles the other items.\n\n## Key points\n- The login bug is now fixed and can be released.\n- Two days remain for testing the updated icons.\n- Onboarding screens are ready for team review.\n- The full regression suite is scheduled for Friday morning.\n\n## Decisions\n- Launch date: March 15\n- Login fix: Daniel owns this, Karen owns the other items.\n- Release notes and store screen shots: Prepared by the project manager.\n- Open bugs: None recorded (all issues resolved).\n\n## Action items\n- [ ] I will own the login fix.\n- [ ] Karen owns the icons and release notes.\n- [ ] The project manager owns screenshots.\n- [ ] Daniel is responsible for the full regression suite on Friday morning.\n- [ ] Review board members sign off on the March 15 launch announcement at 3:00 PM.\n\n## Open questions\n- None recorded",
+   "transcript": "Thanks for joining everyone. Today we need to decide the launch date for the mobile app and review the open bugs. The Android build is stable. We fixed the crash on the settings screen yesterday, and battery usage is down by 20%. Good. What about the login issue on older phones? That one is still open. I need two more days to finish the fix and test it. From the design side, the onboarding screens of final, I will send the updated icons to the team by Thursday. Then let us agree on the plan. We launch on the 15th of March, as long as the login fix lands by Friday. Agreed. I will also prepare the release notes and the store screen shots. I will own the login fix and I will run the full regression suite on Friday morning. Great. To summarize the launch date is March 15. Daniel owns the login fix and Karen owns the icons, the release notes and the screen shots. Thanks, everyone.",
+   "notes": "Title: Meeting on App Launch, Bugs, and Release Plan\n## Summary\nThe team discussed the mobile app launch date of March 15th to ensure the login fix lands by Friday, while also reviewing open bugs and updating design icons.\n## Key points\n- The Android build is stable regarding the crash on the settings screen.\n- Battery usage will be down by 20%.\n- The design team will provide updated icons by Thursday.\n- The launch plans are decided by agreeing with Daniel on the login fix.\n## Decisions\n- \"None recorded.\"\n## Action items\n- [ ] Owner: Task assigned to the group regarding the release notes and screen shots.\n- [ ] Owner: Task assigned to Daniel regarding the login fix.\n- [ ] Owner: Task assigned to Karen regarding the updated icons and release notes.\n- [ ] Owner: Task assigned to the group regarding the March 15th launch plan.\n## Open questions\n- \"None recorded.\"",
    "failures": [],
    "runs": [
     {
      "cycle": 1,
      "transcribeSeconds": 5,
-     "notesSeconds": 22.1,
-     "totalSeconds": 38.1,
-     "peakMB": 3952,
-     "idleMB": 2101,
-     "detail": "466 prompt tokens, first token after 14.1 s, 41.4 tokens per second"
+     "notesSeconds": 20.8,
+     "totalSeconds": 30.1,
+     "peakMB": 3940,
+     "idleMB": 2066,
+     "detail": "475 prompt tokens, first token after 14.6 s, 42.59 tokens per second"
     },
     {
      "cycle": 2,
-     "transcribeSeconds": 5.7,
-     "notesSeconds": 22.4,
-     "totalSeconds": 29.8,
-     "peakMB": 4072,
-     "idleMB": 2148,
-     "detail": "466 prompt tokens, first token after 14.3 s, 41.38 tokens per second"
+     "transcribeSeconds": 4.9,
+     "notesSeconds": 20.7,
+     "totalSeconds": 26.8,
+     "peakMB": 4025,
+     "idleMB": 2104,
+     "detail": "475 prompt tokens, first token after 14.4 s, 42.32 tokens per second"
     }
    ],
    "metrics": {
-    "Download": "761 MB in 19 s",
+    "Download": "761 MB in 13 s",
     "Device": "Chrome on macOS"
    }
   }
