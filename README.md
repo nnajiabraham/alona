@@ -6,12 +6,14 @@ One [Exact](https://github.com/expo/exact) app builds the web, macOS, iOS, and A
 
 ## Status
 
-| Platform | Screens and flows | Real models |
+| Platform | Screens and flows (demo engine) | Real models |
 |---|---|---|
-| macOS | 5 of 5 flows pass | All three tiers run: sherpa-onnx and llama.cpp in a Swift module |
-| Web | 5 of 5 flows pass | Lite tier runs in Chrome on WebGPU; recording from a real microphone is not verified |
-| Android | 5 of 5 flows pass on an emulator | Demo engine only; the native bridge is not built |
+| macOS | 6 of 6 flows pass | All three tiers run: sherpa-onnx and llama.cpp in a Swift module |
+| Web | 6 of 6 flows pass | Lite tier runs in Chrome on WebGPU, recording from Chrome's fake microphone |
+| Android | 6 of 6 flows pass on an emulator | Demo engine only; the native bridge is not built |
 | iOS | Not built | Needs Xcode 27.1 on the build machine |
+
+No hardware microphone and no real meeting has been run on any platform. Accuracy figures come from synthetic voices.
 
 The demo engine returns a sample transcript and sample notes, and the app says so on screen.
 
@@ -28,6 +30,8 @@ The demo engine returns a sample transcript and sample notes, and the app says s
 git clone https://github.com/expo/exact.git ../exact
 git -C ../exact checkout 3baa28ffa5e2598f2eca2ff5d830fa2b444e741f
 bun ../exact/scripts/exact.mjs setup
+# Only on Xcode older than 27.1, for the macOS build:
+git -C ../exact apply "$PWD/tools/patches/exact-3baa28f-xcode26.patch"
 bun install && bun exact.mjs update
 bun exact.mjs web
 ```

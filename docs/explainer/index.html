@@ -148,15 +148,15 @@ footer { color: var(--muted); font-size: 0.86rem; }
 <section id="status">
   <span class="eyebrow">Where each platform stands</span>
   <h2>Platform status</h2>
-  <p>Each row says what was run and seen, not what is expected to work. The demo engine returns a sample transcript and sample notes, and the app labels it on screen.</p>
+  <p>Each row says what was run and seen, not what is expected to work. The flow runs in the first column use the demo engine on every platform, with a sample device, a sample transcript, and sample notes, so they prove the screens and the pipeline's steps. The second column is the separate check on real models.</p>
   <div class="scroll">
   <table>
     <thead><tr><th>Platform</th><th>Screens and flows</th><th>Real models</th><th>Notes</th></tr></thead>
     <tbody id="status-rows">
-      <tr><td><b>macOS</b></td><td><span class="pill ok">5 of 5 flows</span></td><td><span class="pill ok">All three tiers</span></td><td>Swift engine with sherpa-onnx and llama.cpp. Microphone only: capturing other apps' audio needs an Exact permission that does not exist yet.</td></tr>
-      <tr><td><b>Web</b></td><td><span class="pill ok">5 of 5 flows</span></td><td><span class="pill part">Lite tier, in Chrome</span></td><td>WebGPU engine in a worker. The real-model run injected the spoken fixture as the recording, so recording from a real microphone in a real browser is not verified. Tests use the demo engine because headless Chrome has only a software GPU.</td></tr>
-      <tr><td><b>Android</b></td><td><span class="pill ok">5 of 5 flows</span></td><td><span class="pill no">Demo engine</span></td><td>Driven on an emulator. Real models need a Kotlin bridge to the native runtimes, which is not built. The audio player does not draw on Android.</td></tr>
-      <tr><td><b>iOS</b></td><td><span class="pill no">Not built</span></td><td><span class="pill no">Not run</span></td><td>Exact's iOS host needs Xcode 27.1 and this Mac has 26.1.1. The Apple engine is written to compile for iOS, and that is untested.</td></tr>
+      <tr><td><b>macOS</b></td><td><span class="pill ok">6 of 6 flows</span></td><td><span class="pill ok">All three tiers</span></td><td>Swift engine with sherpa-onnx and llama.cpp. The real-model check feeds a spoken fixture in place of the recorded take, so a hardware microphone has not been exercised. Capturing other apps' audio needs an Exact permission that does not exist yet.</td></tr>
+      <tr><td><b>Web</b></td><td><span class="pill ok">6 of 6 flows</span></td><td><span class="pill ok">Lite tier, in Chrome</span></td><td>WebGPU engine in a worker. The real-model run records through the browser's own recorder from Chrome's fake microphone, which plays the fixture. A hardware microphone, Safari, and Firefox are untested.</td></tr>
+      <tr><td><b>Android</b></td><td><span class="pill ok">6 of 6 flows</span></td><td><span class="pill no">Demo engine</span></td><td>Driven on an emulator. Real models need a Kotlin bridge to the native runtimes, which is not built. The audio player does not draw on Android.</td></tr>
+      <tr><td><b>iOS</b></td><td><span class="pill no">Not built</span></td><td><span class="pill no">Not run</span></td><td>Exact's iOS host needs Xcode 27.1 and this Mac has 26.1.1. The Apple engine source is shared with macOS and has never been compiled for iOS.</td></tr>
     </tbody>
   </table>
   </div>
@@ -379,6 +379,8 @@ bun exact.mjs android      # build and install on the emulator or phone in ANDRO
     <div class="tile"><span class="pill part">Not built</span><h3>Android inference</h3><p>Needs a Kotlin extension package that bridges to sherpa-onnx and llama.cpp. The spike report lists the route and its risks.</p></div>
     <div class="tile"><span class="pill part">Not built</span><h3>Meeting detection and menu bar</h3><p>Zoom and Meet detection and the menu bar item from the Swift app are not ported. Detection of Meet needs an Apple Events permission Exact cannot declare.</p></div>
     <div class="tile"><span class="pill part">Unmeasured</span><h3>Long meetings</h3><p>The chunked path is unit-tested, but no hour-long recording has been run through real models, and no eval set scores notes quality.</p></div>
+    <div class="tile"><span class="pill part">Not ported</span><h3>Smaller Swift features</h3><p>The notes toolbar (timestamp, bullet, and action-item buttons), the choice of save folder, and migration of recordings made by the Swift app.</p></div>
+    <div class="tile"><span class="pill part">Unverified</span><h3>Real rooms and real microphones</h3><p>Every accuracy figure comes from synthetic voices fed in as a file or a fake microphone. No hardware microphone and no real meeting has been run on any platform.</p></div>
     <div class="tile"><span class="pill part">Known limit</span><h3>Speaker labels</h3><p>Transcripts have timestamps but no speakers. Diarization models exist for the runtimes in use and are not wired in.</p></div>
   </div>
   <footer>Sources: <code>docs/research/local-models-2026-11.md</code>, <code>docs/rewrite/spikes/</code>, and the decision trail at <code>docs/rewrite/decisions.tsv</code>.</footer>
