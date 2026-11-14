@@ -8,9 +8,9 @@ One [Exact](https://github.com/expo/exact) app builds the web, macOS, iOS, and A
 
 | Platform | Screens and flows | Real models |
 |---|---|---|
-| macOS | Driven end to end | Running: sherpa-onnx and llama.cpp in a Swift module |
-| Web | Driven end to end | WebGPU engine; see the field guide for measured results |
-| Android | See the field guide | Demo engine only; the native bridge is not built |
+| macOS | 5 of 5 flows pass | All three tiers run: sherpa-onnx and llama.cpp in a Swift module |
+| Web | 5 of 5 flows pass | Lite tier runs in Chrome on WebGPU; recording from a real microphone is not verified |
+| Android | 5 of 5 flows pass on an emulator | Demo engine only; the native bridge is not built |
 | iOS | Not built | Needs Xcode 27.1 on the build machine |
 
 The demo engine returns a sample transcript and sample notes, and the app says so on screen.

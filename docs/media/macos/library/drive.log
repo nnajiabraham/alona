@@ -1,19 +1,19 @@
 clock data
-  {"epoch":2,"incarnation":1,"clock":0,"settled":true}
+  {"incarnation":1,"clock":0,"epoch":2,"settled":true}
 tap continue
-  {"delivery":"platform","at":[210,832],"tapped":28,"target":"continue","carrier":"macos","mode":"agent","epoch":3,"incarnation":1,"clock":0}
+  {"at":[210,832],"tapped":28,"delivery":"platform","target":"continue","carrier":"macos","mode":"agent","epoch":3,"incarnation":1,"clock":0}
 clock data
-  {"clock":0,"epoch":3,"incarnation":1,"settled":true}
+  {"clock":0,"epoch":3,"settled":true,"incarnation":1}
 clock +6000
   {"clock":6000,"epoch":8,"incarnation":1}
 clock data
-  {"clock":6000,"incarnation":1,"settled":true,"epoch":8}
+  {"clock":6000,"incarnation":1,"epoch":8,"settled":true}
 tap start-recording
-  {"at":[210,174],"tapped":55,"delivery":"platform","target":"start-recording","carrier":"macos","mode":"agent","epoch":9,"incarnation":1,"clock":6000}
+  {"delivery":"platform","tapped":55,"at":[210,174],"target":"start-recording","carrier":"macos","mode":"agent","epoch":9,"incarnation":1,"clock":6000}
 clock data
-  {"settled":true,"clock":6000,"epoch":13,"incarnation":1}
+  {"incarnation":1,"epoch":13,"clock":6000,"settled":true}
 clock settle
-  {"incarnation":1,"clock":6000,"settled":true,"epoch":13}
+  {"settled":true,"epoch":13,"incarnation":1,"clock":6000}
 type record-title Launch sync
   {"value":"Launch sync","typed":93,"target":"record-title","delivery":"platform","carrier":"macos","mode":"agent","epoch":14,"incarnation":1,"clock":6000}
 type record-notes - Ask about the login fix
@@ -21,46 +21,50 @@ type record-notes - Ask about the login fix
 clock +5000
   {"clock":11000,"incarnation":1,"epoch":17}
 tap stop-recording
-  {"delivery":"platform","tapped":90,"at":[210,206],"target":"stop-recording","carrier":"macos","mode":"agent","epoch":18,"incarnation":1,"clock":11000}
+  {"tapped":90,"at":[210,206],"delivery":"platform","target":"stop-recording","carrier":"macos","mode":"agent","epoch":18,"incarnation":1,"clock":11000}
 clock data
-  {"clock":11000,"settled":true,"incarnation":1,"epoch":23}
+  {"incarnation":1,"epoch":23,"clock":11000,"settled":true}
 clock settle
-  {"settled":true,"clock":11000,"epoch":23,"incarnation":1}
+  {"clock":11000,"settled":true,"incarnation":1,"epoch":23}
 clock +12000
-  {"clock":23000,"epoch":38,"incarnation":1}
+  {"clock":23000,"incarnation":1,"epoch":38}
 clock data
-  {"incarnation":1,"settled":true,"epoch":38,"clock":23000}
+  {"clock":23000,"epoch":38,"settled":true,"incarnation":1}
 back
   {"delivery":"platform","back":"route","carrier":"macos","epoch":39,"incarnation":1,"clock":23000}
 clock data
-  {"clock":23000,"settled":true,"epoch":39,"incarnation":1}
+  {"settled":true,"epoch":39,"clock":23000,"incarnation":1}
+clock settle
+  {"clock":23000,"incarnation":1,"settled":true,"epoch":39}
 state lib.length
   1
 screenshot docs/media/macos/library/01-meetings.png
-  {"clock":23000,"h":900,"w":420,"epoch":39,"incarnation":1,"screenshot":"docs/media/macos/library/01-meetings.png","scale":1}
+  {"incarnation":1,"screenshot":"docs/media/macos/library/01-meetings.png","clock":23000,"w":420,"epoch":39,"h":900,"scale":1}
 prefer prefers-color-scheme dark
-  {"fold":{"vertical-viewport-segments":1,"viewport-segments":[],"horizontal-viewport-segments":1,"device-posture":"continuous"},"incarnation":1,"clock":23000,"media":{"prefers-reduced-transparency":"no-preference","pointer":"fine","hover":"hover","prefers-reduced-motion":"no-preference","dynamic-range":"standard","display-mode":"standalone","prefers-contrast":"no-preference","prefers-color-scheme":"dark","color-gamut":"srgb"},"page":{"has-focus":true,"can-share":true,"can-share-pictures":true,"iframe-partition":true,"can-open-files":true,"frozen":false,"can-share-files":true,"display-scale":2,"bold-text":false,"online":true,"keyboard-navigation":false,"visibility-state":"visible","gpu-tier":"high","root-font-size":13},"epoch":39}
+  {"incarnation":1,"clock":23000,"page":{"can-share-files":true,"keyboard-navigation":false,"visibility-state":"visible","gpu-tier":"high","online":true,"bold-text":false,"display-scale":2,"can-share":true,"root-font-size":13,"iframe-partition":true,"can-share-pictures":true,"can-open-files":true,"frozen":false,"has-focus":true},"epoch":39,"fold":{"viewport-segments":[],"horizontal-viewport-segments":1,"device-posture":"continuous","vertical-viewport-segments":1},"media":{"color-gamut":"srgb","hover":"hover","pointer":"fine","prefers-color-scheme":"dark","dynamic-range":"standard","prefers-contrast":"no-preference","prefers-reduced-transparency":"no-preference","prefers-reduced-motion":"no-preference","display-mode":"standalone"}}
 screenshot docs/media/macos/library/02-meetings-dark.png
-  {"clock":23000,"epoch":39,"w":420,"screenshot":"docs/media/macos/library/02-meetings-dark.png","incarnation":1,"h":900,"scale":1}
+  {"h":900,"screenshot":"docs/media/macos/library/02-meetings-dark.png","incarnation":1,"clock":23000,"epoch":39,"w":420,"scale":1}
 prefer prefers-color-scheme light
-  {"fold":{"device-posture":"continuous","horizontal-viewport-segments":1,"vertical-viewport-segments":1,"viewport-segments":[]},"epoch":39,"incarnation":1,"media":{"prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference","color-gamut":"srgb","hover":"hover","prefers-contrast":"no-preference","display-mode":"standalone","pointer":"fine","prefers-color-scheme":"light","dynamic-range":"standard"},"page":{"visibility-state":"visible","keyboard-navigation":false,"gpu-tier":"high","can-share-files":true,"online":true,"can-share":true,"bold-text":false,"root-font-size":13,"has-focus":true,"frozen":false,"can-share-pictures":true,"display-scale":2,"iframe-partition":true,"can-open-files":true},"clock":23000}
+  {"incarnation":1,"epoch":39,"clock":23000,"fold":{"viewport-segments":[],"horizontal-viewport-segments":1,"device-posture":"continuous","vertical-viewport-segments":1},"page":{"can-share-files":true,"keyboard-navigation":false,"visibility-state":"visible","gpu-tier":"high","online":true,"bold-text":false,"display-scale":2,"can-share":true,"root-font-size":13,"iframe-partition":true,"can-share-pictures":true,"can-open-files":true,"frozen":false,"has-focus":true},"media":{"color-gamut":"srgb","hover":"hover","pointer":"fine","prefers-color-scheme":"light","dynamic-range":"standard","prefers-contrast":"no-preference","prefers-reduced-transparency":"no-preference","prefers-reduced-motion":"no-preference","display-mode":"standalone"}}
 tap "Launch sync"
-  {"delivery":"platform","tapped":115,"at":[165.5,269],"target":"Launch sync","carrier":"macos","mode":"agent","epoch":40,"incarnation":1,"clock":23000}
+  {"at":[165.5,269],"tapped":115,"delivery":"platform","target":"Launch sync","carrier":"macos","mode":"agent","epoch":40,"incarnation":1,"clock":23000}
 clock data
-  {"epoch":40,"settled":true,"clock":23000,"incarnation":1}
+  {"epoch":40,"clock":23000,"incarnation":1,"settled":true}
+clock settle
+  {"incarnation":1,"epoch":40,"settled":true,"clock":23000}
 tap delete-meeting
-  {"delivery":"platform","at":[384.5,20],"tapped":148,"target":"delete-meeting","carrier":"macos","mode":"agent","epoch":40,"incarnation":1,"clock":23000}
+  {"tapped":148,"delivery":"platform","at":[384.5,20],"target":"delete-meeting","carrier":"macos","mode":"agent","epoch":40,"incarnation":1,"clock":23000}
 clock settle
-  {"epoch":40,"settled":true,"incarnation":1,"clock":23000}
+  {"epoch":40,"clock":23000,"settled":true,"incarnation":1}
 screenshot docs/media/macos/library/03-confirm-delete.png
-  {"screenshot":"docs/media/macos/library/03-confirm-delete.png","w":420,"epoch":40,"incarnation":1,"notShown":{"see":"screenshot <png> window","windows":["_NSAlertPanel"]},"clock":23000,"h":900,"scale":1}
+  {"h":900,"epoch":40,"notShown":{"see":"screenshot <png> window","windows":["_NSAlertPanel"]},"screenshot":"docs/media/macos/library/03-confirm-delete.png","clock":23000,"incarnation":1,"w":420,"scale":1}
 tap delete-confirm
-  {"native":"NSAlert","delivery":"host-activation","tapped":36,"target":"delete-confirm","carrier":"macos","mode":"agent","epoch":41,"incarnation":1,"clock":23000}
+  {"tapped":36,"delivery":"host-activation","native":"NSAlert","target":"delete-confirm","carrier":"macos","mode":"agent","epoch":40,"incarnation":1,"clock":23000}
 clock data
-  {"clock":23000,"incarnation":1,"settled":true,"epoch":42}
+  {"clock":23000,"epoch":42,"settled":true,"incarnation":1}
 clock settle
-  {"epoch":42,"incarnation":1,"clock":23000,"settled":true}
+  {"incarnation":1,"epoch":42,"settled":true,"clock":23000}
 state lib.length
   0
 screenshot docs/media/macos/library/04-deleted.png
-  {"w":420,"clock":23000,"screenshot":"docs/media/macos/library/04-deleted.png","h":900,"epoch":42,"incarnation":1,"scale":1}
+  {"incarnation":1,"screenshot":"docs/media/macos/library/04-deleted.png","clock":23000,"w":420,"epoch":42,"h":900,"scale":1}

@@ -153,10 +153,10 @@ footer { color: var(--muted); font-size: 0.86rem; }
   <table>
     <thead><tr><th>Platform</th><th>Screens and flows</th><th>Real models</th><th>Notes</th></tr></thead>
     <tbody id="status-rows">
-      <tr><td><b>macOS</b></td><td><span class="pill ok">Driven</span></td><td><span class="pill ok">Running</span></td><td>Swift engine with sherpa-onnx and llama.cpp. Microphone only: capturing other apps' audio needs an Exact permission that does not exist yet.</td></tr>
-      <tr><td><b>Web</b></td><td><span class="pill ok">Driven</span></td><td><span class="pill part">See measured results</span></td><td>WebGPU engine in a worker. Tests run on the demo engine because headless Chrome has only a software GPU.</td></tr>
-      <tr><td><b>Android</b></td><td><span class="pill part">See flows</span></td><td><span class="pill no">Demo engine</span></td><td>The app builds and records. Real models need a Kotlin bridge to the native runtimes, which is not built.</td></tr>
-      <tr><td><b>iOS</b></td><td><span class="pill no">Not built</span></td><td><span class="pill no">Not run</span></td><td>Exact's iOS host needs Xcode 27.1 and this Mac has 26.1.1. The Apple engine is written to compile for iOS.</td></tr>
+      <tr><td><b>macOS</b></td><td><span class="pill ok">5 of 5 flows</span></td><td><span class="pill ok">All three tiers</span></td><td>Swift engine with sherpa-onnx and llama.cpp. Microphone only: capturing other apps' audio needs an Exact permission that does not exist yet.</td></tr>
+      <tr><td><b>Web</b></td><td><span class="pill ok">5 of 5 flows</span></td><td><span class="pill part">Lite tier, in Chrome</span></td><td>WebGPU engine in a worker. The real-model run injected the spoken fixture as the recording, so recording from a real microphone in a real browser is not verified. Tests use the demo engine because headless Chrome has only a software GPU.</td></tr>
+      <tr><td><b>Android</b></td><td><span class="pill ok">5 of 5 flows</span></td><td><span class="pill no">Demo engine</span></td><td>Driven on an emulator. Real models need a Kotlin bridge to the native runtimes, which is not built. The audio player does not draw on Android.</td></tr>
+      <tr><td><b>iOS</b></td><td><span class="pill no">Not built</span></td><td><span class="pill no">Not run</span></td><td>Exact's iOS host needs Xcode 27.1 and this Mac has 26.1.1. The Apple engine is written to compile for iOS, and that is untested.</td></tr>
     </tbody>
   </table>
   </div>
@@ -222,7 +222,7 @@ footer { color: var(--muted); font-size: 0.86rem; }
       <g>
         <rect class="box" x="20" y="40" width="170" height="64" rx="12"/><text class="label" x="40" y="68">recorded</text><text class="small" x="40" y="88">audio saved, queued</text>
         <rect class="core" x="258" y="40" width="190" height="64" rx="12"/><text class="label" x="278" y="68">transcribing</text><text class="small" x="278" y="88">speech model, with progress</text>
-        <rect class="core" x="516" y="40" width="190" height="64" rx="12"/><text class="label" x="536" y="68">summarizing</text><text class="small" x="536" y="88">one request, or parts then merge</text>
+        <rect class="core" x="516" y="40" width="190" height="64" rx="12"/><text class="label" x="536" y="68">summarizing</text><text class="small" x="536" y="88">one request, or several</text>
         <rect class="box" x="774" y="40" width="166" height="64" rx="12"/><text class="label" x="794" y="68">done</text><text class="small" x="794" y="88">transcript, notes, title</text>
         <path class="arrow" d="M190 72h60"/><path class="head" d="M248 67l8 5-8 5z"/>
         <path class="arrow" d="M448 72h60"/><path class="head" d="M506 67l8 5-8 5z"/>
@@ -252,8 +252,8 @@ footer { color: var(--muted); font-size: 0.86rem; }
   <table>
     <thead><tr><th>Tier</th><th>Speech to text</th><th>Notes model</th><th>Download</th><th>Offered when</th></tr></thead>
     <tbody>
-      <tr><td><b>Lite</b></td><td>Moonshine Base, English</td><td>Qwen3.5 0.8B</td><td class="num">674 MB native<br>about 760 MB web</td><td>Always. The only tier on iPhone browsers and browsers without WebGPU.</td></tr>
-      <tr><td><b>Balanced</b></td><td>Parakeet v3, 25 languages</td><td>Qwen3.5 2B</td><td class="num">2.0 GB</td><td>Native with 6 GB of memory or more. Browsers with WebGPU, 8 GB, and 4 GB of storage.</td></tr>
+      <tr><td><b>Lite</b></td><td>Moonshine Base, English</td><td>Qwen3.5 0.8B</td><td class="num">674 MB native<br>761 MB web</td><td>Always. The only tier browsers are offered today.</td></tr>
+      <tr><td><b>Balanced</b></td><td>Parakeet v3, 25 languages</td><td>Qwen3.5 2B</td><td class="num">2.0 GB</td><td>Native with 6 GB of memory or more. Not offered in browsers until it has been run there.</td></tr>
       <tr><td><b>Quality</b></td><td>Parakeet v3, 25 languages</td><td>Qwen3.5 9B</td><td class="num">6.4 GB</td><td>Apple silicon Macs with 16 GB or more. Never phones or browsers.</td></tr>
     </tbody>
   </table>
@@ -275,6 +275,7 @@ footer { color: var(--muted); font-size: 0.86rem; }
   <span class="eyebrow">Real models, real numbers</span>
   <h2>Measured results</h2>
   <p>These come from repeatable checks that run the built app on real models with a 53-second spoken meeting (three synthetic voices) and compare the transcript with the script that was spoken. Synthetic speech is easier than a real room, so read the word error rate as a floor.</p>
+  <p>Memory on macOS is the app's physical footprint, the figure Activity Monitor shows. It leaves out the model file itself, which is memory-mapped: 0.5 GB on Lite, 1.3 GB on Balanced, and 5.7 GB on Quality stay in the system's file cache while the notes model runs. Memory in the browser is resident size, which runs higher than footprint.</p>
   <div id="check-list" style="display:flex;flex-direction:column;gap:18px"></div>
 </section>
 

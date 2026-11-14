@@ -1,61 +1,61 @@
 clock data
-  {"epoch":2,"settled":true,"incarnation":1,"clock":0}
+  {"settled":true,"epoch":2,"clock":0,"incarnation":1}
 tap continue
-  {"at":[210,832],"delivery":"platform","tapped":28,"target":"continue","carrier":"macos","mode":"agent","epoch":3,"incarnation":1,"clock":0}
+  {"tapped":28,"at":[210,832],"delivery":"platform","target":"continue","carrier":"macos","mode":"agent","epoch":3,"incarnation":1,"clock":0}
 clock data
-  {"epoch":3,"clock":0,"incarnation":1,"settled":true}
+  {"settled":true,"clock":0,"incarnation":1,"epoch":3}
 clock +6000
-  {"epoch":8,"clock":6000,"incarnation":1}
+  {"incarnation":1,"clock":6000,"epoch":8}
 clock data
-  {"settled":true,"incarnation":1,"clock":6000,"epoch":8}
+  {"incarnation":1,"settled":true,"epoch":8,"clock":6000}
 tap start-recording
   {"tapped":55,"at":[210,174],"delivery":"platform","target":"start-recording","carrier":"macos","mode":"agent","epoch":9,"incarnation":1,"clock":6000}
 clock data
-  {"incarnation":1,"clock":6000,"settled":true,"epoch":13}
+  {"clock":6000,"incarnation":1,"epoch":13,"settled":true}
 clock settle
-  {"incarnation":1,"clock":6000,"settled":true,"epoch":13}
+  {"clock":6000,"incarnation":1,"epoch":13,"settled":true}
 state rec.state
   "recording"
 screenshot docs/media/macos/record/01-recording-started.png
-  {"clock":6000,"incarnation":1,"epoch":13,"h":900,"w":420,"screenshot":"docs/media/macos/record/01-recording-started.png","scale":1}
+  {"h":900,"incarnation":1,"screenshot":"docs/media/macos/record/01-recording-started.png","w":420,"clock":6000,"epoch":13,"scale":1}
 type record-title Launch sync
   {"typed":93,"value":"Launch sync","target":"record-title","delivery":"platform","carrier":"macos","mode":"agent","epoch":14,"incarnation":1,"clock":6000}
 type record-notes - Ask about the login fix
   {"typed":97,"value":"- Ask about the login fix","target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":15,"incarnation":1,"clock":6000}
 clock +5000
-  {"epoch":17,"clock":11000,"incarnation":1}
+  {"clock":11000,"incarnation":1,"epoch":17}
 screenshot docs/media/macos/record/02-notes-while-recording.png
-  {"incarnation":1,"h":900,"screenshot":"docs/media/macos/record/02-notes-while-recording.png","clock":11000,"w":420,"epoch":17,"scale":1}
+  {"clock":11000,"epoch":17,"w":420,"incarnation":1,"h":900,"screenshot":"docs/media/macos/record/02-notes-while-recording.png","scale":1}
 tap stop-recording
-  {"at":[210,206],"tapped":90,"delivery":"platform","target":"stop-recording","carrier":"macos","mode":"agent","epoch":18,"incarnation":1,"clock":11000}
+  {"tapped":90,"delivery":"platform","at":[210,206],"target":"stop-recording","carrier":"macos","mode":"agent","epoch":18,"incarnation":1,"clock":11000}
 clock data
-  {"clock":11000,"settled":true,"incarnation":1,"epoch":23}
+  {"epoch":23,"clock":11000,"incarnation":1,"settled":true}
 clock settle
-  {"incarnation":1,"epoch":23,"settled":true,"clock":11000}
+  {"settled":true,"clock":11000,"epoch":23,"incarnation":1}
 state lib.0.status
   "recorded"
 screenshot docs/media/macos/record/03-saved-and-queued.png
-  {"h":900,"screenshot":"docs/media/macos/record/03-saved-and-queued.png","w":420,"clock":11000,"incarnation":1,"epoch":23,"scale":1}
+  {"h":900,"w":420,"screenshot":"docs/media/macos/record/03-saved-and-queued.png","clock":11000,"epoch":23,"incarnation":1,"scale":1}
 clock +3000
-  {"inflight":1,"incarnation":1,"clock":14000,"background":1,"epoch":28,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+  {"inflight":1,"background":1,"clock":14000,"incarnation":1,"epoch":28,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
 clock data
-  {"settled":true,"clock":14000,"incarnation":1,"epoch":30}
+  {"incarnation":1,"clock":14000,"settled":true,"epoch":30}
 state lib.0.status
   "transcribing"
 screenshot docs/media/macos/record/04-transcribing.png
-  {"epoch":30,"screenshot":"docs/media/macos/record/04-transcribing.png","h":900,"clock":14000,"w":420,"incarnation":1,"scale":1}
+  {"w":420,"epoch":30,"incarnation":1,"h":900,"screenshot":"docs/media/macos/record/04-transcribing.png","clock":14000,"scale":1}
 clock +2000
-  {"clock":16000,"background":1,"epoch":32,"inflight":1,"incarnation":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+  {"clock":16000,"incarnation":1,"background":1,"epoch":32,"inflight":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
 clock data
-  {"clock":16000,"settled":true,"epoch":34,"incarnation":1}
+  {"clock":16000,"incarnation":1,"settled":true,"epoch":34}
 state lib.0.status
   "summarizing"
 screenshot docs/media/macos/record/05-writing-notes.png
-  {"epoch":34,"h":900,"screenshot":"docs/media/macos/record/05-writing-notes.png","clock":16000,"w":420,"incarnation":1,"scale":1}
+  {"incarnation":1,"w":420,"clock":16000,"epoch":34,"h":900,"screenshot":"docs/media/macos/record/05-writing-notes.png","scale":1}
 clock +6000
-  {"clock":22000,"incarnation":1,"epoch":38}
+  {"epoch":38,"incarnation":1,"clock":22000}
 clock data
-  {"epoch":38,"clock":22000,"settled":true,"incarnation":1}
+  {"settled":true,"clock":22000,"incarnation":1,"epoch":38}
 state detail.status
   "done"
 state detail.title
@@ -63,4 +63,4 @@ state detail.title
 state detail.userNotes
   "- Ask about the login fix"
 screenshot docs/media/macos/record/06-notes-ready.png
-  {"h":900,"clock":22000,"w":420,"screenshot":"docs/media/macos/record/06-notes-ready.png","epoch":38,"incarnation":1,"scale":1}
+  {"incarnation":1,"epoch":38,"clock":22000,"h":900,"w":420,"screenshot":"docs/media/macos/record/06-notes-ready.png","scale":1}
