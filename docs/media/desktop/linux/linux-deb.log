@@ -1,0 +1,83 @@
+
+== the package's declared fields
+Package: alona
+Version: 0.1.0
+Architecture: arm64
+Depends: libgtk-3-0, libnotify4, libnss3, libxss1, libxtst6, xdg-utils, libatspi2.0-0, libuuid1, libsecret-1-0, libasound2t64 | libasound2, libgbm1, libdrm2
+Recommends: libappindicator3-1
+
+== apt installs the package and its dependencies
+Setting up humanity-icon-theme (0.6.16) ...
+Setting up ubuntu-mono (24.04-0ubuntu1) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.9) ...
+Status: install ok installed
+Version: 0.1.0
+-rwxrwxrwx root /opt/Alona/alona
+-rwxr-xr-x root /opt/Alona/chrome-sandbox
+[Desktop Entry]
+Name=Alona
+Exec=/opt/Alona/alona %U
+Terminal=false
+Type=Application
+Icon=alona
+StartupWMClass=Alona
+Comment=A private meeting assistant. Recordings, transcripts, and notes stay on this computer.
+Categories=Office;
+ldd: every library of /opt/Alona/alona resolves
+
+== test tools: a virtual display, a window lister, Bun
+debconf: delaying package configuration, since apt-utils is not installed
+
+== the menu entry's command opens the Alona window
+Exec: /opt/Alona/alona
+window titled Alona: yes
+
+== the flows, driven by tools/e2e-desktop.mjs
+[22:50:31] page {"url":"alona://app/","crossOriginIsolated":true,"sharedArrayBuffer":true,"webdriver":false,"userAgent":"Mozilla/5.0 (X11; Linux aarch64) AppleWebKit/537.36 (KHTML, like Gecko) Alona/0.1.0 Chrome/156.0.8078.75 Electron/45.2.1 Safari/537.36","webgpuAdapter":{"vendor":"google","architecture":"swiftshader","description":"","shaderF16":false}}
+[22:50:31] probe {"host":"web","memoryGB":8,"cores":12,"gpu":false,"gpuMaxBufferGB":0,"storageFreeGB":1000.368128,"formFactor":"desktop","appleSilicon":false,"iosBrowser":false,"description":"Chrome on Linux","demo":true,"demoReason":"This browser has no WebGPU, so Alona cannot run its models here."}
+[22:50:31] downloading models
+[22:50:33] download {"seconds":2.424}
+[22:50:33] recording 8 s from the fake microphone
+[22:50:44] recording {"found":true,"path":"app:/data/meetings/m1794696633604/audio.m4a","bytes":132953}
+{
+  "error": "",
+  "engine": "demo",
+  "page": {
+    "url": "alona://app/",
+    "crossOriginIsolated": true,
+    "sharedArrayBuffer": true,
+    "webdriver": false,
+    "userAgent": "Mozilla/5.0 (X11; Linux aarch64) AppleWebKit/537.36 (KHTML, like Gecko) Alona/0.1.0 Chrome/156.0.8078.75 Electron/45.2.1 Safari/537.36",
+    "webgpuAdapter": {
+      "vendor": "google",
+      "architecture": "swiftshader",
+      "description": "",
+      "shaderF16": false
+    }
+  },
+  "download": {
+    "seconds": 2.424
+  },
+  "recording": {
+    "found": true,
+    "path": "app:/data/meetings/m1794696633604/audio.m4a",
+    "bytes": 132953
+  },
+  "stopToNotesSeconds": 8.374,
+  "peakMemoryMB": 734,
+  "networkOrigins": [],
+  "mainProcess": [],
+  "checks": {
+    "noError": true,
+    "oneWindowTitledAlona": true,
+    "crossOriginIsolated": true,
+    "firstLaunchShowsDeviceCheck": true,
+    "appRecordedTheMicrophone": true,
+    "notesOnScreenHaveFiveHeadings": true,
+    "werAtMost15": "not applicable: demo engine",
+    "notesHaveFiveHeadings": "not applicable: demo engine",
+    "otherOriginsRefused": true,
+    "networkOnlyAppAndModelHosts": true
+  }
+}
+e2e-desktop: pass
