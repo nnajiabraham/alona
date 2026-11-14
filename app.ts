@@ -7,7 +7,7 @@ import { meetingStore, type Files } from './core/store';
 const DIR = 'app:/data';
 export const grants = `device.microphone purpose.microphone\nfs.read ${DIR}\nfs.write ${DIR}`;
 
-let current: Service | null = null;
+let current: Promise<Service> | null = null;
 
 const DEMO_SHELF = `${DIR}/demo-models.json`;
 
@@ -24,35 +24,40 @@ const demoShelf = (files: Files) => ({
 });
 
 /**
- * One service for the life of the module, so the pipeline's "a tick is
- * already running" guard and the demo engine's jobs survive between calls.
- * A host without an inference module gets the demo engine.
+ * A host's engine may answer its probe with `demo: true` to say it cannot run
+ * models where it is, as the web engine does under browser automation. The
+ * app then uses the demo engine and says so on screen.
  */
-function app(storage: Storage, native: NativeModule | null | undefined): Service {
-  if (current) return current;
-  const real = native?.available === true;
-  const engine = real
-    ? engineOver((request: EngineRequest) => native.later({ ...request }))
-    : simEngine({ polls: 3, shelf: demoShelf(storage.fs) });
-  current = service(engine, meetingStore(storage.fs), !real);
-  return current;
+async function build(storage: Storage, native: NativeModule | null | undefined): Promise<Service> {
+  const store = meetingStore(storage.fs);
+  const demo = (): Service => service(simEngine({ polls: 3, shelf: demoShelf(storage.fs) }), store, true);
+  if (native?.available !== true) return demo();
+  const probe = await native.later({ op: 'probe' });
+  if (probe.demo === true) return demo();
+  return service(engineOver((request: EngineRequest) => native.later({ ...request })), store, false);
 }
 
+/**
+ * One service for the life of the module, so the pipeline's "a tick is
+ * already running" guard and the demo engine's jobs survive between calls.
+ */
+const app = (storage: Storage, native: NativeModule | null | undefined): Promise<Service> =>
+  (current ??= build(storage, native));
+
 const sources: Sources = {
-  loadSetup: ([picked], _store, storage, native) => app(storage, native).setup(picked),
-  downloadTier: ([tier], _store, storage, native) => app(storage, native).downloadTier(tier),
-  removeTierModels: ([tier], _store, storage, native) => app(storage, native).removeTier(tier),
-  tickPipeline: ([picked], _store, storage, native) => app(storage, native).tick(picked),
-  loadMeetings: (_args, _store, storage, native) => app(storage, native).rows(),
-  loadMeeting: ([id], _store, storage, native) => app(storage, native).detail(id),
-  createMeeting: ([id, title, audio, durationMs, notes, createdAt, tier], _store, storage, native) =>
-    app(storage, native).create(id, title, audio, durationMs, notes, createdAt, tier),
-  saveNotes: ([id, text], _store, storage, native) => app(storage, native).saveNotes(id, text),
-  renameMeeting: ([id, title], _store, storage, native) => app(storage, native).rename(id, title),
-  deleteMeeting: ([id], _store, storage, native) => app(storage, native).remove(id),
-  retryMeeting: ([id], _store, storage, native) => app(storage, native).retry(id),
-  regenerateNotes: ([id], _store, storage, native) => app(storage, native).regenerate(id),
-  retranscribeMeeting: ([id], _store, storage, native) => app(storage, native).retranscribe(id),
+  loadSetup: async ([picked], _store, storage, native) => (await app(storage, native)).setup(picked),
+  downloadTier: async ([tier], _store, storage, native) => (await app(storage, native)).downloadTier(tier),
+  removeTierModels: async ([tier], _store, storage, native) => (await app(storage, native)).removeTier(tier),
+  tickPipeline: async ([picked], _store, storage, native) => (await app(storage, native)).tick(picked),
+  loadMeetings: async (_args, _store, storage, native) => (await app(storage, native)).rows(),
+  loadMeeting: async ([id], _store, storage, native) => (await app(storage, native)).detail(id),
+  createMeeting: async ([id, title, audio, durationMs, notes, createdAt, tier], _store, storage, native) => (await app(storage, native)).create(id, title, audio, durationMs, notes, createdAt, tier),
+  saveNotes: async ([id, text], _store, storage, native) => (await app(storage, native)).saveNotes(id, text),
+  renameMeeting: async ([id, title], _store, storage, native) => (await app(storage, native)).rename(id, title),
+  deleteMeeting: async ([id], _store, storage, native) => (await app(storage, native)).remove(id),
+  retryMeeting: async ([id], _store, storage, native) => (await app(storage, native)).retry(id),
+  regenerateNotes: async ([id], _store, storage, native) => (await app(storage, native)).regenerate(id),
+  retranscribeMeeting: async ([id], _store, storage, native) => (await app(storage, native)).retranscribe(id),
 };
 
 export const answer: Answer = (source, args, store, storage, native) => sources[source](args, store, storage, native);
