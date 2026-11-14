@@ -28,6 +28,16 @@ const paths = (id: string) => ({
   aiNotes: `${meetingDir(id)}/ai-notes.md`,
 });
 
+const OWNED = new Set(Object.values(paths('x')).map((p) => p.slice(p.lastIndexOf('/') + 1)));
+
+/** A file an app adds to a meeting's folder: a plain name the store does not own. */
+function extraPath(id: string, name: string): string {
+  if (!/^[a-z0-9][a-z0-9.-]*$/.test(name) || OWNED.has(name) || name.startsWith('audio')) {
+    throw new Error(`"${name}" is not a file an app may add to a meeting.`);
+  }
+  return `${meetingDir(id)}/${name}`;
+}
+
 interface Identity {
   id: string;
   title: string;
@@ -219,6 +229,9 @@ export function meetingStore(files: Files) {
     writeUserNotes: (id: string, text: string): Promise<void> => writeText(files, paths(id).userNotes, text),
     readAiNotes: async (id: string): Promise<string> => (await readText(files, paths(id).aiNotes)) ?? '',
     writeAiNotes: (id: string, text: string): Promise<void> => writeText(files, paths(id).aiNotes, text),
+    /** An app's own file in the meeting's folder, `''` when it has none. */
+    readExtra: async (id: string, name: string): Promise<string> => (await readText(files, extraPath(id, name))) ?? '',
+    writeExtra: (id: string, name: string, text: string): Promise<void> => writeText(files, extraPath(id, name), text),
     readTranscript: async (id: string): Promise<Segment[]> => parseSegments(parseJson(await readText(files, paths(id).transcript))),
     writeTranscript: (id: string, segments: Segment[]): Promise<void> => writeText(files, paths(id).transcript, JSON.stringify(segments)),
   };

@@ -50,6 +50,10 @@ export interface SimOptions {
   /** Job ids containing this text fail. */
   failJobsContaining?: string;
   device?: DeviceFacts;
+  /** The transcript every transcription returns. `SIM_SEGMENTS` when absent. */
+  segments?: Segment[];
+  /** The reply to a generate request, from its prompt. `SIM_NOTES` when absent. */
+  notes?: (prompt: string) => string;
   /** Where the set of "downloaded" models is kept across launches. In memory when absent. */
   shelf?: { load(): Promise<string[]>; save(ids: string[]): Promise<void> };
 }
@@ -58,6 +62,7 @@ interface SimJob {
   kind: 'download' | 'transcribe' | 'generate';
   polled: number;
   artifact: string;
+  prompt: string;
   cancelled: boolean;
 }
 
@@ -91,14 +96,14 @@ export function simEngine(options: SimOptions = {}): Engine & { forget(): void; 
       ...base,
       state: 'done',
       progress: 1,
-      text: job.kind === 'generate' ? SIM_NOTES : '',
-      segments: job.kind === 'transcribe' ? SIM_SEGMENTS : [],
+      text: job.kind === 'generate' ? (options.notes?.(job.prompt) ?? SIM_NOTES) : '',
+      segments: job.kind === 'transcribe' ? (options.segments ?? SIM_SEGMENTS) : [],
     };
   };
 
-  const start = (id: string, kind: SimJob['kind'], artifact: Artifact): JobView => {
+  const start = (id: string, kind: SimJob['kind'], artifact: Artifact, prompt = ''): JobView => {
     if (view(id).state === 'failed') jobs.delete(id);
-    if (!jobs.has(id)) jobs.set(id, { kind, polled: 0, artifact: artifact.id, cancelled: false });
+    if (!jobs.has(id)) jobs.set(id, { kind, polled: 0, artifact: artifact.id, prompt, cancelled: false });
     return view(id);
   };
 
@@ -114,7 +119,7 @@ export function simEngine(options: SimOptions = {}): Engine & { forget(): void; 
       await keep((ids) => ids.delete(artifact.id));
     },
     transcribe: async (job, _audio, artifact) => start(job, 'transcribe', artifact),
-    generate: async (job, artifact) => start(job, 'generate', artifact),
+    generate: async (job, artifact, prompt) => start(job, 'generate', artifact, prompt),
     job: async (id) => {
       const job = jobs.get(id);
       if (job) job.polled += 1;
