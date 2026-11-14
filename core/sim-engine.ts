@@ -64,9 +64,10 @@ interface SimJob {
  * inference module. It keeps jobs in memory, so a fresh instance answers
  * `unknown` for every id, as a real engine does after a restart.
  */
-export function simEngine(options: SimOptions = {}): Engine & { forget(): void } {
+export function simEngine(options: SimOptions = {}): Engine & { forget(): void; unloadCount(): number } {
   const polls = options.polls ?? 2;
   const jobs = new Map<string, SimJob>();
+  let unloads = 0;
   let shelf: Set<string> | null = null;
   const installed = async (): Promise<Set<string>> => (shelf ??= new Set(await options.shelf?.load()));
   const keep = async (change: (ids: Set<string>) => void): Promise<void> => {
@@ -122,7 +123,8 @@ export function simEngine(options: SimOptions = {}): Engine & { forget(): void }
       const job = jobs.get(id);
       if (job) job.cancelled = true;
     },
-    unload: async () => {},
+    unload: async () => void (unloads += 1),
     forget: () => jobs.clear(),
+    unloadCount: () => unloads,
   };
 }

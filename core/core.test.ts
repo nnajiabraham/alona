@@ -277,7 +277,8 @@ describe('model downloads', () => {
         for (const k of [...dirs.keys()]) if (k.startsWith(`${path}/`)) dirs.delete(k);
       },
     };
-    return service(simEngine(options), meetingStore(files), true);
+    const engine = simEngine(options);
+    return Object.assign(service(engine, meetingStore(files), true), { engine });
   }
 
   test('a tier is not installed until its download finishes, then stays installed', async () => {
@@ -323,6 +324,21 @@ describe('model downloads', () => {
     expect(detail.title).toBe('Mobile app launch planning');
     expect(detail.userNotes).toBe('my note');
     expect(detail.segments[1]).toEqual({ id: '1', at: '0:07', text: SIM_SEGMENTS[1].text });
+  });
+
+  test('the model is released when the last queued meeting finishes, not between meetings', async () => {
+    const s = app({ polls: 1 });
+    await s.downloadTier('balanced');
+    await s.setup('auto');
+    await s.create('m1', 'One', 'app:/data/meetings/m1/audio.wav', 5000, '', 1000, 'balanced');
+    await s.create('m2', 'Two', 'app:/data/meetings/m2/audio.wav', 5000, '', 2000, 'balanced');
+    let ticks = 0;
+    while ((await s.tick('auto')).working && ticks++ < 40) {
+      const done = (await s.rows()).filter((r) => r.status === 'done').length;
+      if (done < 2) expect(s.engine.unloadCount()).toBe(0);
+    }
+    expect((await s.rows()).map((r) => r.status)).toEqual(['done', 'done']);
+    expect(s.engine.unloadCount()).toBe(1);
   });
 
   test('deleting a meeting removes it from the library', async () => {

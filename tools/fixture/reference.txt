@@ -1,0 +1,9 @@
+Thanks for joining everyone. Today we need to decide the launch date for the mobile app and review the open bugs.
+The Android build is stable. We fixed the crash on the settings screen yesterday, and battery usage is down by twenty percent.
+Good. What about the login issue on older phones?
+That one is still open. I need two more days to finish the fix and test it.
+From the design side, the onboarding screens are final. I will send the updated icons to the team by Thursday.
+Then let us agree on the plan. We launch on the fifteenth of March, as long as the login fix lands by Friday.
+Agreed. I will also prepare the release notes and the store screenshots.
+I will own the login fix, and I will run the full regression suite on Friday morning.
+Great. To summarize, the launch date is March fifteenth, Daniel owns the login fix, and Karen owns the icons, the release notes, and the screenshots. Thanks everyone.

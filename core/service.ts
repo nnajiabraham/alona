@@ -231,8 +231,9 @@ export function service(engine: Engine, store: MeetingStore, demo: boolean) {
 
     /**
      * Advances the oldest unfinished meeting by one step. Meetings run one at
-     * a time so only one model is in memory. A tick that arrives while one is
-     * still running does nothing.
+     * a time so only one model is in memory, and the model is released when
+     * the last meeting finishes. A tick that arrives while one is still
+     * running does nothing.
      */
     async tick(picked: string): Promise<{ working: boolean }> {
       if (ticking) return { working: true };
@@ -258,7 +259,9 @@ export function service(engine: Engine, store: MeetingStore, demo: boolean) {
         };
         const result = await advance(meeting, io);
         await store.saveProgress({ ...result.meeting, progress: result.progress });
-        return { working: true };
+        const more = waiting.length > 1 || isWorking(result.meeting);
+        if (!more) await engine.unload();
+        return { working: more };
       } finally {
         ticking = false;
       }
