@@ -12,16 +12,18 @@ tap open-settings
   {"tapped":43,"bar":"top","target":"open-settings","delivery":"platform","carrier":"android","mode":"agent","epoch":8,"incarnation":1,"clock":6000}
 clock data
   {"clock":6000,"settled":true,"epoch":8,"incarnation":1}
+clock settle
+  {"clock":6300,"settled":true,"epoch":8,"incarnation":1}
 state picked
   "auto"
 state setup.active
   "balanced"
 screenshot docs/media/android/settings/01-models.png
-  {"screenshot":"docs/media/android/settings/01-models.png","device":true,"epoch":8,"incarnation":1,"clock":6000}
+  {"screenshot":"docs/media/android/settings/01-models.png","device":true,"epoch":8,"incarnation":1,"clock":6300}
 tap pick-lite
-  {"tapped":101,"at":[235.71,330.5],"target":"pick-lite","delivery":"platform","carrier":"android","mode":"agent","epoch":9,"incarnation":1,"clock":6000}
+  {"tapped":101,"at":[205.71,330.5],"target":"pick-lite","delivery":"platform","carrier":"android","mode":"agent","epoch":9,"incarnation":1,"clock":6300}
 clock data
-  {"clock":6000,"settled":true,"epoch":9,"incarnation":1}
+  {"clock":6300,"settled":true,"epoch":9,"incarnation":1}
 state picked
   "lite"
 state setup.active
@@ -29,36 +31,36 @@ state setup.active
 state setup.activeInstalled
   false
 screenshot docs/media/android/settings/02-lite-picked.png
-  {"screenshot":"docs/media/android/settings/02-lite-picked.png","device":true,"epoch":9,"incarnation":1,"clock":6000}
+  {"screenshot":"docs/media/android/settings/02-lite-picked.png","device":true,"epoch":9,"incarnation":1,"clock":6300}
 tap download-lite
-  {"tapped":108,"at":[364.43,412],"target":"download-lite","delivery":"platform","carrier":"android","mode":"agent","epoch":10,"incarnation":1,"clock":6000}
+  {"tapped":108,"at":[334.43,412],"target":"download-lite","delivery":"platform","carrier":"android","mode":"agent","epoch":10,"incarnation":1,"clock":6300}
 clock data
-  {"clock":6000,"settled":true,"epoch":10,"incarnation":1}
+  {"clock":6300,"settled":true,"epoch":10,"incarnation":1}
 clock +6000
-  {"clock":12000,"epoch":15,"incarnation":1}
+  {"clock":12300,"epoch":15,"incarnation":1}
 clock data
-  {"clock":12000,"settled":true,"epoch":15,"incarnation":1}
+  {"clock":12300,"settled":true,"epoch":15,"incarnation":1}
 state setup.activeInstalled
   true
 screenshot docs/media/android/settings/03-lite-downloaded.png
-  {"screenshot":"docs/media/android/settings/03-lite-downloaded.png","device":true,"epoch":15,"incarnation":1,"clock":12000}
+  {"screenshot":"docs/media/android/settings/03-lite-downloaded.png","device":true,"epoch":15,"incarnation":1,"clock":12300}
 tap remove-balanced
-  {"tapped":117,"at":[341.43,547],"target":"remove-balanced","delivery":"platform","carrier":"android","mode":"agent","epoch":16,"incarnation":1,"clock":12000}
+  {"tapped":117,"at":[341.43,547],"target":"remove-balanced","delivery":"platform","carrier":"android","mode":"agent","epoch":16,"incarnation":1,"clock":12300}
 clock data
-  {"clock":12000,"settled":true,"epoch":16,"incarnation":1}
+  {"clock":12300,"settled":true,"epoch":16,"incarnation":1}
 state setup.tiers.1.installed
   false
 screenshot docs/media/android/settings/04-balanced-removed.png
-  {"screenshot":"docs/media/android/settings/04-balanced-removed.png","device":true,"epoch":16,"incarnation":1,"clock":12000}
+  {"screenshot":"docs/media/android/settings/04-balanced-removed.png","device":true,"epoch":16,"incarnation":1,"clock":12300}
 tap tier-auto
-  {"tapped":96,"at":[205.71,256],"target":"tier-auto","delivery":"platform","carrier":"android","mode":"agent","epoch":17,"incarnation":1,"clock":12000}
+  {"tapped":96,"at":[205.71,256],"target":"tier-auto","delivery":"platform","carrier":"android","mode":"agent","epoch":17,"incarnation":1,"clock":12300}
 clock data
-  {"clock":12000,"settled":true,"epoch":17,"incarnation":1}
+  {"clock":12300,"settled":true,"epoch":17,"incarnation":1}
 state setup.active
   "balanced"
 back
-  {"back":"route","delivery":"platform","carrier":"android","epoch":18,"incarnation":1,"clock":12000}
+  {"back":"route","delivery":"platform","carrier":"android","epoch":18,"incarnation":1,"clock":12300}
 clock data
-  {"clock":12000,"settled":true,"epoch":18,"incarnation":1}
+  {"clock":12300,"settled":true,"epoch":18,"incarnation":1}
 screenshot docs/media/android/settings/05-needs-models-again.png
-  {"screenshot":"docs/media/android/settings/05-needs-models-again.png","device":true,"epoch":18,"incarnation":1,"clock":12000}
+  {"screenshot":"docs/media/android/settings/05-needs-models-again.png","device":true,"epoch":18,"incarnation":1,"clock":12300}

@@ -37,4 +37,10 @@ for entry in "${frameworks[@]}"; do
   unzip -q "$work/$name.zip" -d "$work/$name"
   mv "$work/$name/$inner" "$dest/$name.xcframework"
 done
+
+# Some archives carry symlinks that point at nothing or at themselves. The linker ignores them, but Exact's
+# freshness check cannot read them and then refuses to drive any host's build.
+find "$dest" -type l | while read -r link; do
+  [ -e "$link" ] || rm "$link"
+done
 echo "Apple frameworks are in $dest"

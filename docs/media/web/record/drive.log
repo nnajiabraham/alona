@@ -14,8 +14,8 @@ clock data
   {"clock":6000,"settled":true}
 clock settle
   {"clock":6400,"settled":true}
-state recorderId
-  "recorder-1"
+state rec.state
+  "recording"
 screenshot docs/media/web/record/01-recording-started.png
   {"clock":6400,"epoch":43,"incarnation":1,"screenshot":"docs/media/web/record/01-recording-started.png","w":1100,"h":760}
 type record-title Launch sync

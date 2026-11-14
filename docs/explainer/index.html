@@ -394,7 +394,7 @@ bun exact.mjs android      # build and install on the emulator or phone in ANDRO
     ['web-phone', 'Web, phone size', ''],
     ['web-real', 'Web, real models', 'Recorded in Chrome with real models. The spoken fixture was played as the microphone.'],
     ['macos', 'macOS', ''],
-    ['macos-real', 'macOS, real models', ''],
+    ['macos-real', 'macOS, real models', 'The notes screen after the real-model check, one capture per tier.'],
     ['android', 'Android', 'Android runs the demo engine: the transcript and notes shown are samples.'],
   ];
   var DEMO = 'These captures use the demo engine, so the transcript and notes are samples. The agent owns the clock, so each video is one frame per step.';
@@ -405,6 +405,7 @@ bun exact.mjs android      # build and install on the emulator or phone in ANDRO
     ['library', 'Library', ['Home lists meetings, newest first, each with its state.', 'Light and dark follow the system.', 'Delete asks first, then removes the recording, transcript, and notes.']],
     ['settings', 'Settings and models', ['See what this device is and what Alona recommends.', 'Pick a lighter tier, download it, or remove one to free space.', 'A tier the device cannot run is disabled and says why.']],
     ['real-time', 'Real-time capture', ['Screen recordings of the installed app, driven by real taps.']],
+    ['real-run', 'A run on real models', ['The built app, real models, and the spoken fixture: first launch, download, record, transcript, notes.']],
   ];
   var el = function (tag, attrs, children) {
     var node = document.createElement(tag);
@@ -463,7 +464,7 @@ bun exact.mjs android      # build and install on the emulator or phone in ANDRO
     if (c.wer) rows.push(['Word error rate', (c.wer.rate * 100).toFixed(1) + '% (' + c.wer.errors + ' of ' + c.wer.words + ' words)']);
     if (c.title) rows.push(['Title the model proposed', c.title]);
     (c.runs || []).forEach(function (r) {
-      rows.push(['Run ' + r.cycle, 'transcribe ' + fmt(r.transcribeSeconds, ' s') + ', notes ' + fmt(r.notesSeconds, ' s') + ', total ' + fmt(r.totalSeconds, ' s') + ', peak memory ' + fmt(r.peakRssMB, ' MB') + ', idle after ' + fmt(r.idleRssMB, ' MB')]);
+      rows.push(['Run ' + r.cycle, 'transcribe ' + fmt(r.transcribeSeconds, ' s') + ', notes ' + fmt(r.notesSeconds, ' s') + ', total ' + fmt(r.totalSeconds, ' s') + ', peak memory ' + fmt(r.peakMB, ' MB') + ', idle after ' + fmt(r.idleMB, ' MB') + (r.detail ? '. ' + r.detail : '')]);
     });
     Object.keys(c.metrics || {}).forEach(function (k) { rows.push([k, String(c.metrics[k])]); });
     (c.failures || []).forEach(function (f) { rows.push(['Failed', f]); });

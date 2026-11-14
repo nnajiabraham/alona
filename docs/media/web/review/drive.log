@@ -35,13 +35,13 @@ state detail.status
 screenshot docs/media/web/review/01-ai-notes.png
   {"clock":23800,"epoch":102,"incarnation":1,"screenshot":"docs/media/web/review/01-ai-notes.png","w":1100,"h":760}
 tap pane-transcript
-  {"at":[440.3203125,216],"tapped":105,"target":"pane-transcript","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":105,"incarnation":1}
+  {"at":[773.6796875,216],"tapped":105,"target":"pane-transcript","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":105,"incarnation":1}
 state pane
   "transcript"
 screenshot docs/media/web/review/02-transcript.png
   {"clock":23800,"epoch":105,"incarnation":1,"screenshot":"docs/media/web/review/02-transcript.png","w":1100,"h":760}
 tap pane-mine
-  {"at":[342.6328125,216],"tapped":103,"target":"pane-mine","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":108,"incarnation":1}
+  {"at":[542.6484375,216],"tapped":103,"target":"pane-mine","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":108,"incarnation":1}
 type my-notes ## Follow up
   {"at":[550,380],"typed":131,"target":"my-notes","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":109,"incarnation":1}
 clock +1000
@@ -65,7 +65,7 @@ state detail.title
 screenshot docs/media/web/review/04-renamed.png
   {"clock":24800,"epoch":119,"incarnation":1,"screenshot":"docs/media/web/review/04-renamed.png","w":1100,"h":760}
 tap pane-ai
-  {"at":[252.296875,216],"tapped":101,"target":"pane-ai","delivery":"platform","carrier":"web","mode":"agent","clock":24800,"epoch":122,"incarnation":1}
+  {"at":[318.96875,216],"tapped":101,"target":"pane-ai","delivery":"platform","carrier":"web","mode":"agent","clock":24800,"epoch":122,"incarnation":1}
 tap regenerate
   {"at":[550,726],"tapped":136,"target":"regenerate","scrolled":{"from":[550,779],"to":[550,726]},"delivery":"platform","carrier":"web","mode":"agent","clock":24800,"epoch":126,"incarnation":1}
 clock data

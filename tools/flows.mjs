@@ -67,14 +67,14 @@ const FLOWS = {
   ],
   library: [
     ...RECORDED,
-    'back', 'clock data', check('lib.length', 1), shot('meetings'),
+    'back', 'clock data', 'clock settle', check('lib.length', 1), shot('meetings'),
     'prefer prefers-color-scheme dark', shot('meetings-dark'), 'prefer prefers-color-scheme light',
-    'tap "Launch sync"', 'clock data', 'tap delete-meeting', 'clock settle', shot('confirm-delete'),
+    'tap "Launch sync"', 'clock data', 'clock settle', 'tap delete-meeting', 'clock settle', shot('confirm-delete'),
     'tap delete-confirm', 'clock data', 'clock settle', check('lib.length', 0), shot('deleted'),
   ],
   settings: [
     ...READY,
-    'tap open-settings', 'clock data', check('picked', 'auto'), check('setup.active', 'balanced'), shot('models'),
+    'tap open-settings', 'clock data', 'clock settle', check('picked', 'auto'), check('setup.active', 'balanced'), shot('models'),
     'tap pick-lite', 'clock data', check('picked', 'lite'), check('setup.active', 'lite'),
     check('setup.activeInstalled', false), shot('lite-picked'),
     'tap download-lite', 'clock data', 'clock +6000', 'clock data', check('setup.activeInstalled', true), shot('lite-downloaded'),
@@ -119,7 +119,10 @@ function run(targetName, flowName) {
   writeFileSync(join(dir, 'drive.log'), `${log.replaceAll(`${ROOT}/`, '')}\n`);
 
   const failures = [];
-  if (result.status !== 0) failures.push(`the drive exited ${result.status}: ${result.stderr.trim().split('\n').slice(-3).join(' | ')}`);
+  if (result.status !== 0) {
+    const reason = result.stderr.split('\n').filter((l) => l.trim() !== '' && !l.startsWith('    at ') && !l.startsWith('exact:') && !l.startsWith('app:'));
+    failures.push(`the drive exited ${result.status}: ${reason.slice(-2).join(' | ').slice(0, 400)}`);
+  }
   for (const c of checks) {
     const raw = replies[c.at];
     let actual;
