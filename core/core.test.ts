@@ -12,6 +12,7 @@ import golden from './fixtures/alona-notes.golden.json';
 import { planCases, rawReplies } from './fixtures/golden-inputs';
 import type { NotesProfile } from './notes';
 import { memoryFiles } from './fixtures/memory-files';
+import { hostService } from './host';
 
 const ALL = ['lite', 'balanced', 'quality'] as const;
 const device = (over: Partial<DeviceFacts>): DeviceFacts => ({ ...SIM_DEVICE, ...over });
@@ -524,5 +525,31 @@ describe('a service with its own note format', () => {
     expect(() => store.writeExtra('a', '../b/notes.md', 'x')).toThrow('not a file an app may add');
     await store.remove('a');
     expect(files.paths()).toEqual([]);
+  });
+});
+
+describe('choosing the engine at launch', () => {
+  test('without a native module, the demo engine answers and says why', async () => {
+    const { service: s } = await hostService(memoryFiles(), null, { sampleLine: 'Samples.' });
+    const setup = await s.setup('auto');
+    expect([setup.demo, setup.demoNote]).toEqual([true, 'This build has no on-device models. Samples.']);
+  });
+
+  test("Android's recording-only module fails the probe, so the demo engine runs as a phone", async () => {
+    const native = { available: true, later: async () => ({ error: 'NotSupportedError' }) };
+    const setup = await (await hostService(memoryFiles(), native)).service.setup('auto');
+    expect(setup.demo).toBe(true);
+    expect(setup.demoNote).toStartWith('The Android app has no on-device models.');
+  });
+
+  test('a native engine that answers its probe is used, with no demo note', async () => {
+    const replies: Record<string, unknown> = {
+      probe: { ...SIM_DEVICE, host: 'macos', memoryGB: 32, appleSilicon: true },
+      installed: { ids: [] },
+      job: { id: 'j', state: 'unknown' },
+    };
+    const native = { available: true, later: async (r: Record<string, unknown>) => replies[String(r.op)] ?? {} };
+    const setup = await (await hostService(memoryFiles(), native)).service.setup('auto');
+    expect([setup.demo, setup.demoNote]).toEqual([false, '']);
   });
 });
