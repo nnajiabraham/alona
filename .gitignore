@@ -56,5 +56,4 @@ coverage/
 /modules/web/ort/
 
 # Desktop shell, built by tools/build-desktop.mjs
-/desktop/site/
 /desktop/out/

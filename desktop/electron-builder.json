@@ -1,0 +1,51 @@
+{
+  "appId": "com.alona.app",
+  "productName": "Alona",
+  "copyright": "Alona",
+  "directories": {
+    "output": "out",
+    "buildResources": "resources"
+  },
+  "files": [
+    "main.js",
+    "package.json",
+    "resources/icon.png",
+    { "from": "../dist/desktop-site", "to": "site", "filter": ["**/*", "!.exact/**"] }
+  ],
+  "asar": true,
+  "publish": null,
+  "electronFuses": {
+    "runAsNode": false,
+    "enableNodeOptionsEnvironmentVariable": false,
+    "enableCookieEncryption": true,
+    "onlyLoadAppFromAsar": true,
+    "loadBrowserProcessSpecificV8Snapshot": false,
+    "grantFileProtocolExtraPrivileges": false
+  },
+  "linux": {
+    "target": [{ "target": "deb", "arch": ["x64", "arm64"] }],
+    "executableName": "alona",
+    "icon": "resources/icon.png",
+    "category": "Office",
+    "synopsis": "Private meeting notes, made on this computer",
+    "maintainer": "Alona <alona@localhost>",
+    "desktop": {
+      "entry": {
+        "Name": "Alona",
+        "Comment": "Private meeting notes, made on this computer",
+        "StartupWMClass": "Alona"
+      }
+    }
+  },
+  "win": {
+    "target": [{ "target": "nsis", "arch": ["x64"] }],
+    "icon": "resources/icon.png",
+    "executableName": "Alona"
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": false,
+    "allowToChangeInstallationDirectory": true,
+    "artifactName": "Alona-Setup-${version}-${arch}.${ext}"
+  }
+}

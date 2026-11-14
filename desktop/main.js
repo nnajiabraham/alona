@@ -1,4 +1,5 @@
-// Alona's desktop shell: one window around the web build in ./site.
+// Alona's desktop shell: one window around the web build, which
+// tools/build-desktop.mjs writes to dist/desktop-site and packages as ./site.
 //
 // The site is served from alona://app, a standard and secure scheme, so
 // IndexedDB, the Cache API, module Workers, and WebGPU behave as on https.
@@ -11,7 +12,7 @@ import { extname, join, normalize, sep } from 'node:path';
 
 const SCHEME = 'alona';
 const ORIGIN = `${SCHEME}://app`;
-const SITE = join(app.getAppPath(), 'site');
+const SITE = app.isPackaged ? join(app.getAppPath(), 'site') : join(app.getAppPath(), '..', 'dist', 'desktop-site');
 
 const ISOLATION = {
   'Cross-Origin-Opener-Policy': 'same-origin',

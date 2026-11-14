@@ -1,6 +1,7 @@
 {
-  "name": "alona-desktop",
+  "name": "alona",
   "productName": "Alona",
+  "desktopName": "alona.desktop",
   "version": "0.1.0",
   "description": "A private meeting assistant. Recordings, transcripts, and notes stay on this computer.",
   "author": "Alona",
