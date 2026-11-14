@@ -179,7 +179,19 @@ export function finishNotes(raw: string): FinishedNotes {
   const found = labelled ?? heading;
   const title = found ? cleanTitle(found[1]) : '';
   const markdown = (found ? text.replace(found[0], '') : text).trim();
-  return { title, markdown: markdown === '' ? NO_SPEECH_NOTES : markdown };
+  return { title, markdown: markdown === '' ? NO_SPEECH_NOTES : withEverySection(markdown) };
+}
+
+const SECTIONS = ['Summary', 'Key points', 'Decisions', 'Action items', 'Open questions'] as const;
+
+/**
+ * Models often leave out a section that has nothing in it. The notes always
+ * show all five, so a missing one is added and says so.
+ */
+function withEverySection(markdown: string): string {
+  const has = (name: string): boolean => new RegExp(`^#{1,3}\\s*${name}\\s*$`, 'im').test(markdown);
+  const missing = SECTIONS.filter((name) => !has(name));
+  return [markdown, ...missing.map((name) => `## ${name}\n- None recorded.`)].join('\n\n');
 }
 
 /** A title the model wrote, or `''` when it only repeated the instruction it was given. */

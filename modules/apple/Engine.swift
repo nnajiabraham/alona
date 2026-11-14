@@ -155,7 +155,10 @@ final class Engine: ExactModule {
         #else
         let appleSilicon = false
         #endif
-        return ["host": host, "formFactor": formFactor, "appleSilicon": appleSilicon, "iosBrowser": false,
+        // A file named demo-engine in the data folder makes the app use its demo engine.
+        // tools/flows.mjs writes it so the flow captures need no models and take seconds.
+        let demo = FileManager.default.fileExists(atPath: context.data.appendingPathComponent("demo-engine").path)
+        return ["host": host, "formFactor": formFactor, "appleSilicon": appleSilicon, "iosBrowser": false, "demo": demo,
                 "memoryGB": Double(ProcessInfo.processInfo.physicalMemory) / 1_073_741_824,
                 "cores": ProcessInfo.processInfo.processorCount, "gpu": true, "gpuMaxBufferGB": 0,
                 "storageFreeGB": Double(free) / 1_000_000_000, "description": chip()]

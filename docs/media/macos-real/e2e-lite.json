@@ -1,0 +1,50 @@
+{
+  "host": "macos",
+  "tier": "lite",
+  "date": "2026-11-14T18:11:43.298Z",
+  "method": {
+    "audio": "tools/fixture/meeting-fixture.wav (53 s synthetic three-speaker meeting), copied over the recorded take",
+    "wer": "lowercase, punctuation stripped, word-level edit distance, no number normalization",
+    "timing": "wall time between agent replies polled once a second, so each figure is accurate to about one second",
+    "memory": "ps resident set size of the app process, sampled every 250 ms; idle is the lowest sample in the 3 s after a cycle"
+  },
+  "downloadSeconds": 6,
+  "wer": {
+    "errors": 7,
+    "words": 168,
+    "rate": 0.0417
+  },
+  "title": "Launch date and bug fixes for mobile app",
+  "transcript": "Thanks for joining everyone. Today we need to decide the launch date for the mobile app and review the open bugs. The Android build is stable. We fixed the crash on the settings screen yesterday, and battery usage is down by 20%. Good. What about the login issue on older phones? That one is still open. I need two more days to finish the fix and test it. From the design side, the onboarding screens of final, I will send the updated icons to the team by Thursday. Then let us agree on the plan. We launch on the 15th of March, as long as the login fix lands by Friday. Agreed, I will also prepare the release notes and the store screen shots. I will own the login fix, and I will run the full regression suite on Friday morning. Great. To summarize, the launch date is March 15, Daniel owns the login fix, and Karen owns the icons, the release notes, and the screenshots, thanks everyone.",
+  "notes": "## Summary\nToday's meeting decided the launch date is March 15th with a critical login fix scheduled by Friday. We also agreed on the design deliverables, including updated icons sent to the team by Thursday.\n## Key points\n- Android build confirmed stable.\n- Crash fixed on settings screen yesterday.\n- Login issue identified and needs two more days for full testing.\n- Design side: onboarding screens finalized with new icons.\n- Release plan: launch on March 15th, login fix by Friday.\n## Decisions\n- Launch date set to March 15th.\n- Login fix completed by Friday morning (Daniel's responsibility).\n- Release notes prepared for store screen shots.\n- Full regression suite will run on Friday morning.\n- Design team receives updated icons by Thursday.\n## Action items\n- Karen: Own login fix and run full regression suite on Friday morning.\n- Daniel: Own login fix, review design deliverables by Thursday.\n- Team: Review open bugs after March 15th launch.\n- Design side: Send updated icons to the team by Thursday.\n- Team: Prepare release notes and store screen shots for the app.\n## Open questions\n- When will Karen confirm the full regression suite is ready before Friday?\n- How long will Daniel spend on reviewing design deliverables by Thursday?",
+  "runs": [
+    {
+      "cycle": 1,
+      "transcribeSeconds": 4.409,
+      "notesSeconds": 6.296,
+      "totalSeconds": 10.705,
+      "peakRssMB": 994,
+      "idleRssMB": 395,
+      "finished": true
+    },
+    {
+      "cycle": 2,
+      "transcribeSeconds": 4.153,
+      "notesSeconds": 2.055,
+      "totalSeconds": 6.208,
+      "peakRssMB": 1415,
+      "idleRssMB": 481,
+      "finished": true
+    },
+    {
+      "cycle": 3,
+      "transcribeSeconds": 4.162,
+      "notesSeconds": 2.062,
+      "totalSeconds": 6.224,
+      "peakRssMB": 1416,
+      "idleRssMB": 482,
+      "finished": true
+    }
+  ],
+  "failures": []
+}
