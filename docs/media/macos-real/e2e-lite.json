@@ -1,12 +1,12 @@
 {
   "host": "macos",
   "tier": "lite",
-  "date": "2026-11-14T18:25:20.915Z",
+  "date": "2026-11-14T19:34:05.856Z",
   "method": {
     "audio": "tools/fixture/meeting-fixture.wav (53 s synthetic three-speaker meeting), copied over the recorded take",
     "wer": "lowercase, punctuation stripped, word-level edit distance, no number normalization",
     "timing": "wall time between agent replies polled once a second, so each figure is accurate to about one second",
-    "memory": "ps resident set size of the app process, sampled every 250 ms; idle is the lowest sample in the 3 s after a cycle"
+    "memory": "physical footprint of the app process (proc_pid_rusage), sampled every 250 ms; idle is the lowest sample in the 3 s that end a cycle, about a minute after the notes finish"
   },
   "downloadSeconds": 6,
   "wer": {
@@ -20,29 +20,47 @@
   "runs": [
     {
       "cycle": 1,
-      "transcribeSeconds": 4.215,
-      "notesSeconds": 2.053,
-      "totalSeconds": 6.268,
-      "peakRssMB": 989,
-      "idleRssMB": 379,
+      "transcribeSeconds": 4.179,
+      "notesSeconds": 2.048,
+      "totalSeconds": 6.227,
+      "peakMB": 547,
+      "idleMB": 84,
       "finished": true
     },
     {
       "cycle": 2,
-      "transcribeSeconds": 4.177,
-      "notesSeconds": 2.052,
-      "totalSeconds": 6.229,
-      "peakRssMB": 1405,
-      "idleRssMB": 472,
+      "transcribeSeconds": 4.147,
+      "notesSeconds": 2.054,
+      "totalSeconds": 6.201,
+      "peakMB": 619,
+      "idleMB": 81,
       "finished": true
     },
     {
       "cycle": 3,
-      "transcribeSeconds": 4.161,
-      "notesSeconds": 2.058,
-      "totalSeconds": 6.219,
-      "peakRssMB": 1412,
-      "idleRssMB": 493,
+      "transcribeSeconds": 4.144,
+      "notesSeconds": 2.047,
+      "totalSeconds": 6.191,
+      "peakMB": 526,
+      "idleMB": 81,
+      "finished": true
+    },
+    {
+      "cycle": 4,
+      "transcribeSeconds": 4.179,
+      "notesSeconds": 2.036,
+      "totalSeconds": 6.215,
+      "peakMB": 522,
+      "idleMB": 81,
+      "finished": true
+    },
+    {
+      "cycle": 5,
+      "transcribeSeconds": 4.149,
+      "notesSeconds": 2.049,
+      "totalSeconds": 6.198,
+      "peakMB": 521,
+      "idleMB": 81,
       "finished": true
     }
   ],
