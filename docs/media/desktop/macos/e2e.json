@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-14T22:51:00.309Z",
+  "date": "2026-11-14T22:56:54.837Z",
   "platform": "macos",
   "app": "desktop/ on desktop/node_modules/electron",
   "fixture": "tools/fixture/meeting-fixture.wav (53 s, 16 kHz mono)",
@@ -46,25 +46,25 @@
     "cores": 12,
     "gpu": true,
     "gpuMaxBufferGB": 3.9999999962747097,
-    "storageFreeGB": 196.618067968,
+    "storageFreeGB": 196.16323584,
     "formFactor": "desktop",
     "appleSilicon": false,
     "iosBrowser": false,
-    "description": "Chrome on macOS",
+    "description": "Alona on macOS",
     "demo": false,
     "demoReason": ""
   },
   "engine": "real",
   "download": {
-    "seconds": 9.472,
+    "seconds": 13.52,
     "bytes": 761444246
   },
   "recording": {
     "found": true,
-    "path": "app:/data/meetings/m1794696670467/audio.m4a",
-    "bytes": 911253
+    "path": "app:/data/meetings/m1794697029030/audio.m4a",
+    "bytes": 912320
   },
-  "stopToNotesSeconds": 29.434,
+  "stopToNotesSeconds": 29.458,
   "notesOnScreen": "Summary\n\nThe team discussed the mobile app launch date of March 15th to ensure the login fix lands by Friday, while also reviewing open bugs and updating design icons.\n\nKey points\n\n\n• The Android build is stable regarding the crash on the settings screen.\n\n• Battery usage will be down by 20%.\n\n• The design team will provide updated icons by Thursday.\n\n• The launch plans are decided by agreeing with Daniel on the login fix.\n\n\nDecisions\n\n\n• \"None recorded.\"\n\n\nAction items\n\n\n☐ Owner: Task assigned to the group regarding the release notes and screen shots.\n\n☐ Owner: Task assigned to Daniel regarding the login fix.\n\n☐ Owner: Task assigned to Karen regarding the updated icons and release notes.\n\n☐ Owner: Task assigned to the group regarding the March 15th launch plan.\n\n\nOpen questions\n\n\n• \"None recorded.\"",
   "missingHeadingsOnScreen": [],
   "transcript": "Thanks for joining everyone. Today we need to decide the launch date for the mobile app and review the open bugs. The Android build is stable. We fixed the crash on the settings screen yesterday, and battery usage is down by 20%. Good. What about the login issue on older phones? That one is still open. I need two more days to finish the fix and test it. From the design side, the onboarding screens of final, I will send the updated icons to the team by Thursday. Then let us agree on the plan. We launch on the 15th of March, as long as the login fix lands by Friday. Agreed. I will also prepare the release notes and the store screen shots. I will own the login fix and I will run the full regression suite on Friday morning. Great. To summarize the launch date is March 15. Daniel owns the login fix and Karen owns the icons, the release notes and the screen shots. Thanks, everyone.",
@@ -74,34 +74,32 @@
     "wer": 0.0536
   },
   "transcribe": {
-    "loadMs": 1222,
-    "transcribeMs": 3894,
-    "audioSeconds": 56.08,
+    "loadMs": 1167,
+    "transcribeMs": 3758,
+    "audioSeconds": 56.14,
     "windows": 4,
-    "decodeMs": 89
+    "decodeMs": 90
   },
   "generate": {
-    "loadMs": 1212,
+    "loadMs": 1206,
     "promptTokens": 475,
     "tokens": 206,
-    "ttftMs": 14630,
-    "generateMs": 19489,
-    "tokensPerSecond": 42.19
+    "ttftMs": 14503,
+    "generateMs": 19506,
+    "tokensPerSecond": 40.97
   },
   "notes": "Title: Meeting on App Launch, Bugs, and Release Plan\n## Summary\nThe team discussed the mobile app launch date of March 15th to ensure the login fix lands by Friday, while also reviewing open bugs and updating design icons.\n## Key points\n- The Android build is stable regarding the crash on the settings screen.\n- Battery usage will be down by 20%.\n- The design team will provide updated icons by Thursday.\n- The launch plans are decided by agreeing with Daniel on the login fix.\n## Decisions\n- \"None recorded.\"\n## Action items\n- [ ] Owner: Task assigned to the group regarding the release notes and screen shots.\n- [ ] Owner: Task assigned to Daniel regarding the login fix.\n- [ ] Owner: Task assigned to Karen regarding the updated icons and release notes.\n- [ ] Owner: Task assigned to the group regarding the March 15th launch plan.\n## Open questions\n- \"None recorded.\"",
   "missingHeadings": [],
-  "settingsDevice": "Chrome on macOS · 32 GB memory · GPU",
+  "settingsDevice": "Alona on macOS · 32 GB memory · GPU",
   "blockedLinks": {
     "windows": 1,
     "url": "alona://app/settings"
   },
-  "peakMemoryMB": 4575,
+  "peakMemoryMB": 4595,
   "console": [
     "warning: Electron Security Warning (Insecure Content-Security-Policy) This renderer process has either no Content Security\n  Policy set or a policy with \"unsafe-eval\" enabled. This exposes users of\n  this app to unnecessary security risks.\n\nFor more information and help, consult\nhttps://electronjs.org/docs/tutorial/security.\nThis warning will not show up\nonce the app is packaged."
   ],
-  "mainProcess": [
-    "[alona] denied permission persistent-storage [] for alona://app/"
-  ],
+  "mainProcess": [],
   "networkOrigins": [
     "https://huggingface.co",
     "https://us.aws.cdn.hf.co"

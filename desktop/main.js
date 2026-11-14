@@ -85,9 +85,9 @@ function allowedRequest(url) {
 function lockDown(ses) {
   ses.protocol.handle(SCHEME, serve);
   ses.setPermissionRequestHandler((contents, permission, callback, details) => {
-    const granted = permission === 'media'
-      && isApp(details.requestingUrl)
-      && (details.mediaTypes ?? []).every((type) => type === 'audio');
+    // Without persistent storage Chromium may evict the downloaded models and the meetings when the disk runs short.
+    const microphone = permission === 'media' && (details.mediaTypes ?? []).every((type) => type === 'audio');
+    const granted = isApp(details.requestingUrl) && (microphone || permission === 'persistent-storage');
     if (!granted) console.log(`[alona] denied permission ${permission} ${JSON.stringify(details.mediaTypes ?? [])} for ${details.requestingUrl}`);
     callback(granted);
   });
