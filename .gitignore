@@ -38,3 +38,12 @@ __pycache__/
 
 # Misc
 coverage/
+
+# Exact app
+/target/
+/dist/
+/dist.*
+/dist-windows/
+/app.contract.d.ts
+/.exact/
+/.env.local
