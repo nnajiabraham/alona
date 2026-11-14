@@ -29,7 +29,7 @@ export default defineTenant({
     welcomeTitle: 'Clinic Notes',
     welcomeBody: 'Record a consultation and get a draft note to review. Audio, transcripts and notes stay on this device.',
     person: { singular: 'patient', plural: 'patients' },
-    reviewDisclaimer: 'AI draft. Check every line against the consultation before you use it.',
+    reviewDisclaimer: 'Check every line against the consultation before you use it.',
     privacy: 'Recordings, transcripts and notes are processed and stored on this device. The app goes online only to download its models. It sends no analytics and no logs.',
   },
   templates: [

@@ -29,7 +29,7 @@ export default defineTenant({
     welcomeTitle: 'Welcome to the Quillmoor pilot',
     welcomeBody: 'Record a treatment session and Quillmoor Notes drafts the treatment note on this phone. You review every draft before it goes into the record.',
     person: { singular: 'patient', plural: 'patients' },
-    reviewDisclaimer: 'Pilot AI draft. Review and correct it before you copy it into the patient record.',
+    reviewDisclaimer: 'This is a pilot build. Review and correct the draft before you copy it into the patient record.',
     privacy: 'Session audio, transcripts and notes are processed and stored on this device only. Nothing is sent to Quillmoor or anyone else; the app downloads its models once.',
   },
   templates: [

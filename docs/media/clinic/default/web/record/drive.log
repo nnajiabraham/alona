@@ -1,0 +1,100 @@
+clock data
+  {"clock":0,"settled":true}
+tap continue
+  {"at":[550,674],"tapped":28,"target":"continue","delivery":"platform","carrier":"web","mode":"agent","clock":0,"epoch":18,"incarnation":1}
+clock data
+  {"clock":0,"settled":true}
+clock +6000
+  {"clock":6000}
+clock data
+  {"clock":6000,"settled":true}
+tap new-note-button
+  {"at":[550,198.59375],"tapped":60,"target":"new-note-button","delivery":"platform","carrier":"web","mode":"agent","clock":6000,"epoch":27,"incarnation":1}
+clock settle
+  {"clock":6400,"settled":true}
+screenshot docs/media/clinic/default/web/record/01-new-note-sheet.png
+  {"clock":6400,"epoch":27,"incarnation":1,"screenshot":"docs/media/clinic/default/web/record/01-new-note-sheet.png","w":1100,"h":760}
+type new-ref Bed 4
+  {"at":[550,150],"typed":80,"target":"new-ref","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":30,"incarnation":1}
+tap template-consultation
+  {"at":[550,383],"tapped":93,"target":"template-consultation","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":31,"incarnation":1}
+screenshot docs/media/clinic/default/web/record/02-reference-and-template.png
+  {"clock":6400,"epoch":31,"incarnation":1,"screenshot":"docs/media/clinic/default/web/record/02-reference-and-template.png","w":1100,"h":760}
+tap start-recording
+  {"at":[550,694],"tapped":101,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":46,"incarnation":1}
+clock data
+  {"clock":6400,"settled":true}
+clock settle
+  {"clock":6800,"settled":true}
+state rec.state
+  "recording"
+state recRef
+  "Bed 4"
+state recTemplate
+  "consultation"
+screenshot docs/media/clinic/default/web/record/03-recording-started.png
+  {"clock":6800,"epoch":51,"incarnation":1,"screenshot":"docs/media/clinic/default/web/record/03-recording-started.png","w":1100,"h":760}
+type record-jottings - L knee, 2 weeks
+  {"at":[550,518],"typed":106,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":54,"incarnation":1}
+clock +5000
+  {"clock":11800}
+screenshot docs/media/clinic/default/web/record/04-jottings-while-recording.png
+  {"clock":11800,"epoch":60,"incarnation":1,"screenshot":"docs/media/clinic/default/web/record/04-jottings-while-recording.png","w":1100,"h":760}
+tap stop-recording
+  {"at":[550,333],"tapped":120,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":11800,"epoch":75,"incarnation":1}
+clock data
+  {"clock":11800,"settled":true}
+clock settle
+  {"clock":12200,"settled":true}
+state lib.0.state
+  "processing"
+screenshot docs/media/clinic/default/web/record/05-saved-and-queued.png
+  {"clock":12200,"epoch":78,"incarnation":1,"screenshot":"docs/media/clinic/default/web/record/05-saved-and-queued.png","w":1100,"h":760}
+clock +3000
+  {"clock":15200}
+clock data
+  {"clock":15200,"settled":true}
+state detail.status
+  "transcribing"
+screenshot docs/media/clinic/default/web/record/06-transcribing.png
+  {"clock":15200,"epoch":95,"incarnation":1,"screenshot":"docs/media/clinic/default/web/record/06-transcribing.png","w":1100,"h":760}
+clock +2000
+  {"clock":17200}
+clock data
+  {"clock":17200,"settled":true}
+state detail.status
+  "summarizing"
+screenshot docs/media/clinic/default/web/record/07-writing-draft.png
+  {"clock":17200,"epoch":107,"incarnation":1,"screenshot":"docs/media/clinic/default/web/record/07-writing-draft.png","w":1100,"h":760}
+clock +6000
+  {"clock":23200}
+clock data
+  {"clock":23200,"settled":true}
+state detail.state
+  "draft"
+state detail.patientRef
+  "Bed 4"
+state detail.templateName
+  "General consultation"
+state detail.jottings
+  "- L knee, 2 weeks"
+state detail.note
+  "> This is a sample draft from the demo engine. No model ran, and it does not describe your recording.\n\n## Reason for visit\n- Left knee pain for about two weeks.\n\n## History\n- Left knee sore for about two weeks, since a long run.\n- Worse on stairs. Some evening swelling, no locking.\n- No medication taken.\n\n## Examination\n- Mild swelling over the left knee.\n- Full range of movement.\n\n## Assessment\n- Minor strain, as the clinician said.\n\n## Plan\n- Rest from running and ice in the evening.\n- Review in two weeks.\n\n## Follow-up\n- Review in two weeks."
+state detail.note
+  "> This is a sample draft from the demo engine. No model ran, and it does not describe your recording.\n\n## Reason for visit\n- Left knee pain for about two weeks.\n\n## History\n- Left knee sore for about two weeks, since a long run.\n- Worse on stairs. Some evening swelling, no locking.\n- No medication taken.\n\n## Examination\n- Mild swelling over the left knee.\n- Full range of movement.\n\n## Assessment\n- Minor strain, as the clinician said.\n\n## Plan\n- Rest from running and ice in the evening.\n- Review in two weeks.\n\n## Follow-up\n- Review in two weeks."
+state detail.note
+  "> This is a sample draft from the demo engine. No model ran, and it does not describe your recording.\n\n## Reason for visit\n- Left knee pain for about two weeks.\n\n## History\n- Left knee sore for about two weeks, since a long run.\n- Worse on stairs. Some evening swelling, no locking.\n- No medication taken.\n\n## Examination\n- Mild swelling over the left knee.\n- Full range of movement.\n\n## Assessment\n- Minor strain, as the clinician said.\n\n## Plan\n- Rest from running and ice in the evening.\n- Review in two weeks.\n\n## Follow-up\n- Review in two weeks."
+state detail.note
+  "> This is a sample draft from the demo engine. No model ran, and it does not describe your recording.\n\n## Reason for visit\n- Left knee pain for about two weeks.\n\n## History\n- Left knee sore for about two weeks, since a long run.\n- Worse on stairs. Some evening swelling, no locking.\n- No medication taken.\n\n## Examination\n- Mild swelling over the left knee.\n- Full range of movement.\n\n## Assessment\n- Minor strain, as the clinician said.\n\n## Plan\n- Rest from running and ice in the evening.\n- Review in two weeks.\n\n## Follow-up\n- Review in two weeks."
+state detail.note
+  "> This is a sample draft from the demo engine. No model ran, and it does not describe your recording.\n\n## Reason for visit\n- Left knee pain for about two weeks.\n\n## History\n- Left knee sore for about two weeks, since a long run.\n- Worse on stairs. Some evening swelling, no locking.\n- No medication taken.\n\n## Examination\n- Mild swelling over the left knee.\n- Full range of movement.\n\n## Assessment\n- Minor strain, as the clinician said.\n\n## Plan\n- Rest from running and ice in the evening.\n- Review in two weeks.\n\n## Follow-up\n- Review in two weeks."
+state detail.note
+  "> This is a sample draft from the demo engine. No model ran, and it does not describe your recording.\n\n## Reason for visit\n- Left knee pain for about two weeks.\n\n## History\n- Left knee sore for about two weeks, since a long run.\n- Worse on stairs. Some evening swelling, no locking.\n- No medication taken.\n\n## Examination\n- Mild swelling over the left knee.\n- Full range of movement.\n\n## Assessment\n- Minor strain, as the clinician said.\n\n## Plan\n- Rest from running and ice in the evening.\n- Review in two weeks.\n\n## Follow-up\n- Review in two weeks."
+screenshot docs/media/clinic/default/web/record/08-draft-ready.png
+  {"clock":23200,"epoch":119,"incarnation":1,"screenshot":"docs/media/clinic/default/web/record/08-draft-ready.png","w":1100,"h":760}
+tap pane-transcript
+  {"at":[537.59375,247],"tapped":161,"target":"pane-transcript","delivery":"platform","carrier":"web","mode":"agent","clock":23200,"epoch":122,"incarnation":1}
+state pane
+  "transcript"
+screenshot docs/media/clinic/default/web/record/09-transcript.png
+  {"clock":23200,"epoch":122,"incarnation":1,"screenshot":"docs/media/clinic/default/web/record/09-transcript.png","w":1100,"h":760}

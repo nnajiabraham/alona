@@ -459,7 +459,8 @@ component Clinic
                     view width=10 height=10 border-radius=5 background-color="attention.ink"
                     text clock(rec.duration / 1000) font="-exact-large-title" font-variant-numeric="tabular-nums"
                       color="attention.ink" testId="elapsed"
-                  audio-waveform track=trackId tint="attention.ink" width="100%" height=72 testId="waveform"
+                  // A literal only: tools/tenant.mjs writes the tenant's attention ink here.
+                  audio-waveform track=trackId tint="#8c3426" width="100%" height=72 testId="waveform"
                   button press=stopRecording buttonStyle="filled" disabled=pending(saved) testId="stop-recording"
                     image "symbol:stop-fill"
                     text (pending(saved) ? "Saving…" : "Stop and draft the note")

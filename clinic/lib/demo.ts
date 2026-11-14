@@ -10,11 +10,14 @@ export const DEMO_CONSULTATION: Segment[] = [
   { start: 35, end: 44, text: 'This looks like a minor strain. Rest from running, ice in the evening, and we will review in two weeks.' },
 ];
 
+// First match wins, so the narrower headings come before the broader ones.
 const SAMPLES: [RegExp, string][] = [
-  [/subjective|reason|presenting|concern|history|complaint/i, '- Left knee sore for about two weeks, since a long run.\n- Worse on stairs. Some evening swelling, no locking.\n- No medication taken.'],
+  [/reason|presenting|concern|complaint/i, '- Left knee pain for about two weeks.'],
+  [/subjective|history/i, '- Left knee sore for about two weeks, since a long run.\n- Worse on stairs. Some evening swelling, no locking.\n- No medication taken.'],
   [/objective|exam|finding/i, '- Mild swelling over the left knee.\n- Full range of movement.'],
   [/assessment|impression/i, '- Minor strain, as the clinician said.'],
-  [/plan|next|follow/i, '- Rest from running and ice in the evening.\n- Review in two weeks.'],
+  [/follow|review/i, '- Review in two weeks.'],
+  [/plan|next/i, '- Rest from running and ice in the evening.\n- Review in two weeks.'],
 ];
 
 /**

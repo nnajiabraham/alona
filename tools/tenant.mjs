@@ -205,6 +205,19 @@ const strings = (tenant) => ({
   'purpose.microphone': `Records your consultations so ${tenant.app.name} can transcribe them on this device.`,
 });
 
+const WAVEFORM_TINT = 'tint="#8c3426"';
+
+/** A color halfway between two `#rrggbb` colors. */
+const blend = (a, b) => `#${[1, 3, 5].map((i) => Math.round((parseInt(a.slice(i, i + 2), 16) + parseInt(b.slice(i, i + 2), 16)) / 2).toString(16).padStart(2, '0')).join('')}`;
+
+// The waveform's tint takes one literal and no token, so the build writes the
+// tenant's attention ink there, halfway between its light and dark values to read on both.
+function withWaveformTint(contract, tenant) {
+  if (!contract.includes(WAVEFORM_TINT)) fail(`clinic/app.contract no longer has ${WAVEFORM_TINT} on its waveform; update tools/tenant.mjs`);
+  const { light, dark } = tenant.colors.attentionInk;
+  return contract.replace(WAVEFORM_TINT, `tint="${blend(light, dark)}"`);
+}
+
 /** Copies the version of Alona's Exact files and engines the clinic app runs on, and writes the tenant's own. */
 async function materialize(slug) {
   known(slug);
@@ -212,7 +225,8 @@ async function materialize(slug) {
   const tenant = await load(slug);
   const app = appDir(slug);
   mkdirSync(app, { recursive: true });
-  for (const name of ['app.contract', 'app.ts', 'app.test.contract']) put(join(app, name), readFileSync(join(CLINIC, name)));
+  for (const name of ['app.ts', 'app.test.contract']) put(join(app, name), readFileSync(join(CLINIC, name)));
+  put(join(app, 'app.contract'), withWaveformTint(readFileSync(join(CLINIC, 'app.contract'), 'utf8'), tenant));
   mirror(join(CLINIC, 'lib'), join(app, 'lib'), (name) => name.endsWith('.test.ts'));
   if (!existsSync(join(ROOT, 'modules', 'web', 'worker.js'))) fail('the web engine is not built: run `bun tools/build-web-engine.mjs`');
   mirror(join(ROOT, 'modules'), join(app, 'modules'), (name) => name.endsWith('.xcframework'));
