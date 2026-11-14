@@ -160,6 +160,8 @@ component Alona
     picked = tier
 
   action follow(url: string)
+    if noteDirty
+      send notesSaved = saveNotes(selected, noteDraft)
     noteDirty = false
     pane = "ai"
     nav = top(nav).name == "meeting" and url.startsWith("/meeting/") ? replace(nav, url) : go(nav, url)
@@ -253,7 +255,7 @@ component Alona
       nav = back(nav)
 
   view
-    main navigationKey=`${top(nav).id}` navigationBack="back" navigate=follow testId="app" width="100%" height="100%"
+    main navigationKey=`${top(nav).id}` navigate=follow testId="app" width="100%" height="100%"
       background-color="surface.page" color="text.primary"
       for e in stack(nav) key=e.id
         if e.name == "home"
@@ -265,7 +267,7 @@ component Alona
                 button press=openSettings aria-label="Settings" testId="open-settings"
                   image "symbol:settings"
               scroll id="home-scroll" flex=1 min-height=0
-                column gap=16 padding=16 max-width=720 width="100%" margin="0 auto" box-sizing="border-box"
+                column gap=16 padding=16 max-width="45rem" width="100%" margin="0 auto" box-sizing="border-box"
                   ModelBanner(setup=setup, download=download(setup.active), openSettings=openSettings)
                   RecordCard(recording=recording, opening=(pending(opened) or pending(started)), denied=micDenied,
                     available=mic.available, failure=startFailure, start=startRecording, openSystemSettings=openSystemSettings)
@@ -288,7 +290,7 @@ component Alona
             column navigationKey=`${e.id}` navigationBar="none" position="absolute" inset=0 testId="welcome"
               scroll flex=1 min-height=0
                 column min-height="100%" box-sizing="border-box" padding=24 gap=20 justify-content="center"
-                  max-width=520 width="100%" margin="0 auto"
+                  max-width="32.5rem" width="100%" margin="0 auto"
                   column gap=8
                     text "Alona" font="-exact-large-title" role="heading" aria-level=1
                     text "Meeting notes that never leave this device." font="-exact-title3" color="text.muted"
@@ -314,7 +316,7 @@ component Alona
                     Promise(symbol="symbol:lock", text="Audio, transcripts and notes stay on this device.")
                     Promise(symbol="symbol:download", text="Models download once, then work offline.")
                     Promise(symbol="symbol:adjust", text="You can switch to a lighter model in Settings.")
-              column gap=8 padding=24 max-width=520 width="100%" margin="0 auto" box-sizing="border-box"
+              column gap=8 padding=24 max-width="32.5rem" width="100%" margin="0 auto" box-sizing="border-box"
                 button press=begin buttonStyle="filled" disabled=(not setup.ready) testId="continue"
                   text (setup.activeInstalled ? "Continue" : "Download models and continue")
                 if setup.ready and not setup.activeInstalled
@@ -326,7 +328,7 @@ component Alona
             header display="flex" align-items="center" padding="8px 16px"
               text "Recording" role="heading" aria-level=2
             scroll id="record-scroll" flex=1 min-height=0
-              column gap=16 padding=16 max-width=720 width="100%" margin="0 auto" box-sizing="border-box"
+              column gap=16 padding=16 max-width="45rem" width="100%" margin="0 auto" box-sizing="border-box"
                 column gap=10 padding=16 border-radius=16 background-color="clay.soft" align-items="center"
                   row gap=8 align-items="center"
                     view width=10 height=10 border-radius=5 background-color="clay.fill"
@@ -352,7 +354,7 @@ component Alona
                 image "symbol:delete"
             if detail.found
               scroll id="meeting-scroll" flex=1 min-height=0
-                column gap=16 padding=16 max-width=720 width="100%" margin="0 auto" box-sizing="border-box"
+                column gap=16 padding=16 max-width="45rem" width="100%" margin="0 auto" box-sizing="border-box"
                   column gap=4
                     input value=detail.title change=commitTitle aria-label="Title" border="none" font="-exact-title2"
                       testId="title-field"
@@ -399,7 +401,7 @@ component Alona
                       column gap=10 testId="transcript"
                         for s in detail.segments key=s.id
                           row gap=12 align-items="flex-start"
-                            text s.at font="-exact-footnote" color="text.muted" font-variant-numeric="tabular-nums" width=44 flex-shrink=0
+                            text s.at font="-exact-footnote" color="text.muted" font-variant-numeric="tabular-nums" width="2.75rem" flex-shrink=0
                             text s.text flex=1 min-width=0
             else if not pending(detail)
               EmptyState(symbol="symbol:alert", title="No such meeting", message="It may have been deleted.")
@@ -482,7 +484,7 @@ component ModelBanner
           if setup.activeError != ""
             text setup.activeError color="clay.ink" font="-exact-footnote" testId="download-error"
           text "New recordings are transcribed once the models are downloaded." color="moss.ink" font="-exact-footnote"
-          row gap=8
+          row gap=8 flex-wrap="wrap"
             button press=download buttonStyle="filled" testId="download-models"
               text "Download"
             button press=openSettings testId="choose-model"
@@ -499,9 +501,10 @@ component RecordCard
     openSystemSettings: action
   view
     column gap=10 padding=20 border-radius=18 background-color="surface.raised" border="1px solid" border-color="line.soft"
-      align-items="center" testId="record-card"
+      align-items="center" box-sizing="border-box" testId="record-card"
       text "Ready when your meeting starts" font="-exact-title3" text-align="center"
       button press=start buttonStyle="filled" disabled=(opening or recording or denied or not available) testId="start-recording"
+        max-width="100%"
         image "symbol:microphone"
         text (opening ? "Opening microphone…" : "Record a meeting")
       if denied
@@ -538,7 +541,7 @@ component TierDownload
         text `Downloading ${tier.label} · ${percent(tier.progress)}` font="-exact-footnote" color="-exact-secondary-label" flex=1
       else if tier.installed
         text `${tier.label} is on this device` font="-exact-footnote" color="-exact-secondary-label" flex=1 testId=`tier-installed-${tier.id}`
-        button press=remove destructive=true testId=`remove-${tier.id}`
+        button press=remove testId=`remove-${tier.id}`
           text "Remove"
       else
         text (tier.error != "" ? tier.error : `${tier.label} is not downloaded`) font="-exact-footnote" color="-exact-secondary-label" flex=1
