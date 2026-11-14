@@ -72,7 +72,6 @@ function modelOf(artifact) {
   return { runtime: artifact.runtime, repo: first[1], revision: decodeURIComponent(first[2]) };
 }
 
-// ---- Device ----
 
 /**
  * The browser's GPU when it is a real one transformers.js can run the models
@@ -133,7 +132,6 @@ async function probe() {
   return { ...facts, demo: demoReason !== '', demoReason };
 }
 
-// ---- Model files ----
 
 async function cachedSize(cache, file) {
   const hit = await cache.match(file.url);
@@ -224,7 +222,6 @@ async function remove(artifact) {
   await Promise.all(artifact.files.map((f) => cache.delete(f.url)));
 }
 
-// ---- Recordings ----
 
 /**
  * Reads an app:/ file from Exact's web storage. Exact has no supported way for
@@ -265,7 +262,7 @@ async function readAppFile(path) {
   return null;
 }
 
-/** The recording's bytes. The recorder's last write can land just after the meeting is saved, so a missing file is retried briefly. */
+/** The recording's bytes. The recorder's last write can land just after the meeting is saved, so a missing file is retried for up to 60 s. */
 async function readRecording(path) {
   for (let attempt = 0; attempt < 60; attempt++) {
     const bytes = await readAppFile(path);
@@ -287,7 +284,6 @@ async function decode16k(bytes) {
   return mono;
 }
 
-// ---- Worker ----
 
 function stopWorker() {
   worker?.terminate();
@@ -362,7 +358,6 @@ async function generate(job, artifact, prompt, maxTokens) {
   job.metrics = result.metrics;
 }
 
-// ---- Jobs ----
 
 /**
  * Starts `body` as the job `id`, unless that job is running or done: starting is
