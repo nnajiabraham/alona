@@ -4,8 +4,10 @@ import type { Artifact, DeviceFacts } from './engine';
 import { parseJobView } from './engine';
 import { finishNotes, planNotes, stepCount, stepRequest } from './notes';
 import { advance, isWorking, retry, type PipelineIO } from './pipeline';
+import { service } from './service';
+import { meetingStore } from './store';
 import { SIM_DEVICE, SIM_SEGMENTS, simEngine, type SimOptions } from './sim-engine';
-import type { Meeting, Segment } from './types';
+import { displayTitle, type Meeting, type Segment } from './types';
 
 const ALL = ['lite', 'balanced', 'quality'] as const;
 const device = (over: Partial<DeviceFacts>): DeviceFacts => ({ ...SIM_DEVICE, ...over });
@@ -23,18 +25,26 @@ describe('tier selection', () => {
     expect(a.verdicts.find((v) => v.tier === 'balanced')).toEqual({
       tier: 'balanced',
       runnable: false,
-      reason: 'This device has 4 GB of memory.',
+      reason: 'Needs 6 GB of memory. This device has 4 GB.',
     });
   });
 
   test('a 12 GB phone stops at Balanced', () => {
     const a = assess('ios', device({ memoryGB: 12, formFactor: 'phone', appleSilicon: true }), ALL);
     expect(a.recommended).toBe('balanced');
-    expect(a.verdicts.find((v) => v.tier === 'quality')?.runnable).toBe(false);
+    expect(a.verdicts.find((v) => v.tier === 'quality')?.reason).toBe('Too large for phones and tablets.');
   });
 
-  test('a browser without WebGPU gets Lite', () => {
-    expect(assess('web', device({ gpu: false }), ALL).recommended).toBe('lite');
+  test('an 8 GB Mac is told how much memory Quality needs', () => {
+    const a = assess('macos', device({ memoryGB: 8, appleSilicon: true }), ALL);
+    expect(a.recommended).toBe('balanced');
+    expect(a.verdicts.find((v) => v.tier === 'quality')?.reason).toBe('Needs 16 GB of memory. This computer has 8 GB.');
+  });
+
+  test('a browser without WebGPU gets Lite and is told why', () => {
+    const a = assess('web', device({ gpu: false }), ALL);
+    expect(a.recommended).toBe('lite');
+    expect(a.verdicts.find((v) => v.tier === 'balanced')?.reason).toBe('Needs WebGPU, which this browser does not have.');
   });
 
   test('a browser on iPhone gets Lite even with WebGPU', () => {
@@ -147,6 +157,7 @@ function harness(options: SimOptions = {}) {
     tier: 'lite',
     stage: { kind: 'recorded' },
     attempt: 0,
+    suggestedTitle: '',
   };
   const run = async (m: Meeting, limit = 50): Promise<{ meeting: Meeting; progress: number[] }> => {
     const progress: number[] = [];
@@ -165,7 +176,7 @@ describe('the meeting pipeline', () => {
     const h = harness();
     const { meeting, progress } = await h.run(h.meeting);
     expect(meeting.stage).toEqual({ kind: 'done' });
-    expect(meeting.title).toBe('Mobile app launch planning');
+    expect(displayTitle(meeting)).toBe('Mobile app launch planning');
     expect(h.files.transcript).toEqual(SIM_SEGMENTS);
     expect(h.files.aiNotes.startsWith('## Summary')).toBe(true);
     expect(progress.at(-1)).toBe(1);
@@ -175,7 +186,7 @@ describe('the meeting pipeline', () => {
   test('a title the person typed is kept', async () => {
     const h = harness();
     const { meeting } = await h.run({ ...h.meeting, title: 'Weekly sync' });
-    expect(meeting.title).toBe('Weekly sync');
+    expect(displayTitle(meeting)).toBe('Weekly sync');
   });
 
   test('a meeting whose engine restarted mid-transcription still finishes', async () => {
@@ -238,5 +249,80 @@ describe('engine replies', () => {
   test('a reply with no known state is refused', () => {
     expect(() => parseJobView({ id: 'j', state: 'finished' })).toThrow('no known state');
     expect(() => parseJobView('done')).toThrow('not an object');
+  });
+});
+
+describe('model downloads', () => {
+  function app(options: SimOptions = {}) {
+    const dirs = new Map<string, Uint8Array>();
+    const files = {
+      readFile: async (path: string) => {
+        const data = dirs.get(path);
+        if (!data) throw Object.assign(new Error('missing'), { code: 'ENOENT' });
+        return data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength) as ArrayBuffer;
+      },
+      atomicWriteFile: async (path: string, data: Uint8Array) => void dirs.set(path, data),
+      readdir: async (path: string) => [...new Set([...dirs.keys()].filter((k) => k.startsWith(`${path}/`)).map((k) => k.slice(path.length + 1).split('/')[0]))],
+      mkdir: async () => {},
+      rm: async (path: string) => {
+        for (const k of [...dirs.keys()]) if (k.startsWith(`${path}/`)) dirs.delete(k);
+      },
+    };
+    return service(simEngine(options), meetingStore(files), true);
+  }
+
+  test('a tier is not installed until its download finishes, then stays installed', async () => {
+    const s = app({ polls: 2 });
+    expect((await s.setup('auto')).activeInstalled).toBe(false);
+    await s.downloadTier('balanced');
+    expect((await s.setup('auto')).activeDownloading).toBe(true);
+    await s.setup('auto');
+    const done = await s.setup('auto');
+    expect(done.activeInstalled).toBe(true);
+    expect(done.activeDownloading).toBe(false);
+  });
+
+  test('a removed tier reads as not installed and can be downloaded again', async () => {
+    const s = app({ polls: 1 });
+    await s.downloadTier('lite');
+    await s.setup('lite');
+    expect((await s.setup('lite')).activeInstalled).toBe(true);
+    await s.removeTier('lite');
+    expect((await s.setup('lite')).activeInstalled).toBe(false);
+    await s.downloadTier('lite');
+    await s.setup('lite');
+    expect((await s.setup('lite')).activeInstalled).toBe(true);
+  });
+
+  test('a pick this device cannot run falls back to the recommended tier', async () => {
+    const s = app({ device: { ...SIM_DEVICE, gpu: false } });
+    const setup = await s.setup('quality');
+    expect(setup.active).toBe('lite');
+    expect(setup.tiers.find((t) => t.id === 'quality')?.reason).toBe('Too large for a browser. The desktop app can run it.');
+  });
+
+  test('a recorded meeting waits while its tier\'s models are missing, then runs once they arrive', async () => {
+    const s = app({ polls: 1 });
+    await s.create('m1', '', 'app:/data/meetings/m1/audio.wav', 5000, 'my note', 1000, 'balanced');
+    await s.tick('auto');
+    expect((await s.rows())[0].status).toBe('recorded');
+    await s.downloadTier('balanced');
+    await s.setup('auto');
+    for (let i = 0; i < 12; i++) await s.tick('auto');
+    const detail = await s.detail('m1');
+    expect(detail.status).toBe('done');
+    expect(detail.title).toBe('Mobile app launch planning');
+    expect(detail.userNotes).toBe('my note');
+    expect(detail.segments[1]).toEqual({ id: '1', at: '0:07', text: SIM_SEGMENTS[1].text });
+  });
+
+  test('deleting a meeting removes it from the library', async () => {
+    const s = app();
+    await s.create('m1', 'One', 'app:/data/meetings/m1/audio.wav', 5000, '', 1000, 'lite');
+    await s.create('m2', 'Two', 'app:/data/meetings/m2/audio.wav', 5000, '', 2000, 'lite');
+    expect((await s.rows()).map((r) => r.title)).toEqual(['Two', 'One']);
+    await s.remove('m1');
+    expect((await s.rows()).map((r) => r.title)).toEqual(['Two']);
+    expect((await s.detail('m1')).found).toBe(false);
   });
 });

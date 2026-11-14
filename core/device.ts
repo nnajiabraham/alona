@@ -15,39 +15,39 @@ export interface Assessment {
 
 const GB = (n: number): string => `${Math.round(n)} GB`;
 
+const needsMemory = (needed: number, d: DeviceFacts, what: string): string =>
+  `Needs ${needed} GB of memory. This ${what} has ${GB(d.memoryGB)}.`;
+
 /**
- * The highest tier this device can run, and why. Rows follow the decision
- * table in docs/research/local-models-2026-11.md, section 2.2.
+ * Why this device cannot run a tier, or null when it can. Rows follow the
+ * decision table in docs/research/local-models-2026-11.md, section 2.2.
  */
-function ceiling(host: Host, d: DeviceFacts): { tier: TierId; why: string } {
+function blocker(host: Host, d: DeviceFacts, tier: TierId): string | null {
+  if (tier === 'lite') return null;
   if (host === 'web') {
-    if (d.iosBrowser) return { tier: 'lite', why: 'Browsers on iPhone and iPad cap memory, so larger models cannot load.' };
-    if (!d.gpu) return { tier: 'lite', why: 'This browser has no WebGPU, so models run on the CPU.' };
-    const memoryOk = d.memoryGB === 0 || d.memoryGB >= 8;
-    if (memoryOk && d.gpuMaxBufferGB >= 1 && d.storageFreeGB >= 4) {
-      return { tier: 'balanced', why: 'This browser has WebGPU and enough memory and storage.' };
-    }
-    return { tier: 'lite', why: 'This browser reports too little memory, GPU buffer, or storage for larger models.' };
+    if (tier === 'quality') return 'Too large for a browser. The desktop app can run it.';
+    if (d.iosBrowser) return 'Browsers on iPhone and iPad cap memory, so this model cannot load.';
+    if (!d.gpu) return 'Needs WebGPU, which this browser does not have.';
+    if (d.memoryGB !== 0 && d.memoryGB < 8) return needsMemory(8, d, 'browser');
+    if (d.gpuMaxBufferGB < 1) return 'Needs a larger GPU buffer than this browser allows.';
+    if (d.storageFreeGB < 4) return 'Needs 4 GB of free browser storage.';
+    return null;
   }
-  if (d.memoryGB < 6) return { tier: 'lite', why: `This device has ${GB(d.memoryGB)} of memory.` };
-  if (d.formFactor === 'phone') {
-    return { tier: 'balanced', why: `This device has ${GB(d.memoryGB)} of memory. The largest models stay off phones.` };
-  }
-  if (d.memoryGB >= 16 && d.appleSilicon) {
-    return { tier: 'quality', why: `This Mac has ${GB(d.memoryGB)} of memory and Apple silicon.` };
-  }
-  return { tier: 'balanced', why: `This computer has ${GB(d.memoryGB)} of memory.` };
+  const what = d.formFactor === 'phone' ? 'device' : 'computer';
+  if (d.memoryGB < 6) return needsMemory(6, d, what);
+  if (tier === 'balanced') return null;
+  if (d.formFactor === 'phone') return 'Too large for phones and tablets.';
+  if (d.memoryGB < 16) return needsMemory(16, d, what);
+  if (!d.appleSilicon) return 'Needs Apple silicon.';
+  return null;
 }
 
 export function assess(host: Host, device: DeviceFacts, shipped: readonly TierId[]): Assessment {
-  const top = ceiling(host, device);
-  const limit = TIERS.indexOf(top.tier);
   const verdicts = TIERS.filter((tier) => shipped.includes(tier)).map((tier): TierVerdict => {
-    const runnable = TIERS.indexOf(tier) <= limit;
-    return { tier, runnable, reason: runnable ? 'Runs on this device.' : top.why };
+    const why = blocker(host, device, tier);
+    return { tier, runnable: why === null, reason: why ?? 'Runs on this device.' };
   });
-  const runnable = verdicts.filter((v) => v.runnable);
-  const recommended = runnable.at(-1)?.tier ?? 'lite';
+  const recommended = verdicts.filter((v) => v.runnable).at(-1)?.tier ?? 'lite';
   return { recommended, verdicts };
 }
 

@@ -33,7 +33,12 @@ export interface Meeting {
   stage: Stage;
   /** Bumped by each retry so a retried stage never reuses a failed job's id. */
   attempt: number;
+  /** The title the notes model proposed. Shown while `title` is empty. */
+  suggestedTitle: string;
 }
+
+export const displayTitle = (m: Pick<Meeting, 'title' | 'suggestedTitle'>): string =>
+  m.title !== '' ? m.title : m.suggestedTitle !== '' ? m.suggestedTitle : 'Untitled meeting';
 
 export function isTierId(value: unknown): value is TierId {
   return value === 'lite' || value === 'balanced' || value === 'quality';

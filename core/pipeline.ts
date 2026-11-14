@@ -62,8 +62,7 @@ async function summarizing(m: Meeting, io: PipelineIO, stage: Extract<Stage, { k
       if (stage.step + 1 < steps) return startNotesStep(m, io, stage.step + 1, [...stage.partials, view.text]);
       const notes = finishNotes(view.text);
       await io.writeAiNotes(m, notes.markdown);
-      const title = m.title === '' ? notes.title : m.title;
-      return at({ ...m, title }, { kind: 'done' }, 1);
+      return at({ ...m, suggestedTitle: notes.title }, { kind: 'done' }, 1);
     }
   }
 }

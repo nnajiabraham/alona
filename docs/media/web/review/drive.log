@@ -1,0 +1,86 @@
+clock data
+  {"clock":0,"settled":true}
+tap continue
+  {"at":[550,674],"tapped":28,"target":"continue","delivery":"platform","carrier":"web","mode":"agent","clock":0,"epoch":17,"incarnation":1}
+clock data
+  {"clock":0,"settled":true}
+clock +6000
+  {"clock":6000}
+clock data
+  {"clock":6000,"settled":true}
+tap start-recording
+  {"at":[550,198.59375],"tapped":52,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6000,"epoch":38,"incarnation":1}
+clock data
+  {"clock":6000,"settled":true}
+clock settle
+  {"clock":6400,"settled":true}
+type record-title Launch sync
+  {"at":[550,330],"typed":76,"target":"record-title","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":44,"incarnation":1}
+type record-notes - Ask about the login fix
+  {"at":[550,519],"typed":62,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":45,"incarnation":1}
+clock +5000
+  {"clock":11400}
+tap stop-recording
+  {"at":[550,262],"tapped":73,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":11400,"epoch":64,"incarnation":1}
+clock data
+  {"clock":11400,"settled":true}
+clock settle
+  {"clock":11800,"settled":true}
+clock +12000
+  {"clock":23800}
+clock data
+  {"clock":23800,"settled":true}
+state detail.status
+  "done"
+screenshot docs/media/web/review/01-ai-notes.png
+  {"clock":23800,"epoch":102,"incarnation":1,"screenshot":"docs/media/web/review/01-ai-notes.png","w":1100,"h":760}
+tap pane-transcript
+  {"at":[440.3203125,216],"tapped":105,"target":"pane-transcript","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":105,"incarnation":1}
+state pane
+  "transcript"
+screenshot docs/media/web/review/02-transcript.png
+  {"clock":23800,"epoch":105,"incarnation":1,"screenshot":"docs/media/web/review/02-transcript.png","w":1100,"h":760}
+tap pane-mine
+  {"at":[342.6328125,216],"tapped":103,"target":"pane-mine","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":108,"incarnation":1}
+type my-notes ## Follow up
+  {"at":[550,380],"typed":128,"target":"my-notes","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":109,"incarnation":1}
+clock +1000
+  {"clock":24800}
+clock data
+  {"clock":24800,"settled":true}
+state detail.userNotes
+  "## Follow up"
+state noteDirty
+  false
+screenshot docs/media/web/review/03-my-notes-saved.png
+  {"clock":24800,"epoch":113,"incarnation":1,"screenshot":"docs/media/web/review/03-my-notes-saved.png","w":1100,"h":760}
+type title-field Q1 launch plan
+  {"at":[550,81],"typed":98,"target":"title-field","delivery":"platform","carrier":"web","mode":"agent","clock":24800,"epoch":115,"incarnation":1}
+type title-field key Enter
+  {"at":[550,81],"typed":98,"target":"title-field","delivery":"platform","carrier":"web","mode":"agent","clock":24800,"epoch":119,"incarnation":1}
+clock data
+  {"clock":24800,"settled":true}
+state detail.title
+  "Q1 launch plan"
+screenshot docs/media/web/review/04-renamed.png
+  {"clock":24800,"epoch":119,"incarnation":1,"screenshot":"docs/media/web/review/04-renamed.png","w":1100,"h":760}
+tap pane-ai
+  {"at":[252.296875,216],"tapped":101,"target":"pane-ai","delivery":"platform","carrier":"web","mode":"agent","clock":24800,"epoch":122,"incarnation":1}
+tap regenerate
+  {"at":[550,726],"tapped":133,"target":"regenerate","scrolled":{"from":[550,779],"to":[550,726]},"delivery":"platform","carrier":"web","mode":"agent","clock":24800,"epoch":126,"incarnation":1}
+clock data
+  {"clock":24800,"settled":true}
+clock +1000
+  {"clock":25800}
+clock data
+  {"clock":25800,"settled":true}
+state detail.status
+  "summarizing"
+screenshot docs/media/web/review/05-writing-again.png
+  {"clock":25800,"epoch":131,"incarnation":1,"screenshot":"docs/media/web/review/05-writing-again.png","w":1100,"h":760}
+clock +6000
+  {"clock":31800}
+clock data
+  {"clock":31800,"settled":true}
+state detail.status
+  "done"

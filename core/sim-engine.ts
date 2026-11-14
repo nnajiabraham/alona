@@ -30,6 +30,7 @@ The team reviewed open bugs and agreed to launch the mobile app on March 15, pro
 - None recorded.`;
 
 export const SIM_DEVICE: DeviceFacts = {
+  host: 'web',
   memoryGB: 8,
   cores: 8,
   gpu: true,
@@ -47,6 +48,8 @@ export interface SimOptions {
   /** Job ids containing this text fail. */
   failJobsContaining?: string;
   device?: DeviceFacts;
+  /** Where the set of "downloaded" models is kept across launches. In memory when absent. */
+  shelf?: { load(): Promise<string[]>; save(ids: string[]): Promise<void> };
 }
 
 interface SimJob {
@@ -64,7 +67,13 @@ interface SimJob {
 export function simEngine(options: SimOptions = {}): Engine & { forget(): void } {
   const polls = options.polls ?? 2;
   const jobs = new Map<string, SimJob>();
-  const installed = new Set<string>();
+  let shelf: Set<string> | null = null;
+  const installed = async (): Promise<Set<string>> => (shelf ??= new Set(await options.shelf?.load()));
+  const keep = async (change: (ids: Set<string>) => void): Promise<void> => {
+    const ids = await installed();
+    change(ids);
+    await options.shelf?.save([...ids]);
+  };
 
   const view = (id: string): JobView => {
     const job = jobs.get(id);
@@ -75,7 +84,6 @@ export function simEngine(options: SimOptions = {}): Engine & { forget(): void }
       return { ...base, state: 'failed', progress: 0, error: 'The demo engine was told to fail this job.' };
     }
     if (job.polled < polls) return { ...base, state: 'running', progress: job.polled / polls };
-    if (job.kind === 'download') installed.add(job.artifact);
     return {
       ...base,
       state: 'done',
@@ -92,15 +100,23 @@ export function simEngine(options: SimOptions = {}): Engine & { forget(): void }
 
   return {
     probe: async () => options.device ?? SIM_DEVICE,
-    installed: async (artifacts) => artifacts.map((a) => a.id).filter((id) => installed.has(id)),
+    installed: async (artifacts) => {
+      const ids = await installed();
+      return artifacts.map((a) => a.id).filter((id) => ids.has(id));
+    },
     download: async (job, artifact) => start(job, 'download', artifact),
-    remove: async (artifact) => void installed.delete(artifact.id),
+    remove: async (artifact) => {
+      for (const [id, job] of jobs) if (job.kind === 'download' && job.artifact === artifact.id) jobs.delete(id);
+      await keep((ids) => ids.delete(artifact.id));
+    },
     transcribe: async (job, _audio, artifact) => start(job, 'transcribe', artifact),
     generate: async (job, artifact) => start(job, 'generate', artifact),
     job: async (id) => {
       const job = jobs.get(id);
       if (job) job.polled += 1;
-      return view(id);
+      const now = view(id);
+      if (job?.kind === 'download' && now.state === 'done') await keep((ids) => ids.add(job.artifact));
+      return now;
     },
     cancel: async (id) => {
       const job = jobs.get(id);

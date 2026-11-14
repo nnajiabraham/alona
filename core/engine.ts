@@ -1,4 +1,4 @@
-import type { Segment } from './types';
+import type { Host, Segment } from './types';
 
 /** One downloadable file of a model, verified by size and SHA-256 after download. */
 export interface ModelFile {
@@ -16,6 +16,7 @@ export interface Artifact {
 }
 
 export interface DeviceFacts {
+  host: Host;
   memoryGB: number;
   cores: number;
   gpu: boolean;
@@ -61,6 +62,7 @@ export interface Engine {
   probe(): Promise<DeviceFacts>;
   installed(artifacts: Artifact[]): Promise<string[]>;
   download(job: string, artifact: Artifact): Promise<JobView>;
+  /** Deletes the artifact's files and forgets its download job, so a later download starts fresh. */
   remove(artifact: Artifact): Promise<void>;
   transcribe(job: string, audio: string, artifact: Artifact): Promise<JobView>;
   generate(job: string, artifact: Artifact, system: string, prompt: string, maxTokens: number): Promise<JobView>;
@@ -106,9 +108,14 @@ export function parseJobView(raw: unknown): JobView {
   };
 }
 
+const HOSTS: readonly Host[] = ['web', 'macos', 'ios', 'android'];
+
 export function parseDeviceFacts(raw: unknown): DeviceFacts {
   const r = record(raw, 'probe');
+  const host = HOSTS.find((h) => h === r.host);
+  if (!host) throw new EngineReplyError(`The engine's probe reply names no known host: ${str(r.host)}`);
   return {
+    host,
     memoryGB: num(r.memoryGB),
     cores: num(r.cores, 1),
     gpu: r.gpu === true,
