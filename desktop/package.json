@@ -1,0 +1,19 @@
+{
+  "name": "alona-desktop",
+  "productName": "Alona",
+  "version": "0.1.0",
+  "description": "A private meeting assistant. Recordings, transcripts, and notes stay on this computer.",
+  "author": "Alona",
+  "homepage": "https://github.com/nnajiabraham/alona",
+  "license": "UNLICENSED",
+  "private": true,
+  "type": "module",
+  "main": "main.js",
+  "devDependencies": {
+    "electron": "45.2.1",
+    "electron-builder": "26.18.1"
+  },
+  "trustedDependencies": [
+    "electron"
+  ]
+}

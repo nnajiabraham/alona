@@ -54,3 +54,7 @@ coverage/
 # Web inference engine, built by tools/build-web-engine.mjs
 /modules/web/worker.js
 /modules/web/ort/
+
+# Desktop shell, built by tools/build-desktop.mjs
+/desktop/site/
+/desktop/out/
