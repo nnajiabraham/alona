@@ -246,6 +246,8 @@ component Alona
     send retried = retryMeeting(selected)
   action regenerate
     send retried = regenerateNotes(selected)
+  action retranscribe
+    send retried = retranscribeMeeting(selected)
   action askDelete(id: string)
     aimed = id
     showModal("delete-meeting")
@@ -334,7 +336,7 @@ component Alona
                     view width=10 height=10 border-radius=5 background-color="clay.fill"
                     text clock(rec.duration / 1000) font="-exact-large-title" font-variant-numeric="tabular-nums"
                       color="clay.ink" testId="elapsed"
-                  audio-waveform track=trackId tint="clay.fill" width="100%" height=72 testId="waveform"
+                  audio-waveform track=trackId tint="#a8553a" width="100%" height=72 testId="waveform"
                   button press=stopRecording buttonStyle="filled" disabled=pending(saved) testId="stop-recording"
                     image "symbol:stop-fill"
                     text (pending(saved) ? "Saving…" : "Stop and write notes")
@@ -395,6 +397,10 @@ component Alona
                         aria-label="My notes" rows=12 min-height=260 testId="my-notes"
                       text (noteDirty ? "Saving…" : "Saved on this device") font="-exact-footnote" color="text.muted" testId="notes-state"
                   if pane == "transcript"
+                    if not working(detail.status)
+                      button press=retranscribe disabled=pending(retried) testId="retranscribe"
+                        image "symbol:refresh"
+                        text "Transcribe again"
                     if detail.segments.length == 0
                       text (working(detail.status) ? "Transcribing…" : "No speech was found in this recording.") color="text.muted" testId="transcript-empty"
                     else

@@ -3,7 +3,7 @@ import { assess, effectiveTier } from './device';
 import type { Artifact, DeviceFacts } from './engine';
 import { parseJobView } from './engine';
 import { finishNotes, planNotes, stepCount, stepRequest } from './notes';
-import { advance, isWorking, retry, type PipelineIO } from './pipeline';
+import { advance, isWorking, retranscribe, retry, type PipelineIO } from './pipeline';
 import { service } from './service';
 import { meetingStore } from './store';
 import { SIM_DEVICE, SIM_SEGMENTS, simEngine, type SimOptions } from './sim-engine';
@@ -127,6 +127,15 @@ describe('finishing notes', () => {
   test('reasoning blocks and code fences are removed', () => {
     const notes = finishNotes('<think>let me plan</think>\n```markdown\n**Title:** Sync\n## Summary\nShort.\n```');
     expect(notes).toEqual({ title: 'Sync', markdown: '## Summary\nShort.' });
+  });
+
+  test('a first-level heading is taken as the title when no title line is given', () => {
+    expect(finishNotes('# Launch planning\n\n## Summary\nWe agreed.')).toEqual({ title: 'Launch planning', markdown: '## Summary\nWe agreed.' });
+  });
+
+  test('a title that only repeats the instruction is dropped, so the meeting keeps its own name', () => {
+    expect(finishNotes('# a short title for the meeting, on one line\n\n## Summary\nWe agreed.').title).toBe('');
+    expect(finishNotes('Title: names what this meeting was about in three to six words\n## Summary\nOk.').title).toBe('');
   });
 
   test('a reply cut off inside its reasoning yields the no-speech notes, not the reasoning', () => {
@@ -324,5 +333,25 @@ describe('model downloads', () => {
     await s.remove('m1');
     expect((await s.rows()).map((r) => r.title)).toEqual(['Two']);
     expect((await s.detail('m1')).found).toBe(false);
+  });
+});
+
+describe('running a meeting again', () => {
+  test('transcribing again replaces the transcript and the notes', async () => {
+    const h = harness({ polls: 1 });
+    const { meeting: first } = await h.run(h.meeting);
+    h.files.transcript = [];
+    h.files.aiNotes = '';
+    const again = retranscribe(first);
+    expect(again.stage).toEqual({ kind: 'recorded' });
+    const { meeting } = await h.run(again);
+    expect(meeting.stage).toEqual({ kind: 'done' });
+    expect(h.files.transcript).toEqual(SIM_SEGMENTS);
+    expect(h.files.aiNotes.startsWith('## Summary')).toBe(true);
+  });
+
+  test('a meeting still being processed is not restarted', () => {
+    const h = harness();
+    expect(retranscribe(h.meeting)).toBe(h.meeting);
   });
 });

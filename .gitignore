@@ -47,3 +47,6 @@ coverage/
 /app.contract.d.ts
 /.exact/
 /.env.local
+
+# Native inference frameworks, fetched by tools/fetch-apple-frameworks.sh
+/modules/apple/*.xcframework

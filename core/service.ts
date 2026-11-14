@@ -1,7 +1,7 @@
 import { assess, effectiveTier, type Assessment } from './device';
 import type { Artifact, DeviceFacts, Engine, JobView } from './engine';
 import { demoArtifacts, downloadBytes, LINEUP, shippedTiers, sizeLabel, tierArtifacts, type TierArtifacts } from './models';
-import { advance, isWorking, regenerate, retry, type PipelineIO } from './pipeline';
+import { advance, isWorking, regenerate, retranscribe, retry, type PipelineIO } from './pipeline';
 import type { MeetingStore, StoredMeeting } from './store';
 import { displayTitle, isTierId, TIERS, type Stage, type TierId } from './types';
 
@@ -308,6 +308,13 @@ export function service(engine: Engine, store: MeetingStore, demo: boolean) {
       const m = await store.load(id);
       if (!m) return refused('That meeting is gone.');
       await store.saveProgress({ ...regenerate(m), progress: 0 });
+      return OK;
+    },
+
+    async retranscribe(id: string): Promise<Reply> {
+      const m = await store.load(id);
+      if (!m) return refused('That meeting is gone.');
+      await store.saveProgress({ ...retranscribe(m), progress: 0 });
       return OK;
     },
   };

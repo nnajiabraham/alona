@@ -1,5 +1,5 @@
 import type { Artifact, Engine, JobView } from './engine';
-import { finishNotes, NO_SPEECH_NOTES, planNotes, stepCount, stepRequest } from './notes';
+import { chatPrompt, finishNotes, NO_SPEECH_NOTES, planNotes, stepCount, stepRequest } from './notes';
 import type { FailedDuring, Meeting, Segment, Stage } from './types';
 
 /** Everything the pipeline touches outside the meeting record itself. */
@@ -42,7 +42,7 @@ async function startNotesStep(m: Meeting, io: PipelineIO, step: number, partials
   }
   const request = stepRequest(plan, step, partials, userNotes);
   const job = notesJob(m, step);
-  await io.engine.generate(job, io.llm, request.system, request.prompt, request.maxTokens);
+  await io.engine.generate(job, io.llm, chatPrompt(request), request.maxTokens);
   return at(m, { kind: 'summarizing', job, step, partials }, TRANSCRIBE_SHARE + ((1 - TRANSCRIBE_SHARE) * step) / steps);
 }
 
@@ -119,6 +119,12 @@ export function retry(m: Meeting): Meeting {
 export function regenerate(m: Meeting): Meeting {
   if (m.stage.kind !== 'done') return m;
   return { ...m, attempt: m.attempt + 1, stage: { kind: 'summarizing', job: '', step: 0, partials: [] } };
+}
+
+/** Runs the whole pipeline again on a finished or failed meeting, for example after switching tier. */
+export function retranscribe(m: Meeting): Meeting {
+  if (m.stage.kind !== 'done' && m.stage.kind !== 'failed') return m;
+  return { ...m, attempt: m.attempt + 1, stage: { kind: 'recorded' } };
 }
 
 export const isWorking = (m: Meeting): boolean =>

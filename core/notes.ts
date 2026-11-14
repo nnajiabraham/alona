@@ -85,24 +85,17 @@ export interface GenerateRequest {
   maxTokens: number;
 }
 
-const FORMAT = `Write the notes in Markdown with exactly these parts, in this order:
+const FORMAT = `Write the meeting notes in Markdown.
 
-Title: a short title for the meeting, on one line
+Begin with one line that starts with "Title: " and then names what this meeting was about in three to six words.
 
-## Summary
-Two to four sentences.
+After the title, write these five sections in this order. Each section starts with its heading on its own line.
 
-## Key points
-- one bullet per point
-
-## Decisions
-- one bullet per decision, or "- None recorded."
-
-## Action items
-- [ ] Owner: task (due date if one was said), or "- None recorded."
-
-## Open questions
-- one bullet per question, or "- None recorded."`;
+"## Summary": two to four sentences.
+"## Key points": one bullet per point.
+"## Decisions": one bullet per decision that was made. If none was made, write "- None recorded."
+"## Action items": one line per task, written as "- [ ] Owner: task", with the due date if one was said. If there are none, write "- None recorded."
+"## Open questions": one bullet per question left unanswered. If there are none, write "- None recorded."`;
 
 const SYSTEM = `You write meeting notes from a transcript. Use only what was said. Never invent names, dates, numbers, or decisions. If the person's own notes are given, treat them as what matters most to them and cover those topics first. Reply with the notes only, in the meeting's language.`;
 
@@ -146,6 +139,13 @@ function merge(partials: string[], userNotes: string): GenerateRequest {
   };
 }
 
+/**
+ * Qwen3.5's chat markup with its reasoning switched off (an empty think
+ * block). Every tier's notes model is a Qwen3.5, so this is the one template.
+ */
+export const chatPrompt = (request: GenerateRequest): string =>
+  `<|im_start|>system\n${request.system}<|im_end|>\n<|im_start|>user\n${request.prompt}<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n`;
+
 /** The `generate` request for one step of the plan. `partials` are the outputs of the steps before it. */
 export function stepRequest(plan: NotesPlan, step: number, partials: string[], userNotes: string): GenerateRequest {
   switch (plan.kind) {
@@ -174,8 +174,17 @@ export const NO_SPEECH_NOTES = '## Summary\nNo speech was detected in this recor
 export function finishNotes(raw: string): FinishedNotes {
   let text = raw.replace(/<think>[\s\S]*?<\/think>/g, '').replace(/<think>[\s\S]*$/, '');
   text = text.replace(/^\s*```(?:markdown|md)?\s*\n/, '').replace(/\n```\s*$/, '').trim();
-  const titleMatch = /^\s*(?:#+\s*)?\**Title:?\**:?\s*(.+)$/im.exec(text);
-  const title = titleMatch ? titleMatch[1].replace(/[*#]/g, '').trim() : '';
-  const markdown = (titleMatch ? text.replace(titleMatch[0], '') : text).trim();
+  const labelled = /^\s*(?:#+\s*)?\**Title:?\**:?\s*(.+)$/im.exec(text);
+  const heading = labelled ? null : /^\s*#\s+(.+)/.exec(text);
+  const found = labelled ?? heading;
+  const title = found ? cleanTitle(found[1]) : '';
+  const markdown = (found ? text.replace(found[0], '') : text).trim();
   return { title, markdown: markdown === '' ? NO_SPEECH_NOTES : markdown };
+}
+
+/** A title the model wrote, or `''` when it only repeated the instruction it was given. */
+function cleanTitle(raw: string): string {
+  const title = raw.replace(/[*#"]/g, '').trim().replace(/[.:]$/, '');
+  const echoed = /short title|three to six words|names what this meeting/i.test(title);
+  return echoed || title.length > 80 ? '' : title;
 }

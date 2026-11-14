@@ -52,6 +52,7 @@ const sources: Sources = {
   deleteMeeting: ([id], _store, storage, native) => app(storage, native).remove(id),
   retryMeeting: ([id], _store, storage, native) => app(storage, native).retry(id),
   regenerateNotes: ([id], _store, storage, native) => app(storage, native).regenerate(id),
+  retranscribeMeeting: ([id], _store, storage, native) => app(storage, native).retranscribe(id),
 };
 
 export const answer: Answer = (source, args, store, storage, native) => sources[source](args, store, storage, native);

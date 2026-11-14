@@ -1,3 +1,4 @@
+import artifacts from './artifacts.json';
 import type { Artifact } from './engine';
 import { TIERS, type Host, type TierId } from './types';
 
@@ -15,31 +16,38 @@ export interface Tier {
   llm: ModelInfo;
 }
 
+const MOONSHINE: Artifact = artifacts['moonshine-base-en.sherpa'];
+const PARAKEET: Artifact = artifacts['parakeet-tdt-0.6b-v3.sherpa'];
+const QWEN_08B: Artifact = artifacts['qwen3.5-0.8b.gguf'];
+const QWEN_2B: Artifact = artifacts['qwen3.5-2b.gguf'];
+const QWEN_9B: Artifact = artifacts['qwen3.5-9b.gguf'];
+
 /**
- * The model lineup, from docs/research/local-models-2026-11.md. Each host's
- * artifacts are added once that host's engine has run them end to end.
+ * The model lineup. Files and hashes are pinned in artifacts.json by
+ * tools/pin-models.mjs. A host is listed under a model only after that
+ * host's engine has run it end to end.
  */
 export const LINEUP: Record<TierId, Tier> = {
   lite: {
     id: 'lite',
     label: 'Lite',
     blurb: 'Smallest and fastest. English transcripts and draft-quality notes.',
-    stt: { name: 'Moonshine Small', artifacts: {} },
-    llm: { name: 'Qwen3.5 0.8B', artifacts: {} },
+    stt: { name: 'Moonshine Base', artifacts: { macos: MOONSHINE } },
+    llm: { name: 'Qwen3.5 0.8B', artifacts: { macos: QWEN_08B } },
   },
   balanced: {
     id: 'balanced',
     label: 'Balanced',
     blurb: 'Accurate transcripts in 25 languages and solid notes.',
-    stt: { name: 'Parakeet v3', artifacts: {} },
-    llm: { name: 'Qwen3.5 2B', artifacts: {} },
+    stt: { name: 'Parakeet v3', artifacts: { macos: PARAKEET } },
+    llm: { name: 'Qwen3.5 2B', artifacts: { macos: QWEN_2B } },
   },
   quality: {
     id: 'quality',
     label: 'Quality',
-    blurb: 'The most accurate transcripts and the most thorough notes.',
-    stt: { name: 'Granite Speech 5', artifacts: {} },
-    llm: { name: 'Qwen3.5 9B', artifacts: {} },
+    blurb: 'The same accurate transcripts with the most thorough notes.',
+    stt: { name: 'Parakeet v3', artifacts: { macos: PARAKEET } },
+    llm: { name: 'Qwen3.5 9B', artifacts: { macos: QWEN_9B } },
   },
 };
 

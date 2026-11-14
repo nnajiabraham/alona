@@ -14,9 +14,14 @@
     "macos": {
       "minimumOS": "14.0",
       "window": {
-        "width": 900,
-        "height": 700
-      }
+        "width": 1040,
+        "height": 760,
+        "minWidth": 420,
+        "minHeight": 560
+      },
+      "link": [
+        "-lc++"
+      ]
     },
     "android": {},
     "ios": {
@@ -24,6 +29,9 @@
       "deviceFamily": [
         "iphone",
         "ipad"
+      ],
+      "link": [
+        "-lc++"
       ]
     }
   },
@@ -33,5 +41,10 @@
       "macos": "0",
       "ios": "0"
     }
+  },
+  "theme_color": "#f4f3ee",
+  "background_color": "#f4f3ee",
+  "color_scheme_dark": {
+    "background_color": "#151916"
   }
 }

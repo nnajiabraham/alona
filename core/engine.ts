@@ -49,7 +49,7 @@ export type EngineRequest =
   | { op: 'download'; job: string; artifact: Artifact }
   | { op: 'remove'; artifact: Artifact }
   | { op: 'transcribe'; job: string; audio: string; artifact: Artifact }
-  | { op: 'generate'; job: string; artifact: Artifact; system: string; prompt: string; maxTokens: number }
+  | { op: 'generate'; job: string; artifact: Artifact; prompt: string; maxTokens: number }
   | { op: 'job'; job: string }
   | { op: 'cancel'; job: string }
   | { op: 'unload' };
@@ -65,7 +65,8 @@ export interface Engine {
   /** Deletes the artifact's files and forgets its download job, so a later download starts fresh. */
   remove(artifact: Artifact): Promise<void>;
   transcribe(job: string, audio: string, artifact: Artifact): Promise<JobView>;
-  generate(job: string, artifact: Artifact, system: string, prompt: string, maxTokens: number): Promise<JobView>;
+  /** Completes `prompt`, which already carries the model's chat markup. */
+  generate(job: string, artifact: Artifact, prompt: string, maxTokens: number): Promise<JobView>;
   job(job: string): Promise<JobView>;
   cancel(job: string): Promise<void>;
   unload(): Promise<void>;
@@ -141,8 +142,8 @@ export function engineOver(later: (request: EngineRequest) => Promise<unknown>):
     download: async (job, artifact) => parseJobView(await later({ op: 'download', job, artifact })),
     remove: async (artifact) => void (await later({ op: 'remove', artifact })),
     transcribe: async (job, audio, artifact) => parseJobView(await later({ op: 'transcribe', job, audio, artifact })),
-    generate: async (job, artifact, system, prompt, maxTokens) =>
-      parseJobView(await later({ op: 'generate', job, artifact, system, prompt, maxTokens })),
+    generate: async (job, artifact, prompt, maxTokens) =>
+      parseJobView(await later({ op: 'generate', job, artifact, prompt, maxTokens })),
     job: async (job) => parseJobView(await later({ op: 'job', job })),
     cancel: async (job) => void (await later({ op: 'cancel', job })),
     unload: async () => void (await later({ op: 'unload' })),

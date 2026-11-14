@@ -1,0 +1,220 @@
+diff --git a/host/apple/Sources/ExactCore/Bridge.swift b/host/apple/Sources/ExactCore/Bridge.swift
+index e07c08a1..006db24a 100644
+--- a/host/apple/Sources/ExactCore/Bridge.swift
++++ b/host/apple/Sources/ExactCore/Bridge.swift
+@@ -992,7 +992,13 @@ package final class Runtime {
+         let rects = change.segments.map { rects in [UInt32(rects.count)] + rects.flatMap { [$0.minX, $0.minY, $0.width, $0.height].map { Float($0).bitPattern } } } ?? []
+         let keyboard = change.keyboard.map { [Float($0).bitPattern] } ?? []
+         var bytes = Data(capacity: (11 + regions.count + rects.count) * 4)
+-        for word in [mask] + floats.map({ Float($0).bitPattern }) + [UInt32(regions.count)] + regions.map({ Float($0).bitPattern }) + rects + keyboard {
++        var words: [UInt32] = [mask]
++        words += floats.map { (f) -> UInt32 in Float(f).bitPattern }
++        words.append(UInt32(regions.count))
++        words += regions.map { (f) -> UInt32 in Float(f).bitPattern }
++        words += rects
++        words += keyboard
++        for word in words {
+             withUnsafeBytes(of: word.littleEndian) { bytes.append(contentsOf: $0) }
+         }
+         bytes.append(change.blocks)
+diff --git a/host/apple/Sources/ExactCore/TextAnswers.swift b/host/apple/Sources/ExactCore/TextAnswers.swift
+index d478de88..d0d89568 100644
+--- a/host/apple/Sources/ExactCore/TextAnswers.swift
++++ b/host/apple/Sources/ExactCore/TextAnswers.swift
+@@ -219,7 +219,10 @@ package final class TextAnswers: @unchecked Sendable {
+     /// A definite offer's two arrays; its place in the entry's array is
+     /// counted with that array's capacity.
+     private static func cost(_ offer: Offer) -> Int {
+-        (offer.glyphs?.bytes ?? 0) + (offer.lines.map { 64 + (($0.ranges.count * (MemoryLayout<CFRange>.stride + MemoryLayout<CGFloat>.stride)) + 31) & ~31 } ?? 0)
++        let glyphs: Int = offer.glyphs?.bytes ?? 0
++        let per: Int = MemoryLayout<CFRange>.stride + MemoryLayout<CGFloat>.stride
++        let lines: Int = offer.lines.map { (l) -> Int in 64 + ((l.ranges.count * per + 31) & ~31) } ?? 0
++        return glyphs + lines
+     }
+ 
+     /// What measuring the paragraph keyed `key` at `offer` answered.
+diff --git a/host/apple/Sources/ExactCore/TextResidency.swift b/host/apple/Sources/ExactCore/TextResidency.swift
+index 54beb99f..80c461f4 100644
+--- a/host/apple/Sources/ExactCore/TextResidency.swift
++++ b/host/apple/Sources/ExactCore/TextResidency.swift
+@@ -323,13 +323,15 @@ package final class TextShape {
+     // Policy estimate, not measurement of opaque CoreText allocations. Source
+     // String payload is accounted once separately; paint key payload is owned.
+     package var ownedBytes: Int {
+-        (lineBreakBoundaries?.count ?? 0) * MemoryLayout<Int>.stride
+-            + (flow?.ownedBytes ?? 0) + spec.runs.count * MemoryLayout<Run>.stride
+-            + key.paint.color.count * MemoryLayout<Double>.stride + key.paint.runs.reduce(0) {
+-            $0 + MemoryLayout<TextPaint.Inline>.stride
+-                + (($1.color?.count ?? 0) + ($1.underlineColor?.count ?? 0) + ($1.strikeColor?.count ?? 0)) * MemoryLayout<Double>.stride
+-                + $1.decoration.utf8.count + $1.href.utf8.count
+-        }
++        let breaks: Int = (lineBreakBoundaries?.count ?? 0) * MemoryLayout<Int>.stride
++        let flowBytes: Int = flow?.ownedBytes ?? 0
++        let runBytes: Int = spec.runs.count * MemoryLayout<Run>.stride
++        let colorBytes: Int = key.paint.color.count * MemoryLayout<Double>.stride
++        let inline: Int = key.paint.runs.reduce(0) { (sum: Int, r) -> Int in
++            let colors: Int = (r.color?.count ?? 0) + (r.underlineColor?.count ?? 0) + (r.strikeColor?.count ?? 0)
++            return sum + MemoryLayout<TextPaint.Inline>.stride + colors * MemoryLayout<Double>.stride + r.decoration.utf8.count + r.href.utf8.count
++        }
++        return breaks + flowBytes + runBytes + colorBytes + inline
+     }
+     package var opaqueEstimate: Int { identity.utf16Count * 32 + spec.runs.count * 512 + (flow == nil ? 0 : identity.utf16Count * 64 + 256) }
+ }
+diff --git a/host/apple/Sources/ExactKit/Batch.swift b/host/apple/Sources/ExactKit/Batch.swift
+index ba53c155..ad87671a 100644
+--- a/host/apple/Sources/ExactKit/Batch.swift
++++ b/host/apple/Sources/ExactKit/Batch.swift
+@@ -27,7 +27,8 @@ extension BatchValue {
+         guard let c = channels(dark: dark, contrast: contrast, elevated: elevated, tint: tint) else { return nil }
+         guard case .object(let o) = self, let halves = o["cs"]?.array, !halves.isEmpty,
+               case .object(let half) = halves[dark && halves.count > 1 ? 1 : 0] else { return c }
+-        if let code = ["srgb": 0.0, "display-p3": 1, "srgb-linear": 2][half["s"]?.string ?? ""],
++        let codes: [String: Double] = ["srgb": 0, "display-p3": 1, "srgb-linear": 2]
++        if let code = codes[half["s"]?.string ?? ""],
+            let v = half["v"]?.numbers, v.count == 4 { return c + [code] + v }
+         // A profile's colour: as extended sRGB (LLP 1100 D3).
+         guard let cg = cgColor(dark: dark), let space = CGColorSpace(name: CGColorSpace.extendedSRGB),
+diff --git a/host/apple/Sources/ExactKit/BorderPaint.swift b/host/apple/Sources/ExactKit/BorderPaint.swift
+index 42a379d3..01569790 100644
+--- a/host/apple/Sources/ExactKit/BorderPaint.swift
++++ b/host/apple/Sources/ExactKit/BorderPaint.swift
+@@ -180,9 +180,12 @@ package enum BorderPaint {
+                 + max(0, mid.width - midRadii[2].width - midRadii[3].width)
+                 + max(0, mid.height - midRadii[1].height - midRadii[2].height)
+                 + max(0, mid.height - midRadii[3].height - midRadii[0].height)
+-            let arcs = midRadii.reduce(CGFloat(0)) { sum, r in
+-                let a = r.width, b = r.height
+-                return sum + (a + b == 0 ? 0 : .pi / 4 * (3 * (a + b) - sqrt((3 * a + b) * (a + 3 * b))))
++            let arcs: CGFloat = midRadii.reduce(CGFloat(0)) { (sum: CGFloat, r: CGSize) -> CGFloat in
++                let a: CGFloat = r.width, b: CGFloat = r.height
++                if a + b == 0 { return sum }
++                let root: CGFloat = sqrt((3 * a + b) * (a + 3 * b))
++                let quarter: CGFloat = CGFloat.pi / 4
++                return sum + quarter * (3 * (a + b) - root)
+             }
+             length = straight + arcs
+         } else {
+diff --git a/host/apple/Sources/ExactKit/Gradient.swift b/host/apple/Sources/ExactKit/Gradient.swift
+index 4f67c52a..fe550cd5 100644
+--- a/host/apple/Sources/ExactKit/Gradient.swift
++++ b/host/apple/Sources/ExactKit/Gradient.swift
+@@ -153,7 +153,7 @@ struct Gradient {
+                 guard i + 9 < s.count, s[i] < s[i + 5], s[i + 1..<i + 4] != s[i + 6..<i + 9] else { continue }
+                 for k in 1..<16 {
+                     let t = CGFloat(k) / 16
+-                    out += (0..<5).map { s[i + $0] + (s[i + 5 + $0] - s[i + $0]) * t }
++                    out += (0..<5).map { (j: Int) -> CGFloat in let a: CGFloat = s[i + j], b: CGFloat = s[i + 5 + j]; return a + (b - a) * t }
+                 }
+             }
+             s = out
+diff --git a/host/apple/Sources/ExactKit/HostBlock.swift b/host/apple/Sources/ExactKit/HostBlock.swift
+index fbce0e18..3d95f682 100644
+--- a/host/apple/Sources/ExactKit/HostBlock.swift
++++ b/host/apple/Sources/ExactKit/HostBlock.swift
+@@ -74,8 +74,13 @@ extension Runtime {
+         for (view, shown) in shows { append([view, shown ? 14 : 15, 0, 0, 0, 0]) }
+         for (view, block) in blocks {
+             let width = block?.width.wire, height = block?.height.wire
+-            let lengths = [width?.length ?? 0, height?.length ?? 0, width?.policy ?? 0, height?.policy ?? 0].map { Float($0).bitPattern }
+-            append([view, block == nil ? 5 : 4] + lengths + (block.map { [$0.tactic.sides] } ?? []))
++            let l0: UInt32 = Float(width?.length ?? 0).bitPattern, l1: UInt32 = Float(height?.length ?? 0).bitPattern
++            let l2: UInt32 = Float(width?.policy ?? 0).bitPattern, l3: UInt32 = Float(height?.policy ?? 0).bitPattern
++            let lengths: [UInt32] = [l0, l1, l2, l3]
++            var row: [UInt32] = [view, block == nil ? 5 : 4]
++            row += lengths
++            if let block { row.append(block.tactic.sides) }
++            append(row)
+         }
+         for (view, placement) in placements {
+             guard let placement else {
+diff --git a/host/apple/Sources/ExactKit/Mac/FrameHealthOverlayMac.swift b/host/apple/Sources/ExactKit/Mac/FrameHealthOverlayMac.swift
+index 124bf26b..e9399fff 100644
+--- a/host/apple/Sources/ExactKit/Mac/FrameHealthOverlayMac.swift
++++ b/host/apple/Sources/ExactKit/Mac/FrameHealthOverlayMac.swift
+@@ -385,9 +385,10 @@ final class FrameHealthCardViewMac: NSView {
+         let header = next.status != presentation.status
+         presentation = next
+         next.apply(to: &state)
+-        setAccessibilityValue([state.request.0, state.request.1, state.display].filter { !$0.isEmpty }.joined(separator: ", ")
+-            + ". " + state.rows.map { "\($0.0): \($0.1) FPS, \($0.2) missed" }.joined(separator: ". ")
+-            + ". Pacing, \(state.pacingWindow): " + [state.pacing.0, state.pacing.1].filter { !$0.isEmpty }.joined(separator: ", "))
++        let requestText: String = [state.request.0, state.request.1, state.display].filter { !$0.isEmpty }.joined(separator: ", ")
++        let rowsText: String = state.rows.map { (r) -> String in "\(r.0): \(r.1) FPS, \(r.2) missed" }.joined(separator: ". ")
++        let pacingText: String = [state.pacing.0, state.pacing.1].filter { !$0.isEmpty }.joined(separator: ", ")
++        setAccessibilityValue(requestText + ". " + rowsText + ". Pacing, \(state.pacingWindow): " + pacingText)
+         updateAccessibility()
+         // The table changes with each sample; the charts' labels only with their scales
+         let labels = [next.input?.rateTop, next.input?.timeTop, state.table ? 1 : 0]
+diff --git a/host/apple/Sources/ExactKit/Mac/SidebarMac.swift b/host/apple/Sources/ExactKit/Mac/SidebarMac.swift
+index bb92f4c6..4f00e093 100644
+--- a/host/apple/Sources/ExactKit/Mac/SidebarMac.swift
++++ b/host/apple/Sources/ExactKit/Mac/SidebarMac.swift
+@@ -140,8 +140,12 @@ final class SidebarHost {
+         let host = root.tabs
+         // What the kernel is asked by: the root, its tabs as the views name
+         // them, else the tablists mounted (the kernel may find one of them).
+-        let signature = [root.node.id] + (host.map { [$0.tablist.id] + $0.tabs.map(\.id) + [0] + $0.panels.map(\.id) }
+-            ?? [0] + presenter.carrying("role:tablist").map(\.id))
++        var signature = [root.node.id]
++        if let host {
++            signature.append(host.tablist.id); signature += host.tabs.map(\.id); signature.append(0); signature += host.panels.map(\.id)
++        } else {
++            signature.append(0); signature += presenter.carrying("role:tablist").map(\.id)
++        }
+         // The placement is read from the root's and the tablist's layout
+         // rows, which do not cross: a batch that writes either one's props
+         // or style, or that moves the root or a child of it (what a change
+diff --git a/host/apple/Sources/ExactKit/Mac/ToolbarMac.swift b/host/apple/Sources/ExactKit/Mac/ToolbarMac.swift
+index aa50401b..ccc3d99a 100644
+--- a/host/apple/Sources/ExactKit/Mac/ToolbarMac.swift
++++ b/host/apple/Sources/ExactKit/Mac/ToolbarMac.swift
+@@ -748,10 +748,14 @@ final class WindowToolbarHost: NSObject, NSToolbarDelegate, NSToolbarItemValidat
+         if toolbar.centeredItemIdentifiers != centered { toolbar.centeredItemIdentifiers = centered }
+         let field = search.update(searched, enabled: window.attachedSheet == nil)
+         let identifiers = { (nodes: [NodeView]) in nodes.compactMap { self.items[$0.id]?.itemIdentifier } }
+-        let nextOrder = header != nil || beside != nil
+-            ? identifiers(over?.leading ?? []) + (group.map { [$0.itemIdentifier, .flexibleSpace] } ?? []) + identifiers(over?.trailing ?? [])
+-                + (columns ? [Self.listSeparatorIdentifier] : []) + identifiers(after?.buttons ?? [])
+-                + (field.map { [.flexibleSpace, $0.itemIdentifier] } ?? [])
++        var barOrder: [NSToolbarItem.Identifier] = identifiers(over?.leading ?? [])
++        if let group { barOrder += [group.itemIdentifier, .flexibleSpace] }
++        barOrder += identifiers(over?.trailing ?? [])
++        if columns { barOrder.append(Self.listSeparatorIdentifier) }
++        barOrder += identifiers(after?.buttons ?? [])
++        if let field { barOrder += [.flexibleSpace, field.itemIdentifier] }
++        let nextOrder: [NSToolbarItem.Identifier] = header != nil || beside != nil
++            ? barOrder
+             : (customizing != nil ? declared.map { children($0.owner) } ?? [] : declarations).compactMap { node -> NSToolbarItem.Identifier? in
+                 if node === heading { return .flexibleSpace }
+                 return items[node.id]?.itemIdentifier
+diff --git a/host/apple/modules/ExactNativeModule.swift b/host/apple/modules/ExactNativeModule.swift
+index be03979b..c58a4434 100644
+--- a/host/apple/modules/ExactNativeModule.swift
++++ b/host/apple/modules/ExactNativeModule.swift
+@@ -1392,14 +1392,19 @@ private let table: UnsafeMutableRawPointer = {
+     // Beside the tags, under a key no tag can take (a tag has a hyphen): the
+     // hatch words this module was built to handle (LLP 1075.003.000.001
+     // §4.3), so the host calls it with no word its code never compiled.
+-    let words = "\"hatches\":{\"words\":[" + ExactHatchKey._words.map { "\"\($0)\"" }.joined(separator: ",") + "]}"
+-        + ",\"extensions\":{\"names\":[" + ExactExtensions.names.map { "\"\($0)\"" }.joined(separator: ",") + "]}"
+-        // `app.onLine` is asked of the host (`on_line`), not read from the facts.
+-        + ",\"facts\":{\"onLine\":\"asks\"}"
++    let hatchWords: String = ExactHatchKey._words.map { (w) -> String in "\"\(w)\"" }.joined(separator: ",")
++    let extensionNames: String = ExactExtensions.names.map { (n) -> String in "\"\(n)\"" }.joined(separator: ",")
++    var words: String = "\"hatches\":{\"words\":[" + hatchWords + "]}"
++    words += ",\"extensions\":{\"names\":[" + extensionNames + "]}"
++    // `app.onLine` is asked of the host (`on_line`), not read from the facts.
++    words += ",\"facts\":{\"onLine\":\"asks\"}"
+     let roster = ExactNativeViewABI.roster
+-    let text = "{" + (roster.keys.sorted().map { tag in
+-        "\"\(tag)\":{\"snapshot\":\(roster[tag]!.snapshot),\"reuse\":\(roster[tag]!.reuse),\"firstFrame\":\(roster[tag]!.firstFrame)}"
+-    } + [words]).joined(separator: ",") + "}"
++    var entries: [String] = roster.keys.sorted().map { (tag) -> String in
++        let r = roster[tag]!
++        return "\"\(tag)\":{\"snapshot\":\(r.snapshot),\"reuse\":\(r.reuse),\"firstFrame\":\(r.firstFrame)}"
++    }
++    entries.append(words)
++    let text: String = "{" + entries.joined(separator: ",") + "}"
+     let size = 256
+     let t = UnsafeMutableRawPointer.allocate(byteCount: size, alignment: 8)
+     t.initializeMemory(as: UInt8.self, repeating: 0, count: size)
