@@ -31,8 +31,10 @@ const demoShelf = (files: Files) => ({
 });
 
 /**
- * Picks the host's engine, as Alona's app.ts does: the native module when it
- * answers a probe with a host, else the demo engine with the reason on screen.
+ * Picks the host's engine: the native module when it answers a probe with a
+ * host, else the demo engine with the reason on screen. An engine may also
+ * answer `demo: true` to say it cannot run models where it is, as the web
+ * engine does under browser automation.
  */
 export async function hostService(files: Files, native: Native | null | undefined, options: HostOptions = {}): Promise<{ service: Service; store: MeetingStore }> {
   const store = meetingStore(files);

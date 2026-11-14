@@ -10,12 +10,21 @@ One [Exact](https://github.com/expo/exact) app builds the web, macOS, iOS, and A
 |---|---|---|
 | macOS | 6 of 6 flows pass | All three tiers run: sherpa-onnx and llama.cpp in a Swift module |
 | Web | 6 of 6 flows pass | Lite tier runs in Chrome on WebGPU, recording from Chrome's fake microphone |
-| Android | 6 of 6 flows pass on an emulator | Demo engine only; the native bridge is not built |
+| Android | 6 of 6 flows pass on an emulator, with an intermittent recording failure | Demo engine only; the native bridge is not built |
+| Linux (`.deb`) | Flows pass in a container | Demo engine there (no GPU); real models are not verified |
+| Windows | Built, never run | Not verified |
 | iOS | Not built | Needs Xcode 27.1 on the build machine |
 
 No hardware microphone and no real meeting has been run on any platform. Accuracy figures come from synthetic voices.
 
 The demo engine returns a sample transcript and sample notes, and the app says so on screen.
+
+## Two apps, one foundation
+
+- **Alona** is the meeting assistant at the repository root.
+- **The clinical app** in `clinic/` is a patient note-taking and transcription app for health professionals on web, Android, and iOS. It is white-label: each tenant is one typed config file under `tenants/`, and `bun tools/tenant.mjs build <slug> web` turns that file into a branded build. See `tenants/README.md`.
+
+Windows and Linux use an Electron shell (`desktop/`) around Alona's web build, because Exact cannot target either as a desktop app.
 
 ## Read next
 

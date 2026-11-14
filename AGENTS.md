@@ -40,7 +40,9 @@ Alona is a private meeting assistant. It records a meeting, transcribes it with 
 | `core/` | Shared TypeScript: `service`, `pipeline`, `notes`, `device`, `models`, `store`, `engine` (the protocol), `sim-engine`, `artifacts.json` |
 | `modules/apple/` | The Swift inference engine for macOS and iOS |
 | `modules/web/`, `engine/web/` | The web engine's seam and its Worker source |
-| `tools/` | Flow runner, real-model checks, model pinning, framework fetch, the Exact patch |
+| `clinic/`, `tenants/` | The clinical app's view and logic, and one typed config file per tenant (`tenants/README.md`) |
+| `desktop/` | The Electron shell for the Windows and Linux packages |
+| `tools/` | Flow runner, real-model checks, model pinning, framework fetch, tenant and desktop builds, the Exact patch |
 | `docs/` | Field guide, captured media, research, spike reports, decision trail |
 | `legacy/macos-swift/` | The original Swift app, reference only |
 
@@ -65,3 +67,6 @@ bun tools/e2e-native.mjs lite   # macOS on real models, after any engine or pipe
 6. Colors come from `app.tamber` tokens or platform roles. No hex values in `app.contract`, except the waveform tint, which takes only a literal.
 7. Recording flows are tested in `tools/flows.mjs`, because Contract test files cannot grant the microphone permission.
 8. Nothing about a meeting leaves the device. The only network use is downloading models.
+9. The note format is a profile in `core/notes.ts`. Alona and each clinical template supply one; do not hard-code headings in the pipeline.
+10. A tenant's brand comes from its file under `tenants/` through generated tokens. No tenant names or colors in `clinic/`.
+11. The clinical app claims no regulatory compliance anywhere. It says what it does.

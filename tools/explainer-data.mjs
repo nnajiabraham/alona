@@ -25,7 +25,7 @@ const media = (target, flow, dir) => {
 };
 
 const flows = {};
-for (const target of dirs(MEDIA)) {
+for (const target of dirs(MEDIA).filter((t) => t !== 'clinic')) {
   // Captures saved straight into a target's folder are one real-model run, not a named flow.
   const loose = media(target, '', join(MEDIA, target));
   if (loose) (flows[target] ??= {})['real-run'] = loose;
@@ -65,18 +65,60 @@ function fromWeb(result) {
   };
 }
 
+// A check that did not apply, such as word error rate on the demo engine, is recorded as text, not false.
+const failed = (checksOf) => Object.entries(checksOf ?? {}).filter(([, ok]) => ok === false).map(([name]) => name);
+
+/** The desktop shell's and the clinical app's result files: one run each, with word error rate and total time. */
+function fromSingleRun(result, host, tier, total, notes, memory) {
+  return {
+    host, tier, date: result.date,
+    method: {
+      audio: `${result.fixture}`,
+      recording: typeof result.recording === 'string' ? result.recording : `recorded by the app: ${result.recording?.path} (${result.recording?.bytes} bytes)`,
+      timing: 'wall time from stopping the recording to the notes on screen',
+      engine: result.engine === 'demo' ? 'the demo engine, because this machine gave no real WebGPU adapter' : 'real models',
+    },
+    wer: result.wer ? { errors: result.wer.errors, words: result.wer.words, rate: result.wer.wer } : undefined,
+    title: '', transcript: result.transcript ?? '', notes: notes ?? '', failures: failed(result.checks),
+    runs: [{ cycle: 1, transcribeSeconds: null, notesSeconds: null, totalSeconds: Number(total.toFixed(1)), peakMB: memory ?? null, idleMB: null }],
+  };
+}
+
 const checks = [];
-for (const target of dirs(MEDIA)) {
+const check = (target, file, read) => {
+  try {
+    checks.push({ target, file, ...read(JSON.parse(readFileSync(join(ROOT, file), 'utf8'))) });
+  } catch (e) {
+    console.warn(`skipped ${file}: ${e.message}`);
+  }
+};
+for (const target of dirs(MEDIA).filter((t) => t !== 'clinic' && t !== 'desktop')) {
   for (const name of files(join(MEDIA, target), '.json')) {
-    try {
-      const raw = JSON.parse(readFileSync(join(MEDIA, target, name), 'utf8'));
-      const result = raw.browser ? fromWeb(raw) : raw;
-      checks.push({ target, file: `docs/media/${target}/${name}`, ...result });
-    } catch (e) {
-      console.warn(`skipped ${target}/${name}: ${e.message}`);
+    check(target, `docs/media/${target}/${name}`, (raw) => (raw.browser ? fromWeb(raw) : raw));
+  }
+}
+for (const platform of dirs(join(MEDIA, 'desktop'))) {
+  check('desktop', `docs/media/desktop/${platform}/e2e.json`, (raw) =>
+    fromSingleRun(raw, `desktop shell on ${platform}`, 'lite', raw.stopToNotesSeconds, raw.notes, raw.peakMemoryMB));
+}
+
+/** The clinical app's captures: tenant, then target, then flow. */
+const clinic = {};
+for (const slug of dirs(join(MEDIA, 'clinic'))) {
+  for (const target of dirs(join(MEDIA, 'clinic', slug))) {
+    const base = join(MEDIA, 'clinic', slug, target);
+    for (const name of files(base, '.json')) {
+      check('clinic', `docs/media/clinic/${slug}/${target}/${name}`, (raw) =>
+        fromSingleRun(raw, `clinical app, ${slug}, web`, 'lite', raw.pipelineSeconds, raw.draft, null));
     }
+    for (const flow of dirs(base)) {
+      const found = media(`clinic/${slug}/${target}`, flow, join(base, flow));
+      if (found) ((clinic[slug] ??= {})[target] ??= {})[flow] = found;
+    }
+    const loose = media(`clinic/${slug}/${target}`, '', base);
+    if (loose) ((clinic[slug] ??= {})[target] ??= {})['real-run'] = loose;
   }
 }
 
-writeFileSync(join(ROOT, 'docs', 'explainer', 'data.js'), `window.ALONA = ${JSON.stringify({ flows, checks }, null, 1)};\n`);
-console.log(`explainer data: ${Object.keys(flows).length} targets, ${checks.length} real-model checks`);
+writeFileSync(join(ROOT, 'docs', 'explainer', 'data.js'), `window.ALONA = ${JSON.stringify({ flows, checks, clinic }, null, 1)};\n`);
+console.log(`explainer data: ${Object.keys(flows).length} targets, ${Object.keys(clinic).length} clinic tenants, ${checks.length} checks`);

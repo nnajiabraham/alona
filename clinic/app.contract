@@ -420,7 +420,8 @@ component Clinic
                       text setup.deviceLine testId="device-line"
                       row gap=8 align-items="center"
                         image "symbol:checkmark" color="accent"
-                        text `Best fit: ${setup.recommendedLabel}` font="-exact-headline" testId="recommended"
+                        text (setup.active == setup.recommended ? `Best fit: ${setup.recommendedLabel}` : `Set for this app: ${setup.activeLabel}`)
+                          font="-exact-headline" testId="recommended"
                       for t in setup.tiers.filter(t => t.id == setup.active) key=t.id
                         text `${t.sttName} for transcripts, ${t.llmName} for drafts.${downloadOnce(t.downloadLabel)}`
                           font="-exact-footnote" color="text.muted" testId="recommended-models"
