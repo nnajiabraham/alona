@@ -50,3 +50,7 @@ coverage/
 
 # Native inference frameworks, fetched by tools/fetch-apple-frameworks.sh
 /modules/apple/*.xcframework
+
+# Web inference engine, built by tools/build-web-engine.mjs
+/modules/web/worker.js
+/modules/web/ort/

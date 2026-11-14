@@ -1,0 +1,152 @@
+warning: patch `accesskit_windows v0.35.2 (/Users/manlikeabro/Documents/repos/exact/vendor/accesskit-windows)` was not used in the crate graph
+help: Check that the patched package version and available features are compatible
+      with the dependency requirements. If the patch has a different version from
+      what is locked in the Cargo.lock file, run `cargo update` to use the new
+      version. This may also occur with an optional dependency that is not enabled.
+warning: use of deprecated method `icu_properties::props::BidiClass::to_icu4c_value`: please comment on https://github.com/unicode-org/icu4x/issues/6067 if you need this
+   --> /Users/manlikeabro/Documents/repos/exact/vendor/parley/src/bidi.rs:893:13
+    |
+893 |     1 << (t.to_icu4c_value() as u32)
+    |             ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+warning: `parley` (lib) generated 1 warning
+   Compiling alona-android v0.1.0 (/Users/manlikeabro/Documents/repos/alona/.exact/shells/android)
+warning: alona-android@0.1.0: app.tamber:6:3 warning [tamber-unreachable] accent-color on iOS, macOS and the web: the platform's look stands on iOS disabled prominent buttons (iOS draws a disabled prominent glass button grey; style a pressable instead (LLP 1121 D8)); macOS progress bars and spinners (NSProgressIndicator takes no tint); the web's disabled prominent buttons (the neutral look draws a disabled button grey; style a pressable instead (LLP 1121 D8)) (the first at line 315; LLP 1121 D9). The app ships ios (app.json `host.ios`, app.json `deploy.store.ios`) and macos (app.json `host.macos`, app.json `deploy.store.macos`); not shipping one? delete its keys
+    Finished `host-dev` profile [optimized] target(s) in 4.31s
+
+Welcome to Gradle 9.8.0!
+
+Here are the highlights of this release:
+ - Java 27 support
+ - Maven mirror settings reuse
+ - Linked problem locations in build output
+
+For more details see https://docs.gradle.org/9.8.0/release-notes.html
+
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.8.0/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Calculating task graph as configuration cache cannot be reused due to --write-verification-metadata
+
+> Configure project :reference
+w: file:///Users/manlikeabro/Documents/repos/exact/host/android/reference/build.gradle.kts:34:24: 'fun RegisteringDomainObjectDelegateProviderWithAction<out TaskContainer, Task>.provideDelegate(receiver: Any?, property: KProperty<*>): ExistingDomainObjectDelegate<TaskProvider<Task>>' is deprecated. Use 'val task = tasks.register(name) { }' instead. See the Gradle 9.6 upgrading guide.
+w: file:///Users/manlikeabro/Documents/repos/exact/host/android/reference/build.gradle.kts:34:24: 'fun <T : Any, C : NamedDomainObjectContainer<T>> C.registering(action: T.() -> Unit): RegisteringDomainObjectDelegateProviderWithAction<out C, T>' is deprecated. Use 'val element = register(name) { }' instead. See the Gradle 9.6 upgrading guide.
+w: file:///Users/manlikeabro/Documents/repos/exact/host/android/reference/build.gradle.kts:34:24: 'fun <T> ExistingDomainObjectDelegate<out T>.getValue(receiver: Any?, property: KProperty<*>): T' is deprecated. Use the named() API instead. See the Gradle 9.6 upgrading guide.
+
+> Task :app:preBuild UP-TO-DATE
+> Task :canvas:preBuild UP-TO-DATE
+> Task :app:preReleaseBuild UP-TO-DATE
+> Task :canvas:preReleaseBuild UP-TO-DATE
+> Task :canvas:mergeReleaseJniLibFolders
+> Task :canvas:mergeReleaseNativeLibs NO-SOURCE
+> Task :canvas:copyReleaseJniLibsProjectOnly
+> Task :canvas:generateReleaseResources
+> Task :canvas:packageReleaseResources
+> Task :canvas:processReleaseNavigationResources
+> Task :app:mergeReleaseJniLibFolders
+> Task :canvas:prepareReleaseArtProfile
+> Task :canvas:javaPreCompileRelease
+> Task :canvas:extractDeepLinksRelease
+> Task :canvas:writeReleaseAarMetadata
+> Task :canvas:mapReleaseSourceSetPaths
+> Task :canvas:parseReleaseLocalResources
+> Task :canvas:processReleaseManifest
+> Task :canvas:generateReleaseAssets UP-TO-DATE
+> Task :canvas:mergeReleaseAssets
+> Task :canvas:extractProguardFiles
+> Task :canvas:generateReleaseRFile
+> Task :canvas:prepareLintJarForPublish
+> Task :canvas:checkReleaseAarMetadata
+> Task :canvas:compileReleaseLibraryResources
+> Task :app:checkReleaseDuplicateClasses
+> Task :app:generateReleaseResources
+> Task :app:packageReleaseResources
+> Task :app:processReleaseNavigationResources
+> Task :app:javaPreCompileRelease FROM-CACHE
+> Task :app:parseReleaseLocalResources
+> Task :app:mergeReleaseNativeLibs
+> Task :app:mergeReleaseArtProfile
+> Task :app:mapReleaseSourceSetPaths
+> Task :app:compileReleaseNavigationResources
+> Task :app:checkReleaseAarMetadata
+> Task :app:generateReleaseRFile
+> Task :app:stripReleaseDebugSymbols
+> Task :app:createReleaseCompatibleScreenManifests
+> Task :app:extractDeepLinksRelease
+> Task :app:processReleaseMainManifest
+> Task :app:processReleaseManifest
+> Task :app:extractProguardFiles
+> Task :app:mergeReleaseStartupProfile
+> Task :app:generateReleaseAssets UP-TO-DATE
+> Task :app:mergeReleaseResources
+> Task :app:mergeReleaseAssets
+> Task :app:compressReleaseAssets
+> Task :app:extractReleaseVersionControlInfo
+> Task :app:collectReleaseDependencies
+> Task :app:sdkReleaseDependencyData
+> Task :app:validateSigningRelease
+> Task :app:writeReleaseAppMetadata
+> Task :app:writeReleaseSigningConfigVersions
+> Task :app:processReleaseManifestForPackage
+> Task :app:extractReleaseNativeSymbolTables
+> Task :canvas:extractDeepLinksForAarRelease
+> Task :app:processReleaseResources
+> Task :app:mergeReleaseNativeDebugMetadata
+> Task :app:optimizeReleaseResources
+> Task :canvas:extractReleaseAnnotations
+> Task :canvas:writeReleaseLintModelMetadata
+
+> Task :canvas:compileReleaseKotlin
+w: file:///Users/manlikeabro/Documents/repos/exact/host/android/canvas/src/main/java/dev/exact/canvas/Keys.kt:116:22 'val characters: String!' is deprecated. Deprecated in Java.
+w: file:///Users/manlikeabro/Documents/repos/exact/host/android/canvas/src/main/java/dev/exact/canvas/SurfaceHaptics.kt:163:73 'static field HAPTIC_FEEDBACK_ENABLED: String' is deprecated. Deprecated in Java.
+
+> Task :canvas:compileReleaseJavaWithJavac NO-SOURCE
+> Task :canvas:mergeReleaseGeneratedProguardFiles
+> Task :canvas:exportReleaseConsumerProguardFiles
+> Task :canvas:processReleaseJavaRes
+> Task :canvas:bundleLibRuntimeToJarRelease
+> Task :canvas:bundleLibCompileToJarRelease
+> Task :canvas:generateReleaseLintModel
+> Task :canvas:createFullJarRelease
+> Task :canvas:mergeReleaseConsumerProguardFiles
+> Task :canvas:generateReleaseLintVitalModel
+> Task :canvas:mergeReleaseJavaResource
+> Task :canvas:syncReleaseLibJars
+> Task :canvas:bundleReleaseLocalLintAar
+> Task :app:compileReleaseKotlin
+> Task :app:compileReleaseJavaWithJavac NO-SOURCE
+> Task :app:mergeReleaseGeneratedProguardFiles
+> Task :app:processReleaseJavaRes
+> Task :app:expandReleaseArtProfileWildcards
+> Task :app:mergeReleaseJavaResource
+> Task :app:generateReleaseLintVitalReportModel
+> Task :app:minifyReleaseWithR8
+> Task :app:compileReleaseArtProfile
+> Task :canvas:lintVitalAnalyzeRelease
+> Task :app:lintVitalAnalyzeRelease
+> Task :app:lintVitalReportRelease
+> Task :app:lintVitalRelease
+> Task :app:packageRelease
+> Task :app:createReleaseApkListingFileRedirect
+> Task :app:assembleRelease
+Persisted dependency lock state for Dependency Resolution Management
+Persisted dependency lock state for buildscript of root project 'exact-android'
+Persisted dependency lock state for project ':app'
+Persisted dependency lock state for project ':canvas'
+Persisted dependency lock state for project ':reference'
+
+[Incubating] Problems report is available at: file:///Users/manlikeabro/Documents/repos/alona/target/android/app/root/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.8.0/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 1m 31s
+82 actionable tasks: 81 executed, 1 from cache
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.8.0/userguide/configuration_cache_enabling.html
+/Users/manlikeabro/Documents/repos/alona/target/android/app/outputs/apk/release/app-release.apk
+built in 97.7 s, installed on emulator-5554 as com.alona.app in 0.3 s
+bun exact.mjs android --write-locks  3.99s user 2.80s system 6% cpu 1:38.62 total

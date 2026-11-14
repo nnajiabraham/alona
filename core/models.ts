@@ -21,6 +21,8 @@ const PARAKEET: Artifact = artifacts['parakeet-tdt-0.6b-v3.sherpa'];
 const QWEN_08B: Artifact = artifacts['qwen3.5-0.8b.gguf'];
 const QWEN_2B: Artifact = artifacts['qwen3.5-2b.gguf'];
 const QWEN_9B: Artifact = artifacts['qwen3.5-9b.gguf'];
+const MOONSHINE_WEB: Artifact = artifacts['moonshine-base.onnx'];
+const QWEN_08B_WEB: Artifact = artifacts['qwen3.5-0.8b.onnx'];
 
 /**
  * The model lineup. Files and hashes are pinned in artifacts.json by
@@ -32,8 +34,8 @@ export const LINEUP: Record<TierId, Tier> = {
     id: 'lite',
     label: 'Lite',
     blurb: 'Smallest and fastest. English transcripts and draft-quality notes.',
-    stt: { name: 'Moonshine Base', artifacts: { macos: MOONSHINE } },
-    llm: { name: 'Qwen3.5 0.8B', artifacts: { macos: QWEN_08B } },
+    stt: { name: 'Moonshine Base', artifacts: { macos: MOONSHINE, web: MOONSHINE_WEB } },
+    llm: { name: 'Qwen3.5 0.8B', artifacts: { macos: QWEN_08B, web: QWEN_08B_WEB } },
   },
   balanced: {
     id: 'balanced',

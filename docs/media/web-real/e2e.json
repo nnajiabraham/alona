@@ -1,0 +1,176 @@
+{
+  "date": "2026-11-14T18:58:59.074Z",
+  "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+  "fixture": "tools/fixture/meeting-fixture.wav (53 s, 16 kHz mono)",
+  "microphone": "Chrome's fake capture device failed (no answer in 8 s); getUserMedia was replaced by a Web Audio stream playing the fixture. Hardware capture NOT VERIFIED; the app's MediaRecorder recording path ran.",
+  "runs": [
+    {
+      "run": 1,
+      "jobs": [
+        "m1794682789525.a0.stt",
+        "m1794682789525.a0.notes0"
+      ],
+      "pipelineSeconds": 38.089,
+      "transcribe": {
+        "loadMs": 1181,
+        "transcribeMs": 3840,
+        "audioSeconds": 52.9880625,
+        "windows": 3,
+        "decodeMs": 8020
+      },
+      "generate": [
+        {
+          "loadMs": 1443,
+          "promptTokens": 466,
+          "tokens": 272,
+          "ttftMs": 14142,
+          "generateMs": 20689,
+          "tokensPerSecond": 41.4
+        }
+      ],
+      "wer": {
+        "errors": 7,
+        "words": 168,
+        "wer": 0.0417
+      },
+      "transcript": "Thanks for joining everyone. Today we need to decide the launch date for the mobile app and review the open bugs. The Android build is stable. We fixed the crash on the settings screen yesterday, and battery usage is down by 20%. Good. What about the login issue on older phones? That one is still open. I need two more days to finish the fix and test it. From the design side, the onboarding screens of final, I will send the updated icons to the team by Thursday. Then let us agree on the plan. We launch on the 15th of March, as long as the login fix lands by Friday. Agreed. I will also prepare the release notes and the store screen shots. I will own the login fix and I will run the full regression suite on Friday morning. Great. To summarize the launch date is March 15. Daniel owns the login fix and Karen owns the icons, the release notes and the screenshots. Thanks everyone.",
+      "segments": [
+        {
+          "start": 0,
+          "end": 17.67,
+          "text": "Thanks for joining everyone. Today we need to decide the launch date for the mobile app and review the open bugs. The Android build is stable. We fixed the crash on the settings screen yesterday, and battery usage is down by 20%. Good. What about the login issue on older phones? That one is still open."
+        },
+        {
+          "start": 17.67,
+          "end": 33.69,
+          "text": "I need two more days to finish the fix and test it. From the design side, the onboarding screens of final, I will send the updated icons to the team by Thursday. Then let us agree on the plan. We launch on the 15th of March, as long as the login fix lands by Friday. Agreed."
+        },
+        {
+          "start": 33.69,
+          "end": 52.9880625,
+          "text": "I will also prepare the release notes and the store screen shots. I will own the login fix and I will run the full regression suite on Friday morning. Great. To summarize the launch date is March 15. Daniel owns the login fix and Karen owns the icons, the release notes and the screenshots. Thanks everyone."
+        }
+      ],
+      "notes": "# Title: Meeting on App Launch and Bug Resolution\n# Today's meeting was to decide the launch date for the mobile app and review open bugs.\n\n## Summary\nThe meeting agreed on launching the app on March 15th, with a condition that the login fix must be resolved by Friday before then. We also confirmed that Daniel will own the fix while Karen handles the other items.\n\n## Key points\n- The login bug is now fixed and can be released.\n- Two days remain for testing the updated icons.\n- Onboarding screens are ready for team review.\n- The full regression suite is scheduled for Friday morning.\n\n## Decisions\n- Launch date: March 15\n- Login fix: Daniel owns this, Karen owns the other items.\n- Release notes and store screen shots: Prepared by the project manager.\n- Open bugs: None recorded (all issues resolved).\n\n## Action items\n- [ ] I will own the login fix.\n- [ ] Karen owns the icons and release notes.\n- [ ] The project manager owns screenshots.\n- [ ] Daniel is responsible for the full regression suite on Friday morning.\n- [ ] Review board members sign off on the March 15 launch announcement at 3:00 PM.\n\n## Open questions\n- None recorded",
+      "missingHeadings": [],
+      "memory": {
+        "peak": {
+          "rendererMB": 3087,
+          "gpuMB": 865,
+          "totalMB": 3952
+        },
+        "afterUnload": {
+          "rendererMB": 1725,
+          "gpuMB": 376,
+          "totalMB": 2101
+        }
+      }
+    },
+    {
+      "run": 2,
+      "jobs": [
+        "m1794682789525.a1.stt",
+        "m1794682789525.a1.notes0"
+      ],
+      "pipelineSeconds": 29.828,
+      "transcribe": {
+        "loadMs": 1251,
+        "transcribeMs": 4473,
+        "audioSeconds": 52.9880625,
+        "windows": 3,
+        "decodeMs": 8
+      },
+      "generate": [
+        {
+          "loadMs": 1630,
+          "promptTokens": 466,
+          "tokens": 272,
+          "ttftMs": 14251,
+          "generateMs": 20800,
+          "tokensPerSecond": 41.38
+        }
+      ],
+      "wer": {
+        "errors": 7,
+        "words": 168,
+        "wer": 0.0417
+      },
+      "transcript": "Thanks for joining everyone. Today we need to decide the launch date for the mobile app and review the open bugs. The Android build is stable. We fixed the crash on the settings screen yesterday, and battery usage is down by 20%. Good. What about the login issue on older phones? That one is still open. I need two more days to finish the fix and test it. From the design side, the onboarding screens of final, I will send the updated icons to the team by Thursday. Then let us agree on the plan. We launch on the 15th of March, as long as the login fix lands by Friday. Agreed. I will also prepare the release notes and the store screen shots. I will own the login fix and I will run the full regression suite on Friday morning. Great. To summarize the launch date is March 15. Daniel owns the login fix and Karen owns the icons, the release notes and the screenshots. Thanks everyone.",
+      "segments": [
+        {
+          "start": 0,
+          "end": 17.67,
+          "text": "Thanks for joining everyone. Today we need to decide the launch date for the mobile app and review the open bugs. The Android build is stable. We fixed the crash on the settings screen yesterday, and battery usage is down by 20%. Good. What about the login issue on older phones? That one is still open."
+        },
+        {
+          "start": 17.67,
+          "end": 33.69,
+          "text": "I need two more days to finish the fix and test it. From the design side, the onboarding screens of final, I will send the updated icons to the team by Thursday. Then let us agree on the plan. We launch on the 15th of March, as long as the login fix lands by Friday. Agreed."
+        },
+        {
+          "start": 33.69,
+          "end": 52.9880625,
+          "text": "I will also prepare the release notes and the store screen shots. I will own the login fix and I will run the full regression suite on Friday morning. Great. To summarize the launch date is March 15. Daniel owns the login fix and Karen owns the icons, the release notes and the screenshots. Thanks everyone."
+        }
+      ],
+      "notes": "# Title: Meeting on App Launch and Bug Resolution\n# Today's meeting was to decide the launch date for the mobile app and review open bugs.\n\n## Summary\nThe meeting agreed on launching the app on March 15th, with a condition that the login fix must be resolved by Friday before then. We also confirmed that Daniel will own the fix while Karen handles the other items.\n\n## Key points\n- The login bug is now fixed and can be released.\n- Two days remain for testing the updated icons.\n- Onboarding screens are ready for team review.\n- The full regression suite is scheduled for Friday morning.\n\n## Decisions\n- Launch date: March 15\n- Login fix: Daniel owns this, Karen owns the other items.\n- Release notes and store screen shots: Prepared by the project manager.\n- Open bugs: None recorded (all issues resolved).\n\n## Action items\n- [ ] I will own the login fix.\n- [ ] Karen owns the icons and release notes.\n- [ ] The project manager owns screenshots.\n- [ ] Daniel is responsible for the full regression suite on Friday morning.\n- [ ] Review board members sign off on the March 15 launch announcement at 3:00 PM.\n\n## Open questions\n- None recorded",
+      "missingHeadings": [],
+      "memory": {
+        "peak": {
+          "rendererMB": 3143,
+          "gpuMB": 928,
+          "totalMB": 4072
+        },
+        "afterUnload": {
+          "rendererMB": 1756,
+          "gpuMB": 393,
+          "totalMB": 2148
+        }
+      }
+    }
+  ],
+  "checks": {
+    "noError": true,
+    "werAtMost15": true,
+    "headingsRun1": true,
+    "secondRunCompleted": true,
+    "headingsRun2": true,
+    "memoryAfterUnloadNotGrowing": true
+  },
+  "probe": {
+    "host": "web",
+    "memoryGB": 32,
+    "cores": 12,
+    "gpu": true,
+    "gpuMaxBufferGB": 3.9999999962747097,
+    "storageFreeGB": 10.73741824,
+    "formFactor": "desktop",
+    "appleSilicon": false,
+    "iosBrowser": false,
+    "description": "Chrome on macOS",
+    "demo": false
+  },
+  "download": {
+    "seconds": 19.479,
+    "bytes": 761444246,
+    "jobs": [
+      {
+        "id": "dl.moonshine-base.onnx",
+        "state": "done",
+        "bytes": 157499295
+      },
+      {
+        "id": "dl.qwen3.5-0.8b.onnx",
+        "state": "done",
+        "bytes": 603944951
+      }
+    ],
+    "persisted": false
+  },
+  "recording": "NOT recorded by the app: no file at app:/data/meetings/m1794682789525/audio.m4a; the fixture WAV was written there. Microphone and recorder path NOT VERIFIED.",
+  "console": [
+    "error: The AudioContext encountered an error from the audio device or the WebAudio renderer.",
+    "error: The AudioContext encountered an error from the audio device or the WebAudio renderer.",
+    "error: Failed to load resource: net::ERR_UNKNOWN_URL_SCHEME"
+  ]
+}

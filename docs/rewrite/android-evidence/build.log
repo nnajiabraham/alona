@@ -1,0 +1,274 @@
+uptime 10:57  up 76 days, 11 hrs, 2 users, load averages: 3.44 12.02 25.26
+warning: patch `accesskit_windows v0.35.2 (/Users/manlikeabro/Documents/repos/exact/vendor/accesskit-windows)` was not used in the crate graph
+help: Check that the patched package version and available features are compatible
+      with the dependency requirements. If the patch has a different version from
+      what is locked in the Cargo.lock file, run `cargo update` to use the new
+      version. This may also occur with an optional dependency that is not enabled.
+   Compiling cfg-if v1.0.4
+   Compiling libm v0.2.16
+   Compiling libc v0.2.189
+   Compiling smallvec v1.15.2
+   Compiling num-traits v0.2.19
+   Compiling once_cell v1.21.4
+   Compiling arrayvec v0.7.8
+   Compiling zeroize v1.9.0
+   Compiling typenum v1.20.1
+   Compiling bitflags v2.13.1
+   Compiling zerofrom v0.1.8
+   Compiling stable_deref_trait v1.2.1
+   Compiling log v0.4.34
+   Compiling yoke v0.8.3
+   Compiling bytemuck_derive v1.12.0
+   Compiling subtle v2.6.1
+   Compiling foldhash v0.2.0
+   Compiling writeable v0.6.4
+   Compiling litemap v0.8.3
+   Compiling utf8_iter v1.0.4
+   Compiling zerovec v0.11.8
+   Compiling hashbrown v0.17.1
+   Compiling zerotrie v0.2.5
+   Compiling equivalent v1.0.2
+   Compiling thiserror v2.0.20
+   Compiling icu_properties_data v2.3.0
+   Compiling itoa v1.0.18
+   Compiling hybrid-array v0.4.15
+   Compiling rand_core v0.10.1
+   Compiling cmov v0.5.4
+   Compiling libloading v0.8.9
+   Compiling indexmap v2.14.1
+   Compiling ctutils v0.4.8
+   Compiling bytemuck v1.25.2
+   Compiling zerocopy v0.8.56
+   Compiling tinystr v0.8.4
+   Compiling potential_utf v0.1.6
+   Compiling rustc-hash v1.1.0
+   Compiling icu_collections v2.3.0
+   Compiling icu_locale_core v2.3.0
+   Compiling bit-vec v0.9.1
+   Compiling icu_normalizer_data v2.3.0
+   Compiling unicode-width v0.2.2
+   Compiling crypto-common v0.2.2
+   Compiling codespan-reporting v0.13.1
+   Compiling spirv v0.4.0+sdk-1.4.341.0
+   Compiling serde_core v1.0.229
+   Compiling parking_lot_core v0.9.12
+   Compiling icu_provider v2.3.1
+   Compiling const-oid v0.10.3
+   Compiling exact-num v0.1.0 (/Users/manlikeabro/Documents/repos/exact/num)
+   Compiling icu_properties v2.3.0
+   Compiling raw-window-handle v0.6.2
+   Compiling allocator-api2 v0.2.21
+   Compiling unicode-ident v1.0.24
+   Compiling generic-array v0.14.7
+   Compiling hashbrown v0.16.1
+   Compiling scopeguard v1.2.0
+   Compiling ash v0.38.0+1.3.281
+   Compiling icu_normalizer v2.3.0
+   Compiling lock_api v0.4.14
+   Compiling block-buffer v0.12.1
+   Compiling zmij v1.0.23
+   Compiling percent-encoding v2.3.2
+   Compiling parking_lot v0.12.5
+   Compiling digest v0.11.3
+   Compiling idna_adapter v1.2.2
+   Compiling android_system_properties v0.1.6
+   Compiling serde_json v1.0.151
+   Compiling dtoa v1.0.11
+   Compiling cpubits v0.1.1
+   Compiling memchr v2.8.3
+   Compiling presser v0.3.1
+   Compiling crypto-common v0.1.7
+   Compiling block-buffer v0.10.4
+   Compiling crypto-bigint v0.7.11
+   Compiling dtoa-short v0.3.5
+   Compiling idna v1.1.0
+   Compiling form_urlencoded v1.2.2
+   Compiling font-types v0.12.4
+   Compiling exact-color v0.1.0 (/Users/manlikeabro/Documents/repos/exact/color)
+   Compiling ordered-float v5.5.0
+   Compiling ff v0.14.0
+   Compiling slotmap v1.1.1
+   Compiling rustls-pki-types v1.15.1
+   Compiling naga v30.0.1
+   Compiling renderdoc-sys v1.1.0
+   Compiling profiling v1.0.18
+   Compiling exact-motion v0.1.0 (/Users/manlikeabro/Documents/repos/exact/motion)
+   Compiling read-fonts v0.41.0
+   Compiling url v2.5.8
+   Compiling half v2.7.1
+   Compiling cssparser v0.37.0
+   Compiling digest v0.10.7
+   Compiling cpufeatures v0.2.17
+   Compiling ring v0.17.14
+   Compiling simd-adler32 v0.3.10
+   Compiling exact-svg-filter v0.1.0 (/Users/manlikeabro/Documents/repos/exact/svg-filter)
+   Compiling unicode-linebreak v0.1.5
+   Compiling static_assertions v1.1.0
+   Compiling exact-textflow v0.1.0 (/Users/manlikeabro/Documents/repos/exact/textflow)
+   Compiling taffy v0.14.0 (/Users/manlikeabro/Documents/repos/exact/vendor/taffy)
+   Compiling sha2 v0.10.9
+   Compiling group v0.14.0
+   Compiling der v0.8.3
+   Compiling naga-types v30.0.1
+   Compiling getrandom v0.2.17
+   Compiling exact-kernel v0.1.0 (/Users/manlikeabro/Documents/repos/exact/kernel)
+   Compiling exact-plan v0.1.0 (/Users/manlikeabro/Documents/repos/exact/plan)
+   Compiling jni-sys-macros v0.4.1
+   Compiling naga v29.0.4
+   Compiling wgpu-hal v30.0.1 (/Users/manlikeabro/Documents/repos/exact/vendor/wgpu-hal)
+   Compiling serde v1.0.229
+   Compiling untrusted v0.9.0
+   Compiling smol_str v0.2.2
+   Compiling arcstr v1.2.0
+   Compiling base16ct v1.0.0
+   Compiling jni-sys v0.3.1
+   Compiling triomphe v0.1.16
+   Compiling adler2 v2.0.1
+   Compiling sec1 v0.8.1
+   Compiling jni-sys v0.4.1
+   Compiling bit-set v0.9.1
+   Compiling bit-set v0.10.0
+   Compiling hermes-lean-sys v0.1.0 (/Users/manlikeabro/Documents/repos/exact/vendor/ibex/crates/hermes-lean-sys)
+   Compiling wayland-sys v0.31.11
+   Compiling httparse v1.10.1
+   Compiling crc32fast v1.5.1
+   Compiling foldhash v0.1.5
+   Compiling hexf-parse v0.2.1
+   Compiling khronos-egl v6.0.0
+   Compiling bytes v1.12.1
+   Compiling litrs v1.0.0
+   Compiling document-features v0.2.12
+   Compiling http v1.5.0
+   Compiling rustls v0.23.45
+   Compiling skrifa v0.44.0
+   Compiling exact-js-value v0.1.0 (/Users/manlikeabro/Documents/repos/exact/js/value)
+   Compiling gpu-allocator v0.28.0
+   Compiling rustls-webpki v0.103.17
+   Compiling hashbrown v0.15.5
+   Compiling exact-route v0.1.0 (/Users/manlikeabro/Documents/repos/exact/route)
+   Compiling elliptic-curve v0.14.3
+   Compiling wgpu-types v30.0.1
+   Compiling exact-canvas v0.1.0 (/Users/manlikeabro/Documents/repos/exact/canvas)
+   Compiling primefield v0.14.0
+   Compiling exact-grants v0.1.0 (/Users/manlikeabro/Documents/repos/exact/grants)
+   Compiling hmac v0.13.0
+   Compiling wgpu-types v29.0.4
+   Compiling dlib v0.5.3
+   Compiling gpu-descriptor-types v0.2.0
+   Compiling wgpu-hal v29.0.4
+   Compiling base64 v0.23.1
+   Compiling linebender_resource_handle v0.1.1
+   Compiling ureq-proto v0.6.4
+   Compiling exact-runner v0.1.0 (/Users/manlikeabro/Documents/repos/exact/runner)
+   Compiling gpu-descriptor v0.3.2
+   Compiling rfc6979 v0.6.0
+   Compiling wnaf v0.14.1
+   Compiling ndk-sys v0.6.0+11769913
+   Compiling miniz_oxide v0.8.9
+   Compiling miniz_oxide v0.9.1
+   Compiling wgpu-naga-bridge v29.0.4
+   Compiling rustls-pemfile v2.2.0
+   Compiling webpki-roots v1.0.12
+   Compiling signature v3.0.0
+   Compiling socket2 v0.6.5
+   Compiling cpufeatures v0.3.1
+   Compiling polycool v0.4.0
+   Compiling ibex2 v0.1.0 (/Users/manlikeabro/Documents/repos/exact/vendor/ibex/crates/ibex2)
+   Compiling openssl-probe v0.1.6
+   Compiling utf8-zero v0.8.1
+   Compiling glow v0.17.0
+   Compiling kurbo v0.13.1
+   Compiling wgpu-naga-bridge v30.0.1
+   Compiling ureq v3.4.0
+   Compiling rustls-native-certs v0.7.3
+   Compiling sha2 v0.11.1
+   Compiling ecdsa v0.17.0
+   Compiling flate2 v1.1.10
+   Compiling primeorder v0.14.0
+   Compiling fdeflate v0.3.7
+   Compiling getrandom v0.3.4
+   Compiling euclid v0.22.14
+   Compiling icu_locale_fallback_data v2.3.0
+   Compiling mio v1.2.4
+   Compiling wgpu-core v29.0.4
+   Compiling wgpu-core v30.0.1
+   Compiling color v0.3.3
+   Compiling base64 v0.22.1
+   Compiling svg_fmt v0.4.5
+   Compiling icu_segmenter_data v2.3.0
+   Compiling guillotiere v0.7.0
+   Compiling peniko v0.6.1
+   Compiling png v0.18.1
+   Compiling p256 v0.14.0
+   Compiling vello_shaders v0.10.0
+   Compiling wgpu-core-deps-windows-linux-android v29.0.4
+   Compiling wgpu-core-deps-windows-linux-android v30.0.1
+   Compiling exact-gpu-reflect v0.1.0 (/Users/manlikeabro/Documents/repos/exact/gpu/reflect)
+   Compiling libsqlite3-sys v0.39.1
+   Compiling libmimalloc-sys v0.1.49
+   Compiling wgpu v29.0.4
+   Compiling wgpu v30.0.1
+   Compiling same-file v1.0.6
+   Compiling arrayref v0.3.9
+   Compiling wasmi_ir v2.0.0
+   Compiling strict-num v0.1.1
+   Compiling wasmparser v0.228.0
+   Compiling tiny-skia-path v0.12.0
+   Compiling exact-data v0.1.0 (/Users/manlikeabro/Documents/repos/exact/data)
+   Compiling exact-bake v0.1.0 (/Users/manlikeabro/Documents/repos/exact/bake)
+   Compiling icu_locale_fallback v2.3.0
+   Compiling vello_encoding v0.10.0
+   Compiling exact-ink v0.1.0 (/Users/manlikeabro/Documents/repos/exact/host/ink)
+   Compiling wasmi_core v2.0.0
+   Compiling memmap2 v0.9.11
+   Compiling hashlink v0.12.1
+   Compiling zeno v0.3.3
+   Compiling yazi v0.2.1
+   Compiling fallible-iterator v0.3.0
+   Compiling parlance v0.1.0
+   Compiling futures-core v0.3.34
+   Compiling fallible-streaming-iterator v0.1.9
+   Compiling futures-intrusive v0.5.0
+   Compiling fontique v0.11.1 (/Users/manlikeabro/Documents/repos/exact/vendor/fontique)
+   Compiling swash v0.2.10
+   Compiling wasmi v2.0.0
+   Compiling icu_segmenter v2.3.0
+   Compiling exact-js-bake v0.1.0 (/Users/manlikeabro/Documents/repos/exact/js/bake)
+   Compiling tiny-skia v0.12.0
+   Compiling harfrust v0.12.0
+   Compiling ibex2-sqlite v0.1.0 (/Users/manlikeabro/Documents/repos/exact/vendor/ibex/crates/ibex2-sqlite)
+   Compiling parley_data v0.11.1
+   Compiling spin v0.9.9
+   Compiling wasmi_collections v2.0.0
+   Compiling exact-logic v0.1.0 (/Users/manlikeabro/Documents/repos/exact/logic)
+   Compiling parley v0.11.1 (/Users/manlikeabro/Documents/repos/exact/vendor/parley)
+warning: use of deprecated method `icu_properties::props::BidiClass::to_icu4c_value`: please comment on https://github.com/unicode-org/icu4x/issues/6067 if you need this
+   --> /Users/manlikeabro/Documents/repos/exact/vendor/parley/src/bidi.rs:893:13
+    |
+893 |     1 << (t.to_icu4c_value() as u32)
+    |             ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+   Compiling alona-android v0.1.0 (/Users/manlikeabro/Documents/repos/alona/.exact/shells/android)
+warning: `parley` (lib) generated 1 warning
+   Compiling mimalloc v0.1.52
+   Compiling vello v0.10.0
+   Compiling exact-logic-abi v0.1.0 (/Users/manlikeabro/Documents/repos/exact/logic/abi)
+   Compiling exact-listen v0.1.0 (/Users/manlikeabro/Documents/repos/exact/host/listen)
+   Compiling exact-svg-file v0.1.0 (/Users/manlikeabro/Documents/repos/exact/host/svg-file)
+   Compiling rusqlite v0.41.1
+   Compiling exact-svg-raster v0.1.0 (/Users/manlikeabro/Documents/repos/exact/host/svg-raster)
+   Compiling iana-time-zone v0.1.65
+   Compiling unicode-segmentation v1.13.3
+   Compiling exact-raster v0.1.0 (/Users/manlikeabro/Documents/repos/exact/host/raster)
+   Compiling exact-markdown v0.1.0 (/Users/manlikeabro/Documents/repos/exact/markdown)
+   Compiling roxmltree v0.20.0
+warning: alona-android@0.1.0: app.tamber:6:3 warning [tamber-unreachable] accent-color on iOS, macOS and the web: the platform's look stands on iOS disabled prominent buttons (iOS draws a disabled prominent glass button grey; style a pressable instead (LLP 1121 D8)); macOS progress bars and spinners (NSProgressIndicator takes no tint); the web's disabled prominent buttons (the neutral look draws a disabled button grey; style a pressable instead (LLP 1121 D8)) (the first at line 315; LLP 1121 D9). The app ships ios (app.json `host.ios`, app.json `deploy.store.ios`) and macos (app.json `host.macos`, app.json `deploy.store.macos`); not shipping one? delete its keys
+   Compiling exact-js v0.1.0 (/Users/manlikeabro/Documents/repos/exact/js)
+   Compiling exact-executor v0.1.0 (/Users/manlikeabro/Documents/repos/exact/host/executor)
+   Compiling exact-painted v0.1.0 (/Users/manlikeabro/Documents/repos/exact/host/painted)
+    Finished `host-dev` profile [optimized] target(s) in 2m 52s
+alona: its modules or own Kotlin name Maven libraries (androidx.camera:camera-camera2:1.6.2, androidx.camera:camera-lifecycle:1.6.2, androidx.lifecycle:lifecycle-runtime:2.9.4); before compiling, write gradle.lockfile and gradle-verification.xml by running in '/Users/manlikeabro/Documents/repos/alona': bun exact.mjs android --write-locks, and keep them with the app
+bun exact.mjs android  888.58s user 36.77s system 533% cpu 2:53.40 total
+done

@@ -1,0 +1,424 @@
+/private/tmp/claude-501/-Users-manlikeabro-Documents-repos-alona/245b89a2-4852-4324-abff-b9ca242915e6/scratchpad/snap/alona/.exact/shells: the native workspace (web, apple, linux, android), generated from app.json
+    Blocking waiting for file lock on package cache
+warning: patch `accesskit_windows v0.35.2 (/Users/manlikeabro/Documents/repos/exact/vendor/accesskit-windows)` was not used in the crate graph
+help: Check that the patched package version and available features are compatible
+      with the dependency requirements. If the patch has a different version from
+      what is locked in the Cargo.lock file, run `cargo update` to use the new
+      version. This may also occur with an optional dependency that is not enabled.
+    Blocking waiting for file lock on package cache
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.24
+   Compiling quote v1.0.47
+   Compiling libc v0.2.189
+   Compiling libm v0.2.16
+   Compiling cfg-if v1.0.4
+   Compiling typenum v1.20.1
+   Compiling version_check v0.9.5
+   Compiling serde_core v1.0.229
+   Compiling zmij v1.0.23
+   Compiling autocfg v1.5.1
+   Compiling itoa v1.0.18
+   Compiling serde_json v1.0.151
+   Compiling memchr v2.8.3
+   Compiling serde v1.0.229
+   Compiling generic-array v0.14.7
+   Compiling find-msvc-tools v0.1.11
+   Compiling num-traits v0.2.19
+   Compiling shlex v2.0.1
+   Compiling subtle v2.6.1
+   Compiling cc v1.4.4
+   Compiling cfg_aliases v0.2.2
+   Compiling zeroize v1.9.0
+   Compiling icu_properties_data v2.3.0
+   Compiling smallvec v1.15.2
+   Compiling bitflags v2.13.1
+   Compiling icu_normalizer_data v2.3.0
+   Compiling thiserror v2.0.20
+   Compiling log v0.4.34
+   Compiling once_cell v1.21.4
+   Compiling ring v0.17.14
+   Compiling zerocopy v0.8.56
+   Compiling crc32fast v1.5.1
+   Compiling percent-encoding v2.3.2
+   Compiling httparse v1.10.1
+   Compiling syn v3.0.4
+   Compiling syn v2.0.119
+   Compiling arrayvec v0.7.8
+   Compiling stable_deref_trait v1.2.1
+   Compiling cpufeatures v0.2.17
+   Compiling rustls v0.23.45
+   Compiling slotmap v1.1.1
+   Compiling crypto-common v0.1.7
+   Compiling block-buffer v0.10.4
+   Compiling digest v0.10.7
+   Compiling rustix v1.1.4
+   Compiling foldhash v0.2.0
+   Compiling sha2 v0.10.9
+   Compiling getrandom v0.2.17
+   Compiling errno v0.3.14
+   Compiling rustls-pki-types v1.15.1
+   Compiling untrusted v0.9.0
+   Compiling writeable v0.6.4
+   Compiling bytes v1.12.1
+   Compiling adler2 v2.0.1
+   Compiling getrandom v0.4.3
+   Compiling hashbrown v0.17.1
+   Compiling http v1.5.0
+   Compiling zerovec-derive v0.11.6
+   Compiling displaydoc v0.2.7
+   Compiling serde_derive v1.0.229
+   Compiling thiserror-impl v2.0.20
+   Compiling synstructure v0.13.2
+   Compiling bytemuck_derive v1.12.0
+   Compiling litemap v0.8.3
+   Compiling base64 v0.23.1
+   Compiling simd-adler32 v0.3.10
+   Compiling webpki-roots v1.0.12
+   Compiling ureq-proto v0.6.4
+   Compiling miniz_oxide v0.9.1
+   Compiling filetime v0.2.29
+   Compiling utf8-zero v0.8.1
+   Compiling pkg-config v0.3.34
+   Compiling fastrand v2.5.0
+   Compiling exact-num v0.1.0 (/Users/manlikeabro/Documents/repos/exact/num)
+   Compiling utf8_iter v1.0.4
+   Compiling zerofrom-derive v0.1.7
+   Compiling yoke-derive v0.8.2
+   Compiling zerocopy-derive v0.8.56
+   Compiling bytemuck v1.25.2
+   Compiling flate2 v1.1.10
+   Compiling hybrid-array v0.4.15
+   Compiling equivalent v1.0.2
+   Compiling rand_core v0.10.1
+   Compiling cmov v0.5.4
+   Compiling xattr v1.6.1
+   Compiling tempfile v3.27.0
+   Compiling zerofrom v0.1.8
+   Compiling tar v0.4.46
+   Compiling ctutils v0.4.8
+   Compiling yoke v0.8.3
+   Compiling exact-color v0.1.0 (/Users/manlikeabro/Documents/repos/exact/color)
+   Compiling indexmap v2.14.1
+   Compiling exact-motion v0.1.0 (/Users/manlikeabro/Documents/repos/exact/motion)
+   Compiling libloading v0.8.9
+   Compiling zerovec v0.11.8
+   Compiling zerotrie v0.2.5
+   Compiling bit-vec v0.9.1
+   Compiling rustc-hash v1.1.0
+   Compiling crypto-common v0.2.2
+   Compiling unicode-width v0.2.2
+   Compiling const-oid v0.10.3
+   Compiling icu_locale_fallback_data v2.3.0
+   Compiling rustls-webpki v0.103.17
+   Compiling codespan-reporting v0.13.1
+   Compiling spirv v0.4.0+sdk-1.4.341.0
+   Compiling arcstr v1.2.0
+   Compiling exact-plan v0.1.0 (/Users/manlikeabro/Documents/repos/exact/plan)
+   Compiling tinystr v0.8.4
+   Compiling potential_utf v0.1.6
+   Compiling icu_locale_core v2.3.0
+   Compiling exact-kernel v0.1.0 (/Users/manlikeabro/Documents/repos/exact/kernel)
+   Compiling icu_collections v2.3.0
+   Compiling icu_provider v2.3.1
+   Compiling allocator-api2 v0.2.21
+   Compiling raw-window-handle v0.6.2
+   Compiling triomphe v0.1.16
+   Compiling icu_properties v2.3.0
+   Compiling icu_normalizer v2.3.0
+   Compiling parking_lot_core v0.9.12
+   Compiling dtoa v1.0.11
+   Compiling hashbrown v0.16.1
+   Compiling dtoa-short v0.3.5
+   Compiling block-buffer v0.12.1
+   Compiling idna_adapter v1.2.2
+   Compiling ash v0.38.0+1.3.281
+   Compiling vcpkg v0.2.15
+   Compiling scopeguard v1.2.0
+   Compiling lock_api v0.4.14
+   Compiling idna v1.1.0
+   Compiling libsqlite3-sys v0.39.1
+   Compiling digest v0.11.3
+   Compiling cssparser v0.37.0
+   Compiling form_urlencoded v1.2.2
+   Compiling getrandom v0.3.4
+   Compiling unicode-linebreak v0.1.5
+   Compiling half v2.7.1
+   Compiling cpubits v0.1.1
+   Compiling exact-textflow v0.1.0 (/Users/manlikeabro/Documents/repos/exact/textflow)
+   Compiling crypto-bigint v0.7.11
+   Compiling url v2.5.8
+   Compiling taffy v0.14.0 (/Users/manlikeabro/Documents/repos/exact/vendor/taffy)
+   Compiling parking_lot v0.12.5
+   Compiling ureq v3.4.0
+   Compiling exact-route v0.1.0 (/Users/manlikeabro/Documents/repos/exact/route)
+   Compiling ff v0.14.0
+   Compiling android_system_properties v0.1.6
+   Compiling exact-svg-filter v0.1.0 (/Users/manlikeabro/Documents/repos/exact/svg-filter)
+   Compiling presser v0.3.1
+   Compiling smol_str v0.2.2
+   Compiling font-types v0.12.4
+   Compiling ordered-float v5.5.0
+   Compiling naga v30.0.1
+   Compiling profiling v1.0.18
+   Compiling renderdoc-sys v1.1.0
+   Compiling read-fonts v0.41.0
+   Compiling hermes-lean-sys v0.1.0 (/Users/manlikeabro/Documents/repos/exact/vendor/ibex/crates/hermes-lean-sys)
+   Compiling group v0.14.0
+   Compiling der v0.8.3
+   Compiling naga-types v30.0.1
+   Compiling bit-set v0.10.0
+   Compiling static_assertions v1.1.0
+   Compiling base16ct v1.0.0
+   Compiling semver v1.0.28
+   Compiling rustc_version v0.4.1
+   Compiling sec1 v0.8.1
+   Compiling exact-grants v0.1.0 (/Users/manlikeabro/Documents/repos/exact/grants)
+   Compiling exact-js-value v0.1.0 (/Users/manlikeabro/Documents/repos/exact/js/value)
+   Compiling exact-canvas v0.1.0 (/Users/manlikeabro/Documents/repos/exact/canvas)
+   Compiling jni-sys-macros v0.4.1
+   Compiling ibex2-sqlite v0.1.0 (/Users/manlikeabro/Documents/repos/exact/vendor/ibex/crates/ibex2-sqlite)
+   Compiling naga v29.0.4
+   Compiling wgpu-hal v30.0.1 (/Users/manlikeabro/Documents/repos/exact/vendor/wgpu-hal)
+   Compiling jni-sys v0.3.1
+   Compiling icu_locale_data v2.3.0
+   Compiling jni-sys v0.4.1
+   Compiling elliptic-curve v0.14.3
+   Compiling curve25519-dalek v4.1.3
+   Compiling primefield v0.14.0
+   Compiling hmac v0.13.0
+   Compiling contract-syntax v0.1.0 (/Users/manlikeabro/Documents/repos/exact/contract/syntax)
+   Compiling bit-set v0.9.1
+   Compiling wayland-sys v0.31.11
+   Compiling ibex2 v0.1.0 (/Users/manlikeabro/Documents/repos/exact/vendor/ibex/crates/ibex2)
+   Compiling base64 v0.22.1
+   Compiling foldhash v0.1.5
+   Compiling khronos-egl v6.0.0
+   Compiling litrs v1.0.0
+   Compiling hexf-parse v0.2.1
+   Compiling document-features v0.2.12
+   Compiling skrifa v0.44.0
+   Compiling gpu-allocator v0.28.0
+   Compiling contract-types v0.1.0 (/Users/manlikeabro/Documents/repos/exact/contract/types)
+   Compiling hashbrown v0.15.5
+   Compiling exact-js v0.1.0 (/Users/manlikeabro/Documents/repos/exact/js)
+   Compiling exact-runner v0.1.0 (/Users/manlikeabro/Documents/repos/exact/runner)
+   Compiling rfc6979 v0.6.0
+   Compiling wnaf v0.14.1
+   Compiling icu_locale_fallback v2.3.0
+   Compiling wgpu-types v30.0.1
+   Compiling signature v3.0.0
+   Compiling wgpu-types v29.0.4
+   Compiling dlib v0.5.3
+   Compiling contract-lower v0.1.0 (/Users/manlikeabro/Documents/repos/exact/contract/lower)
+   Compiling cpufeatures v0.3.1
+   Compiling gpu-descriptor-types v0.2.0
+   Compiling wgpu-hal v29.0.4
+   Compiling signature v2.2.0
+   Compiling linebender_resource_handle v0.1.1
+   Compiling ed25519 v2.2.3
+   Compiling gpu-descriptor v0.3.2
+   Compiling sha2 v0.11.1
+   Compiling ecdsa v0.17.0
+   Compiling icu_locale v2.3.0
+   Compiling wgpu-naga-bridge v29.0.4
+   Compiling ndk-sys v0.6.0+11769913
+   Compiling primeorder v0.14.0
+   Compiling exact-svg-file v0.1.0 (/Users/manlikeabro/Documents/repos/exact/host/svg-file)
+   Compiling contract-analyze v0.1.0 (/Users/manlikeabro/Documents/repos/exact/contract/analyze)
+   Compiling miniz_oxide v0.8.9
+   Compiling rustls-pemfile v2.2.0
+   Compiling exact-tamber v0.1.0 (/Users/manlikeabro/Documents/repos/exact/tamber)
+   Compiling wgpu-naga-bridge v30.0.1
+   Compiling hashlink v0.12.1
+   Compiling socket2 v0.6.5
+   Compiling polycool v0.4.0
+   Compiling fallible-streaming-iterator v0.1.9
+   Compiling fallible-iterator v0.3.0
+   Compiling openssl-probe v0.1.6
+   Compiling glow v0.17.0
+   Compiling rustls-native-certs v0.7.3
+   Compiling rusqlite v0.41.1
+   Compiling kurbo v0.13.1
+   Compiling p256 v0.14.0
+   Compiling ed25519-dalek v2.2.0
+   Compiling fdeflate v0.3.7
+   Compiling euclid v0.22.14
+   Compiling mio v1.2.4
+   Compiling wgpu-core v30.0.1
+   Compiling wgpu-core v29.0.4
+   Compiling icu_segmenter_data v2.3.0
+   Compiling color v0.3.3
+   Compiling same-file v1.0.6
+   Compiling svg_fmt v0.4.5
+   Compiling guillotiere v0.7.0
+   Compiling exact-data v0.1.0 (/Users/manlikeabro/Documents/repos/exact/data)
+   Compiling peniko v0.6.1
+   Compiling wgpu-core-deps-windows-linux-android v30.0.1
+   Compiling png v0.18.1
+   Compiling exact-update v0.1.0 (/Users/manlikeabro/Documents/repos/exact/update)
+   Compiling vello_shaders v0.10.0
+   Compiling wgpu-core-deps-windows-linux-android v29.0.4
+   Compiling exact-logic-abi v0.1.0 (/Users/manlikeabro/Documents/repos/exact/logic/abi)
+   Compiling exact-gpu-reflect v0.1.0 (/Users/manlikeabro/Documents/repos/exact/gpu/reflect)
+   Compiling exact-filesystem v0.1.0 (/Users/manlikeabro/Documents/repos/exact/filesystem)
+   Compiling libmimalloc-sys v0.1.49
+   Compiling wgpu v29.0.4
+   Compiling wgpu v30.0.1
+   Compiling strict-num v0.1.1
+   Compiling arrayref v0.3.9
+   Compiling wasmi_ir v2.0.0
+   Compiling wasmparser v0.228.0
+   Compiling tiny-skia-path v0.12.0
+   Compiling contract v0.1.0 (/Users/manlikeabro/Documents/repos/exact/contract/cli)
+   Compiling vello_encoding v0.10.0
+   Compiling exact-ink v0.1.0 (/Users/manlikeabro/Documents/repos/exact/host/ink)
+   Compiling wasmi_core v2.0.0
+   Compiling memmap2 v0.9.11
+   Compiling yazi v0.2.1
+   Compiling exact-bake v0.1.0 (/Users/manlikeabro/Documents/repos/exact/bake)
+   Compiling futures-core v0.3.34
+   Compiling zeno v0.3.3
+   Compiling wasmi v2.0.0
+   Compiling parlance v0.1.0
+   Compiling swash v0.2.10
+   Compiling fontique v0.11.1 (/Users/manlikeabro/Documents/repos/exact/vendor/fontique)
+   Compiling exact-js-bake v0.1.0 (/Users/manlikeabro/Documents/repos/exact/js/bake)
+   Compiling futures-intrusive v0.5.0
+   Compiling icu_segmenter v2.3.0
+   Compiling tiny-skia v0.12.0
+   Compiling harfrust v0.12.0
+   Compiling parley_data v0.11.1
+   Compiling wasmi_collections v2.0.0
+   Compiling exact-logic v0.1.0 (/Users/manlikeabro/Documents/repos/exact/logic)
+   Compiling spin v0.9.9
+   Compiling alona-android v0.1.0 (/private/tmp/claude-501/-Users-manlikeabro-Documents-repos-alona/245b89a2-4852-4324-abff-b9ca242915e6/scratchpad/snap/alona/.exact/shells/android)
+   Compiling mimalloc v0.1.52
+   Compiling vello v0.10.0
+   Compiling parley v0.11.1 (/Users/manlikeabro/Documents/repos/exact/vendor/parley)
+warning: use of deprecated method `icu_properties::props::BidiClass::to_icu4c_value`: please comment on https://github.com/unicode-org/icu4x/issues/6067 if you need this
+   --> /Users/manlikeabro/Documents/repos/exact/vendor/parley/src/bidi.rs:893:13
+    |
+893 |     1 << (t.to_icu4c_value() as u32)
+    |             ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+warning: `parley` (lib) generated 1 warning
+   Compiling exact-listen v0.1.0 (/Users/manlikeabro/Documents/repos/exact/host/listen)
+   Compiling exact-svg-raster v0.1.0 (/Users/manlikeabro/Documents/repos/exact/host/svg-raster)
+   Compiling iana-time-zone v0.1.65
+   Compiling roxmltree v0.20.0
+   Compiling exact-raster v0.1.0 (/Users/manlikeabro/Documents/repos/exact/host/raster)
+   Compiling exact-markdown v0.1.0 (/Users/manlikeabro/Documents/repos/exact/markdown)
+   Compiling unicode-segmentation v1.13.3
+warning: alona-android@0.1.0: app.tamber:6:3 warning [tamber-unreachable] accent-color on iOS, macOS and the web: the platform's look stands on iOS disabled prominent buttons (iOS draws a disabled prominent glass button grey; style a pressable instead (LLP 1121 D8)); macOS progress bars and spinners (NSProgressIndicator takes no tint); the web's disabled prominent buttons (the neutral look draws a disabled button grey; style a pressable instead (LLP 1121 D8)) (the first at line 315; LLP 1121 D9). The app ships ios (app.json `host.ios`, app.json `deploy.store.ios`) and macos (app.json `host.macos`, app.json `deploy.store.macos`); not shipping one? delete its keys
+   Compiling exact-executor v0.1.0 (/Users/manlikeabro/Documents/repos/exact/host/executor)
+   Compiling exact-painted v0.1.0 (/Users/manlikeabro/Documents/repos/exact/host/painted)
+    Finished `host-dev` profile [optimized] target(s) in 4m 42s
+> Task :canvas:preBuild UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :canvas:preReleaseBuild UP-TO-DATE
+> Task :app:preReleaseBuild UP-TO-DATE
+> Task :canvas:mergeReleaseJniLibFolders
+> Task :canvas:mergeReleaseNativeLibs NO-SOURCE
+> Task :canvas:copyReleaseJniLibsProjectOnly
+> Task :canvas:generateReleaseResources FROM-CACHE
+> Task :canvas:packageReleaseResources FROM-CACHE
+> Task :canvas:processReleaseNavigationResources FROM-CACHE
+> Task :app:mergeReleaseJniLibFolders
+> Task :canvas:parseReleaseLocalResources FROM-CACHE
+> Task :canvas:generateReleaseRFile FROM-CACHE
+> Task :app:checkReleaseDuplicateClasses
+> Task :app:generateReleaseResources
+> Task :app:packageReleaseResources
+> Task :app:processReleaseNavigationResources
+> Task :app:javaPreCompileRelease FROM-CACHE
+> Task :app:mapReleaseSourceSetPaths
+> Task :app:compileReleaseNavigationResources FROM-CACHE
+> Task :app:parseReleaseLocalResources
+> Task :app:createReleaseCompatibleScreenManifests
+> Task :app:mergeReleaseNativeLibs
+> Task :canvas:compileReleaseKotlin FROM-CACHE
+> Task :app:generateReleaseRFile
+> Task :app:extractDeepLinksRelease
+> Task :canvas:javaPreCompileRelease FROM-CACHE
+> Task :canvas:compileReleaseJavaWithJavac NO-SOURCE
+> Task :canvas:mergeReleaseGeneratedProguardFiles
+> Task :canvas:exportReleaseConsumerProguardFiles
+> Task :canvas:prepareReleaseArtProfile
+> Task :canvas:writeReleaseAarMetadata
+> Task :canvas:extractDeepLinksRelease FROM-CACHE
+> Task :app:mergeReleaseArtProfile
+> Task :canvas:processReleaseManifest FROM-CACHE
+> Task :canvas:mapReleaseSourceSetPaths
+> Task :app:checkReleaseAarMetadata
+> Task :canvas:compileReleaseLibraryResources FROM-CACHE
+> Task :canvas:processReleaseJavaRes
+> Task :canvas:bundleLibCompileToJarRelease
+> Task :canvas:generateReleaseAssets UP-TO-DATE
+> Task :canvas:mergeReleaseAssets
+> Task :canvas:extractProguardFiles
+> Task :app:processReleaseMainManifest
+> Task :canvas:bundleLibRuntimeToJarRelease
+> Task :app:mergeReleaseResources
+> Task :app:stripReleaseDebugSymbols
+> Task :app:processReleaseManifest
+> Task :app:extractProguardFiles
+> Task :app:mergeReleaseStartupProfile
+> Task :app:generateReleaseAssets UP-TO-DATE
+> Task :app:mergeReleaseAssets
+> Task :app:compressReleaseAssets FROM-CACHE
+> Task :app:extractReleaseVersionControlInfo
+> Task :app:collectReleaseDependencies
+> Task :app:sdkReleaseDependencyData
+> Task :app:validateSigningRelease
+> Task :app:writeReleaseAppMetadata
+> Task :app:writeReleaseSigningConfigVersions
+> Task :app:processReleaseManifestForPackage
+> Task :canvas:generateReleaseLintModel
+> Task :canvas:createFullJarRelease
+> Task :canvas:prepareLintJarForPublish
+> Task :canvas:checkReleaseAarMetadata
+> Task :canvas:extractDeepLinksForAarRelease FROM-CACHE
+> Task :app:processReleaseResources
+> Task :app:optimizeReleaseResources
+> Task :canvas:extractReleaseAnnotations FROM-CACHE
+> Task :canvas:mergeReleaseConsumerProguardFiles
+> Task :canvas:mergeReleaseJavaResource
+> Task :canvas:lintVitalAnalyzeRelease FROM-CACHE
+> Task :canvas:syncReleaseLibJars FROM-CACHE
+> Task :canvas:bundleReleaseLocalLintAar
+> Task :canvas:writeReleaseLintModelMetadata
+> Task :canvas:generateReleaseLintVitalModel
+> Task :app:compileReleaseKotlin
+> Task :app:compileReleaseJavaWithJavac NO-SOURCE
+> Task :app:mergeReleaseGeneratedProguardFiles
+> Task :app:processReleaseJavaRes
+> Task :app:generateReleaseLintVitalReportModel
+> Task :app:expandReleaseArtProfileWildcards
+> Task :app:mergeReleaseJavaResource
+> Task :app:extractReleaseNativeSymbolTables
+> Task :app:mergeReleaseNativeDebugMetadata
+> Task :app:lintVitalAnalyzeRelease
+> Task :app:lintVitalReportRelease
+> Task :app:lintVitalRelease
+> Task :app:minifyReleaseWithR8
+> Task :app:compileReleaseArtProfile
+> Task :app:packageRelease
+> Task :app:createReleaseApkListingFileRedirect
+> Task :app:assembleRelease
+
+[Incubating] Problems report is available at: file:///private/tmp/claude-501/-Users-manlikeabro-Documents-repos-alona/245b89a2-4852-4324-abff-b9ca242915e6/scratchpad/snap/alona/target/android/app/root/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.8.0/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 11s
+82 actionable tasks: 65 executed, 17 from cache
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.8.0/userguide/configuration_cache_enabling.html
+/private/tmp/claude-501/-Users-manlikeabro-Documents-repos-alona/245b89a2-4852-4324-abff-b9ca242915e6/scratchpad/snap/alona/target/android/app/outputs/apk/release/app-release.apk
+built in 294.7 s, installed on emulator-5554 as com.alona.app in 0.3 s
+bun exact.mjs android  1071.19s user 59.64s system 382% cpu 4:55.96 total

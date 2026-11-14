@@ -1,0 +1,124 @@
+warning: patch `accesskit_windows v0.35.2 (/Users/manlikeabro/Documents/repos/exact/vendor/accesskit-windows)` was not used in the crate graph
+help: Check that the patched package version and available features are compatible
+      with the dependency requirements. If the patch has a different version from
+      what is locked in the Cargo.lock file, run `cargo update` to use the new
+      version. This may also occur with an optional dependency that is not enabled.
+warning: use of deprecated method `icu_properties::props::BidiClass::to_icu4c_value`: please comment on https://github.com/unicode-org/icu4x/issues/6067 if you need this
+   --> /Users/manlikeabro/Documents/repos/exact/vendor/parley/src/bidi.rs:893:13
+    |
+893 |     1 << (t.to_icu4c_value() as u32)
+    |             ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+warning: `parley` (lib) generated 1 warning
+   Compiling alona-android v0.1.0 (/private/tmp/claude-501/-Users-manlikeabro-Documents-repos-alona/245b89a2-4852-4324-abff-b9ca242915e6/scratchpad/snap/alona/.exact/shells/android)
+warning: alona-android@0.1.0: app.tamber:6:3 warning [tamber-unreachable] accent-color on iOS, macOS and the web: the platform's look stands on iOS disabled prominent buttons (iOS draws a disabled prominent glass button grey; style a pressable instead (LLP 1121 D8)); macOS progress bars and spinners (NSProgressIndicator takes no tint); the web's disabled prominent buttons (the neutral look draws a disabled button grey; style a pressable instead (LLP 1121 D8)) (the first at line 315; LLP 1121 D9). The app ships ios (app.json `host.ios`, app.json `deploy.store.ios`) and macos (app.json `host.macos`, app.json `deploy.store.macos`); not shipping one? delete its keys
+    Finished `host-dev` profile [optimized] target(s) in 22.36s
+> Task :canvas:preBuild UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :canvas:preReleaseBuild UP-TO-DATE
+> Task :app:preReleaseBuild UP-TO-DATE
+> Task :canvas:mergeReleaseJniLibFolders UP-TO-DATE
+> Task :canvas:mergeReleaseNativeLibs NO-SOURCE
+> Task :canvas:copyReleaseJniLibsProjectOnly UP-TO-DATE
+> Task :canvas:generateReleaseResources UP-TO-DATE
+> Task :canvas:packageReleaseResources UP-TO-DATE
+> Task :canvas:processReleaseNavigationResources UP-TO-DATE
+> Task :canvas:parseReleaseLocalResources UP-TO-DATE
+> Task :canvas:generateReleaseRFile UP-TO-DATE
+> Task :canvas:compileReleaseKotlin UP-TO-DATE
+> Task :canvas:javaPreCompileRelease UP-TO-DATE
+> Task :canvas:compileReleaseJavaWithJavac NO-SOURCE
+> Task :canvas:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :canvas:exportReleaseConsumerProguardFiles UP-TO-DATE
+> Task :canvas:bundleLibCompileToJarRelease UP-TO-DATE
+> Task :canvas:prepareReleaseArtProfile UP-TO-DATE
+> Task :canvas:writeReleaseAarMetadata UP-TO-DATE
+> Task :canvas:extractDeepLinksRelease UP-TO-DATE
+> Task :canvas:processReleaseManifest UP-TO-DATE
+> Task :canvas:mapReleaseSourceSetPaths UP-TO-DATE
+> Task :canvas:compileReleaseLibraryResources UP-TO-DATE
+> Task :canvas:bundleLibRuntimeToJarRelease UP-TO-DATE
+> Task :canvas:processReleaseJavaRes UP-TO-DATE
+> Task :canvas:generateReleaseAssets UP-TO-DATE
+> Task :canvas:mergeReleaseAssets UP-TO-DATE
+> Task :canvas:createFullJarRelease UP-TO-DATE
+> Task :canvas:extractProguardFiles UP-TO-DATE
+> Task :canvas:generateReleaseLintModel UP-TO-DATE
+> Task :canvas:prepareLintJarForPublish UP-TO-DATE
+> Task :canvas:checkReleaseAarMetadata UP-TO-DATE
+> Task :canvas:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :canvas:extractReleaseAnnotations UP-TO-DATE
+> Task :canvas:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :canvas:mergeReleaseJavaResource UP-TO-DATE
+> Task :canvas:syncReleaseLibJars UP-TO-DATE
+> Task :canvas:bundleReleaseLocalLintAar UP-TO-DATE
+> Task :canvas:lintVitalAnalyzeRelease UP-TO-DATE
+> Task :canvas:writeReleaseLintModelMetadata UP-TO-DATE
+> Task :canvas:generateReleaseLintVitalModel UP-TO-DATE
+> Task :app:mergeReleaseJniLibFolders
+> Task :app:checkReleaseDuplicateClasses UP-TO-DATE
+> Task :app:generateReleaseResources UP-TO-DATE
+> Task :app:packageReleaseResources UP-TO-DATE
+> Task :app:processReleaseNavigationResources UP-TO-DATE
+> Task :app:parseReleaseLocalResources UP-TO-DATE
+> Task :app:generateReleaseRFile UP-TO-DATE
+> Task :app:compileReleaseKotlin UP-TO-DATE
+> Task :app:javaPreCompileRelease UP-TO-DATE
+> Task :app:compileReleaseJavaWithJavac NO-SOURCE
+> Task :app:mergeReleaseArtProfile UP-TO-DATE
+> Task :app:checkReleaseAarMetadata UP-TO-DATE
+> Task :app:mapReleaseSourceSetPaths UP-TO-DATE
+> Task :app:compileReleaseNavigationResources UP-TO-DATE
+> Task :app:mergeReleaseResources UP-TO-DATE
+> Task :app:createReleaseCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksRelease UP-TO-DATE
+> Task :app:processReleaseMainManifest UP-TO-DATE
+> Task :app:processReleaseManifest UP-TO-DATE
+> Task :app:processReleaseManifestForPackage UP-TO-DATE
+> Task :app:mergeReleaseNativeLibs
+> Task :app:processReleaseResources UP-TO-DATE
+> Task :app:expandReleaseArtProfileWildcards UP-TO-DATE
+> Task :app:extractProguardFiles UP-TO-DATE
+> Task :app:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :app:processReleaseJavaRes UP-TO-DATE
+> Task :app:mergeReleaseJavaResource UP-TO-DATE
+> Task :app:mergeReleaseStartupProfile UP-TO-DATE
+> Task :app:minifyReleaseWithR8 UP-TO-DATE
+> Task :app:compileReleaseArtProfile UP-TO-DATE
+> Task :app:generateReleaseAssets UP-TO-DATE
+> Task :app:mergeReleaseAssets UP-TO-DATE
+> Task :app:compressReleaseAssets UP-TO-DATE
+> Task :app:extractReleaseVersionControlInfo UP-TO-DATE
+> Task :app:generateReleaseLintVitalReportModel UP-TO-DATE
+> Task :app:lintVitalAnalyzeRelease UP-TO-DATE
+> Task :app:lintVitalReportRelease UP-TO-DATE
+> Task :app:lintVitalRelease
+> Task :app:optimizeReleaseResources UP-TO-DATE
+> Task :app:collectReleaseDependencies UP-TO-DATE
+> Task :app:sdkReleaseDependencyData UP-TO-DATE
+> Task :app:validateSigningRelease UP-TO-DATE
+> Task :app:writeReleaseAppMetadata UP-TO-DATE
+> Task :app:writeReleaseSigningConfigVersions UP-TO-DATE
+> Task :app:stripReleaseDebugSymbols
+> Task :app:packageRelease
+> Task :app:createReleaseApkListingFileRedirect UP-TO-DATE
+> Task :app:extractReleaseNativeSymbolTables
+> Task :app:mergeReleaseNativeDebugMetadata
+> Task :app:assembleRelease
+
+[Incubating] Problems report is available at: file:///private/tmp/claude-501/-Users-manlikeabro-Documents-repos-alona/245b89a2-4852-4324-abff-b9ca242915e6/scratchpad/snap/alona/target/android/app/root/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.8.0/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 4s
+82 actionable tasks: 7 executed, 75 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.8.0/userguide/configuration_cache_enabling.html
+/private/tmp/claude-501/-Users-manlikeabro-Documents-repos-alona/245b89a2-4852-4324-abff-b9ca242915e6/scratchpad/snap/alona/target/android/app/outputs/apk/release/app-release.apk
+built in 27.3 s, installed on emulator-5554 as com.alona.app in 0.3 s
+bun exact.mjs android  66.58s user 2.60s system 244% cpu 28.310 total

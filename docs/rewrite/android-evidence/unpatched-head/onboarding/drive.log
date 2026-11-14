@@ -1,0 +1,26 @@
+clock data
+  {"clock":0,"settled":true,"epoch":1,"incarnation":1}
+state setup.ready
+  true
+state welcomed
+  false
+screenshot docs/media/android/onboarding/01-device-check.png
+  {"screenshot":"docs/media/android/onboarding/01-device-check.png","device":true,"epoch":1,"incarnation":1,"clock":0}
+tap continue
+  {"tapped":28,"at":[205.71,760.33],"target":"continue","delivery":"platform","carrier":"android","mode":"agent","epoch":2,"incarnation":1,"clock":0}
+clock data
+  {"clock":0,"settled":false,"reason":"requests","epoch":2,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
+state welcomed
+  true
+state setup.activeDownloading
+  false
+screenshot docs/media/android/onboarding/02-downloading-models.png
+  {"screenshot":"docs/media/android/onboarding/02-downloading-models.png","device":true,"epoch":2,"incarnation":1,"clock":0}
+clock +6000
+  {"clock":6000,"epoch":2,"incarnation":1}
+clock data
+  {"clock":6000,"settled":true,"epoch":2,"incarnation":1}
+state setup.activeInstalled
+  false
+screenshot docs/media/android/onboarding/03-ready-to-record.png
+  {"screenshot":"docs/media/android/onboarding/03-ready-to-record.png","device":true,"epoch":2,"incarnation":1,"clock":6000}

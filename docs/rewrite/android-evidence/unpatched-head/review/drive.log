@@ -1,0 +1,86 @@
+clock data
+  {"clock":0,"settled":true,"epoch":1,"incarnation":1}
+tap continue
+  {"tapped":28,"at":[205.71,760.33],"target":"continue","delivery":"platform","carrier":"android","mode":"agent","epoch":2,"incarnation":1,"clock":0}
+clock data
+  {"clock":0,"settled":true,"epoch":2,"incarnation":1}
+clock +6000
+  {"clock":6000,"epoch":2,"incarnation":1}
+clock data
+  {"clock":6000,"settled":true,"epoch":2,"incarnation":1}
+tap start-recording
+  {"tapped":60,"at":[205.71,335],"target":"start-recording","delivery":"platform","carrier":"android","mode":"agent","epoch":5,"incarnation":1,"clock":6000}
+clock data
+  {"clock":6000,"settled":false,"reason":"requests","epoch":5,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
+clock settle
+  {"clock":6000,"settled":false,"reason":"requests","epoch":7,"incarnation":1,"diagnostic":"clock settle gave up on requests still in flight at its bound (20 s native); state shows them under pending, and logs a `request N` with no `fulfil N`"}
+type record-title Launch sync
+  {"typed":82,"value":"Launch sync","target":"record-title","delivery":"platform","carrier":"android","mode":"agent","epoch":8,"incarnation":1,"clock":6000}
+type record-notes - Ask about the login fix
+  {"typed":86,"value":"- Ask about the login fix","target":"record-notes","delivery":"platform","carrier":"android","mode":"agent","epoch":9,"incarnation":1,"clock":6000}
+clock +5000
+  {"clock":11000,"inflight":1,"epoch":10,"incarnation":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+tap stop-recording
+  {"tapped":79,"at":[205.71,143],"target":"stop-recording","delivery":"platform","carrier":"android","mode":"agent","epoch":12,"incarnation":1,"clock":11000}
+clock data
+  {"clock":11000,"settled":false,"reason":"requests","epoch":12,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
+clock settle
+  {"clock":11000,"settled":false,"reason":"requests","epoch":17,"incarnation":1,"diagnostic":"clock settle gave up on requests still in flight at its bound (20 s native); state shows them under pending, and logs a `request N` with no `fulfil N`"}
+clock +12000
+  {"clock":23000,"inflight":1,"epoch":19,"incarnation":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+clock data
+  {"clock":23000,"settled":false,"reason":"requests","epoch":19,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
+state detail.status
+  "recorded"
+screenshot docs/media/android/review/01-ai-notes.png
+  {"screenshot":"docs/media/android/review/01-ai-notes.png","device":true,"epoch":19,"incarnation":1,"clock":23000}
+tap pane-transcript
+  {"tapped":123,"at":[285.5,316.38],"target":"pane-transcript","delivery":"platform","carrier":"android","mode":"agent","epoch":20,"incarnation":1,"clock":23000}
+state pane
+  "transcript"
+screenshot docs/media/android/review/02-transcript.png
+  {"screenshot":"docs/media/android/review/02-transcript.png","device":true,"epoch":20,"incarnation":1,"clock":23000}
+tap pane-mine
+  {"tapped":121,"at":[175,316.38],"target":"pane-mine","delivery":"platform","carrier":"android","mode":"agent","epoch":21,"incarnation":1,"clock":23000}
+type my-notes ## Follow up
+  {"typed":128,"value":"## Follow up","target":"my-notes","delivery":"platform","carrier":"android","mode":"agent","epoch":22,"incarnation":1,"clock":23000}
+clock +1000
+  {"clock":24000,"inflight":1,"background":1,"epoch":23,"incarnation":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+clock data
+  {"clock":24000,"settled":true,"epoch":23,"incarnation":1}
+state detail.userNotes
+  "## Follow up"
+state noteDirty
+  false
+screenshot docs/media/android/review/03-my-notes-saved.png
+  {"screenshot":"docs/media/android/review/03-my-notes-saved.png","device":true,"epoch":23,"incarnation":1,"clock":24000}
+type title-field Q1 launch plan
+  {"typed":112,"value":"Q1 launch plan","target":"title-field","scrolled":{"from":[205.71,12.76],"to":[205.71,12.76]},"delivery":"platform","carrier":"android","mode":"agent","epoch":23,"incarnation":1,"clock":24000}
+type title-field key Enter
+  {"typed":112,"delivery":"recognized","target":"title-field","carrier":"android","mode":"agent","epoch":23,"incarnation":1,"clock":24000}
+clock data
+  {"clock":24000,"settled":true,"epoch":25,"incarnation":1}
+state detail.title
+  "Q1 launch plan"
+screenshot docs/media/android/review/04-renamed.png
+  {"screenshot":"docs/media/android/review/04-renamed.png","device":true,"epoch":25,"incarnation":1,"clock":24000}
+tap pane-ai
+  {"tapped":119,"at":[69,316.38],"target":"pane-ai","delivery":"platform","carrier":"android","mode":"agent","epoch":26,"incarnation":1,"clock":24000}
+tap regenerate
+  (no reply)
+clock data
+  (no reply)
+clock +1000
+  (no reply)
+clock data
+  (no reply)
+state detail.status
+  (no reply)
+screenshot docs/media/android/review/05-writing-again.png
+  (no reply)
+clock +6000
+  (no reply)
+clock data
+  (no reply)
+state detail.status
+  (no reply)

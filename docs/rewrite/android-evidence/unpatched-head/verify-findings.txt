@@ -1,0 +1,17 @@
+refused at run time: 7 (the host's journal, 'logs'; each is a call or a wiring the app got wrong)
+  fulfil 4 (setup) [HTTP 200, 29 bytes; wall 30 ms] refused: Data { resource: "setup", error: Unavailable("The engine's probe reply names no known host: ") } (first screen)
+  fulfil 4 (setup) [HTTP 200, 29 bytes; wall 20 ms] refused: Data { resource: "setup", error: Unavailable("The engine's probe reply names no known host: ") } (test "first launch checks the dev…")
+  fulfil 4 (setup) [HTTP 200, 29 bytes; wall 24 ms] refused: Data { resource: "setup", error: Unavailable("The engine's probe reply names no known host: ") } (test "continue downloads the mode…")
+  fulfil 4 (setup) [HTTP 200, 29 bytes; wall 16 ms] refused: Data { resource: "setup", error: Unavailable("The engine's probe reply names no known host: ") } (test "not now skips the download,…")
+  fulfil 6 (downloading) [HTTP 200, 29 bytes; wall 1 ms] refused: Data { resource: "downloading", error: Unavailable("The engine's probe reply names no known host: ") } (test "not now skips the download,…")
+  fulfil 7 (setup) [HTTP 200, 29 bytes; wall 0 ms] refused: Data { resource: "setup", error: Unavailable("The engine's probe reply names no known host: ") } (test "not now skips the download,…")
+  fulfil 4 (setup) [HTTP 200, 29 bytes; wall 12 ms] refused: Data { resource: "setup", error: Unavailable("The engine's probe reply names no known host: ") } (relaunch)
+compiler: 1 note, not counted (the platform's own look stands there; LLP 1121 D9)
+  app.tamber:6:3 warning [tamber-unreachable] accent-color on iOS, macOS and the web: the platform's look stands on iOS disabled prominent buttons (iOS draws a disabled prominent glass button grey; style a pressable instead (LLP 1121 D8)); macOS progress bars and spinners (NSProgressIndicator takes no tint); the web's disabled prominent buttons (the neutral look draws a disabled button grey; style a pressable instead (LLP 1121 D8)) (the first at line 315; LLP 1121 D9). The app ships ios (app.json `host.ios`, app.json `deploy.store.ios`) and macos (app.json `host.macos`, app.json `deploy.store.macos`); not shipping one? delete its keys
+failed and not arranged: 6 findings
+  "first launch checks the device and recommends a tier": resource setup was refused once (The engine's probe reply names no known host: )
+  "first launch checks the device and recommends a tier": resource rec was refused once
+  "continue downloads the models, then the home screen is ready to record": resource setup was refused once (The engine's probe reply names no known host: )
+  "continue downloads the models, then the home screen is ready to record": resource rec was refused once
+  "not now skips the download, and the home screen says models are needed": resource setup was refused 2 times (The engine's probe reply names no known host: )
+  "not now skips the download, and the home screen says models are needed": resource rec was refused once

@@ -1,0 +1,22 @@
+android onboarding: FAIL · 5 checks · 3 screenshots
+  setup.activeDownloading: expected true, got false
+  setup.activeInstalled: expected true, got false
+android record: FAIL · 7 checks · 6 screenshots
+  recorderId: expected "recorder-1", got "recorder-1-1"
+  lib.0.status: expected "transcribing", got "recorded"
+  lib.0.status: expected "summarizing", got "recorded"
+  detail.status: expected "done", got "recorded"
+android review: FAIL · 7 checks · 4 screenshots
+  the drive exited 1:     at async <anonymous> (/Users/manlikeabro/Documents/repos/exact/scripts/agent.mjs:527:86) |     at async main (/Users/manlikeabro/Documents/repos/exact/scripts/agent.mjs:624:26) |     at processTicksAndRejections (unknown:7:39)
+  detail.status: expected "done", got "recorded"
+  detail.status: expected "summarizing", got (no reply)
+  detail.status: expected "done", got (no reply)
+android library: ok · 2 checks · 4 screenshots
+android settings: FAIL · 8 checks · 3 screenshots
+  the drive exited 1:     at async <anonymous> (/Users/manlikeabro/Documents/repos/exact/scripts/agent.mjs:527:86) |     at async main (/Users/manlikeabro/Documents/repos/exact/scripts/agent.mjs:624:26) |     at processTicksAndRejections (native:7:39)
+  setup.active: expected "lite", got "balanced"
+  setup.activeInstalled: expected true, got false
+  setup.tiers.1.installed: expected false, got (no reply)
+  setup.active: expected "balanced", got (no reply)
+1 passed, 4 failed
+bun tools/flows.mjs android  20.78s user 5.35s system 3% cpu 11:07.00 total

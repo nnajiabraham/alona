@@ -1,0 +1,11 @@
+android onboarding: ok · 5 checks · 3 screenshots
+android record: FAIL · 7 checks · 6 screenshots
+  recorderId: expected "recorder-1", got "recorder-1-1"
+android review: ok · 7 checks · 5 screenshots
+android library: FAIL · 2 checks · 0 screenshots
+  the drive exited 1:     at async <anonymous> (/Users/manlikeabro/Documents/repos/exact/scripts/agent.mjs:443:44) |     at async main (/Users/manlikeabro/Documents/repos/exact/scripts/agent.mjs:624:26) |     at processTicksAndRejections (unknown:7:39)
+  lib.length: expected 1, got (no reply)
+  lib.length: expected 0, got (no reply)
+android settings: ok · 8 checks · 5 screenshots
+3 passed, 2 failed
+bun tools/flows.mjs android  20.79s user 4.35s system 9% cpu 4:13.75 total

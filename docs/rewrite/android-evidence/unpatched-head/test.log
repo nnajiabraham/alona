@@ -1,0 +1,15 @@
+test "first launch checks the device and recommends a tier": ok
+  note: unarranged: resource setup was refused once (The engine's probe reply names no known host: )
+  note: unarranged: resource rec was refused once
+test "continue downloads the models, then the home screen is ready to record": FAIL
+  continue downloads the models, then the home screen is ready to record: line 12: expected testId "download-card" present, it was absent (resource setup failed: The engine's probe reply names no known host: ; it shows its placeholder or last value) (mutation downloading's reply was refused: The engine's probe reply names no known host: ; its slot keeps what it had and its `then` does not run)
+  continue downloads the models, then the home screen is ready to record: line 16: expected testId "models-needed" absent, it was present (resource setup failed: The engine's probe reply names no known host: ; it shows its placeholder or last value) (mutation downloading's reply was refused: The engine's probe reply names no known host: ; its slot keeps what it had and its `then` does not run)
+  note: unarranged: resource setup was refused once (The engine's probe reply names no known host: )
+  note: unarranged: resource rec was refused once
+test "not now skips the download, and the home screen says models are needed": FAIL
+  not now skips the download, and the home screen says models are needed: line 30: expected testId "models-needed" absent, it was present (resource setup failed: The engine's probe reply names no known host: ; it shows its placeholder or last value) (mutation downloading's reply was refused: The engine's probe reply names no known host: ; its slot keeps what it had and its `then` does not run)
+  note: unarranged: resource setup was refused 2 times (The engine's probe reply names no known host: )
+  note: unarranged: resource rec was refused once
+1 passed, 2 failed
+exact: if this was unclear or slow, tell the exact2 team in one line: bun exact.mjs feedback note "<what happened>"
+bun exact.mjs test android  1.31s user 1.00s system 8% cpu 26.786 total
