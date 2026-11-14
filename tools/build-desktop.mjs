@@ -45,7 +45,7 @@ if (wanted.has('site')) process.exit(0);
 
 must(BUN, ['install', '--frozen-lockfile'], DESKTOP);
 must('node', ['node_modules/electron/install.js'], DESKTOP);
-rmSync(OUT, { recursive: true, force: true });
+if (all) rmSync(OUT, { recursive: true, force: true });
 
 const notes = {};
 if (all || wanted.has('linux')) {

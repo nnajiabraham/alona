@@ -2,7 +2,7 @@
 // Drives Alona's desktop shell (desktop/) through the UI with Playwright's Electron support:
 //
 //   bun tools/e2e-desktop.mjs                          unpacked shell, this machine's Electron, real models
-//   bun tools/e2e-desktop.mjs --exe /opt/Alona/alona --platform linux --allow-demo
+//   bun tools/e2e-desktop.mjs --exe /opt/Alona/alona --platform linux --allow-demo --no-video
 //
 // Without --exe it runs desktop/ on the Electron in desktop/node_modules and
 // serves dist/desktop-site (bun tools/build-desktop.mjs site writes it). With
@@ -39,6 +39,8 @@ const { values: opts } = parseArgs({
     platform: { type: 'string', default: HOST },
     'allow-demo': { type: 'boolean', default: false },
     'record-seconds': { type: 'string' },
+    // Playwright's screencast stalled the page under software rendering in the Linux container.
+    'no-video': { type: 'boolean', default: false },
   },
 });
 
@@ -115,7 +117,7 @@ async function main() {
   const app = await _electron.launch({
     executablePath,
     args,
-    recordVideo: { dir: join(work, 'video'), size: { width: 1040, height: 760 } },
+    ...(opts['no-video'] ? {} : { recordVideo: { dir: join(work, 'video'), size: { width: 1040, height: 760 } } }),
     timeout: 60_000,
   });
   const mainLog = [];

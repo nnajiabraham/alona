@@ -98,8 +98,18 @@ function lockDown(ses) {
     if (!allowed) console.log(`[alona] blocked request ${details.url}`);
     callback({ cancel: !allowed });
   });
-  ses.setSpellCheckerEnabled(false);
 }
+
+// On Linux and Windows Chromium fetches hunspell dictionaries from Google's
+// CDN as a session starts, outside webRequest. A session is configured here,
+// before that, so nothing is fetched: no checker, no languages, and a
+// download URL on the app's own origin.
+app.on('session-created', (ses) => {
+  ses.setSpellCheckerEnabled(false);
+  ses.setSpellCheckerLanguages([]);
+  ses.setSpellCheckerDictionaryDownloadURL(`${ORIGIN}/no-dictionaries/`);
+  ses.on('spellcheck-dictionary-download-begin', (event, language) => console.log(`[alona] dictionary download began: ${language}`));
+});
 
 // Node's URL reports the origin of a non-special scheme such as alona: as "null".
 function isApp(url) {
