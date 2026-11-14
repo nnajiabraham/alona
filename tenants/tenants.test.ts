@@ -61,6 +61,17 @@ describe('each rule the validator adds to the types', () => {
     expect(problems(t).find((x) => x.message.includes('white button label'))?.field).toBe('colors.accent.light');
   });
 
+  test('an accent too dim to read as link text in a dark settings list', () => {
+    const t = variant((t) => ({ ...t, colors: { ...t.colors, accent: { light: t.colors.accent.light, dark: '#7a5cc4' } } }));
+    expect(problems(t).find((x) => x.message.includes('link text'))?.field).toBe('colors.accent.dark');
+  });
+
+  test('a welcome title with a word too long for a phone at the largest text size', () => {
+    const t = variant((t) => ({ ...t, copy: { ...t.copy, welcomeTitle: 'Welcome to Quillmoor' } }));
+    expect(fields(t)).toEqual(['copy.welcomeTitle']);
+    expect(problems(t)[0].message).toContain('"Quillmoor"');
+  });
+
   test('a colour that is not six hex digits', () => {
     const t = variant((t) => ({ ...t, colors: { ...t.colors, line: { light: '#abc', dark: t.colors.line.dark } } }));
     expect(fields(t)).toEqual(['colors.line.light']);

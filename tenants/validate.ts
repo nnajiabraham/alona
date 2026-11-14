@@ -37,6 +37,10 @@ const TEXT_PAIRS: [ColorToken, ColorToken][] = [
 const MARK_PAIRS: [ColorToken, ColorToken][] = [['accent', 'page'], ['accent', 'card']];
 
 const WHITE = '#ffffff';
+const BLACK = '#000000';
+
+/** The longest word the welcome title can hold at the largest text size on a 390-point-wide phone. */
+const TITLE_WORD = 8;
 
 /**
  * What the types cannot say about a tenant. `fileExists` answers for paths
@@ -55,6 +59,10 @@ export function validateTenant(t: TenantConfig, slug: string, fileExists: (path:
     ['copy.reviewDisclaimer', t.copy.reviewDisclaimer], ['copy.privacy', t.copy.privacy],
   ];
   for (const [field, value] of text) if (value.trim() === '') add(field, 'is empty. Write the text the app shows.');
+  const long = t.copy.welcomeTitle.split(/[^\p{L}\p{N}'-]+/u).find((w) => [...w].length > TITLE_WORD);
+  if (long !== undefined) {
+    add('copy.welcomeTitle', `has "${long}", longer than ${TITLE_WORD} letters, which spills off a phone at the largest text size. Rephrase it with shorter words; the app's name can go in copy.welcomeBody.`);
+  }
   if (t.app.shortName.length > 12) add('app.shortName', `is ${t.app.shortName.length} characters. Shorten it to 12 or fewer, so it fits under the icon.`);
   if (!BUNDLE.test(t.app.bundleId)) {
     add('app.bundleId', `"${t.app.bundleId}" is not a reverse-DNS id. Use lowercase words joined by dots, at least three, such as "org.example.notes".`);
@@ -90,6 +98,12 @@ export function validateTenant(t: TenantConfig, slug: string, fileExists: (path:
     if (valid('accent', scheme)) {
       const ratio = contrast(WHITE, t.colors.accent[scheme]);
       if (ratio < 3) add(`colors.accent.${scheme}`, `under a white button label is ${ratio.toFixed(2)}:1; it needs 3:1. Darken colors.accent.${scheme}.`);
+      // Plain buttons in a settings list (the support link) draw their label in the accent on the platform's own list background.
+      const list = scheme === 'light' ? WHITE : BLACK;
+      const onList = contrast(t.colors.accent[scheme], list);
+      if (onList < 4.5) {
+        add(`colors.accent.${scheme}`, `as link text on the platform's ${scheme} list background (${list}) is ${onList.toFixed(2)}:1; it needs 4.5:1. ${scheme === 'light' ? 'Darken' : 'Lighten'} colors.accent.${scheme}.`);
+      }
     }
   }
 

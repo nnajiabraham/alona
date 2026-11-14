@@ -11,7 +11,7 @@ export default defineTenant({
     version: '0.1.0',
   },
   colors: {
-    accent: { light: '#5b3fa0', dark: '#7a5cc4' },
+    accent: { light: '#5b3fa0', dark: '#8a6fd4' },
     page: { light: '#f6f4fb', dark: '#141220' },
     card: { light: '#ebe7f5', dark: '#1e1b2d' },
     raised: { light: '#fdfcff', dark: '#262238' },
@@ -26,7 +26,7 @@ export default defineTenant({
     noticeInk: { light: '#6a4f0c', dark: '#e0c482' },
   },
   copy: {
-    welcomeTitle: 'Welcome to the Quillmoor pilot',
+    welcomeTitle: 'Welcome to the pilot',
     welcomeBody: 'Record a treatment session and Quillmoor Notes drafts the treatment note on this phone. You review every draft before it goes into the record.',
     person: { singular: 'patient', plural: 'patients' },
     reviewDisclaimer: 'This is a pilot build. Review and correct the draft before you copy it into the patient record.',

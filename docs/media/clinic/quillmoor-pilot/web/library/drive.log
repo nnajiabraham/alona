@@ -1,0 +1,84 @@
+clock data
+  {"clock":0,"settled":true}
+tap continue
+  {"at":[550,674],"tapped":28,"target":"continue","delivery":"platform","carrier":"web","mode":"agent","clock":0,"epoch":18,"incarnation":1}
+clock data
+  {"clock":0,"settled":true}
+clock +6000
+  {"clock":6000}
+clock data
+  {"clock":6000,"settled":true}
+tap new-note-button
+  {"at":[550,198.59375],"tapped":60,"target":"new-note-button","delivery":"platform","carrier":"web","mode":"agent","clock":6000,"epoch":27,"incarnation":1}
+clock settle
+  {"clock":6400,"settled":true}
+type new-ref Bed 4
+  {"at":[550,150],"typed":80,"target":"new-ref","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":28,"incarnation":1}
+tap template-physio-follow-up
+  {"at":[550,383],"tapped":93,"target":"template-physio-follow-up","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":29,"incarnation":1}
+tap start-recording
+  {"at":[550,694],"tapped":101,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":42,"incarnation":1}
+clock data
+  {"clock":6400,"settled":true}
+clock settle
+  {"clock":6800,"settled":true}
+type record-jottings - L knee, 2 weeks
+  {"at":[550,518],"typed":106,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":48,"incarnation":1}
+clock +5000
+  {"clock":11800}
+tap stop-recording
+  {"at":[550,333],"tapped":120,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":11800,"epoch":67,"incarnation":1}
+clock data
+  {"clock":11800,"settled":true}
+clock settle
+  {"clock":12200,"settled":true}
+clock +12000
+  {"clock":24200}
+clock data
+  {"clock":24200,"settled":true}
+back
+  {"history":-1,"delivery":"platform","back":"route","carrier":"web","clock":24200,"epoch":106,"incarnation":1}
+clock data
+  {"clock":24200,"settled":true}
+clock settle
+  {"clock":24200,"settled":true}
+state lib.length
+  1
+state lib.0.patientRef
+  "Bed 4"
+state lib.0.templateName
+  "Follow-up session"
+state lib.0.state
+  "draft"
+screenshot docs/media/clinic/quillmoor-pilot/web/library/01-notes.png
+  {"clock":24200,"epoch":106,"incarnation":1,"screenshot":"docs/media/clinic/quillmoor-pilot/web/library/01-notes.png","w":1100,"h":760}
+prefer prefers-color-scheme dark
+  {"media":{"display-mode":"browser","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","prefers-color-scheme":"dark","color-gamut":"srgb","dynamic-range":"standard","pointer":"fine","hover":"hover"},"clock":24200,"epoch":109,"incarnation":1}
+screenshot docs/media/clinic/quillmoor-pilot/web/library/02-notes-dark.png
+  {"clock":24200,"epoch":109,"incarnation":1,"screenshot":"docs/media/clinic/quillmoor-pilot/web/library/02-notes-dark.png","w":1100,"h":760}
+tap "Bed 4"
+  {"at":[521.9765625,302.59375],"tapped":131,"target":"Bed 4","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":113,"incarnation":1}
+clock data
+  {"clock":24200,"settled":true}
+clock settle
+  {"clock":24200,"settled":true}
+screenshot docs/media/clinic/quillmoor-pilot/web/library/03-note-dark.png
+  {"clock":24200,"epoch":113,"incarnation":1,"screenshot":"docs/media/clinic/quillmoor-pilot/web/library/03-note-dark.png","w":1100,"h":760}
+prefer prefers-color-scheme light
+  {"media":{"display-mode":"browser","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","prefers-color-scheme":"light","color-gamut":"srgb","dynamic-range":"standard","pointer":"fine","hover":"hover"},"clock":24200,"epoch":116,"incarnation":1}
+tap delete-note
+  {"at":[1066,26],"tapped":139,"target":"delete-note","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":117,"incarnation":1}
+clock settle
+  {"clock":24200,"settled":true}
+screenshot docs/media/clinic/quillmoor-pilot/web/library/04-confirm-delete.png
+  {"clock":24200,"epoch":117,"incarnation":1,"screenshot":"docs/media/clinic/quillmoor-pilot/web/library/04-confirm-delete.png","w":1100,"h":760}
+tap delete-confirm
+  {"at":[455,424.5],"tapped":36,"target":"delete-confirm","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":122,"incarnation":1}
+clock data
+  {"clock":24200,"settled":true}
+clock settle
+  {"clock":24200,"settled":true}
+state lib.length
+  0
+screenshot docs/media/clinic/quillmoor-pilot/web/library/05-deleted.png
+  {"clock":24200,"epoch":122,"incarnation":1,"screenshot":"docs/media/clinic/quillmoor-pilot/web/library/05-deleted.png","w":1100,"h":760}

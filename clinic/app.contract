@@ -411,8 +411,8 @@ component Clinic
                 column min-height="100%" box-sizing="border-box" padding=24 gap=20 justify-content="center"
                   max-width="32.5rem" width="100%" margin="0 auto"
                   column gap=8
-                    text brand.welcomeTitle font="-exact-large-title" role="heading" aria-level=1 testId="welcome-title"
-                    text brand.tagline font="-exact-title3" color="text.muted" testId="tagline"
+                    text brand.welcomeTitle font="-exact-title2" role="heading" aria-level=1 testId="welcome-title"
+                    text brand.tagline font="-exact-headline" color="text.muted" testId="tagline"
                     text brand.welcomeBody color="text.muted"
                   column gap=10 padding=16 border-radius=16 background-color="surface.card" testId="device-card"
                     text "This device" font="-exact-footnote" color="text.muted"
