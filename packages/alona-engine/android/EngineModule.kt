@@ -68,9 +68,12 @@ class EngineModule(context: ExtensionContext) : ExactExtension(context) {
     private fun facts(): JSONObject {
         val info = ActivityManager.MemoryInfo()
         (context.application.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).getMemoryInfo(info)
-        val memory = if (Build.VERSION.SDK_INT >= 34) maxOf(info.totalMem, info.advertisedMem) else info.totalMem
+        // totalMem leaves out what the kernel reserves, so a 6 GB phone reports about 5.6. Round it up to
+        // the whole gigabyte it is sold as. advertisedMem is not used: where the maker sets no size it
+        // rounds up to a power of two, which shows 16 GB for 8.3 and 8 GB for a 6 GB phone.
+        val memoryGB = Math.ceil(info.totalMem / 1e9)
         val tablet = context.application.resources.configuration.smallestScreenWidthDp >= 600
-        return JSONObject().put("host", "android").put("memoryGB", memory / 1e9)
+        return JSONObject().put("host", "android").put("memoryGB", memoryGB)
             .put("cores", Runtime.getRuntime().availableProcessors()).put("storageFreeGB", StatFs(context.application.filesDir.path).availableBytes / 1e9)
             .put("gpu", false).put("gpuMaxBufferGB", 0).put("formFactor", if (tablet) "desktop" else "phone")
             .put("appleSilicon", false).put("iosBrowser", false).put("description", "${Build.MODEL} · Android ${Build.VERSION.RELEASE}")
