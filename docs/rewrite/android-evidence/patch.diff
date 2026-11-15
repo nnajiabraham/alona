@@ -1,4 +1,0 @@
-36c36
-<   if (probe.demo === true) return demo();
----
->   if (probe.demo === true || typeof probe.host !== 'string') return demo();

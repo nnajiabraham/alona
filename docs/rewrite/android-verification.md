@@ -18,7 +18,7 @@ Two causes, both outside this task:
 
 So I built and drove from a snapshot: `git archive HEAD` (commit `e915608`) extracted to `<scratchpad>/snap/alona`, with `<scratchpad>/snap/exact` symlinked to the Exact checkout so `file:../exact/...` resolves, and the `gradle.lockfile` and `gradle-verification.xml` from the repo copied in. All results below are from that snapshot unless stated. The snapshot has no uncommitted work from the other agent. Media was copied into this repo afterwards.
 
-I changed one line of `app.ts` in the snapshot only, after the unmodified results were recorded. The change is the suggested fix for defect D1. Its diff is `docs/rewrite/android-evidence/patch.diff`:
+I changed one line of `app.ts` in the snapshot only, after the unmodified results were recorded. The change is the suggested fix for defect D1. Its diff is `(evidence removed after the fixes were re-verified; see git history)`:
 
 ```
 -  if (probe.demo === true) return demo();
@@ -72,7 +72,7 @@ test "not now skips the download, and the home screen says models are needed": F
 1 passed, 2 failed
 ```
 
-`verify android` full finding list: `docs/rewrite/android-evidence/unpatched-head/verify-findings.txt`, log `verify.log`. Summary:
+`verify android` full finding list: `(evidence removed after the fixes were re-verified; see git history)`, log `verify.log`. Summary:
 - 7 refused at run time: `setup` and `downloading` replies, `HTTP 200, 29 bytes`, `Unavailable("The engine's probe reply names no known host: ")` (first screen, each test, relaunch).
 - 6 "failed and not arranged": `setup` refused (3 tests) and `rec` refused once per test.
 - 1 failed resource: `setup`. 1 other (relaunch problem, same cause).
@@ -99,7 +99,7 @@ The drive crashes (HEAD: review, settings; PATCHED run 1: library) are intermitt
 
 `tools/flows.mjs` was not changed. The existing `android` entry (no flags) works: the agent substitutes the recorder and the `--permission microphone=granted` flag is accepted.
 
-PATCHED media is at `docs/media/android/<flow>/` (screenshots, `drive.log`, stepped `<flow>.mp4`). HEAD media is at `docs/rewrite/android-evidence/unpatched-head/`. `docs/rewrite/android-evidence/extra/` holds four extra screenshots I took with settled transitions (list, list dark, settings dark, window bars). Frame videos are one frame per step, not real-time.
+PATCHED media is at `docs/media/android/<flow>/` (screenshots, `drive.log`, stepped `<flow>.mp4`). HEAD media is at `(evidence removed after the fixes were re-verified; see git history)`. `(evidence removed after the fixes were re-verified; see git history)` holds four extra screenshots I took with settled transitions (list, list dark, settings dark, window bars). Frame videos are one frame per step, not real-time.
 
 ## Real-time videos (step 4)
 
@@ -160,7 +160,7 @@ bun exact.mjs android
 bun exact.mjs test android
 bun exact.mjs verify android --shots shots
 bun tools/flows.mjs android              # or: bun tools/flows.mjs android library
-# PATCHED variant: apply docs/rewrite/android-evidence/patch.diff to app.ts, then rebuild and rerun the three lines above
+# PATCHED variant: apply (evidence removed after the fixes were re-verified; see git history) to app.ts, then rebuild and rerun the three lines above
 # real-time videos (app installed, 1080x2424)
 adb shell pm clear com.alona.app; adb shell pm grant com.alona.app android.permission.RECORD_AUDIO
 adb shell screenrecord --time-limit 25 /sdcard/onb.mp4 &

@@ -1,0 +1,15 @@
+e2e macos balanced: preparing models
+recording a take and swapping in the spoken fixture
+running the pipeline 8 times on the fixture
+word error rate: 4.8% (8 of 168)
+title: Mobile App Launch Review
+cycle 1: transcribe 6.274 s, notes 4.204 s, total 10.478 s, peak 2369 MB, idle after 634 MB
+cycle 2: transcribe 5.202 s, notes 3.081 s, total 8.283 s, peak 2437 MB, idle after 656 MB
+cycle 3: transcribe 5.177 s, notes 3.084 s, total 8.261 s, peak 2601 MB, idle after 820 MB
+cycle 4: transcribe 5.193 s, notes 3.08 s, total 8.273 s, peak 2607 MB, idle after 826 MB
+cycle 5: transcribe 5.178 s, notes 3.078 s, total 8.256 s, peak 2616 MB, idle after 834 MB
+cycle 6: transcribe 5.175 s, notes 3.078 s, total 8.253 s, peak 2754 MB, idle after 973 MB
+cycle 7: transcribe 5.176 s, notes 3.084 s, total 8.26 s, peak 2759 MB, idle after 978 MB
+cycle 8: transcribe 5.176 s, notes 3.08 s, total 8.256 s, peak 2762 MB, idle after 981 MB
+FAIL idle memory grew from 634 MB after cycle 1 to 981 MB after cycle 8
+e2e: 1 failed
