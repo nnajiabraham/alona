@@ -30,16 +30,24 @@ internal data class Artifact(val id: String, val runtime: String, val files: Lis
     }
 }
 internal class ModelStore(val root: File) {
+    private data class Verified(val bytes: Long, val modified: Long, val sha: String)
+    private val checked = java.util.concurrent.ConcurrentHashMap<String, Verified>()
+    private val buffers = ThreadLocal.withInitial { ByteArray(1024 * 1024) }
     fun dir(a: Artifact) = File(root, a.id)
     fun path(a: Artifact, name: String) = File(dir(a), name).path
     fun verified(f: File, pin: Pin): Boolean {
         if (!f.isFile || f.length() != pin.bytes) return false
+        val stamp = Verified(f.length(), f.lastModified(), pin.sha)
+        // Final model files are immutable; only a verified part is renamed into place.
+        if (checked[f.path] == stamp) return true
         val digest = MessageDigest.getInstance("SHA-256")
         f.inputStream().buffered().use { input ->
-            val buffer = ByteArray(1024 * 1024)
+            val buffer = buffers.get()
             while (true) { val n = input.read(buffer); if (n < 0) break; digest.update(buffer, 0, n) }
         }
-        return digest.digest().joinToString("") { "%02x".format(it) } == pin.sha
+        val valid = digest.digest().joinToString("") { "%02x".format(it) } == pin.sha && f.length() == stamp.bytes && f.lastModified() == stamp.modified
+        if (valid) checked[f.path] = stamp
+        return valid
     }
     fun installed(a: Artifact) = a.files.all { verified(File(dir(a), it.name), it) }
     fun download(a: Artifact, check: () -> Unit, progress: (Double) -> Unit) {

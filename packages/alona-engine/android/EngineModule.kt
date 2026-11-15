@@ -32,6 +32,7 @@ internal class Writer(val job: Job) {
 class EngineModule(context: ExtensionContext) : ExactExtension(context) {
     private val main = Handler(Looper.getMainLooper())
     private val worker = Executors.newSingleThreadExecutor()
+    private val inspector = Executors.newSingleThreadExecutor()
     private val models = ModelStore(File(context.application.noBackupFilesDir, "alona-models"))
     private val jobs = linkedMapOf<String, Job>()
     private val threads = maxOf(1, minOf(8, Runtime.getRuntime().availableProcessors() - 2))
@@ -43,7 +44,8 @@ class EngineModule(context: ExtensionContext) : ExactExtension(context) {
                 val op = request.getString("op")
                 val artifact = if (op == "remove") Artifact.parse(request.getJSONObject("artifact")) else null
                 if (artifact != null) synchronized(this) { jobs.values.filter { it.artifact == artifact.id }.forEach { it.cancelled.set(true) } }
-                worker.execute {
+                val executor = if (op == "installed") inspector else worker
+                executor.execute {
                     val result = try {
                         if (artifact != null) {
                             require(models.dir(artifact).deleteRecursively()) { "Could not remove model" }
@@ -116,6 +118,6 @@ class EngineModule(context: ExtensionContext) : ExactExtension(context) {
     }
     override fun destroy(done: () -> Unit) {
         synchronized(this) { jobs.values.forEach { it.cancelled.set(true) } }
-        worker.shutdown(); done()
+        worker.shutdown(); inspector.shutdown(); done()
     }
 }
