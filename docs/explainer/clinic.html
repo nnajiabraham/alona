@@ -138,8 +138,18 @@ footer { color: var(--muted); font-size: 0.86rem; }
     <div class="tile"><h3>Jot while listening</h3><p>A pad on the recording screen takes the clinician's own jottings. The draft covers what they wrote first, and treats it as what matters most.</p></div>
     <div class="tile"><h3>Review and sign off</h3><p>Every draft carries "AI draft · Not reviewed" and the tenant's own warning. The clinician edits it in place, then marks it reviewed, which records when.</p></div>
     <div class="tile"><h3>Move it to the record</h3><p>Copy and Share appear only on a reviewed note. The text goes to the clipboard or the system share sheet, for pasting into the practice's record system.</p></div>
+    <div class="tile"><h3>A second note from one visit</h3><p>"Write as another note" writes the same recording under another template, such as a referral letter after a SOAP note. Both notes share the recording. Deleting one leaves the other, and the recording goes only with the last.</p></div>
+    <div class="tile"><h3>Format without Markdown</h3><p>The jottings pad and the draft have a toolbar: bold, headings, bullets, numbered lists, to-dos, quotes, and links. The note stays plain Markdown, so it pastes cleanly into a record system.</p></div>
     <div class="tile"><h3>Start over safely</h3><p>"Write again" and "Transcribe again" rerun the models, for example after a tier change. If the clinician has edited the draft, the app asks before it replaces those edits.</p></div>
   </div>
+</section>
+
+<section>
+  <span class="eyebrow">After the first note</span>
+  <h2>A second note from the same visit</h2>
+  <p>A clinician often needs two documents from one conversation: the note for the record, and a letter or a summary for someone else. The second is written from the same transcript, with no second recording.</p>
+  <ol class="steps" id="rewrite-steps"></ol>
+  <p class="note" id="rewrite-note" hidden>These captures are from the default tenant. The flow is the same under every brand.</p>
 </section>
 
 <section>
@@ -249,7 +259,13 @@ bun tools/tenant.mjs flows riverbend web     # every flow below, with captures</
     ['review', 'reviewed', 'Mark it reviewed', 'The label changes and the time is recorded.'],
     ['review', 'copied', 'Copy or share', 'Only now can the note leave the app, to the record system.'],
   ];
-  var VIDEOS = [['onboarding', 'First launch'], ['record', 'New note'], ['review', 'Review and sign off'], ['library', 'Notes list'], ['leaving', 'Leaving mid-task'], ['settings', 'Settings']];
+  var REWRITE = [
+    ['rewrite', 'reviewed first', 'Start from a finished note', 'The first note is reviewed and stays as it is.'],
+    ['rewrite', 'write as sheet', 'Write as another note', 'A sheet lists the tenant\'s other templates.'],
+    ['rewrite', 'second draft', 'A second draft', 'Written from the same transcript, under the new headings, and labelled as a draft.'],
+    ['rewrite', 'first untouched after delete', 'Each note stands alone', 'Deleting one note leaves the other, with the recording.'],
+  ];
+  var VIDEOS = [['onboarding', 'First launch'], ['record', 'New note'], ['review', 'Review and sign off'], ['rewrite', 'Write as another note'], ['toolbar', 'Formatting toolbar'], ['library', 'Notes list'], ['leaving', 'Leaving mid-task'], ['settings', 'Settings']];
 
   function paint(slug) {
     var t = tenants[slug];
@@ -281,6 +297,16 @@ bun tools/tenant.mjs flows riverbend web     # every flow below, with captures</
       if (!s) return;
       steps.appendChild(el('li', {}, [el('img', { src: s.src, alt: step[2], loading: 'lazy' }), el('h3', { text: step[2] }), el('p', { text: step[3] })]));
     });
+
+    var rewrite = document.getElementById('rewrite-steps'), borrowed = false;
+    rewrite.replaceChildren();
+    REWRITE.forEach(function (step) {
+      var s = shot(slug, step[0], step[1]);
+      if (!s) { s = shot('default', step[0], step[1]); borrowed = borrowed || !!s; }
+      if (!s) return;
+      rewrite.appendChild(el('li', {}, [el('img', { src: s.src, alt: step[2], loading: 'lazy' }), el('h3', { text: step[2] }), el('p', { text: step[3] })]));
+    });
+    document.getElementById('rewrite-note').hidden = !borrowed;
 
     var templates = document.getElementById('templates');
     templates.replaceChildren();
