@@ -22,6 +22,7 @@ const TARGETS = {
   web: { host: 'web', flags: ['--size', '1100x760'] },
   'web-phone': { host: 'web', flags: ['--size', '390x844'] },
   macos: { host: 'macos', flags: [], demoMarker: true },
+  // An unbound engine selects demo; real-model checks bind engine explicitly.
   android: { host: 'android', flags: [] },
   ios: { host: 'ios', flags: [] },
 };
