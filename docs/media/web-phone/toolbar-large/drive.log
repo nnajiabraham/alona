@@ -1,0 +1,64 @@
+clock data
+  {"clock":0,"settled":true}
+tap continue
+  {"at":[195,758],"tapped":28,"target":"continue","delivery":"platform","carrier":"web","mode":"agent","clock":0,"epoch":18,"incarnation":1}
+clock data
+  {"clock":0,"settled":true}
+clock +6000
+  {"clock":6000}
+clock data
+  {"clock":6000,"settled":true}
+prefer root-font-size 53px
+  {"media":{"display-mode":"browser","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","prefers-color-scheme":"light","color-gamut":"srgb","dynamic-range":"standard","pointer":"fine","hover":"hover"},"page":{"visibility-state":"visible","frozen":false,"online":true,"can-share":true,"can-share-files":true,"can-share-pictures":false,"can-open-files":true,"has-focus":true,"root-font-size":53,"gpu-tier":"high","iframe-partition":false,"navigation-type":"navigate","persisted":false,"restores":0,"display-scale":1},"fold":{"device-posture":"continuous","horizontal-viewport-segments":1,"vertical-viewport-segments":1,"viewport-segments":[]},"clock":6000,"epoch":27,"incarnation":1}
+tap start-recording
+  {"at":[195,495.71875],"tapped":64,"target":"start-recording","scrolled":{"from":[195,930.71875],"to":[195,495.71875]},"delivery":"platform","carrier":"web","mode":"agent","clock":6000,"epoch":40,"incarnation":1}
+clock data
+  {"clock":6000,"settled":true}
+clock settle
+  {"clock":6400,"settled":true}
+type record-notes - Agenda
+  {"at":[195,409.59375],"typed":74,"target":"record-notes","scrolled":{"from":[195,1212.59375],"to":[195,409.59375]},"delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":49,"incarnation":1}
+tap rec-bold
+  {"at":[215.609375,257.796875],"tapped":99,"target":"rec-bold","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":51,"incarnation":1}
+clock settle
+  {"clock":6400,"settled":true}
+check both
+  {"check":[{"scheme":"light","asked":"light","target":24,"viewport":{"w":390,"h":844,"scrollW":390},"findings":[{"line":"  covered  Text \"Your notes\"#92 [16,56 358×62]: its middle is under Text \"Recording\"#75 at rest, and nothing scrolls it clear; start the content below what covers it (padding or a divider), or let the bar take its place","kind":"covered","id":92,"text":"Your notes","box":[16,56,358,62],"detail":{"under":{"ref":75},"offscreen":false},"hint":"start the content below what covers it (padding or a divider), or let the bar take its place","node":"Text \"Your notes\"#92"}],"accepted":[]},{"scheme":"dark","asked":"dark","target":24,"viewport":{"w":390,"h":844,"scrollW":390},"findings":[{"line":"  covered  Text \"Your notes\"#92 [16,56 358×62]: its middle is under Text \"Recording\"#75 at rest, and nothing scrolls it clear; start the content below what covers it (padding or a divider), or let the bar take its place","kind":"covered","id":92,"text":"Your notes","box":[16,56,358,62],"detail":{"under":{"ref":75},"offscreen":false},"hint":"start the content below what covers it (padding or a divider), or let the bar take its place","node":"Text \"Your notes\"#92"}],"accepted":[]}],"text":"check web · light: 1 finding\n  covered  Text \"Your notes\"#92 [16,56 358×62]: its middle is under Text \"Recording\"#75 at rest, and nothing scrolls it clear; start the content below what covers it (padding or a divider), or let the bar take its place\ncheck web · dark: 1 finding\n  covered  Text \"Your notes\"#92 [16,56 358×62]: its middle is under Text \"Recording\"#75 at rest, and nothing scrolls it clear; start the content below what covers it (padding or a divider), or let the bar take its place","clock":6400,"epoch":57,"incarnation":1}
+screenshot docs/media/web-phone/toolbar-large/01-record-pad-large.png
+  {"clock":6400,"epoch":57,"incarnation":1,"screenshot":"docs/media/web-phone/toolbar-large/01-record-pad-large.png","w":390,"h":844}
+prefer prefers-color-scheme dark
+  {"media":{"display-mode":"browser","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","prefers-color-scheme":"dark","color-gamut":"srgb","dynamic-range":"standard","pointer":"fine","hover":"hover"},"clock":6400,"epoch":60,"incarnation":1}
+clock settle
+  {"clock":6400,"settled":true}
+screenshot docs/media/web-phone/toolbar-large/02-record-pad-large-dark.png
+  {"clock":6400,"epoch":60,"incarnation":1,"screenshot":"docs/media/web-phone/toolbar-large/02-record-pad-large-dark.png","w":390,"h":844}
+prefer prefers-color-scheme light
+  {"media":{"display-mode":"browser","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","prefers-color-scheme":"light","color-gamut":"srgb","dynamic-range":"standard","pointer":"fine","hover":"hover"},"clock":6400,"epoch":63,"incarnation":1}
+tap stop-recording
+  {"at":[195,409.6875],"tapped":87,"target":"stop-recording","scrolled":{"from":[195,-263.3125],"to":[195,409.6875]},"delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":76,"incarnation":1}
+clock data
+  {"clock":6400,"settled":true}
+clock settle
+  {"clock":6800,"settled":true}
+clock +12000
+  {"clock":18800}
+clock data
+  {"clock":18800,"settled":true}
+tap pane-mine
+  {"at":[197.875,791.75],"tapped":155,"target":"pane-mine","delivery":"platform","carrier":"web","mode":"agent","clock":18800,"epoch":116,"incarnation":1}
+clock settle
+  {"clock":18800,"settled":true}
+tap mine-link
+  {"at":[282.953125,490.046875],"tapped":199,"target":"mine-link","scrolled":{"from":[1929.953125,927.046875],"to":[282.953125,490.046875]},"delivery":"platform","carrier":"web","mode":"agent","clock":18800,"epoch":117,"incarnation":1}
+clock settle
+  {"clock":18800,"settled":true}
+check both
+  {"check":[{"scheme":"light","asked":"light","target":24,"viewport":{"w":390,"h":844,"scrollW":390},"findings":[{"line":"  clipped  pane-ai's label \"AI notes\" [14,289 129×133]: pane-ai cuts 12 px of its width; the clipping box is smaller than its content: let it grow, or scroll","kind":"clipped","id":154,"of":153,"text":"AI notes","box":[14,289,129,133],"detail":{"cut":[12,0],"by":153,"unit":"px"},"hint":"the clipping box is smaller than its content: let it grow, or scroll","node":"pane-ai's label \"AI notes\""},{"line":"  clipped  pane-mine's label \"My notes\" [133,289 129×133]: pane-mine cuts 12 px of its width; the clipping box is smaller than its content: let it grow, or scroll","kind":"clipped","id":156,"of":155,"text":"My notes","box":[133,289,129,133],"detail":{"cut":[12,0],"by":155,"unit":"px"},"hint":"the clipping box is smaller than its content: let it grow, or scroll","node":"pane-mine's label \"My notes\""},{"line":"  clipped  pane-transcript's label \"Transcript\" [202,322 231×66]: pane-transcript cuts 114 px of its width; the clipping box is smaller than its content: let it grow, or scroll","kind":"clipped","id":158,"of":157,"text":"Transcript","box":[202,322,231,66],"detail":{"cut":[114,0],"by":157,"unit":"px"},"hint":"the clipping box is smaller than its content: let it grow, or scroll","node":"pane-transcript's label \"Transcript\""},{"line":"  overflow pane-transcript [258,274 119×161]: runs 3 px past View \"Show\"#152's side, and nothing there scrolls or clips it; a flex item's width stops at its content: let it shrink (`min-width: 0`, a smaller `padding`), or let the row wrap (`flex-wrap: wrap`) or scroll","kind":"overflow","id":157,"box":[258,274,119,161],"detail":{"past":3,"of":152,"unit":"px"},"hint":"a flex item's width stops at its content: let it shrink (`min-width: 0`, a smaller `padding`), or let the row wrap (`flex-wrap: wrap`) or scroll","node":"pane-transcript"}],"accepted":[]},{"scheme":"dark","asked":"dark","target":24,"viewport":{"w":390,"h":844,"scrollW":390},"findings":[{"line":"  clipped  pane-ai's label \"AI notes\" [14,289 129×133]: pane-ai cuts 12 px of its width; the clipping box is smaller than its content: let it grow, or scroll","kind":"clipped","id":154,"of":153,"text":"AI notes","box":[14,289,129,133],"detail":{"cut":[12,0],"by":153,"unit":"px"},"hint":"the clipping box is smaller than its content: let it grow, or scroll","node":"pane-ai's label \"AI notes\""},{"line":"  clipped  pane-mine's label \"My notes\" [133,289 129×133]: pane-mine cuts 12 px of its width; the clipping box is smaller than its content: let it grow, or scroll","kind":"clipped","id":156,"of":155,"text":"My notes","box":[133,289,129,133],"detail":{"cut":[12,0],"by":155,"unit":"px"},"hint":"the clipping box is smaller than its content: let it grow, or scroll","node":"pane-mine's label \"My notes\""},{"line":"  clipped  pane-transcript's label \"Transcript\" [202,322 231×66]: pane-transcript cuts 114 px of its width; the clipping box is smaller than its content: let it grow, or scroll","kind":"clipped","id":158,"of":157,"text":"Transcript","box":[202,322,231,66],"detail":{"cut":[114,0],"by":157,"unit":"px"},"hint":"the clipping box is smaller than its content: let it grow, or scroll","node":"pane-transcript's label \"Transcript\""},{"line":"  overflow pane-transcript [258,274 119×161]: runs 3 px past View \"Show\"#152's side, and nothing there scrolls or clips it; a flex item's width stops at its content: let it shrink (`min-width: 0`, a smaller `padding`), or let the row wrap (`flex-wrap: wrap`) or scroll","kind":"overflow","id":157,"box":[258,274,119,161],"detail":{"past":3,"of":152,"unit":"px"},"hint":"a flex item's width stops at its content: let it shrink (`min-width: 0`, a smaller `padding`), or let the row wrap (`flex-wrap: wrap`) or scroll","node":"pane-transcript"}],"accepted":[]}],"text":"check web · light: 4 findings\n  clipped  pane-ai's label \"AI notes\" [14,289 129×133]: pane-ai cuts 12 px of its width; the clipping box is smaller than its content: let it grow, or scroll\n  clipped  pane-mine's label \"My notes\" [133,289 129×133]: pane-mine cuts 12 px of its width; the clipping box is smaller than its content: let it grow, or scroll\n  clipped  pane-transcript's label \"Transcript\" [202,322 231×66]: pane-transcript cuts 114 px of its width; the clipping box is smaller than its content: let it grow, or scroll\n  overflow pane-transcript [258,274 119×161]: runs 3 px past View \"Show\"#152's side, and nothing there scrolls or clips it; a flex item's width stops at its content: let it shrink (`min-width: 0`, a smaller `padding`), or let the row wrap (`flex-wrap: wrap`) or scroll\ncheck web · dark: 4 findings\n  clipped  pane-ai's label \"AI notes\" [14,289 129×133]: pane-ai cuts 12 px of its width; the clipping box is smaller than its content: let it grow, or scroll\n  clipped  pane-mine's label \"My notes\" [133,289 129×133]: pane-mine cuts 12 px of its width; the clipping box is smaller than its content: let it grow, or scroll\n  clipped  pane-transcript's label \"Transcript\" [202,322 231×66]: pane-transcript cuts 114 px of its width; the clipping box is smaller than its content: let it grow, or scroll\n  overflow pane-transcript [258,274 119×161]: runs 3 px past View \"Show\"#152's side, and nothing there scrolls or clips it; a flex item's width stops at its content: let it shrink (`min-width: 0`, a smaller `padding`), or let the row wrap (`flex-wrap: wrap`) or scroll","clock":18800,"epoch":123,"incarnation":1}
+screenshot docs/media/web-phone/toolbar-large/03-my-notes-large.png
+  {"clock":18800,"epoch":123,"incarnation":1,"screenshot":"docs/media/web-phone/toolbar-large/03-my-notes-large.png","w":390,"h":844}
+prefer prefers-color-scheme dark
+  {"media":{"display-mode":"browser","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","prefers-color-scheme":"dark","color-gamut":"srgb","dynamic-range":"standard","pointer":"fine","hover":"hover"},"clock":18800,"epoch":126,"incarnation":1}
+clock settle
+  {"clock":18800,"settled":true}
+screenshot docs/media/web-phone/toolbar-large/04-my-notes-large-dark.png
+  {"clock":18800,"epoch":126,"incarnation":1,"screenshot":"docs/media/web-phone/toolbar-large/04-my-notes-large-dark.png","w":390,"h":844}

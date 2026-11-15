@@ -39,8 +39,10 @@ Alona is a private meeting assistant. It records a meeting, transcribes it with 
 | `app.contract`, `app.ts`, `app.tamber`, `app.json` | The view, the data module, the brand tokens, the manifest |
 | `core/` | Shared TypeScript: `service`, `pipeline`, `notes`, `device`, `models`, `store`, `engine` (the protocol), `sim-engine`, `artifacts.json` |
 | `modules/apple/` | The Swift inference engine for macOS and iOS |
+| `packages/alona-engine/` | The Kotlin inference engine for Android, as an Exact extension package |
 | `modules/web/`, `engine/web/` | The web engine's seam and its Worker source |
 | `clinic/`, `tenants/` | The clinical app's view and logic, and one typed config file per tenant (`tenants/README.md`) |
+| `ui/` | View components both apps share, such as the notes pad with its formatting toolbar |
 | `desktop/` | The Electron shell for the Windows and Linux packages |
 | `tools/` | Flow runner, real-model checks, model pinning, framework fetch, tenant and desktop builds, the Exact patch |
 | `docs/` | Field guide, captured media, research, spike reports, decision trail |
@@ -53,6 +55,7 @@ bun test core/                  # shared logic
 bun exact.mjs verify web        # Contract tests plus Exact's screen checks; ends with "verify: clean"
 bun tools/flows.mjs web         # every flow, with state checks and fresh media
 bun tools/e2e-native.mjs lite   # macOS on real models, after any engine or pipeline change
+bun tools/e2e-android.mjs       # Android on real models, after any change to packages/alona-engine
 ```
 
 `bun tools/explainer-data.mjs` refreshes the field guide after new media or check results.

@@ -14,6 +14,7 @@
 import { spawnSync } from 'node:child_process';
 import { mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
+import { forHost, formatSteps, padClean, padOp, pressed, START, withKeys } from './pad-steps.mjs';
 
 const ROOT = resolve(dirname(new URL(import.meta.url).pathname), '..');
 const BUN = process.execPath;
@@ -28,14 +29,20 @@ const TARGETS = {
 const shot = (name) => ({ shot: name });
 const check = (path, equals) => ({ check: path, equals });
 const has = (path, text) => ({ check: path, contains: text });
+/** Remembers a state's value under a name, for a later `same` to compare against. */
+const keep = (path, name) => ({ check: path, keep: name });
+const same = (path, name) => ({ check: path, same: name });
 
 function flows(tenant) {
   const second = tenant.templates.find((t) => t.id !== tenant.defaults.template) ?? tenant.templates[0];
   const headings = second.sections.map((s) => `## ${s.heading}`);
+  // The rewrite flow's pair: a consultation note written again as a referral letter, where the tenant has both.
+  const first = tenant.templates.find((t) => t.id === 'consultation') ?? tenant.templates[0];
+  const other = tenant.templates.find((t) => t.id === 'referral') ?? tenant.templates.find((t) => t.id !== first.id);
   const READY = ['clock data', 'tap continue', 'clock data', 'clock +6000', 'clock data'];
   const RECORDED = [
     ...READY,
-    'tap new-note-button', 'clock settle', 'type new-ref Bed 4', `tap template-${second.id}`, 'clock settle', 'tap start-recording',
+    'tap new-note-button', 'clock settle', 'type new-ref Bed 4', `tap template-${second.id}`, 'clock settle', ...START,
     'clock data', 'clock settle', 'type record-jottings - L knee, 2 weeks',
     'clock +5000', 'tap stop-recording', 'clock data', 'clock settle', 'clock +12000', 'clock data',
   ];
@@ -49,7 +56,7 @@ function flows(tenant) {
       ...READY,
       'tap new-note-button', 'clock settle', shot('new-note-sheet'),
       'type new-ref Bed 4', `tap template-${second.id}`, 'clock settle', shot('reference-and-template'),
-      'tap start-recording', 'clock data', 'clock settle', check('rec.state', 'recording'), check('recRef', 'Bed 4'),
+      ...START, 'clock data', 'clock settle', check('rec.state', 'recording'), check('recRef', 'Bed 4'),
       check('recTemplate', second.id), shot('recording-started'),
       'type record-jottings - L knee, 2 weeks', 'clock +5000', shot('jottings-while-recording'),
       'tap stop-recording', 'clock data', 'clock settle', check('lib.0.state', 'processing'), shot('saved-and-queued'),
@@ -86,7 +93,7 @@ function flows(tenant) {
     // Leaving a screen by the platform's Back runs no action of the app's, so these two paths need their own proof.
     leaving: [
       ...READY,
-      'tap new-note-button', 'clock settle', 'tap start-recording', 'clock data', 'clock settle', 'clock +3000',
+      'tap new-note-button', 'clock settle', ...START, 'clock data', 'clock settle', 'clock +3000',
       check('rec.state', 'recording'), shot('recording'),
       'back', 'clock data', 'clock settle', check('recorderId', ''), check('trackId', ''), check('lib.length', 1), shot('back-stopped-and-saved'),
       'clock +12000', 'clock data', check('detail.state', 'draft'),
@@ -94,6 +101,56 @@ function flows(tenant) {
       check('lib.length', 1), shot('notes-after-back'),
       `tap "No ${tenant.copy.person.singular} reference"`, 'clock data', 'clock settle', check('detail.hasEdits', true),
       check('detail.note', '## Typed just before Back'), shot('edits-kept'),
+    ],
+    // Every formatting button on each pad: the jottings while recording, the draft, and the jottings on the note.
+    toolbar: [
+      ...READY,
+      'tap new-note-button', 'clock settle', 'type new-ref Bed 4', ...START, 'clock data', 'clock settle', shot('jottings-pad'),
+      ...(tenant.features.jottings ? formatSteps('rec', 'record-jottings', 'recJottings') : []),
+      'clock +5000', 'tap stop-recording', 'clock data', 'clock settle', 'clock +12000', 'clock data', check('detail.state', 'draft'),
+      'tap edit-note', 'clock settle', shot('draft-pad'),
+      ...formatSteps('draft', 'note-editor', 'editDraft'),
+      'clock +1500', 'clock data', check('detail.note', '**Agenda**'), check('detail.hasEdits', true),
+      'tap done-editing', 'clock data', 'clock settle',
+      ...(tenant.features.jottings
+        ? ['tap pane-jottings', 'clock settle', 'type jottings Follow up', 'tap jot-task', 'clock data', check('jotDraft', '- [ ] Follow up'),
+          pressed('jot-task', true), 'clock +1500', 'clock data', check('detail.jottings', '- [ ] Follow up'), shot('jottings-pane')]
+        : []),
+    ],
+    // The pads at the largest text size iOS offers (a 53 px root at a phone's width), light and dark.
+    'toolbar-large': [
+      ...READY, 'prefer root-font-size 53px',
+      'tap new-note-button', 'clock settle', ...START, 'clock data', 'clock settle',
+      ...(tenant.features.jottings
+        ? ['type record-jottings - BP 120/80', 'tap rec-bold', 'clock settle', padClean('rec', 'record-jottings'), shot('jottings-large'),
+          'prefer prefers-color-scheme dark', 'clock settle', shot('jottings-large-dark'), 'prefer prefers-color-scheme light']
+        : []),
+      'tap stop-recording', 'clock data', 'clock settle', 'clock +12000', 'clock data',
+      'tap edit-note', 'clock settle', 'tap draft-link', 'clock settle', padClean('draft', 'note-editor'), shot('draft-large'),
+      'prefer prefers-color-scheme dark', 'clock settle', shot('draft-large-dark'),
+    ],
+    // A second document from one visit: the reviewed note stays as it was, the new one is an unreviewed draft in the other template.
+    rewrite: [
+      ...READY,
+      'tap new-note-button', 'clock settle', 'type new-ref Bed 4', `tap template-${first.id}`, 'clock settle', ...START,
+      'clock data', 'clock settle', ...(tenant.features.jottings ? ['type record-jottings - L knee, 2 weeks'] : []),
+      'clock +5000', 'tap stop-recording', 'clock data', 'clock settle', 'clock +12000', 'clock data',
+      check('detail.state', 'draft'), check('detail.templateName', first.name),
+      'tap mark-reviewed', 'clock data', check('detail.state', 'reviewed'), keep('detail.note', 'firstNote'), keep('detail.reviewedAt', 'firstReviewedAt'),
+      keep('detail.audio', 'firstAudio'), shot('reviewed-first'),
+      'tap write-as', 'clock settle', shot('write-as-sheet'),
+      `tap write-as-${other.id}`, 'clock settle', shot('template-picked'),
+      'tap write-as-start', 'clock data', 'clock settle', check('detail.templateName', other.name), check('detail.patientRef', 'Bed 4'),
+      check('detail.writtenFrom', first.name), check('detail.sharesRecording', true), same('detail.audio', 'firstAudio'), shot('second-writing'),
+      'clock +12000', 'clock data', check('detail.state', 'draft'), check('detail.hasEdits', false), check('detail.reviewedAt', 0),
+      ...other.sections.map((x) => has('detail.note', `## ${x.heading}`)), shot('second-draft'),
+      check('lib.length', 2), check('lib.0.patientRef', 'Bed 4'), check('lib.1.patientRef', 'Bed 4'),
+      'tap delete-note', 'clock settle', shot('confirm-delete-keeps-recording'),
+      'tap delete-confirm', 'clock data', 'clock settle', check('lib.length', 1), check('lib.0.templateName', first.name),
+      check('detail.templateName', first.name), check('detail.state', 'reviewed'), same('detail.note', 'firstNote'),
+      same('detail.reviewedAt', 'firstReviewedAt'), same('detail.audio', 'firstAudio'), check('detail.sharesRecording', false),
+      'tree player', shot('first-untouched-after-delete'),
+      'back', 'clock data', 'clock settle', shot('one-note-left'),
     ],
     settings: [
       ...READY,
@@ -113,10 +170,15 @@ function run(slug, app, targetName, flowName, steps) {
   const ops = [];
   const checks = [];
   let shots = 0;
-  for (const step of steps) {
-    if (typeof step === 'string') ops.push(step);
+  for (const step of forHost(steps, target.host)) {
+    if (typeof step === 'string') ops.push(withKeys(target.host, step));
     else if ('shot' in step) ops.push(`screenshot ${join(dir, `${String(++shots).padStart(2, '0')}-${step.shot}.png`)}`);
-    else {
+    else if (padOp(step, target.host)) {
+      const { op, check: c, skip } = padOp(step, target.host);
+      if (skip) { console.log(`  skipped: ${skip}`); continue; }
+      checks.push({ at: ops.length, ...c });
+      ops.push(op);
+    } else {
       checks.push({ at: ops.length, ...step });
       ops.push(`state ${step.check}`);
     }
@@ -136,18 +198,23 @@ function run(slug, app, targetName, flowName, steps) {
     const reason = result.stderr.split('\n').filter((l) => l.trim() !== '' && !l.startsWith('    at ') && !l.startsWith('exact:') && !l.startsWith('app:'));
     failures.push(`the drive exited ${result.status}: ${reason.slice(-2).join(' | ').slice(0, 400)}`);
   }
+  const kept = {};
   for (const c of checks) {
     const raw = replies[c.at];
     let actual;
     try {
-      actual = JSON.parse(raw);
+      actual = c.read ? c.read(raw) : JSON.parse(raw);
     } catch {
       actual = raw;
     }
-    if ('contains' in c) {
+    if ('keep' in c) {
+      kept[c.keep] = actual;
+    } else if ('same' in c) {
+      if (JSON.stringify(actual) !== JSON.stringify(kept[c.same])) failures.push(`${c.check}: expected the ${c.same} kept earlier, ${JSON.stringify(kept[c.same])?.slice(0, 200)}, got ${(raw ?? '(no reply)').slice(0, 200)}`);
+    } else if ('contains' in c) {
       if (typeof actual !== 'string' || !actual.includes(c.contains)) failures.push(`${c.check}: expected to contain ${JSON.stringify(c.contains)}, got ${(raw ?? '(no reply)').slice(0, 300)}`);
     } else if (JSON.stringify(actual) !== JSON.stringify(c.equals)) {
-      failures.push(`${c.check}: expected ${JSON.stringify(c.equals)}, got ${(raw ?? '(no reply)').slice(0, 300)}`);
+      failures.push(`${c.check}: expected ${JSON.stringify(c.equals)}, got ${c.read ? String(JSON.stringify(actual)).slice(0, 300) : (raw ?? '(no reply)').slice(0, 300)}`);
     }
   }
 

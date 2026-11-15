@@ -1,0 +1,446 @@
+clock data
+  {"clock":0,"settled":true,"epoch":2,"incarnation":1}
+tap continue
+  {"tapped":28,"at":[205.71,760.33],"target":"continue","delivery":"platform","carrier":"android","mode":"agent","epoch":3,"incarnation":1,"clock":0}
+clock data
+  {"clock":0,"settled":true,"epoch":3,"incarnation":1}
+clock +6000
+  {"clock":6000,"epoch":8,"incarnation":1}
+clock data
+  {"clock":6000,"settled":true,"epoch":8,"incarnation":1}
+tap new-note-button
+  {"tapped":63,"at":[205.71,223],"target":"new-note-button","delivery":"platform","carrier":"android","mode":"agent","epoch":9,"incarnation":1,"clock":6000}
+clock settle
+  {"clock":6350,"settled":true,"epoch":9,"incarnation":1}
+type new-ref Bed 4
+  {"typed":99,"value":"Bed 4","target":"new-ref","delivery":"platform","carrier":"android","mode":"agent","epoch":10,"incarnation":1,"clock":6350}
+tap start-recording
+  {"tapped":135,"at":[205.71,809],"target":"start-recording","delivery":"platform","carrier":"android","mode":"agent","epoch":11,"incarnation":1,"clock":6350}
+clock until state rec.state == "recording" within 15000
+  {"clock":6350,"real":145,"until":"met","value":"recording"}
+clock data
+  {"clock":6350,"settled":true,"epoch":15,"incarnation":1}
+clock settle
+  {"clock":6700,"settled":false,"reason":"requests","epoch":15,"incarnation":1,"diagnostic":"clock settle gave up on requests still in flight at its bound (20 s native); state shows them under pending, and logs a `request N` with no `fulfil N`"}
+screenshot docs/media/clinic/default/android/toolbar/01-jottings-pad.png
+  {"screenshot":"docs/media/clinic/default/android/toolbar/01-jottings-pad.png","device":true,"epoch":15,"incarnation":1,"clock":6700}
+type record-jottings Agenda
+  {"typed":189,"value":"Agenda","target":"record-jottings","delivery":"platform","carrier":"android","mode":"agent","epoch":16,"incarnation":1,"clock":6700}
+type record-jottings key Shift+Home
+  {"typed":189,"delivery":"recognized","target":"record-jottings","carrier":"android","mode":"agent","epoch":16,"incarnation":1,"clock":6700}
+tap rec-bold
+  {"tapped":160,"at":[48,430],"target":"rec-bold","delivery":"platform","carrier":"android","mode":"agent","epoch":17,"incarnation":1,"clock":6700}
+clock data
+  {"clock":6700,"settled":true,"epoch":17,"incarnation":1}
+state recJottings
+  "**Agenda**"
+tree rec-bold
+  {"clock":6700,"epoch":17,"incarnation":1,"nodes":[{"children":[161],"depth":8,"focused":false,"handlers":["press"],"id":160,"parent":159,"props":{"accessibilityLabel":"Bold","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-bold"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":161,"parent":160,"props":{"accessibilityElementsHidden":true,"text":"B"},"type":"Text"}],"pending":[],"roots":[160]}
+screenshot docs/media/clinic/default/android/toolbar/02-rec-bold.png
+  {"screenshot":"docs/media/clinic/default/android/toolbar/02-rec-bold.png","device":true,"epoch":17,"incarnation":1,"clock":6700}
+type record-jottings Agenda
+  {"typed":189,"value":"Agenda","target":"record-jottings","delivery":"platform","carrier":"android","mode":"agent","epoch":18,"incarnation":1,"clock":6700}
+type record-jottings key Shift+Home
+  {"typed":189,"delivery":"recognized","target":"record-jottings","carrier":"android","mode":"agent","epoch":18,"incarnation":1,"clock":6700}
+tap rec-italic
+  {"tapped":162,"at":[116,321],"target":"rec-italic","delivery":"platform","carrier":"android","mode":"agent","epoch":19,"incarnation":1,"clock":6700}
+clock data
+  {"clock":6700,"settled":true,"epoch":19,"incarnation":1}
+state recJottings
+  "*Agenda*"
+tree rec-italic
+  {"clock":6700,"epoch":19,"incarnation":1,"nodes":[{"children":[163],"depth":8,"focused":false,"handlers":["press"],"id":162,"parent":159,"props":{"accessibilityLabel":"Italic","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-italic"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":163,"parent":162,"props":{"accessibilityElementsHidden":true,"text":"I"},"type":"Text"}],"pending":[],"roots":[162]}
+type record-jottings Agenda
+  {"typed":189,"value":"Agenda","target":"record-jottings","delivery":"platform","carrier":"android","mode":"agent","epoch":20,"incarnation":1,"clock":6700}
+type record-jottings key Shift+Home
+  {"typed":189,"delivery":"recognized","target":"record-jottings","carrier":"android","mode":"agent","epoch":20,"incarnation":1,"clock":6700}
+tap rec-strike
+  {"tapped":164,"at":[184,321],"target":"rec-strike","delivery":"platform","carrier":"android","mode":"agent","epoch":21,"incarnation":1,"clock":6700}
+clock data
+  {"clock":6700,"settled":true,"epoch":21,"incarnation":1}
+state recJottings
+  "~~Agenda~~"
+tree rec-strike
+  {"clock":6700,"epoch":21,"incarnation":1,"nodes":[{"children":[165],"depth":8,"focused":false,"handlers":["press"],"id":164,"parent":159,"props":{"accessibilityLabel":"Strikethrough","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-strike"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":165,"parent":164,"props":{"accessibilityElementsHidden":true,"text":"S"},"type":"Text"}],"pending":[],"roots":[164]}
+screenshot docs/media/clinic/default/android/toolbar/03-rec-strike.png
+  {"screenshot":"docs/media/clinic/default/android/toolbar/03-rec-strike.png","device":true,"epoch":21,"incarnation":1,"clock":6700}
+type record-jottings Agenda
+  {"typed":189,"value":"Agenda","target":"record-jottings","delivery":"platform","carrier":"android","mode":"agent","epoch":22,"incarnation":1,"clock":6700}
+tap rec-title
+  {"tapped":167,"at":[255.5,321],"target":"rec-title","delivery":"platform","carrier":"android","mode":"agent","epoch":23,"incarnation":1,"clock":6700}
+clock data
+  {"clock":6700,"settled":true,"epoch":23,"incarnation":1}
+state recJottings
+  "## Agenda"
+tree rec-title
+  {"clock":6700,"epoch":23,"incarnation":1,"nodes":[{"children":[168],"depth":8,"focused":false,"handlers":["press"],"id":167,"parent":159,"props":{"accessibilityLabel":"Title","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-title"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":168,"parent":167,"props":{"text":"Title"},"type":"Text"}],"pending":[],"roots":[167]}
+tree rec-plain
+  {"clock":6700,"epoch":23,"incarnation":1,"nodes":[{"children":[172],"depth":8,"focused":false,"handlers":["press"],"id":171,"parent":159,"props":{"accessibilityLabel":"Plain text","accessibilityPressed":"false","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-plain"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":172,"parent":171,"props":{"text":"Text"},"type":"Text"}],"pending":[],"roots":[171]}
+screenshot docs/media/clinic/default/android/toolbar/04-rec-title.png
+  {"screenshot":"docs/media/clinic/default/android/toolbar/04-rec-title.png","device":true,"epoch":23,"incarnation":1,"clock":6700}
+tap rec-subtitle
+  {"tapped":169,"at":[324,321],"target":"rec-subtitle","delivery":"platform","carrier":"android","mode":"agent","epoch":24,"incarnation":1,"clock":6700}
+clock data
+  {"clock":6700,"settled":true,"epoch":24,"incarnation":1}
+state recJottings
+  "### Agenda"
+tree rec-subtitle
+  {"clock":6700,"epoch":24,"incarnation":1,"nodes":[{"children":[170],"depth":8,"focused":false,"handlers":["press"],"id":169,"parent":159,"props":{"accessibilityLabel":"Subtitle","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-subtitle"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":170,"parent":169,"props":{"text":"Subtitle"},"type":"Text"}],"pending":[],"roots":[169]}
+tree rec-title
+  {"clock":6700,"epoch":24,"incarnation":1,"nodes":[{"children":[168],"depth":8,"focused":false,"handlers":["press"],"id":167,"parent":159,"props":{"accessibilityLabel":"Title","accessibilityPressed":"false","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-title"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":168,"parent":167,"props":{"text":"Title"},"type":"Text"}],"pending":[],"roots":[167]}
+tap rec-plain
+  {"tapped":171,"at":[391.5,321],"target":"rec-plain","delivery":"platform","carrier":"android","mode":"agent","epoch":25,"incarnation":1,"clock":6700}
+clock data
+  {"clock":6700,"settled":true,"epoch":25,"incarnation":1}
+state recJottings
+  "Agenda"
+tree rec-plain
+  {"clock":6700,"epoch":25,"incarnation":1,"nodes":[{"children":[172],"depth":8,"focused":false,"handlers":["press"],"id":171,"parent":159,"props":{"accessibilityLabel":"Plain text","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-plain"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":172,"parent":171,"props":{"text":"Text"},"type":"Text"}],"pending":[],"roots":[171]}
+tree rec-subtitle
+  {"clock":6700,"epoch":25,"incarnation":1,"nodes":[{"children":[170],"depth":8,"focused":false,"handlers":["press"],"id":169,"parent":159,"props":{"accessibilityLabel":"Subtitle","accessibilityPressed":"false","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-subtitle"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":170,"parent":169,"props":{"text":"Subtitle"},"type":"Text"}],"pending":[],"roots":[169]}
+type record-jottings Agenda
+  {"typed":189,"value":"Agenda","target":"record-jottings","delivery":"platform","carrier":"android","mode":"agent","epoch":25,"incarnation":1,"clock":6700}
+tap rec-bullet
+  {"tapped":174,"at":[350.93,321],"target":"rec-bullet","scrolled":{"from":[474.5,321],"to":[474.5,321]},"delivery":"platform","carrier":"android","mode":"agent","epoch":26,"incarnation":1,"clock":6700}
+clock data
+  {"clock":6700,"settled":true,"epoch":26,"incarnation":1}
+state recJottings
+  "- Agenda"
+tree rec-bullet
+  {"clock":6700,"epoch":26,"incarnation":1,"nodes":[{"children":[175,176],"depth":8,"focused":false,"handlers":["press"],"id":174,"parent":159,"props":{"accessibilityLabel":"Bulleted list","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-bullet"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":175,"parent":174,"props":{"accessibilityElementsHidden":true,"imageSource":"symbol:list"},"type":"Image"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":176,"parent":174,"props":{"text":"Bullets"},"type":"Text"}],"pending":[],"roots":[174]}
+screenshot docs/media/clinic/default/android/toolbar/05-rec-bullet.png
+  {"screenshot":"docs/media/clinic/default/android/toolbar/05-rec-bullet.png","device":true,"epoch":26,"incarnation":1,"clock":6700}
+tree rec-plain
+  {"clock":6700,"epoch":26,"incarnation":1,"nodes":[{"children":[172],"depth":8,"focused":false,"handlers":["press"],"id":171,"parent":159,"props":{"accessibilityLabel":"Plain text","accessibilityPressed":"false","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-plain"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":172,"parent":171,"props":{"text":"Text"},"type":"Text"}],"pending":[],"roots":[171]}
+tap rec-plain
+  {"tapped":171,"at":[267.93,321],"target":"rec-plain","delivery":"platform","carrier":"android","mode":"agent","epoch":27,"incarnation":1,"clock":6700}
+clock data
+  {"clock":6700,"settled":true,"epoch":27,"incarnation":1}
+state recJottings
+  "Agenda"
+tree rec-plain
+  {"clock":6700,"epoch":27,"incarnation":1,"nodes":[{"children":[172],"depth":8,"focused":false,"handlers":["press"],"id":171,"parent":159,"props":{"accessibilityLabel":"Plain text","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-plain"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":172,"parent":171,"props":{"text":"Text"},"type":"Text"}],"pending":[],"roots":[171]}
+tree rec-bullet
+  {"clock":6700,"epoch":27,"incarnation":1,"nodes":[{"children":[175,176],"depth":8,"focused":false,"handlers":["press"],"id":174,"parent":159,"props":{"accessibilityLabel":"Bulleted list","accessibilityPressed":"false","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-bullet"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":175,"parent":174,"props":{"accessibilityElementsHidden":true,"imageSource":"symbol:list"},"type":"Image"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":176,"parent":174,"props":{"text":"Bullets"},"type":"Text"}],"pending":[],"roots":[174]}
+type record-jottings Agenda
+  {"typed":189,"value":"Agenda","target":"record-jottings","delivery":"platform","carrier":"android","mode":"agent","epoch":27,"incarnation":1,"clock":6700}
+tap rec-ordered
+  {"tapped":177,"at":[343.43,321],"target":"rec-ordered","scrolled":{"from":[451.43,321],"to":[451.43,321]},"delivery":"platform","carrier":"android","mode":"agent","epoch":28,"incarnation":1,"clock":6700}
+clock data
+  {"clock":6700,"settled":true,"epoch":28,"incarnation":1}
+state recJottings
+  "1. Agenda"
+tree rec-ordered
+  {"clock":6700,"epoch":28,"incarnation":1,"nodes":[{"children":[178,179],"depth":8,"focused":false,"handlers":["press"],"id":177,"parent":159,"props":{"accessibilityLabel":"Numbered list","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-ordered"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":178,"parent":177,"props":{"accessibilityElementsHidden":true,"text":"1."},"type":"Text"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":179,"parent":177,"props":{"text":"Numbers"},"type":"Text"}],"pending":[],"roots":[177]}
+tree rec-bullet
+  {"clock":6700,"epoch":28,"incarnation":1,"nodes":[{"children":[175,176],"depth":8,"focused":false,"handlers":["press"],"id":174,"parent":159,"props":{"accessibilityLabel":"Bulleted list","accessibilityPressed":"false","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-bullet"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":175,"parent":174,"props":{"accessibilityElementsHidden":true,"imageSource":"symbol:list"},"type":"Image"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":176,"parent":174,"props":{"text":"Bullets"},"type":"Text"}],"pending":[],"roots":[174]}
+type record-jottings Agenda
+  {"typed":189,"value":"Agenda","target":"record-jottings","delivery":"platform","carrier":"android","mode":"agent","epoch":29,"incarnation":1,"clock":6700}
+tap rec-task
+  {"tapped":180,"at":[354.93,321],"target":"rec-task","scrolled":{"from":[439.93,321],"to":[439.93,321]},"delivery":"platform","carrier":"android","mode":"agent","epoch":30,"incarnation":1,"clock":6700}
+clock data
+  {"clock":6700,"settled":true,"epoch":30,"incarnation":1}
+state recJottings
+  "- [ ] Agenda"
+tree rec-task
+  {"clock":6700,"epoch":30,"incarnation":1,"nodes":[{"children":[181,182],"depth":8,"focused":false,"handlers":["press"],"id":180,"parent":159,"props":{"accessibilityLabel":"Checklist","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-task"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":181,"parent":180,"props":{"accessibilityElementsHidden":true,"imageSource":"symbol:checkmark"},"type":"Image"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":182,"parent":180,"props":{"text":"To-do"},"type":"Text"}],"pending":[],"roots":[180]}
+screenshot docs/media/clinic/default/android/toolbar/06-rec-checklist.png
+  {"screenshot":"docs/media/clinic/default/android/toolbar/06-rec-checklist.png","device":true,"epoch":30,"incarnation":1,"clock":6700}
+type record-jottings Agenda
+  {"typed":189,"value":"Agenda","target":"record-jottings","delivery":"platform","carrier":"android","mode":"agent","epoch":31,"incarnation":1,"clock":6700}
+tap rec-quote
+  {"tapped":183,"at":[353.93,321],"target":"rec-quote","scrolled":{"from":[440.93,321],"to":[440.93,321]},"delivery":"platform","carrier":"android","mode":"agent","epoch":32,"incarnation":1,"clock":6700}
+clock data
+  {"clock":6700,"settled":true,"epoch":32,"incarnation":1}
+state recJottings
+  "> Agenda"
+tree rec-quote
+  {"clock":6700,"epoch":32,"incarnation":1,"nodes":[{"children":[184,185],"depth":8,"focused":false,"handlers":["press"],"id":183,"parent":159,"props":{"accessibilityLabel":"Quote","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-quote"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":184,"parent":183,"props":{"accessibilityElementsHidden":true,"imageSource":"symbol:quote"},"type":"Image"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":185,"parent":183,"props":{"text":"Quote"},"type":"Text"}],"pending":[],"roots":[183]}
+screenshot docs/media/clinic/default/android/toolbar/07-rec-quote.png
+  {"screenshot":"docs/media/clinic/default/android/toolbar/07-rec-quote.png","device":true,"epoch":32,"incarnation":1,"clock":6700}
+type record-jottings Alona site
+  {"typed":189,"value":"Alona site","target":"record-jottings","delivery":"platform","carrier":"android","mode":"agent","epoch":33,"incarnation":1,"clock":6700}
+type record-jottings key Shift+Home
+  {"typed":189,"delivery":"recognized","target":"record-jottings","carrier":"android","mode":"agent","epoch":33,"incarnation":1,"clock":6700}
+tap rec-link
+  {"tapped":186,"at":[360.43,321],"target":"rec-link","scrolled":{"from":[434.43,321],"to":[434.43,321]},"delivery":"platform","carrier":"android","mode":"agent","epoch":34,"incarnation":1,"clock":6700}
+clock settle
+  {"clock":6700,"settled":true,"epoch":34,"incarnation":1}
+type rec-link-url https://example.com
+  {"typed":192,"value":"https://example.com","target":"rec-link-url","delivery":"platform","carrier":"android","mode":"agent","epoch":35,"incarnation":1,"clock":6700}
+tap rec-link-apply
+  {"tapped":193,"at":[272.43,381],"target":"rec-link-apply","delivery":"platform","carrier":"android","mode":"agent","epoch":37,"incarnation":1,"clock":6700}
+clock data
+  {"clock":6700,"settled":true,"epoch":37,"incarnation":1}
+state recJottings
+  "[Alona site](https://example.com)"
+tree rec-link
+  {"clock":6700,"epoch":37,"incarnation":1,"nodes":[{"children":[187,188],"depth":8,"focused":false,"handlers":["press"],"id":186,"parent":159,"props":{"accessibilityLabel":"Link","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-link"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":187,"parent":186,"props":{"accessibilityElementsHidden":true,"imageSource":"symbol:link"},"type":"Image"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":188,"parent":186,"props":{"text":"Link"},"type":"Text"}],"pending":[],"roots":[186]}
+screenshot docs/media/clinic/default/android/toolbar/08-rec-link.png
+  {"screenshot":"docs/media/clinic/default/android/toolbar/08-rec-link.png","device":true,"epoch":37,"incarnation":1,"clock":6700}
+type record-jottings Plain **bold**
+  {"typed":189,"value":"Plain **bold**","target":"record-jottings","delivery":"platform","carrier":"android","mode":"agent","epoch":38,"incarnation":1,"clock":6700}
+type record-jottings key Home
+  {"typed":189,"delivery":"recognized","target":"record-jottings","carrier":"android","mode":"agent","epoch":39,"incarnation":1,"clock":6700}
+clock data
+  {"clock":6700,"settled":true,"epoch":39,"incarnation":1}
+tree rec-bold
+  {"clock":6700,"epoch":39,"incarnation":1,"nodes":[{"children":[161],"depth":8,"focused":false,"handlers":["press"],"id":160,"parent":159,"props":{"accessibilityLabel":"Bold","accessibilityPressed":"false","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-bold"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":161,"parent":160,"props":{"accessibilityElementsHidden":true,"text":"B"},"type":"Text"}],"pending":[],"roots":[160]}
+screenshot docs/media/clinic/default/android/toolbar/09-rec-caret-in-plain.png
+  {"screenshot":"docs/media/clinic/default/android/toolbar/09-rec-caret-in-plain.png","device":true,"epoch":39,"incarnation":1,"clock":6700}
+type record-jottings key End
+  {"typed":189,"delivery":"recognized","target":"record-jottings","carrier":"android","mode":"agent","epoch":40,"incarnation":1,"clock":6700}
+clock data
+  {"clock":6700,"settled":true,"epoch":40,"incarnation":1}
+tree rec-bold
+  {"clock":6700,"epoch":40,"incarnation":1,"nodes":[{"children":[161],"depth":8,"focused":false,"handlers":["press"],"id":160,"parent":159,"props":{"accessibilityLabel":"Bold","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-bold"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":161,"parent":160,"props":{"accessibilityElementsHidden":true,"text":"B"},"type":"Text"}],"pending":[],"roots":[160]}
+screenshot docs/media/clinic/default/android/toolbar/10-rec-caret-in-bold.png
+  {"screenshot":"docs/media/clinic/default/android/toolbar/10-rec-caret-in-bold.png","device":true,"epoch":40,"incarnation":1,"clock":6700}
+type record-jottings Agenda
+  {"typed":189,"value":"Agenda","target":"record-jottings","delivery":"platform","carrier":"android","mode":"agent","epoch":42,"incarnation":1,"clock":6700}
+type record-jottings key Shift+Home
+  {"typed":189,"delivery":"recognized","target":"record-jottings","carrier":"android","mode":"agent","epoch":42,"incarnation":1,"clock":6700}
+tap rec-bold
+  {"tapped":160,"at":[48,321],"target":"rec-bold","scrolled":{"from":[-429.57,321],"to":[-429.57,321]},"delivery":"platform","carrier":"android","mode":"agent","epoch":43,"incarnation":1,"clock":6700}
+clock data
+  {"clock":6700,"settled":true,"epoch":43,"incarnation":1}
+state recJottings
+  "**Agenda**"
+clock +5000
+  {"clock":11700,"inflight":1,"epoch":44,"incarnation":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+tap stop-recording
+  {"tapped":151,"at":[205.71,197],"target":"stop-recording","delivery":"platform","carrier":"android","mode":"agent","epoch":46,"incarnation":1,"clock":11700}
+clock data
+  {"clock":11700,"settled":false,"reason":"requests","epoch":46,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
+clock settle
+  {"clock":11700,"settled":false,"reason":"requests","epoch":51,"incarnation":1,"diagnostic":"clock settle gave up on requests still in flight at its bound (20 s native); state shows them under pending, and logs a `request N` with no `fulfil N`"}
+clock +12000
+  {"clock":23700,"epoch":66,"incarnation":1}
+clock data
+  {"clock":23700,"settled":true,"epoch":66,"incarnation":1}
+state detail.state
+  "draft"
+tap edit-note
+  {"tapped":246,"at":[51,760.33],"target":"edit-note","scrolled":{"from":[51,958.38],"to":[51,958.38]},"delivery":"platform","carrier":"android","mode":"agent","epoch":67,"incarnation":1,"clock":23700}
+clock settle
+  {"clock":23700,"settled":true,"epoch":67,"incarnation":1}
+screenshot docs/media/clinic/default/android/toolbar/11-draft-pad.png
+  {"screenshot":"docs/media/clinic/default/android/toolbar/11-draft-pad.png","device":true,"epoch":67,"incarnation":1,"clock":23700}
+type note-editor Agenda
+  {"typed":292,"value":"Agenda","target":"note-editor","delivery":"platform","carrier":"android","mode":"agent","epoch":68,"incarnation":1,"clock":23700}
+type note-editor key Shift+Home
+  {"typed":292,"delivery":"recognized","target":"note-editor","carrier":"android","mode":"agent","epoch":68,"incarnation":1,"clock":23700}
+tap draft-bold
+  {"tapped":263,"at":[48,354.33],"target":"draft-bold","delivery":"platform","carrier":"android","mode":"agent","epoch":69,"incarnation":1,"clock":23700}
+clock data
+  {"clock":23700,"settled":true,"epoch":69,"incarnation":1}
+state editDraft
+  "**Agenda**"
+tree draft-bold
+  {"clock":23700,"epoch":69,"incarnation":1,"nodes":[{"children":[264],"depth":8,"focused":false,"handlers":["press"],"id":263,"parent":262,"props":{"accessibilityLabel":"Bold","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"draft-bold"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":264,"parent":263,"props":{"accessibilityElementsHidden":true,"text":"B"},"type":"Text"}],"pending":[],"roots":[263]}
+screenshot docs/media/clinic/default/android/toolbar/12-draft-bold.png
+  {"screenshot":"docs/media/clinic/default/android/toolbar/12-draft-bold.png","device":true,"epoch":69,"incarnation":1,"clock":23700}
+type note-editor Agenda
+  {"typed":292,"value":"Agenda","target":"note-editor","delivery":"platform","carrier":"android","mode":"agent","epoch":70,"incarnation":1,"clock":23700}
+type note-editor key Shift+Home
+  {"typed":292,"delivery":"recognized","target":"note-editor","carrier":"android","mode":"agent","epoch":70,"incarnation":1,"clock":23700}
+tap draft-italic
+  {"tapped":265,"at":[116,180.95],"target":"draft-italic","delivery":"platform","carrier":"android","mode":"agent","epoch":71,"incarnation":1,"clock":23700}
+clock data
+  {"clock":23700,"settled":true,"epoch":71,"incarnation":1}
+state editDraft
+  "*Agenda*"
+tree draft-italic
+  {"clock":23700,"epoch":71,"incarnation":1,"nodes":[{"children":[266],"depth":8,"focused":false,"handlers":["press"],"id":265,"parent":262,"props":{"accessibilityLabel":"Italic","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"draft-italic"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":266,"parent":265,"props":{"accessibilityElementsHidden":true,"text":"I"},"type":"Text"}],"pending":[],"roots":[265]}
+type note-editor Agenda
+  {"typed":292,"value":"Agenda","target":"note-editor","delivery":"platform","carrier":"android","mode":"agent","epoch":72,"incarnation":1,"clock":23700}
+type note-editor key Shift+Home
+  {"typed":292,"delivery":"recognized","target":"note-editor","carrier":"android","mode":"agent","epoch":72,"incarnation":1,"clock":23700}
+tap draft-strike
+  {"tapped":267,"at":[184,180.95],"target":"draft-strike","delivery":"platform","carrier":"android","mode":"agent","epoch":73,"incarnation":1,"clock":23700}
+clock data
+  {"clock":23700,"settled":true,"epoch":73,"incarnation":1}
+state editDraft
+  "~~Agenda~~"
+tree draft-strike
+  {"clock":23700,"epoch":73,"incarnation":1,"nodes":[{"children":[268],"depth":8,"focused":false,"handlers":["press"],"id":267,"parent":262,"props":{"accessibilityLabel":"Strikethrough","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"draft-strike"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":268,"parent":267,"props":{"accessibilityElementsHidden":true,"text":"S"},"type":"Text"}],"pending":[],"roots":[267]}
+screenshot docs/media/clinic/default/android/toolbar/13-draft-strike.png
+  {"screenshot":"docs/media/clinic/default/android/toolbar/13-draft-strike.png","device":true,"epoch":73,"incarnation":1,"clock":23700}
+type note-editor Agenda
+  {"typed":292,"value":"Agenda","target":"note-editor","delivery":"platform","carrier":"android","mode":"agent","epoch":74,"incarnation":1,"clock":23700}
+tap draft-title
+  {"tapped":270,"at":[255.5,180.95],"target":"draft-title","delivery":"platform","carrier":"android","mode":"agent","epoch":75,"incarnation":1,"clock":23700}
+clock data
+  {"clock":23700,"settled":true,"epoch":75,"incarnation":1}
+state editDraft
+  "## Agenda"
+tree draft-title
+  {"clock":23700,"epoch":75,"incarnation":1,"nodes":[{"children":[271],"depth":8,"focused":false,"handlers":["press"],"id":270,"parent":262,"props":{"accessibilityLabel":"Title","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"draft-title"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":271,"parent":270,"props":{"text":"Title"},"type":"Text"}],"pending":[],"roots":[270]}
+tree draft-plain
+  {"clock":23700,"epoch":75,"incarnation":1,"nodes":[{"children":[275],"depth":8,"focused":false,"handlers":["press"],"id":274,"parent":262,"props":{"accessibilityLabel":"Plain text","accessibilityPressed":"false","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"draft-plain"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":275,"parent":274,"props":{"text":"Text"},"type":"Text"}],"pending":[],"roots":[274]}
+screenshot docs/media/clinic/default/android/toolbar/14-draft-title.png
+  {"screenshot":"docs/media/clinic/default/android/toolbar/14-draft-title.png","device":true,"epoch":75,"incarnation":1,"clock":23700}
+tap draft-subtitle
+  {"tapped":272,"at":[324,180.95],"target":"draft-subtitle","delivery":"platform","carrier":"android","mode":"agent","epoch":76,"incarnation":1,"clock":23700}
+clock data
+  {"clock":23700,"settled":true,"epoch":76,"incarnation":1}
+state editDraft
+  "### Agenda"
+tree draft-subtitle
+  {"clock":23700,"epoch":76,"incarnation":1,"nodes":[{"children":[273],"depth":8,"focused":false,"handlers":["press"],"id":272,"parent":262,"props":{"accessibilityLabel":"Subtitle","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"draft-subtitle"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":273,"parent":272,"props":{"text":"Subtitle"},"type":"Text"}],"pending":[],"roots":[272]}
+tree draft-title
+  {"clock":23700,"epoch":76,"incarnation":1,"nodes":[{"children":[271],"depth":8,"focused":false,"handlers":["press"],"id":270,"parent":262,"props":{"accessibilityLabel":"Title","accessibilityPressed":"false","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"draft-title"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":271,"parent":270,"props":{"text":"Title"},"type":"Text"}],"pending":[],"roots":[270]}
+tap draft-plain
+  {"tapped":274,"at":[391.5,180.95],"target":"draft-plain","delivery":"platform","carrier":"android","mode":"agent","epoch":77,"incarnation":1,"clock":23700}
+clock data
+  {"clock":23700,"settled":true,"epoch":77,"incarnation":1}
+state editDraft
+  "Agenda"
+tree draft-plain
+  {"clock":23700,"epoch":77,"incarnation":1,"nodes":[{"children":[275],"depth":8,"focused":false,"handlers":["press"],"id":274,"parent":262,"props":{"accessibilityLabel":"Plain text","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"draft-plain"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":275,"parent":274,"props":{"text":"Text"},"type":"Text"}],"pending":[],"roots":[274]}
+tree draft-subtitle
+  {"clock":23700,"epoch":77,"incarnation":1,"nodes":[{"children":[273],"depth":8,"focused":false,"handlers":["press"],"id":272,"parent":262,"props":{"accessibilityLabel":"Subtitle","accessibilityPressed":"false","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"draft-subtitle"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":273,"parent":272,"props":{"text":"Subtitle"},"type":"Text"}],"pending":[],"roots":[272]}
+type note-editor Agenda
+  {"typed":292,"value":"Agenda","target":"note-editor","delivery":"platform","carrier":"android","mode":"agent","epoch":77,"incarnation":1,"clock":23700}
+tap draft-bullet
+  {"tapped":277,"at":[350.93,180.95],"target":"draft-bullet","scrolled":{"from":[474.5,180.95],"to":[474.5,180.95]},"delivery":"platform","carrier":"android","mode":"agent","epoch":78,"incarnation":1,"clock":23700}
+clock data
+  {"clock":23700,"settled":true,"epoch":78,"incarnation":1}
+state editDraft
+  "- Agenda"
+tree draft-bullet
+  {"clock":23700,"epoch":78,"incarnation":1,"nodes":[{"children":[278,279],"depth":8,"focused":false,"handlers":["press"],"id":277,"parent":262,"props":{"accessibilityLabel":"Bulleted list","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"draft-bullet"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":278,"parent":277,"props":{"accessibilityElementsHidden":true,"imageSource":"symbol:list"},"type":"Image"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":279,"parent":277,"props":{"text":"Bullets"},"type":"Text"}],"pending":[],"roots":[277]}
+screenshot docs/media/clinic/default/android/toolbar/15-draft-bullet.png
+  {"screenshot":"docs/media/clinic/default/android/toolbar/15-draft-bullet.png","device":true,"epoch":78,"incarnation":1,"clock":23700}
+tree draft-plain
+  {"clock":23700,"epoch":78,"incarnation":1,"nodes":[{"children":[275],"depth":8,"focused":false,"handlers":["press"],"id":274,"parent":262,"props":{"accessibilityLabel":"Plain text","accessibilityPressed":"false","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"draft-plain"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":275,"parent":274,"props":{"text":"Text"},"type":"Text"}],"pending":[],"roots":[274]}
+tap draft-plain
+  {"tapped":274,"at":[267.93,180.95],"target":"draft-plain","delivery":"platform","carrier":"android","mode":"agent","epoch":79,"incarnation":1,"clock":23700}
+clock data
+  {"clock":23700,"settled":true,"epoch":79,"incarnation":1}
+state editDraft
+  "Agenda"
+tree draft-plain
+  {"clock":23700,"epoch":79,"incarnation":1,"nodes":[{"children":[275],"depth":8,"focused":false,"handlers":["press"],"id":274,"parent":262,"props":{"accessibilityLabel":"Plain text","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"draft-plain"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":275,"parent":274,"props":{"text":"Text"},"type":"Text"}],"pending":[],"roots":[274]}
+tree draft-bullet
+  {"clock":23700,"epoch":79,"incarnation":1,"nodes":[{"children":[278,279],"depth":8,"focused":false,"handlers":["press"],"id":277,"parent":262,"props":{"accessibilityLabel":"Bulleted list","accessibilityPressed":"false","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"draft-bullet"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":278,"parent":277,"props":{"accessibilityElementsHidden":true,"imageSource":"symbol:list"},"type":"Image"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":279,"parent":277,"props":{"text":"Bullets"},"type":"Text"}],"pending":[],"roots":[277]}
+type note-editor Agenda
+  {"typed":292,"value":"Agenda","target":"note-editor","delivery":"platform","carrier":"android","mode":"agent","epoch":79,"incarnation":1,"clock":23700}
+tap draft-ordered
+  {"tapped":280,"at":[343.43,180.95],"target":"draft-ordered","scrolled":{"from":[451.43,180.95],"to":[451.43,180.95]},"delivery":"platform","carrier":"android","mode":"agent","epoch":80,"incarnation":1,"clock":23700}
+clock data
+  {"clock":23700,"settled":true,"epoch":80,"incarnation":1}
+state editDraft
+  "1. Agenda"
+tree draft-ordered
+  {"clock":23700,"epoch":80,"incarnation":1,"nodes":[{"children":[281,282],"depth":8,"focused":false,"handlers":["press"],"id":280,"parent":262,"props":{"accessibilityLabel":"Numbered list","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"draft-ordered"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":281,"parent":280,"props":{"accessibilityElementsHidden":true,"text":"1."},"type":"Text"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":282,"parent":280,"props":{"text":"Numbers"},"type":"Text"}],"pending":[],"roots":[280]}
+tree draft-bullet
+  {"clock":23700,"epoch":80,"incarnation":1,"nodes":[{"children":[278,279],"depth":8,"focused":false,"handlers":["press"],"id":277,"parent":262,"props":{"accessibilityLabel":"Bulleted list","accessibilityPressed":"false","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"draft-bullet"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":278,"parent":277,"props":{"accessibilityElementsHidden":true,"imageSource":"symbol:list"},"type":"Image"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":279,"parent":277,"props":{"text":"Bullets"},"type":"Text"}],"pending":[],"roots":[277]}
+type note-editor Agenda
+  {"typed":292,"value":"Agenda","target":"note-editor","delivery":"platform","carrier":"android","mode":"agent","epoch":81,"incarnation":1,"clock":23700}
+tap draft-task
+  {"tapped":283,"at":[354.93,180.95],"target":"draft-task","scrolled":{"from":[439.93,180.95],"to":[439.93,180.95]},"delivery":"platform","carrier":"android","mode":"agent","epoch":82,"incarnation":1,"clock":23700}
+clock data
+  {"clock":23700,"settled":true,"epoch":82,"incarnation":1}
+state editDraft
+  "- [ ] Agenda"
+tree draft-task
+  {"clock":23700,"epoch":82,"incarnation":1,"nodes":[{"children":[284,285],"depth":8,"focused":false,"handlers":["press"],"id":283,"parent":262,"props":{"accessibilityLabel":"Checklist","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"draft-task"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":284,"parent":283,"props":{"accessibilityElementsHidden":true,"imageSource":"symbol:checkmark"},"type":"Image"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":285,"parent":283,"props":{"text":"To-do"},"type":"Text"}],"pending":[],"roots":[283]}
+screenshot docs/media/clinic/default/android/toolbar/16-draft-checklist.png
+  {"screenshot":"docs/media/clinic/default/android/toolbar/16-draft-checklist.png","device":true,"epoch":82,"incarnation":1,"clock":23700}
+type note-editor Agenda
+  {"typed":292,"value":"Agenda","target":"note-editor","delivery":"platform","carrier":"android","mode":"agent","epoch":83,"incarnation":1,"clock":23700}
+tap draft-quote
+  {"tapped":286,"at":[353.93,180.95],"target":"draft-quote","scrolled":{"from":[440.93,180.95],"to":[440.93,180.95]},"delivery":"platform","carrier":"android","mode":"agent","epoch":84,"incarnation":1,"clock":23700}
+clock data
+  {"clock":23700,"settled":true,"epoch":84,"incarnation":1}
+state editDraft
+  "> Agenda"
+tree draft-quote
+  {"clock":23700,"epoch":84,"incarnation":1,"nodes":[{"children":[287,288],"depth":8,"focused":false,"handlers":["press"],"id":286,"parent":262,"props":{"accessibilityLabel":"Quote","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"draft-quote"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":287,"parent":286,"props":{"accessibilityElementsHidden":true,"imageSource":"symbol:quote"},"type":"Image"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":288,"parent":286,"props":{"text":"Quote"},"type":"Text"}],"pending":[],"roots":[286]}
+screenshot docs/media/clinic/default/android/toolbar/17-draft-quote.png
+  {"screenshot":"docs/media/clinic/default/android/toolbar/17-draft-quote.png","device":true,"epoch":84,"incarnation":1,"clock":23700}
+type note-editor Alona site
+  {"typed":292,"value":"Alona site","target":"note-editor","delivery":"platform","carrier":"android","mode":"agent","epoch":85,"incarnation":1,"clock":23700}
+type note-editor key Shift+Home
+  {"typed":292,"delivery":"recognized","target":"note-editor","carrier":"android","mode":"agent","epoch":85,"incarnation":1,"clock":23700}
+tap draft-link
+  {"tapped":289,"at":[360.43,180.95],"target":"draft-link","scrolled":{"from":[434.43,180.95],"to":[434.43,180.95]},"delivery":"platform","carrier":"android","mode":"agent","epoch":86,"incarnation":1,"clock":23700}
+clock settle
+  {"clock":23700,"settled":true,"epoch":86,"incarnation":1}
+type draft-link-url https://example.com
+  {"typed":299,"value":"https://example.com","target":"draft-link-url","delivery":"platform","carrier":"android","mode":"agent","epoch":87,"incarnation":1,"clock":23700}
+tap draft-link-apply
+  {"tapped":300,"at":[272.43,240.95],"target":"draft-link-apply","delivery":"platform","carrier":"android","mode":"agent","epoch":89,"incarnation":1,"clock":23700}
+clock data
+  {"clock":23700,"settled":true,"epoch":89,"incarnation":1}
+state editDraft
+  "[Alona site](https://example.com)"
+tree draft-link
+  {"clock":23700,"epoch":89,"incarnation":1,"nodes":[{"children":[290,291],"depth":8,"focused":false,"handlers":["press"],"id":289,"parent":262,"props":{"accessibilityLabel":"Link","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"draft-link"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":290,"parent":289,"props":{"accessibilityElementsHidden":true,"imageSource":"symbol:link"},"type":"Image"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":291,"parent":289,"props":{"text":"Link"},"type":"Text"}],"pending":[],"roots":[289]}
+screenshot docs/media/clinic/default/android/toolbar/18-draft-link.png
+  {"screenshot":"docs/media/clinic/default/android/toolbar/18-draft-link.png","device":true,"epoch":89,"incarnation":1,"clock":23700}
+type note-editor Plain **bold**
+  {"typed":292,"value":"Plain **bold**","target":"note-editor","delivery":"platform","carrier":"android","mode":"agent","epoch":90,"incarnation":1,"clock":23700}
+type note-editor key Home
+  {"typed":292,"delivery":"recognized","target":"note-editor","carrier":"android","mode":"agent","epoch":91,"incarnation":1,"clock":23700}
+clock data
+  {"clock":23700,"settled":true,"epoch":91,"incarnation":1}
+tree draft-bold
+  {"clock":23700,"epoch":91,"incarnation":1,"nodes":[{"children":[264],"depth":8,"focused":false,"handlers":["press"],"id":263,"parent":262,"props":{"accessibilityLabel":"Bold","accessibilityPressed":"false","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"draft-bold"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":264,"parent":263,"props":{"accessibilityElementsHidden":true,"text":"B"},"type":"Text"}],"pending":[],"roots":[263]}
+screenshot docs/media/clinic/default/android/toolbar/19-draft-caret-in-plain.png
+  {"screenshot":"docs/media/clinic/default/android/toolbar/19-draft-caret-in-plain.png","device":true,"epoch":91,"incarnation":1,"clock":23700}
+type note-editor key End
+  {"typed":292,"delivery":"recognized","target":"note-editor","carrier":"android","mode":"agent","epoch":92,"incarnation":1,"clock":23700}
+clock data
+  {"clock":23700,"settled":true,"epoch":92,"incarnation":1}
+tree draft-bold
+  {"clock":23700,"epoch":92,"incarnation":1,"nodes":[{"children":[264],"depth":8,"focused":false,"handlers":["press"],"id":263,"parent":262,"props":{"accessibilityLabel":"Bold","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"draft-bold"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":264,"parent":263,"props":{"accessibilityElementsHidden":true,"text":"B"},"type":"Text"}],"pending":[],"roots":[263]}
+screenshot docs/media/clinic/default/android/toolbar/20-draft-caret-in-bold.png
+  {"screenshot":"docs/media/clinic/default/android/toolbar/20-draft-caret-in-bold.png","device":true,"epoch":92,"incarnation":1,"clock":23700}
+type note-editor Agenda
+  {"typed":292,"value":"Agenda","target":"note-editor","delivery":"platform","carrier":"android","mode":"agent","epoch":94,"incarnation":1,"clock":23700}
+type note-editor key Shift+Home
+  {"typed":292,"delivery":"recognized","target":"note-editor","carrier":"android","mode":"agent","epoch":94,"incarnation":1,"clock":23700}
+tap draft-bold
+  {"tapped":263,"at":[48,180.95],"target":"draft-bold","scrolled":{"from":[-429.57,180.95],"to":[-429.57,180.95]},"delivery":"platform","carrier":"android","mode":"agent","epoch":95,"incarnation":1,"clock":23700}
+clock data
+  {"clock":23700,"settled":true,"epoch":95,"incarnation":1}
+state editDraft
+  "**Agenda**"
+clock +1500
+  {"clock":25200,"inflight":1,"background":1,"epoch":95,"incarnation":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+clock data
+  {"clock":25200,"settled":true,"epoch":97,"incarnation":1}
+state detail.note
+  "**Agenda**"
+state detail.hasEdits
+  true
+tap done-editing
+  {"tapped":296,"at":[367.93,451.45],"target":"done-editing","scrolled":{"from":[367.93,590.45],"to":[367.93,590.45]},"delivery":"platform","carrier":"android","mode":"agent","epoch":98,"incarnation":1,"clock":25200}
+clock data
+  {"clock":25200,"settled":true,"epoch":98,"incarnation":1}
+clock settle
+  {"clock":25200,"settled":true,"epoch":98,"incarnation":1}
+tap pane-jottings
+  {"tapped":234,"at":[332.19,246.95],"target":"pane-jottings","delivery":"platform","carrier":"android","mode":"agent","epoch":99,"incarnation":1,"clock":25200}
+clock settle
+  {"clock":25200,"settled":true,"epoch":99,"incarnation":1}
+type jottings Follow up
+  {"typed":346,"value":"Follow up","target":"jottings","delivery":"platform","carrier":"android","mode":"agent","epoch":101,"incarnation":1,"clock":25200}
+tap jot-task
+  {"tapped":337,"at":[354.93,336.38],"target":"jot-task","scrolled":{"from":[671.5,336.38],"to":[671.5,336.38]},"delivery":"platform","carrier":"android","mode":"agent","epoch":102,"incarnation":1,"clock":25200}
+clock data
+  {"clock":25200,"settled":true,"epoch":102,"incarnation":1}
+state jotDraft
+  "- [ ] Follow up"
+tree jot-task
+  {"clock":25200,"epoch":102,"incarnation":1,"nodes":[{"children":[338,339],"depth":8,"focused":false,"handlers":["press"],"id":337,"parent":316,"props":{"accessibilityLabel":"Checklist","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"jot-task"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":338,"parent":337,"props":{"accessibilityElementsHidden":true,"imageSource":"symbol:checkmark"},"type":"Image"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":339,"parent":337,"props":{"text":"To-do"},"type":"Text"}],"pending":[],"roots":[337]}
+clock +1500
+  {"clock":26700,"epoch":103,"incarnation":1}
+clock data
+  {"clock":26700,"settled":true,"epoch":103,"incarnation":1}
+state detail.jottings
+  "- [ ] Follow up"
+screenshot docs/media/clinic/default/android/toolbar/21-jottings-pane.png
+  {"screenshot":"docs/media/clinic/default/android/toolbar/21-jottings-pane.png","device":true,"epoch":103,"incarnation":1,"clock":26700}

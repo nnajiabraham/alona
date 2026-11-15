@@ -1,0 +1,1 @@
+{"kind":"implementation","implements":"@alona/engine@^1.0","platform":"android","targets":["android"],"shapes":{},"names":[],"sources":{"kotlin":["."]},"artifacts":[],"class":"alona.engine.EngineModule","maven":["com.alona.local:sherpa:2.0.1","com.alona.local:llama:b12383"]}

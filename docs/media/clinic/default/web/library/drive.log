@@ -19,17 +19,17 @@ tap template-consultation
 clock settle
   {"clock":6400,"settled":true}
 tap start-recording
-  {"at":[550,694],"tapped":101,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":42,"incarnation":1}
+  {"at":[550,694],"tapped":116,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":42,"incarnation":1}
 clock data
   {"clock":6400,"settled":true}
 clock settle
   {"clock":6800,"settled":true}
 type record-jottings - L knee, 2 weeks
-  {"at":[550,518],"typed":106,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":48,"incarnation":1}
+  {"at":[550,536.5],"typed":121,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":50,"incarnation":1}
 clock +5000
   {"clock":11800}
 tap stop-recording
-  {"at":[550,333],"tapped":120,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":11800,"epoch":67,"incarnation":1}
+  {"at":[550,293.5],"tapped":135,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":11800,"epoch":69,"incarnation":1}
 clock data
   {"clock":11800,"settled":true}
 clock settle
@@ -39,7 +39,7 @@ clock +12000
 clock data
   {"clock":24200,"settled":true}
 back
-  {"history":-1,"delivery":"platform","back":"route","carrier":"web","clock":24200,"epoch":106,"incarnation":1}
+  {"history":-1,"delivery":"platform","back":"route","carrier":"web","clock":24200,"epoch":108,"incarnation":1}
 clock data
   {"clock":24200,"settled":true}
 clock settle
@@ -53,29 +53,29 @@ state lib.0.templateName
 state lib.0.state
   "draft"
 screenshot docs/media/clinic/default/web/library/01-notes.png
-  {"clock":24200,"epoch":106,"incarnation":1,"screenshot":"docs/media/clinic/default/web/library/01-notes.png","w":1100,"h":760}
+  {"clock":24200,"epoch":108,"incarnation":1,"screenshot":"docs/media/clinic/default/web/library/01-notes.png","w":1100,"h":760}
 prefer prefers-color-scheme dark
-  {"media":{"display-mode":"browser","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","prefers-color-scheme":"dark","color-gamut":"srgb","dynamic-range":"standard","pointer":"fine","hover":"hover"},"clock":24200,"epoch":109,"incarnation":1}
+  {"media":{"display-mode":"browser","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","prefers-color-scheme":"dark","color-gamut":"srgb","dynamic-range":"standard","pointer":"fine","hover":"hover"},"clock":24200,"epoch":111,"incarnation":1}
 screenshot docs/media/clinic/default/web/library/02-notes-dark.png
-  {"clock":24200,"epoch":109,"incarnation":1,"screenshot":"docs/media/clinic/default/web/library/02-notes-dark.png","w":1100,"h":760}
+  {"clock":24200,"epoch":111,"incarnation":1,"screenshot":"docs/media/clinic/default/web/library/02-notes-dark.png","w":1100,"h":760}
 tap "Bed 4"
-  {"at":[521.9765625,302.59375],"tapped":132,"target":"Bed 4","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":113,"incarnation":1}
+  {"at":[521.9765625,302.59375],"tapped":180,"target":"Bed 4","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":115,"incarnation":1}
 clock data
   {"clock":24200,"settled":true}
 clock settle
   {"clock":24200,"settled":true}
 screenshot docs/media/clinic/default/web/library/03-note-dark.png
-  {"clock":24200,"epoch":113,"incarnation":1,"screenshot":"docs/media/clinic/default/web/library/03-note-dark.png","w":1100,"h":760}
+  {"clock":24200,"epoch":115,"incarnation":1,"screenshot":"docs/media/clinic/default/web/library/03-note-dark.png","w":1100,"h":760}
 prefer prefers-color-scheme light
-  {"media":{"display-mode":"browser","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","prefers-color-scheme":"light","color-gamut":"srgb","dynamic-range":"standard","pointer":"fine","hover":"hover"},"clock":24200,"epoch":116,"incarnation":1}
+  {"media":{"display-mode":"browser","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","prefers-color-scheme":"light","color-gamut":"srgb","dynamic-range":"standard","pointer":"fine","hover":"hover"},"clock":24200,"epoch":118,"incarnation":1}
 tap delete-note
-  {"at":[1066,26],"tapped":141,"target":"delete-note","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":117,"incarnation":1}
+  {"at":[1066,26],"tapped":189,"target":"delete-note","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":119,"incarnation":1}
 clock settle
   {"clock":24200,"settled":true}
 screenshot docs/media/clinic/default/web/library/04-confirm-delete.png
-  {"clock":24200,"epoch":117,"incarnation":1,"screenshot":"docs/media/clinic/default/web/library/04-confirm-delete.png","w":1100,"h":760}
+  {"clock":24200,"epoch":119,"incarnation":1,"screenshot":"docs/media/clinic/default/web/library/04-confirm-delete.png","w":1100,"h":760}
 tap delete-confirm
-  {"at":[455,424.5],"tapped":36,"target":"delete-confirm","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":122,"incarnation":1}
+  {"at":[455,424.5],"tapped":36,"target":"delete-confirm","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":124,"incarnation":1}
 clock data
   {"clock":24200,"settled":true}
 clock settle
@@ -83,4 +83,4 @@ clock settle
 state lib.length
   0
 screenshot docs/media/clinic/default/web/library/05-deleted.png
-  {"clock":24200,"epoch":122,"incarnation":1,"screenshot":"docs/media/clinic/default/web/library/05-deleted.png","w":1100,"h":760}
+  {"clock":24200,"epoch":124,"incarnation":1,"screenshot":"docs/media/clinic/default/web/library/05-deleted.png","w":1100,"h":760}

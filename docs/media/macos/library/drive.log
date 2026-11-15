@@ -1,70 +1,72 @@
 clock data
-  {"settled":true,"incarnation":1,"epoch":3,"clock":0}
+  {"incarnation":1,"epoch":5,"settled":true,"clock":0}
 tap continue
-  {"delivery":"platform","at":[210,832],"tapped":28,"target":"continue","carrier":"macos","mode":"agent","epoch":4,"incarnation":1,"clock":0}
+  {"delivery":"platform","tapped":28,"at":[210,832],"target":"continue","carrier":"macos","mode":"agent","epoch":6,"incarnation":1,"clock":0}
 clock data
-  {"clock":0,"incarnation":1,"epoch":4,"settled":true}
+  {"settled":true,"incarnation":1,"clock":0,"epoch":6}
 clock +6000
-  {"epoch":9,"clock":6000,"incarnation":1}
+  {"incarnation":1,"epoch":11,"clock":6000}
 clock data
-  {"incarnation":1,"settled":true,"clock":6000,"epoch":9}
+  {"incarnation":1,"clock":6000,"settled":true,"epoch":11}
 tap start-recording
-  {"at":[210,174],"tapped":55,"delivery":"platform","target":"start-recording","carrier":"macos","mode":"agent","epoch":10,"incarnation":1,"clock":6000}
+  {"tapped":69,"delivery":"platform","at":[210,174],"target":"start-recording","carrier":"macos","mode":"agent","epoch":12,"incarnation":1,"clock":6000}
+clock until state rec.state == "recording" within 15000
+  {"clock":6000,"real":182,"until":"met","value":"recording"}
 clock data
-  {"incarnation":1,"settled":true,"clock":6000,"epoch":14}
+  {"clock":6000,"settled":true,"incarnation":1,"epoch":16}
 clock settle
-  {"epoch":14,"settled":true,"incarnation":1,"clock":6000}
+  {"settled":true,"clock":6000,"incarnation":1,"epoch":16}
 type record-title Launch sync
-  {"value":"Launch sync","typed":95,"target":"record-title","delivery":"platform","carrier":"macos","mode":"agent","epoch":15,"incarnation":1,"clock":6000}
+  {"value":"Launch sync","typed":109,"target":"record-title","delivery":"platform","carrier":"macos","mode":"agent","epoch":17,"incarnation":1,"clock":6000}
 type record-notes - Ask about the login fix
-  {"value":"- Ask about the login fix","typed":99,"target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":16,"incarnation":1,"clock":6000}
+  {"typed":147,"value":"- Ask about the login fix","target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":19,"incarnation":1,"clock":6000}
 clock +5000
-  {"epoch":18,"clock":11000,"incarnation":1}
+  {"clock":11000,"epoch":21,"incarnation":1}
 tap stop-recording
-  {"tapped":92,"delivery":"platform","at":[210,208],"target":"stop-recording","carrier":"macos","mode":"agent","epoch":19,"incarnation":1,"clock":11000}
+  {"tapped":106,"at":[210,208],"delivery":"platform","target":"stop-recording","carrier":"macos","mode":"agent","epoch":22,"incarnation":1,"clock":11000}
 clock data
-  {"settled":true,"epoch":24,"clock":11000,"incarnation":1}
+  {"clock":11000,"settled":true,"epoch":27,"incarnation":1}
 clock settle
-  {"settled":true,"clock":11000,"epoch":24,"incarnation":1}
+  {"clock":11000,"settled":true,"incarnation":1,"epoch":27}
 clock +12000
-  {"incarnation":1,"clock":23000,"epoch":39}
+  {"epoch":42,"clock":23000,"incarnation":1}
 clock data
-  {"clock":23000,"incarnation":1,"epoch":39,"settled":true}
+  {"clock":23000,"incarnation":1,"settled":true,"epoch":42}
 back
-  {"delivery":"platform","back":"route","carrier":"macos","epoch":40,"incarnation":1,"clock":23000}
+  {"delivery":"platform","back":"route","carrier":"macos","epoch":43,"incarnation":1,"clock":23000}
 clock data
-  {"epoch":40,"incarnation":1,"settled":true,"clock":23000}
+  {"clock":23000,"settled":true,"incarnation":1,"epoch":43}
 clock settle
-  {"settled":true,"clock":23000,"incarnation":1,"epoch":40}
+  {"clock":23000,"settled":true,"incarnation":1,"epoch":43}
 state lib.length
   1
 screenshot docs/media/macos/library/01-meetings.png
-  {"h":900,"clock":23000,"w":420,"incarnation":1,"epoch":40,"screenshot":"docs/media/macos/library/01-meetings.png","scale":1}
+  {"clock":23000,"screenshot":"docs/media/macos/library/01-meetings.png","h":900,"epoch":43,"w":420,"incarnation":1,"scale":1}
 prefer prefers-color-scheme dark
-  {"epoch":40,"page":{"iframe-partition":true,"has-focus":true,"online":true,"can-share-files":true,"can-open-files":true,"root-font-size":13,"gpu-tier":"high","can-share-pictures":true,"display-scale":2,"keyboard-navigation":false,"can-share":true,"frozen":false,"bold-text":false,"visibility-state":"visible"},"media":{"prefers-reduced-transparency":"no-preference","pointer":"fine","prefers-contrast":"no-preference","prefers-color-scheme":"dark","hover":"hover","dynamic-range":"standard","prefers-reduced-motion":"no-preference","display-mode":"standalone","color-gamut":"srgb"},"fold":{"horizontal-viewport-segments":1,"vertical-viewport-segments":1,"viewport-segments":[],"device-posture":"continuous"},"incarnation":1,"clock":23000}
+  {"clock":23000,"epoch":43,"incarnation":1,"page":{"frozen":false,"gpu-tier":"high","keyboard-navigation":false,"has-focus":true,"can-share-files":true,"online":true,"visibility-state":"visible","root-font-size":13,"can-share-pictures":true,"iframe-partition":true,"display-scale":2,"can-share":true,"can-open-files":true,"bold-text":false},"media":{"prefers-color-scheme":"dark","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","dynamic-range":"standard","pointer":"fine","prefers-reduced-motion":"no-preference","display-mode":"standalone","hover":"hover","color-gamut":"srgb"},"fold":{"vertical-viewport-segments":1,"device-posture":"continuous","horizontal-viewport-segments":1,"viewport-segments":[]}}
 screenshot docs/media/macos/library/02-meetings-dark.png
-  {"screenshot":"docs/media/macos/library/02-meetings-dark.png","w":420,"h":900,"epoch":40,"incarnation":1,"clock":23000,"scale":1}
+  {"incarnation":1,"epoch":43,"h":900,"screenshot":"docs/media/macos/library/02-meetings-dark.png","w":420,"clock":23000,"scale":1}
 prefer prefers-color-scheme light
-  {"epoch":40,"clock":23000,"media":{"hover":"hover","prefers-reduced-motion":"no-preference","prefers-color-scheme":"light","pointer":"fine","color-gamut":"srgb","prefers-contrast":"no-preference","display-mode":"standalone","prefers-reduced-transparency":"no-preference","dynamic-range":"standard"},"page":{"iframe-partition":true,"has-focus":true,"online":true,"can-share-files":true,"can-open-files":true,"root-font-size":13,"gpu-tier":"high","can-share-pictures":true,"display-scale":2,"keyboard-navigation":false,"can-share":true,"frozen":false,"bold-text":false,"visibility-state":"visible"},"fold":{"horizontal-viewport-segments":1,"viewport-segments":[],"vertical-viewport-segments":1,"device-posture":"continuous"},"incarnation":1}
+  {"media":{"prefers-color-scheme":"light","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","dynamic-range":"standard","pointer":"fine","prefers-reduced-motion":"no-preference","display-mode":"standalone","hover":"hover","color-gamut":"srgb"},"incarnation":1,"page":{"frozen":false,"can-share-pictures":true,"gpu-tier":"high","visibility-state":"visible","has-focus":true,"root-font-size":13,"iframe-partition":true,"can-share":true,"keyboard-navigation":false,"bold-text":false,"online":true,"can-open-files":true,"can-share-files":true,"display-scale":2},"clock":23000,"epoch":43,"fold":{"vertical-viewport-segments":1,"device-posture":"continuous","horizontal-viewport-segments":1,"viewport-segments":[]}}
 tap "Launch sync"
-  {"at":[165.5,269],"delivery":"platform","tapped":117,"target":"Launch sync","carrier":"macos","mode":"agent","epoch":41,"incarnation":1,"clock":23000}
+  {"at":[165.5,269],"delivery":"platform","tapped":171,"target":"Launch sync","carrier":"macos","mode":"agent","epoch":44,"incarnation":1,"clock":23000}
 clock data
-  {"clock":23000,"incarnation":1,"epoch":41,"settled":true}
+  {"incarnation":1,"settled":true,"clock":23000,"epoch":44}
 clock settle
-  {"epoch":41,"settled":true,"clock":23000,"incarnation":1}
+  {"incarnation":1,"settled":true,"clock":23000,"epoch":44}
 tap delete-meeting
-  {"delivery":"platform","at":[384.5,20],"tapped":151,"target":"delete-meeting","carrier":"macos","mode":"agent","epoch":41,"incarnation":1,"clock":23000}
+  {"delivery":"platform","tapped":205,"at":[384.5,20],"target":"delete-meeting","carrier":"macos","mode":"agent","epoch":44,"incarnation":1,"clock":23000}
 clock settle
-  {"epoch":41,"settled":true,"clock":23000,"incarnation":1}
+  {"settled":true,"incarnation":1,"clock":23000,"epoch":44}
 screenshot docs/media/macos/library/03-confirm-delete.png
-  {"epoch":41,"clock":23000,"h":900,"notShown":{"windows":["_NSAlertPanel"],"see":"screenshot <png> window"},"incarnation":1,"w":420,"screenshot":"docs/media/macos/library/03-confirm-delete.png","scale":1}
+  {"epoch":44,"notShown":{"windows":["_NSAlertPanel"],"see":"screenshot <png> window"},"clock":23000,"w":420,"h":900,"screenshot":"docs/media/macos/library/03-confirm-delete.png","incarnation":1,"scale":1}
 tap delete-confirm
-  {"delivery":"host-activation","native":"NSAlert","tapped":36,"target":"delete-confirm","carrier":"macos","mode":"agent","epoch":42,"incarnation":1,"clock":23000}
+  {"tapped":48,"native":"NSAlert","delivery":"host-activation","target":"delete-confirm","carrier":"macos","mode":"agent","epoch":44,"incarnation":1,"clock":23000}
 clock data
-  {"settled":true,"epoch":43,"clock":23000,"incarnation":1}
+  {"epoch":46,"clock":23000,"incarnation":1,"settled":true}
 clock settle
-  {"epoch":43,"settled":true,"incarnation":1,"clock":23000}
+  {"clock":23000,"incarnation":1,"settled":true,"epoch":46}
 state lib.length
   0
 screenshot docs/media/macos/library/04-deleted.png
-  {"screenshot":"docs/media/macos/library/04-deleted.png","w":420,"incarnation":1,"clock":23000,"epoch":43,"h":900,"scale":1}
+  {"clock":23000,"incarnation":1,"screenshot":"docs/media/macos/library/04-deleted.png","w":420,"h":900,"epoch":46,"scale":1}

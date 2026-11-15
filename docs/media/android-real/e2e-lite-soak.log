@@ -1,0 +1,30 @@
+e2e android lite: preparing models
+recording a take and swapping in the spoken fixture
+running the pipeline 12 times on the fixture
+completed cycle 1: peak 741 MiB, idle 96 MiB, native allocated 27.5 MiB
+completed cycle 2: peak 745 MiB, idle 99 MiB, native allocated 27.6 MiB
+completed cycle 3: peak 746 MiB, idle 105 MiB, native allocated 27.5 MiB
+completed cycle 4: peak 746 MiB, idle 102 MiB, native allocated 27.5 MiB
+completed cycle 5: peak 740 MiB, idle 106 MiB, native allocated 27.6 MiB
+completed cycle 6: peak 746 MiB, idle 102 MiB, native allocated 27.6 MiB
+completed cycle 7: peak 745 MiB, idle 106 MiB, native allocated 27.6 MiB
+completed cycle 8: peak 740 MiB, idle 102 MiB, native allocated 27.6 MiB
+completed cycle 9: peak 745 MiB, idle 106 MiB, native allocated 27.6 MiB
+completed cycle 10: peak 746 MiB, idle 102 MiB, native allocated 27.6 MiB
+completed cycle 11: peak 745 MiB, idle 106 MiB, native allocated 27.6 MiB
+completed cycle 12: peak 740 MiB, idle 103 MiB, native allocated 27.6 MiB
+word error rate (synthetic speech, easier than a real room): 4.2% (7 of 168)
+title: Launch Plan and Bug Resolution Meeting
+cycle 1: transcribe 9.219 s, notes 13.417 s, total 22.636 s, peak 741 MB, idle after 96 MB
+cycle 2: transcribe 9.192 s, notes 13.24 s, total 22.432 s, peak 745 MB, idle after 99 MB
+cycle 3: transcribe 9.215 s, notes 13.219 s, total 22.434 s, peak 746 MB, idle after 105 MB
+cycle 4: transcribe 9.189 s, notes 13.273 s, total 22.462 s, peak 746 MB, idle after 102 MB
+cycle 5: transcribe 20.672 s, notes 13.241 s, total 33.913 s, peak 740 MB, idle after 106 MB
+cycle 6: transcribe 9.191 s, notes 13.232 s, total 22.423 s, peak 746 MB, idle after 102 MB
+cycle 7: transcribe 9.201 s, notes 13.286 s, total 22.487 s, peak 745 MB, idle after 106 MB
+cycle 8: transcribe 9.289 s, notes 23.617 s, total 32.906 s, peak 740 MB, idle after 102 MB
+cycle 9: transcribe 9.192 s, notes 12.229 s, total 21.421 s, peak 745 MB, idle after 106 MB
+cycle 10: transcribe 9.189 s, notes 13.238 s, total 22.427 s, peak 746 MB, idle after 102 MB
+cycle 11: transcribe 9.324 s, notes 13.245 s, total 22.569 s, peak 745 MB, idle after 106 MB
+cycle 12: transcribe 9.189 s, notes 12.2 s, total 21.389 s, peak 740 MB, idle after 103 MB
+e2e: ok

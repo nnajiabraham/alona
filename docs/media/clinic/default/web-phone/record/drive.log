@@ -23,7 +23,7 @@ clock settle
 screenshot docs/media/clinic/default/web-phone/record/02-reference-and-template.png
   {"clock":6400,"epoch":31,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/record/02-reference-and-template.png","w":390,"h":844}
 tap start-recording
-  {"at":[195,810],"tapped":101,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":46,"incarnation":1}
+  {"at":[195,810],"tapped":116,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":46,"incarnation":1}
 clock data
   {"clock":6400,"settled":true}
 clock settle
@@ -35,15 +35,15 @@ state recRef
 state recTemplate
   "consultation"
 screenshot docs/media/clinic/default/web-phone/record/03-recording-started.png
-  {"clock":6800,"epoch":51,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/record/03-recording-started.png","w":390,"h":844}
+  {"clock":6800,"epoch":52,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/record/03-recording-started.png","w":390,"h":844}
 type record-jottings - L knee, 2 weeks
-  {"at":[195,466],"typed":106,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":54,"incarnation":1}
+  {"at":[195,524],"typed":121,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":56,"incarnation":1}
 clock +5000
   {"clock":11800}
 screenshot docs/media/clinic/default/web-phone/record/04-jottings-while-recording.png
-  {"clock":11800,"epoch":60,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/record/04-jottings-while-recording.png","w":390,"h":844}
+  {"clock":11800,"epoch":62,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/record/04-jottings-while-recording.png","w":390,"h":844}
 tap stop-recording
-  {"at":[195,281],"tapped":120,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":11800,"epoch":75,"incarnation":1}
+  {"at":[195,281],"tapped":135,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":11800,"epoch":77,"incarnation":1}
 clock data
   {"clock":11800,"settled":true}
 clock settle
@@ -51,7 +51,7 @@ clock settle
 state lib.0.state
   "processing"
 screenshot docs/media/clinic/default/web-phone/record/05-saved-and-queued.png
-  {"clock":12200,"epoch":78,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/record/05-saved-and-queued.png","w":390,"h":844}
+  {"clock":12200,"epoch":80,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/record/05-saved-and-queued.png","w":390,"h":844}
 clock +3000
   {"clock":15200}
 clock data
@@ -59,7 +59,7 @@ clock data
 state detail.status
   "transcribing"
 screenshot docs/media/clinic/default/web-phone/record/06-transcribing.png
-  {"clock":15200,"epoch":95,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/record/06-transcribing.png","w":390,"h":844}
+  {"clock":15200,"epoch":97,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/record/06-transcribing.png","w":390,"h":844}
 clock +2000
   {"clock":17200}
 clock data
@@ -67,7 +67,7 @@ clock data
 state detail.status
   "summarizing"
 screenshot docs/media/clinic/default/web-phone/record/07-writing-draft.png
-  {"clock":17200,"epoch":107,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/record/07-writing-draft.png","w":390,"h":844}
+  {"clock":17200,"epoch":109,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/record/07-writing-draft.png","w":390,"h":844}
 clock +6000
   {"clock":23200}
 clock data
@@ -93,10 +93,10 @@ state detail.note
 state detail.note
   "> This is a sample draft from the demo engine. No model ran, and it does not describe your recording.\n\n## Reason for visit\n- Left knee pain for about two weeks.\n\n## History\n- Left knee sore for about two weeks, since a long run.\n- Worse on stairs. Some evening swelling, no locking.\n- No medication taken.\n\n## Examination\n- Mild swelling over the left knee.\n- Full range of movement.\n\n## Assessment\n- Minor strain, as the clinician said.\n\n## Plan\n- Rest from running and ice in the evening.\n- Review in two weeks.\n\n## Follow-up\n- Review in two weeks."
 screenshot docs/media/clinic/default/web-phone/record/08-draft-ready.png
-  {"clock":23200,"epoch":119,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/record/08-draft-ready.png","w":390,"h":844}
+  {"clock":23200,"epoch":121,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/record/08-draft-ready.png","w":390,"h":844}
 tap pane-transcript
-  {"at":[182.59375,262],"tapped":161,"target":"pane-transcript","delivery":"platform","carrier":"web","mode":"agent","clock":23200,"epoch":122,"incarnation":1}
+  {"at":[182.59375,262],"tapped":209,"target":"pane-transcript","delivery":"platform","carrier":"web","mode":"agent","clock":23200,"epoch":124,"incarnation":1}
 state pane
   "transcript"
 screenshot docs/media/clinic/default/web-phone/record/09-transcript.png
-  {"clock":23200,"epoch":122,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/record/09-transcript.png","w":390,"h":844}
+  {"clock":23200,"epoch":124,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/record/09-transcript.png","w":390,"h":844}

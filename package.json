@@ -1,12 +1,15 @@
 {
   "name": "alona",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "build": "bun exact.mjs web-build --out dist",
     "start": "bun exact.mjs serve dist"
   },
   "dependencies": {
+    "@alona/engine": "file:packages/alona-engine",
     "@exact/media-capture": "file:../exact/packages/media-capture",
+    "@exact/notifications": "file:../exact/packages/notifications",
     "@exact/recording": "file:../exact/packages/recording"
   },
   "devDependencies": {

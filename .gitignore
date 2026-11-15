@@ -57,3 +57,6 @@ coverage/
 
 # Desktop shell, built by tools/build-desktop.mjs
 /desktop/out/
+
+# Built packages staged for a release
+/release/

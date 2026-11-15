@@ -1,61 +1,63 @@
 clock data
-  {"clock":0,"settled":true,"epoch":2,"incarnation":1}
-tap continue
-  {"tapped":28,"at":[205.71,760.33],"target":"continue","delivery":"platform","carrier":"android","mode":"agent","epoch":3,"incarnation":1,"clock":0}
-clock data
   {"clock":0,"settled":true,"epoch":3,"incarnation":1}
+tap continue
+  {"tapped":28,"at":[205.71,760.33],"target":"continue","delivery":"platform","carrier":"android","mode":"agent","epoch":4,"incarnation":1,"clock":0}
+clock data
+  {"clock":0,"settled":true,"epoch":4,"incarnation":1}
 clock +6000
-  {"clock":6000,"epoch":8,"incarnation":1}
+  {"clock":6000,"epoch":9,"incarnation":1}
 clock data
-  {"clock":6000,"settled":true,"epoch":8,"incarnation":1}
+  {"clock":6000,"settled":true,"epoch":9,"incarnation":1}
 tap start-recording
-  {"tapped":55,"at":[205.71,223],"target":"start-recording","delivery":"platform","carrier":"android","mode":"agent","epoch":12,"incarnation":1,"clock":6000}
+  {"tapped":67,"at":[205.71,223],"target":"start-recording","delivery":"platform","carrier":"android","mode":"agent","epoch":10,"incarnation":1,"clock":6000}
+clock until state rec.state == "recording" within 15000
+  {"clock":6000,"real":149,"until":"met","value":"recording"}
 clock data
-  {"clock":6000,"settled":false,"reason":"requests","epoch":12,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
+  {"clock":6000,"settled":true,"epoch":14,"incarnation":1}
 clock settle
-  {"clock":6000,"settled":false,"reason":"requests","epoch":13,"incarnation":1,"diagnostic":"clock settle gave up on requests still in flight at its bound (20 s native); state shows them under pending, and logs a `request N` with no `fulfil N`"}
+  {"clock":6350,"settled":false,"reason":"requests","epoch":14,"incarnation":1,"diagnostic":"clock settle gave up on requests still in flight at its bound (20 s native); state shows them under pending, and logs a `request N` with no `fulfil N`"}
 state rec.state
   "recording"
 screenshot docs/media/android/record/01-recording-started.png
-  {"screenshot":"docs/media/android/record/01-recording-started.png","device":true,"epoch":13,"incarnation":1,"clock":6000}
+  {"screenshot":"docs/media/android/record/01-recording-started.png","device":true,"epoch":14,"incarnation":1,"clock":6350}
 type record-title Launch sync
-  {"typed":95,"value":"Launch sync","target":"record-title","delivery":"platform","carrier":"android","mode":"agent","epoch":14,"incarnation":1,"clock":6000}
+  {"typed":107,"value":"Launch sync","target":"record-title","delivery":"platform","carrier":"android","mode":"agent","epoch":15,"incarnation":1,"clock":6350}
 type record-notes - Ask about the login fix
-  {"typed":99,"value":"- Ask about the login fix","target":"record-notes","delivery":"platform","carrier":"android","mode":"agent","epoch":15,"incarnation":1,"clock":6000}
+  {"typed":145,"value":"- Ask about the login fix","target":"record-notes","delivery":"platform","carrier":"android","mode":"agent","epoch":16,"incarnation":1,"clock":6350}
 clock +5000
-  {"clock":11000,"inflight":1,"epoch":16,"incarnation":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+  {"clock":11350,"inflight":1,"epoch":17,"incarnation":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
 screenshot docs/media/android/record/02-notes-while-recording.png
-  {"screenshot":"docs/media/android/record/02-notes-while-recording.png","device":true,"epoch":17,"incarnation":1,"clock":11000}
+  {"screenshot":"docs/media/android/record/02-notes-while-recording.png","device":true,"epoch":18,"incarnation":1,"clock":11350}
 tap stop-recording
-  {"tapped":92,"at":[205.71,143],"target":"stop-recording","delivery":"platform","carrier":"android","mode":"agent","epoch":18,"incarnation":1,"clock":11000}
+  {"tapped":104,"at":[205.71,277],"target":"stop-recording","scrolled":{"from":[205.71,85],"to":[205.71,85]},"delivery":"platform","carrier":"android","mode":"agent","epoch":19,"incarnation":1,"clock":11350}
 clock data
-  {"clock":11000,"settled":false,"reason":"requests","epoch":18,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
+  {"clock":11350,"settled":false,"reason":"requests","epoch":19,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
 clock settle
-  {"clock":11000,"settled":false,"reason":"requests","epoch":23,"incarnation":1,"diagnostic":"clock settle gave up on requests still in flight at its bound (20 s native); state shows them under pending, and logs a `request N` with no `fulfil N`"}
+  {"clock":11350,"settled":false,"reason":"requests","epoch":24,"incarnation":1,"diagnostic":"clock settle gave up on requests still in flight at its bound (20 s native); state shows them under pending, and logs a `request N` with no `fulfil N`"}
 state lib.0.status
   "recorded"
 screenshot docs/media/android/record/03-saved-and-queued.png
-  {"screenshot":"docs/media/android/record/03-saved-and-queued.png","device":true,"epoch":23,"incarnation":1,"clock":11000}
+  {"screenshot":"docs/media/android/record/03-saved-and-queued.png","device":true,"epoch":24,"incarnation":1,"clock":11350}
 clock +3000
-  {"clock":14000,"inflight":1,"background":1,"epoch":28,"incarnation":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+  {"clock":14350,"inflight":1,"background":1,"epoch":29,"incarnation":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
 clock data
-  {"clock":14000,"settled":true,"epoch":30,"incarnation":1}
+  {"clock":14350,"settled":true,"epoch":31,"incarnation":1}
 state lib.0.status
   "transcribing"
 screenshot docs/media/android/record/04-transcribing.png
-  {"screenshot":"docs/media/android/record/04-transcribing.png","device":true,"epoch":30,"incarnation":1,"clock":14000}
+  {"screenshot":"docs/media/android/record/04-transcribing.png","device":true,"epoch":31,"incarnation":1,"clock":14350}
 clock +2000
-  {"clock":16000,"inflight":1,"background":1,"epoch":32,"incarnation":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+  {"clock":16350,"inflight":1,"background":1,"epoch":33,"incarnation":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
 clock data
-  {"clock":16000,"settled":true,"epoch":34,"incarnation":1}
+  {"clock":16350,"settled":true,"epoch":35,"incarnation":1}
 state lib.0.status
   "summarizing"
 screenshot docs/media/android/record/05-writing-notes.png
-  {"screenshot":"docs/media/android/record/05-writing-notes.png","device":true,"epoch":34,"incarnation":1,"clock":16000}
+  {"screenshot":"docs/media/android/record/05-writing-notes.png","device":true,"epoch":35,"incarnation":1,"clock":16350}
 clock +6000
-  {"clock":22000,"epoch":38,"incarnation":1}
+  {"clock":22350,"epoch":39,"incarnation":1}
 clock data
-  {"clock":22000,"settled":true,"epoch":38,"incarnation":1}
+  {"clock":22350,"settled":true,"epoch":39,"incarnation":1}
 state detail.status
   "done"
 state detail.title
@@ -63,4 +65,4 @@ state detail.title
 state detail.userNotes
   "- Ask about the login fix"
 screenshot docs/media/android/record/06-notes-ready.png
-  {"screenshot":"docs/media/android/record/06-notes-ready.png","device":true,"epoch":38,"incarnation":1,"clock":22000}
+  {"screenshot":"docs/media/android/record/06-notes-ready.png","device":true,"epoch":39,"incarnation":1,"clock":22350}

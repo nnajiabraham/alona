@@ -1,0 +1,12 @@
+e2e android balanced: preparing models
+recording a take and swapping in the spoken fixture
+running the pipeline 3 times on the fixture
+completed cycle 1: peak 1455 MiB, idle 99 MiB, native allocated 27.5 MiB
+completed cycle 2: peak 1474 MiB, idle 107 MiB, native allocated 27.6 MiB
+completed cycle 3: peak 1475 MiB, idle 110 MiB, native allocated 27.6 MiB
+word error rate (synthetic speech, easier than a real room): 4.8% (8 of 168)
+title: App Launch Date and Bug Fix
+cycle 1: transcribe 31.404 s, notes 36.943 s, total 68.347 s, peak 1455 MB, idle after 99 MB
+cycle 2: transcribe 11.225 s, notes 37.804 s, total 49.029 s, peak 1474 MB, idle after 107 MB
+cycle 3: transcribe 11.245 s, notes 36.779 s, total 48.024 s, peak 1475 MB, idle after 110 MB
+e2e: ok

@@ -46,6 +46,9 @@ if (process.platform === 'linux') {
 }
 
 app.setName('Alona');
+// On a Mac, "Alona" under Application Support is the original Swift app's folder. The shell is
+// packaged for Windows and Linux only, but a development run on a Mac must not write there.
+if (process.platform === 'darwin') app.setPath('userData', join(app.getPath('appData'), 'Alona Desktop'));
 
 protocol.registerSchemesAsPrivileged([{
   scheme: SCHEME,

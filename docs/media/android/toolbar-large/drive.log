@@ -1,0 +1,92 @@
+clock data
+  {"clock":0,"settled":false,"reason":"requests","epoch":2,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
+tap continue
+  {"tapped":28,"at":[205.71,760.33],"target":"continue","delivery":"platform","carrier":"android","mode":"agent","epoch":4,"incarnation":1,"clock":0}
+clock data
+  {"clock":0,"settled":true,"epoch":4,"incarnation":1}
+clock +6000
+  {"clock":6000,"epoch":9,"incarnation":1}
+clock data
+  {"clock":6000,"settled":true,"epoch":9,"incarnation":1}
+prefer root-font-size 53px
+  {"fold":{"device-posture":"continuous","horizontal-viewport-segments":1,"vertical-viewport-segments":1,"viewport-segments":[]},"media":{"color-gamut":"srgb","dynamic-range":"standard","hover":"none","pointer":"coarse","prefers-color-scheme":"light","prefers-contrast":"no-preference","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference"},"mode":{},"page":{"can-open-files":true,"can-share":true,"can-share-files":true,"can-share-pictures":true,"display-scale":2.625,"frozen":false,"gpu-tier":"high","has-focus":true,"iframe-partition":false,"online":true,"root-font-size":53,"visibility-state":"visible"},"epoch":10,"incarnation":1,"clock":6000}
+tap start-recording
+  {"tapped":67,"at":[205.71,675],"target":"start-recording","delivery":"platform","carrier":"android","mode":"agent","epoch":11,"incarnation":1,"clock":6000}
+clock until state rec.state == "recording" within 15000
+  {"clock":6000,"real":145,"until":"met","value":"recording"}
+clock data
+  {"clock":6000,"settled":true,"epoch":15,"incarnation":1}
+clock settle
+  {"clock":6350,"settled":false,"reason":"requests","epoch":15,"incarnation":1,"diagnostic":"clock settle gave up on requests still in flight at its bound (20 s native); state shows them under pending, and logs a `request N` with no `fulfil N`"}
+type record-notes - Agenda
+  {"typed":145,"value":"- Agenda","target":"record-notes","scrolled":{"from":[205.71,1037.5],"to":[205.71,1037.5]},"delivery":"platform","carrier":"android","mode":"agent","epoch":16,"incarnation":1,"clock":6350}
+tap rec-bold
+  {"tapped":116,"at":[203,165.5],"target":"rec-bold","delivery":"platform","carrier":"android","mode":"agent","epoch":17,"incarnation":1,"clock":6350}
+clock settle
+  {"clock":6350,"settled":true,"epoch":17,"incarnation":1}
+screenshot docs/media/android/toolbar-large/01-record-pad-large.png
+  {"screenshot":"docs/media/android/toolbar-large/01-record-pad-large.png","device":true,"epoch":17,"incarnation":1,"clock":6350}
+prefer prefers-color-scheme dark
+  {"fold":{"device-posture":"continuous","horizontal-viewport-segments":1,"vertical-viewport-segments":1,"viewport-segments":[]},"media":{"color-gamut":"srgb","dynamic-range":"standard","hover":"none","pointer":"coarse","prefers-color-scheme":"dark","prefers-contrast":"no-preference","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference"},"mode":{},"page":{"can-open-files":true,"can-share":true,"can-share-files":true,"can-share-pictures":true,"display-scale":2.625,"frozen":false,"gpu-tier":"high","has-focus":true,"iframe-partition":false,"online":true,"root-font-size":53,"visibility-state":"visible"},"epoch":17,"incarnation":1,"clock":6350}
+clock settle
+  {"clock":6350,"settled":true,"epoch":17,"incarnation":1}
+screenshot docs/media/android/toolbar-large/02-record-pad-large-dark.png
+  {"screenshot":"docs/media/android/toolbar-large/02-record-pad-large-dark.png","device":true,"epoch":17,"incarnation":1,"clock":6350}
+prefer prefers-color-scheme light
+  {"fold":{"device-posture":"continuous","horizontal-viewport-segments":1,"vertical-viewport-segments":1,"viewport-segments":[]},"media":{"color-gamut":"srgb","dynamic-range":"standard","hover":"none","pointer":"coarse","prefers-color-scheme":"light","prefers-contrast":"no-preference","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference"},"mode":{},"page":{"can-open-files":true,"can-share":true,"can-share-files":true,"can-share-pictures":true,"display-scale":2.625,"frozen":false,"gpu-tier":"high","has-focus":true,"iframe-partition":false,"online":true,"root-font-size":53,"visibility-state":"visible"},"epoch":17,"incarnation":1,"clock":6350}
+type record-notes Agenda
+  {"typed":145,"value":"Agenda","target":"record-notes","delivery":"platform","carrier":"android","mode":"agent","epoch":18,"incarnation":1,"clock":6350}
+tap rec-quote
+  {"tapped":139,"at":[285.93,165.5],"target":"rec-quote","scrolled":{"from":[1714.5,165.5],"to":[1714.5,165.5]},"delivery":"platform","carrier":"android","mode":"agent","epoch":19,"incarnation":1,"clock":6350}
+clock data
+  {"clock":6350,"settled":true,"epoch":19,"incarnation":1}
+state recNotes
+  "> Agenda"
+tree rec-quote
+  {"clock":6350,"epoch":19,"incarnation":1,"nodes":[{"children":[140,141],"depth":8,"focused":false,"handlers":["press"],"id":139,"parent":113,"props":{"accessibilityLabel":"Quote","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-quote"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":140,"parent":139,"props":{"accessibilityElementsHidden":true,"imageSource":"symbol:quote"},"type":"Image"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":141,"parent":139,"props":{"text":"Quote"},"type":"Text"}],"pending":[],"roots":[139]}
+tap rec-plain
+  {"tapped":127,"at":[76.5,165.5],"target":"rec-plain","scrolled":{"from":[-644.07,165.5],"to":[-644.07,165.5]},"delivery":"platform","carrier":"android","mode":"agent","epoch":20,"incarnation":1,"clock":6350}
+clock data
+  {"clock":6350,"settled":true,"epoch":20,"incarnation":1}
+state recNotes
+  "Agenda"
+tree rec-plain
+  {"clock":6350,"epoch":20,"incarnation":1,"nodes":[{"children":[128],"depth":8,"focused":false,"handlers":["press"],"id":127,"parent":113,"props":{"accessibilityLabel":"Plain text","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-plain"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":128,"parent":127,"props":{"text":"Text"},"type":"Text"}],"pending":[],"roots":[127]}
+tap stop-recording
+  {"tapped":104,"at":[205.71,331.5],"target":"stop-recording","scrolled":{"from":[205.71,-250],"to":[205.71,-250]},"delivery":"platform","carrier":"android","mode":"agent","epoch":21,"incarnation":1,"clock":6350}
+clock data
+  {"clock":6350,"settled":false,"reason":"requests","epoch":21,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
+clock settle
+  {"clock":6350,"settled":false,"reason":"requests","epoch":26,"incarnation":1,"diagnostic":"clock settle gave up on requests still in flight at its bound (20 s native); state shows them under pending, and logs a `request N` with no `fulfil N`"}
+clock +12000
+  {"clock":18350,"epoch":41,"incarnation":1}
+clock data
+  {"clock":18350,"settled":true,"epoch":41,"incarnation":1}
+tap pane-mine
+  {"tapped":186,"at":[205.71,685.52],"target":"pane-mine","delivery":"platform","carrier":"android","mode":"agent","epoch":42,"incarnation":1,"clock":18350}
+clock settle
+  {"clock":18350,"settled":true,"epoch":42,"incarnation":1}
+tap mine-link
+  {"tapped":231,"at":[307.93,757.02],"target":"mine-link","scrolled":{"from":[1915.5,757.02],"to":[1915.5,757.02]},"delivery":"platform","carrier":"android","mode":"agent","epoch":43,"incarnation":1,"clock":18350}
+clock settle
+  {"clock":18350,"settled":true,"epoch":43,"incarnation":1}
+screenshot docs/media/android/toolbar-large/03-my-notes-large.png
+  {"screenshot":"docs/media/android/toolbar-large/03-my-notes-large.png","device":true,"epoch":43,"incarnation":1,"clock":18350}
+prefer prefers-color-scheme dark
+  {"fold":{"device-posture":"continuous","horizontal-viewport-segments":1,"vertical-viewport-segments":1,"viewport-segments":[]},"media":{"color-gamut":"srgb","dynamic-range":"standard","hover":"none","pointer":"coarse","prefers-color-scheme":"dark","prefers-contrast":"no-preference","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference"},"mode":{},"page":{"can-open-files":true,"can-share":true,"can-share-files":true,"can-share-pictures":true,"display-scale":2.625,"frozen":false,"gpu-tier":"high","has-focus":true,"iframe-partition":false,"online":true,"root-font-size":53,"visibility-state":"visible"},"epoch":43,"incarnation":1,"clock":18350}
+clock settle
+  {"clock":18350,"settled":true,"epoch":43,"incarnation":1}
+screenshot docs/media/android/toolbar-large/04-my-notes-large-dark.png
+  {"screenshot":"docs/media/android/toolbar-large/04-my-notes-large-dark.png","device":true,"epoch":43,"incarnation":1,"clock":18350}
+tap mine-link-cancel
+  {"tapped":241,"at":[361.93,504.95],"target":"mine-link-cancel","delivery":"platform","carrier":"android","mode":"agent","epoch":44,"incarnation":1,"clock":18350}
+type my-notes Decisions
+  {"typed":234,"value":"Decisions","target":"my-notes","scrolled":{"from":[205.71,851.95],"to":[205.71,851.95]},"delivery":"platform","carrier":"android","mode":"agent","epoch":45,"incarnation":1,"clock":18350}
+tap mine-title
+  {"tapped":212,"at":[80,99.5],"target":"mine-title","scrolled":{"from":[-1159.57,99.5],"to":[-1159.57,99.5]},"delivery":"platform","carrier":"android","mode":"agent","epoch":46,"incarnation":1,"clock":18350}
+clock data
+  {"clock":18350,"settled":true,"epoch":46,"incarnation":1}
+state noteDraft
+  "## Decisions"
+tree mine-title
+  {"clock":18350,"epoch":46,"incarnation":1,"nodes":[{"children":[213],"depth":8,"focused":false,"handlers":["press"],"id":212,"parent":202,"props":{"accessibilityLabel":"Title","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"mine-title"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":213,"parent":212,"props":{"text":"Title"},"type":"Text"}],"pending":[],"roots":[212]}

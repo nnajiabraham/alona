@@ -2,6 +2,7 @@ import { describe, expect, test } from 'bun:test';
 import { assess, effectiveTier } from './device';
 import type { Artifact, DeviceFacts } from './engine';
 import { parseJobView } from './engine';
+import { applyFormat, formatsAt } from './markdown';
 import { ALONA_NOTES, chatPrompt, finishNotes, planNotes, stepCount, stepRequest } from './notes';
 import { advance, isWorking, retranscribe, retry, type PipelineIO } from './pipeline';
 import { service } from './service';
@@ -12,7 +13,7 @@ import golden from './fixtures/alona-notes.golden.json';
 import { planCases, rawReplies } from './fixtures/golden-inputs';
 import type { NotesProfile } from './notes';
 import { memoryFiles } from './fixtures/memory-files';
-import { hostService } from './host';
+import { androidTransport, hostService } from './host';
 
 const ALL = ['lite', 'balanced', 'quality'] as const;
 const device = (over: Partial<DeviceFacts>): DeviceFacts => ({ ...SIM_DEVICE, ...over });
@@ -348,6 +349,11 @@ describe('model downloads', () => {
     return Object.assign(service(engine, meetingStore(files), 'Demo.'), { engine, files });
   }
 
+  test('setup names the host, so a view can leave out what that host lacks', async () => {
+    expect((await app({ device: { ...SIM_DEVICE, host: 'android', formFactor: 'phone' } }).setup('auto')).host).toBe('android');
+    expect((await app().setup('auto')).host).toBe('web');
+  });
+
   test('a tier is not installed until its download finishes, then stays installed', async () => {
     const s = app({ polls: 2 });
     expect((await s.setup('auto')).activeInstalled).toBe(false);
@@ -528,6 +534,65 @@ describe('a service with its own note format', () => {
   });
 });
 
+describe('a second meeting from the same recording', () => {
+  async function finished() {
+    const files = memoryFiles();
+    const store = meetingStore(files);
+    const notes: string[] = [];
+    const engine = simEngine({ polls: 1, notes: (prompt) => (notes.push(prompt), '## Summary\nSaid things.') });
+    const s = service(engine, store, 'Demo.');
+    await s.downloadTier('balanced');
+    for (let i = 0; i < 5; i++) await s.setup('auto');
+    await files.atomicWriteFile('app:/data/meetings/a/audio.wav', new Uint8Array([1, 2, 3]));
+    await s.create('a', 'Visit', 'app:/data/meetings/a/audio.wav', 1000, '- BP 120/80', 7, 'balanced');
+    for (let i = 0; i < 30; i++) await s.tick('auto');
+    return { files, store, s, notes };
+  }
+
+  test('starts from the first one’s transcript and notes, plays its recording, and writes notes of its own', async () => {
+    const { s, store, notes } = await finished();
+    const first = await s.detail('a');
+    expect(first.status).toBe('done');
+    const transcribed = notes.length;
+    expect(await s.fork('a', 'b')).toEqual({ ok: true, error: '' });
+    const waiting = await s.detail('b');
+    expect(waiting.status).toBe('summarizing');
+    expect(waiting.segments).toEqual(first.segments);
+    expect(waiting.userNotes).toBe('- BP 120/80');
+    expect(waiting.audio).toBe(first.audio);
+    expect(waiting.createdAt).toBe(first.createdAt);
+    for (let i = 0; i < 30; i++) await s.tick('auto');
+    expect((await s.detail('b')).status).toBe('done');
+    expect(notes.length).toBeGreaterThan(transcribed);
+    expect(await store.readAiNotes('a')).toBe(first.aiNotes);
+  });
+
+  test('a meeting still being written is not forked, and an id in use is refused', async () => {
+    const { s, store } = await finished();
+    await s.regenerate('a');
+    expect((await s.fork('a', 'b')).ok).toBe(false);
+    for (let i = 0; i < 30; i++) await s.tick('auto');
+    expect((await s.fork('a', 'a')).ok).toBe(false);
+    expect(await store.load('b')).toBeNull();
+  });
+
+  test('deleting either meeting leaves the other’s recording playable', async () => {
+    const first = await finished();
+    await first.s.fork('a', 'b');
+    await first.s.remove('a');
+    const kept = await first.s.detail('b');
+    expect(kept.audio).toBe('app:/data/meetings/b/audio.wav');
+    expect([...new Uint8Array(await first.files.readFile(kept.audio))]).toEqual([1, 2, 3]);
+    expect(first.files.paths().some((p) => p.startsWith('app:/data/meetings/a/'))).toBe(false);
+
+    const second = await finished();
+    await second.s.fork('a', 'b');
+    await second.s.remove('b');
+    expect((await second.s.detail('a')).audio).toBe('app:/data/meetings/a/audio.wav');
+    expect([...new Uint8Array(await second.files.readFile('app:/data/meetings/a/audio.wav'))]).toEqual([1, 2, 3]);
+  });
+});
+
 describe('choosing the engine at launch', () => {
   test('without a native module, the demo engine answers and says why', async () => {
     const { service: s } = await hostService(memoryFiles(), null, { sampleLine: 'Samples.' });
@@ -551,5 +616,230 @@ describe('choosing the engine at launch', () => {
     const native = { available: true, later: async (r: Record<string, unknown>) => replies[String(r.op)] ?? {} };
     const setup = await (await hostService(memoryFiles(), native)).service.setup('auto');
     expect([setup.demo, setup.demoNote]).toEqual([false, '']);
+  });
+});
+
+describe('Android extension transport', () => {
+  test('serializes requests and unwraps protocol replies', async () => {
+    const calls: string[] = [];
+    const send = async (json: string) => { calls.push(json); return { json: '{"id":"a","state":"running","text":"partial"}' }; };
+    expect(await androidTransport(send)({ op: 'job', job: 'a' })).toEqual({ id: 'a', state: 'running', text: 'partial' });
+    expect(calls).toEqual(['{"op":"job","job":"a"}']);
+  });
+  test('rejects missing, malformed, and failed replies', async () => {
+    for (const reply of [null, {}, { json: '[]' }, { json: '{' }, { json: '{"error":"bad pin"}' }]) {
+      await expect(androidTransport(async () => reply)({ op: 'probe' })).rejects.toThrow();
+    }
+  });
+  test('a failed job is a valid protocol reply', async () => {
+    const reply = { id: 'a', state: 'failed', error: 'Cancelled.' };
+    expect(await androidTransport(async () => ({ json: JSON.stringify(reply) }))({ op: 'job', job: 'a' })).toEqual(reply);
+  });
+});
+
+describe('the notes pad formatting the Markdown source itself', () => {
+  // `|` marks the selection: one for a caret, two around a range.
+  const at = (marked: string) => {
+    const a = marked.indexOf('|');
+    const b = marked.indexOf('|', a + 1);
+    const value = marked.replaceAll('|', '');
+    return { value, start: a, end: b < 0 ? a : b - 1 };
+  };
+  const show = (e: { value: string; start: number; end: number }) =>
+    e.start === e.end ? `${e.value.slice(0, e.start)}|${e.value.slice(e.start)}` : `${e.value.slice(0, e.start)}|${e.value.slice(e.start, e.end)}|${e.value.slice(e.end)}`;
+  const run = (marked: string, command: string, argument?: string) => {
+    const s = at(marked);
+    return show(applyFormat(s.value, s.start, s.end, command, argument));
+  };
+  const formats = (marked: string) => {
+    const s = at(marked);
+    return formatsAt(s.value, s.start, s.end).formats;
+  };
+
+  test('each button stores the Markdown the web editor stores', () => {
+    expect(run('|Agenda|', 'bold')).toBe('**|Agenda|**');
+    expect(run('|Agenda|', 'italic')).toBe('*|Agenda|*');
+    expect(run('|Agenda|', 'strike')).toBe('~~|Agenda|~~');
+    expect(run('Agenda|', 'heading', '2')).toBe('## Agenda|');
+    expect(run('Agenda|', 'heading', '3')).toBe('### Agenda|');
+    expect(run('Agenda|', 'bullet')).toBe('- Agenda|');
+    expect(run('Agenda|', 'ordered')).toBe('1. Agenda|');
+    expect(run('Agenda|', 'task')).toBe('- [ ] Agenda|');
+    expect(run('Agenda|', 'quote')).toBe('> Agenda|');
+    expect(run('|Alona site|', 'link', 'https://example.com')).toBe('[|Alona site|](https://example.com)');
+  });
+
+  test('pressing a button where its format is on takes it off', () => {
+    expect(run('**|Agenda|**', 'bold')).toBe('|Agenda|');
+    expect(run('**Age|nda**', 'bold')).toBe('Age|nda');
+    expect(run('*|Agenda|*', 'italic')).toBe('|Agenda|');
+    expect(run('~~|Agenda|~~', 'strike')).toBe('|Agenda|');
+    expect(run('## Agenda|', 'heading', '2')).toBe('Agenda|');
+    expect(run('- Agenda|', 'bullet')).toBe('Agenda|');
+    expect(run('1. Agenda|', 'ordered')).toBe('Agenda|');
+    expect(run('- [ ] Agenda|', 'task')).toBe('Agenda|');
+    expect(run('> Agenda|', 'quote')).toBe('Agenda|');
+    expect(run('[|Alona site|](https://example.com)', 'link', '')).toBe('|Alona site|');
+  });
+
+  test('one block format replaces another on the line', () => {
+    expect(run('## Agenda|', 'heading', '3')).toBe('### Agenda|');
+    expect(run('- Agenda|', 'ordered')).toBe('1. Agenda|');
+    expect(run('- [ ] Agenda|', 'bullet')).toBe('- Agenda|');
+    expect(run('## Agenda|', 'bullet')).toBe('- Agenda|');
+    expect(run('> Agenda|', 'heading', '2')).toBe('> ## Agenda|');
+  });
+
+  test('Text clears the heading, list and quote, and leaves inline formats', () => {
+    expect(run('### Agenda|', 'plain')).toBe('Agenda|');
+    expect(run('- **Agenda**|', 'plain')).toBe('**Agenda**|');
+    expect(run('> 1. Agenda|', 'plain')).toBe('Agenda|');
+    expect(run('Agenda|', 'plain')).toBe('Agenda|');
+  });
+
+  test('a block format applies to every line the selection touches', () => {
+    expect(run('|One\nTwo|', 'ordered')).toBe('1. |One\n2. Two|');
+    expect(run('|One\nTwo|', 'bullet')).toBe('- |One\n- Two|');
+    expect(run('- |One\n- Two|', 'bullet')).toBe('|One\nTwo|');
+    expect(run('Intro\nAge|nda\nEnd', 'heading', '2')).toBe('Intro\n## Age|nda\nEnd');
+  });
+
+  test('inline formats nest', () => {
+    expect(run('**|Agenda|**', 'italic')).toBe('***|Agenda|***');
+    expect(formats('***|Agenda|***')).toBe('bold italic');
+    expect(run('***|Agenda|***', 'bold')).toBe('*|Agenda|*');
+  });
+
+  test('a caret where nothing is selected gets an empty pair to type into', () => {
+    expect(run('Plain |', 'bold')).toBe('Plain **|**');
+  });
+
+  test('a link changes its address, and a caret link shows its address', () => {
+    expect(run('[Al|ona](https://a.example)', 'link', 'https://b.example')).toBe('[Al|ona](https://b.example)');
+    expect(run('See |', 'link', 'https://example.com')).toBe('See [|https://example.com|](https://example.com)');
+    expect(formatsAt('[Alona](https://example.com)', 3, 3).link).toBe('https://example.com');
+    expect(run('|Alona|', 'link', '')).toBe('|Alona|');
+  });
+
+  test('insert puts text in place of the selection, the caret after it', () => {
+    expect(run('Agenda|', 'insert', '[0:05] ')).toBe('Agenda[0:05] |');
+    expect(run('A|gend|a', 'insert', 'x')).toBe('Ax|a');
+  });
+
+  test('an unknown command or heading level changes nothing', () => {
+    expect(run('|Agenda|', 'undo')).toBe('|Agenda|');
+    expect(run('Agenda|', 'heading', '9')).toBe('Agenda|');
+  });
+
+  test('the formats on at the caret follow it', () => {
+    expect(formats('|Plain **bold**')).toBe('');
+    expect(formats('Plain **bold**|')).toBe('bold');
+    expect(formats('Plain **bo|ld**')).toBe('bold');
+    expect(formats('*it|*')).toBe('italic');
+    expect(formats('~~gone|~~')).toBe('strike');
+    expect(formats('## Agenda|')).toBe('heading2');
+    expect(formats('### Agenda|')).toBe('heading3');
+    expect(formats('- Agenda|')).toBe('bullet');
+    expect(formats('1. Agenda|')).toBe('ordered');
+    expect(formats('- [ ] Agenda|')).toBe('task');
+    expect(formats('- [x] Agenda|')).toBe('task');
+    expect(formats('> Agenda|')).toBe('quote');
+    expect(formats('> - **Ag|enda**')).toBe('bold bullet quote');
+    expect(formats('Agenda|')).toBe('');
+  });
+
+  test('a selection shows a format only when the whole of it has that format', () => {
+    expect(formats('|Plain **bold**|')).toBe('');
+    expect(formats('**|bold|**')).toBe('bold');
+    expect(formats('|- One\n- Two|')).toBe('bullet');
+    expect(formats('|- One\nTwo|')).toBe('');
+  });
+
+  test('stars inside a link address and a lone star are not emphasis', () => {
+    expect(formats('[a](https://x.example/*y*)|')).toBe('');
+    expect(formats('2 * 3 = 6|')).toBe('');
+    expect(formats('a ** b|')).toBe('');
+  });
+
+  test('offsets outside the source are held to it', () => {
+    expect(applyFormat('Agenda', 40, 99, 'heading', '2')).toEqual({ value: '## Agenda', start: 9, end: 9 });
+    expect(formatsAt('', 3, 1).formats).toBe('');
+  });
+
+  test('offsets count UTF-16 units, as the field reports them', () => {
+    const s = 'Café 😀 plan';
+    expect(applyFormat(s, 8, 12, 'bold')).toEqual({ value: 'Café 😀 **plan**', start: 10, end: 14 });
+  });
+
+  test('italic inside bold, and bold inside italic, read and toggle as written', () => {
+    expect(run('**a|b|c**', 'italic')).toBe('**a*|b|*c**');
+    expect(formats('**a*|b|*c**')).toBe('bold italic');
+    expect(run('**|a*b*c|**', 'bold')).toBe('|a*b*c|');
+    expect(run('**a*|b|*c**', 'italic')).toBe('**a|b|c**');
+    expect(run('*a|b|c*', 'bold')).toBe('*a**|b|**c*');
+    expect(formats('*a**|b|**c*')).toBe('bold italic');
+    expect(run('*a**|b|**c*', 'bold')).toBe('*a|b|c*');
+  });
+
+  test('a format pressed at a bare caret is on there, and a second press takes it off', () => {
+    expect(run('|', 'bold')).toBe('**|**');
+    expect(formats('**|**')).toBe('bold');
+    expect(run('**|**', 'bold')).toBe('|');
+    expect(run('Agenda |', 'italic')).toBe('Agenda *|*');
+    expect(run('**|**', 'italic')).toBe('***|***');
+    expect(formats('***|***')).toBe('bold italic');
+    expect(run('***|***', 'bold')).toBe('*|*');
+    expect(run('~~|~~', 'strike')).toBe('|');
+    // After a word, what is typed next takes the format.
+    expect(run('Agenda|', 'bold')).toBe('Agenda**|**');
+    expect(formats('Agenda**|**')).toBe('bold');
+    expect(run('Agenda**|**', 'bold')).toBe('Agenda|');
+    // Inside a word, the word takes it.
+    expect(run('ab|cd', 'bold')).toBe('**ab|cd**');
+    expect(run('**ab|cd**', 'bold')).toBe('ab|cd');
+    // A caret inside a real marker is not an empty pair.
+    expect(formats('*|*abc**')).toBe('');
+  });
+
+  test('bold over text that is partly bold makes one bold span', () => {
+    expect(run('|**a** b|', 'bold')).toBe('**|a b|**');
+    expect(run('**a|b**cd|', 'bold')).toBe('**a|bcd|**');
+    expect(run('**a**|b|', 'bold')).toBe('**a|b|**');
+  });
+
+  test('a link whose address has parentheses is one link', () => {
+    const wiki = 'https://en.wikipedia.org/wiki/Foo_(bar)';
+    expect(formatsAt(`[w](${wiki})`, 1, 2).link).toBe(wiki);
+    expect(run(`[|w|](${wiki})`, 'link', '')).toBe('|w|');
+    expect(run(`[|w|](${wiki})`, 'link', 'https://x.com')).toBe('[|w|](https://x.com)');
+  });
+
+  test('a format over several lines wraps each line', () => {
+    expect(run('|a\nb|', 'bold')).toBe('**|a**\n**b|**');
+    expect(formats('**|a**\n**b|**')).toBe('bold');
+    expect(run('**|a**\n**b|**', 'bold')).toBe('|a\nb|');
+    expect(run('|- a\n- b|', 'bold')).toBe('|- **a**\n- **b|**');
+  });
+
+  test('a selection ending at the start of the next line leaves that line alone', () => {
+    expect(run('|a\n|b', 'bullet')).toBe('- |a\n|b');
+    expect(formats('|- a\n|b')).toBe('bullet');
+    expect(run('|a\n|b', 'heading', '2')).toBe('## |a\n|b');
+  });
+
+  test('two formats on one selection are both on, whatever spaces it took in', () => {
+    const bold = applyFormat('plan the', 0, 5, 'bold');
+    const both = applyFormat(bold.value, bold.start, bold.end, 'italic');
+    expect(both.value).toBe('***plan*** the');
+    expect(formatsAt(both.value, both.start, both.end).formats).toBe('bold italic');
+    const back = applyFormat(both.value, both.start, both.end, 'bold');
+    expect(back.value).toBe('*plan* the');
+  });
+
+  test('a format leaves the spaces around the selection outside it', () => {
+    expect(run('|word |', 'bold')).toBe('**|word** |');
+    expect(formats('**|word** |')).toBe('bold');
+    expect(run('**|word** |', 'bold')).toBe('|word |');
+    expect(run('| |', 'bold')).toBe('| |');
   });
 });

@@ -160,7 +160,7 @@ function manifest(tenant, app) {
     start_url: '/',
     display: 'standalone',
     app: { id: tenant.app.bundleId, name: tenant.app.name },
-    host: { web: {}, android: {}, ios: { minimumOS: '17.0', deviceFamily: ['iphone', 'ipad'], link: ['-lc++'] } },
+    host: { web: {}, android: { maven: ['com.alona.local:sherpa:2.0.1', 'com.alona.local:llama:b12383'] }, ios: { minimumOS: '17.0', deviceFamily: ['iphone', 'ipad'], link: ['-lc++'] } },
     icons: [{ src: 'assets/icon.png', sizes: '1024x1024', type: 'image/png', purpose: 'any' }],
     typescript: { sources },
     theme_color: tenant.colors.page.light,
@@ -230,7 +230,12 @@ async function materialize(slug) {
   // At clinic/lib, as in the repo, so its `../../core` and `../../tenants` reach the mounted directories in both places.
   rmSync(join(app, 'lib'), { recursive: true, force: true });
   mirror(join(CLINIC, 'lib'), join(app, 'clinic', 'lib'), (name) => name.endsWith('.test.ts'));
-  if (!existsSync(join(ROOT, 'modules', 'web', 'worker.js'))) fail('the web engine is not built: run `bun tools/build-web-engine.mjs`');
+  mirror(join(ROOT, 'ui'), join(app, 'ui'), () => false);
+  // The web engine's worker is a build product. Every tenant build carries modules/web, so make it when it is missing.
+  if (!existsSync(join(ROOT, 'modules', 'web', 'worker.js'))) {
+    const built = spawnSync(BUN, [join(ROOT, 'tools', 'build-web-engine.mjs')], { cwd: ROOT, stdio: 'inherit' });
+    if (built.status !== 0) fail('the web engine did not build: run `bun tools/build-web-engine.mjs` and read its output');
+  }
   mirror(join(ROOT, 'modules'), join(app, 'modules'), (name) => name.endsWith('.xcframework'));
   for (const name of ['exact.mjs', 'bun.lock', 'gradle.lockfile', 'gradle-verification.xml']) {
     if (existsSync(join(ROOT, name))) put(join(app, name), readFileSync(join(ROOT, name)));

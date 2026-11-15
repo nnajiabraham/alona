@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Clinical Notes Guide</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one column of bands. The whole page takes its colours from the tenant picked at the top,
+   so switching tenant re-skins the guide the way a tenant file re-skins the app. */
+:root {
+  --page: #f3f6f5; --card: #e6eceb; --raised: #fbfdfc; --line: #d3dcda;
+  --ink: #17211f; --muted: #4f5d5a; --accent: #1f6f6b; --on-accent: #ffffff;
+  --soft: #dcebe9; --soft-ink: #164e4b; --notice: #f1e8cf; --notice-ink: #6a4f0c;
+  --display: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --text: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page: #111716; --card: #1a2221; --raised: #212b29; --line: #2b3735;
+    --ink: #e4ebe9; --muted: #a1aeab; --accent: #2f8a84; --on-accent: #ffffff;
+    --soft: #1d3231; --soft-ink: #a5d6d1; --notice: #352d1c; --notice-ink: #e0c482;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --page: #111716; --card: #1a2221; --raised: #212b29; --line: #2b3735;
+  --ink: #e4ebe9; --muted: #a1aeab; --accent: #2f8a84; --on-accent: #ffffff;
+  --soft: #1d3231; --soft-ink: #a5d6d1; --notice: #352d1c; --notice-ink: #e0c482;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink); font: 16px/1.6 var(--text); transition: background-color .25s, color .25s; }
+@media (prefers-reduced-motion: reduce) { body { transition: none; } }
+a { color: var(--soft-ink); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+code, pre { font-family: var(--mono); font-size: 0.86em; }
+code { background: var(--card); padding: 0.1em 0.35em; border-radius: 5px; }
+pre { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; overflow-x: auto; line-height: 1.55; margin: 0; }
+pre code { background: none; padding: 0; font-size: 1em; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; line-height: 1.15; margin: 0; }
+h1 { font-size: clamp(2.2rem, 5.4vw, 3.6rem); font-weight: 700; letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.5rem, 3.2vw, 2.1rem); font-weight: 600; }
+h3 { font-size: 1.1rem; font-weight: 600; }
+p { margin: 0; max-width: 66ch; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { display: flex; flex-direction: column; gap: 72px; padding-block: 28px 96px; }
+section { display: flex; flex-direction: column; gap: 20px; }
+.top { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; font-size: 0.9rem; }
+.eyebrow { font-size: 0.78rem; letter-spacing: 0.09em; text-transform: uppercase; color: var(--soft-ink); font-weight: 600; }
+.lede { font-size: 1.18rem; color: var(--muted); max-width: 58ch; }
+.hero { display: grid; gap: 32px; grid-template-columns: minmax(0, 1fr); align-items: center; }
+@media (min-width: 900px) { .hero { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); } }
+.hero-copy { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+.tabs button { font: 600 0.9rem var(--text); border: 1px solid var(--line); background: var(--raised); color: var(--muted); padding: 8px 14px; border-radius: 999px; cursor: pointer; }
+.tabs button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.phones { display: flex; gap: 14px; justify-content: center; min-width: 0; }
+.phone { flex: 1 1 0; min-width: 0; max-width: 230px; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.phone img { width: 100%; height: auto; border-radius: 22px; border: 6px solid var(--ink); background: var(--card); display: block; }
+.phone figcaption { font-size: 0.82rem; color: var(--muted); text-align: center; }
+.phones .phone:nth-child(2) { transform: translateY(18px); }
+.brandline { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: baseline; }
+.brandline b { font-family: var(--display); font-size: 1.25rem; }
+.brandline span { color: var(--muted); }
+.steps { display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); counter-reset: step; list-style: none; margin: 0; padding: 0; }
+.steps li { counter-increment: step; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.steps li::before { content: counter(step); font: 700 0.85rem var(--display); width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: var(--on-accent); display: grid; place-items: center; }
+.steps img { width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--line); background: var(--card); display: block; }
+.steps h3 { font-size: 1rem; }
+.steps p { font-size: 0.9rem; color: var(--muted); }
+.grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.tile { background: var(--card); border-radius: 14px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.tile p { font-size: 0.93rem; color: var(--muted); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-size: 0.78rem; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: var(--soft); color: var(--soft-ink); }
+.brands { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.brand { border: 1px solid var(--line); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.brand img { width: 100%; height: auto; border-radius: 12px; display: block; }
+.brand .sw { display: flex; gap: 6px; }
+.brand .sw i { width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(128,128,128,.35); display: block; }
+.brand small { font-size: 0.82rem; }
+.scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: var(--raised); }
+table { border-collapse: collapse; width: 100%; font-size: 0.93rem; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; font-size: 0.78rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.pill { display: inline-flex; font-size: 0.8rem; font-weight: 600; padding: 3px 10px; border-radius: 999px; white-space: nowrap; }
+.pill.ok { background: var(--soft); color: var(--soft-ink); }
+.pill.part { background: var(--notice); color: var(--notice-ink); }
+.note { background: var(--notice); color: var(--notice-ink); border-radius: 12px; padding: 12px 16px; font-size: 0.93rem; max-width: 66ch; }
+.videos { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.videos figure { margin: 0; display: flex; flex-direction: column; gap: 6px; }
+video { width: 100%; max-width: 320px; border-radius: 14px; border: 1px solid var(--line); background: #000; }
+figcaption { font-size: 0.86rem; color: var(--muted); }
+ul.plain { margin: 0; padding-left: 1.1em; max-width: 66ch; display: flex; flex-direction: column; gap: 6px; }
+footer { color: var(--muted); font-size: 0.86rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<main>
+
+<div class="top">
+  <a href="index.html">← Alona field guide</a>
+  <span class="eyebrow">Clinical notes · white-label</span>
+</div>
+
+<section class="hero">
+  <div class="hero-copy">
+    <h1>Patient notes, drafted on the device</h1>
+    <p class="lede">A clinician records a visit or dictates after it. The app transcribes it and drafts the note in the clinic's own template. Audio, transcript, and note stay on the phone or in the browser. The draft waits for the clinician's review before it can be copied anywhere.</p>
+    <p>Each clinic, group, or test partner gets its own build from one config file. Pick a tenant and this page takes its brand, as the app does.</p>
+    <div class="tabs" id="tenants" role="group" aria-label="Tenant"></div>
+    <div class="brandline"><b id="brand-name">Clinic Notes</b><span id="brand-tagline">Visit notes, drafted on this device.</span></div>
+  </div>
+  <div class="phones" id="hero-phones" aria-label="Three screens of the selected tenant"></div>
+</section>
+
+<section>
+  <span class="eyebrow">A visit, start to finish</span>
+  <h2>One note, eight steps</h2>
+  <p>This is the whole path for one <span data-person="singular">patient</span>, in the order it happens. The screens are the selected tenant's build at phone size.</p>
+  <ol class="steps" id="steps"></ol>
+  <p class="note">These captures use the demo engine, so the transcript and the draft are samples and the app says so on screen. The run on real models is further down.</p>
+</section>
+
+<section>
+  <span class="eyebrow">What a clinician uses it for</span>
+  <h2>Workflows</h2>
+  <p>A note type is a template: a list of headings, each with one sentence telling the model what belongs under it. The clinician picks one when starting a note. These are the selected tenant's templates.</p>
+  <div class="grid" id="templates"></div>
+  <h3>Around the note</h3>
+  <div class="grid">
+    <div class="tile"><h3>Record the visit</h3><p>Start a note, set a short reference for the <span data-person="singular">patient</span>, and record the conversation. The hint under the reference asks for something short and warns against full names, dates of birth, and record numbers.</p></div>
+    <div class="tile"><h3>Dictate afterwards</h3><p>With nobody else in the room, the clinician speaks the note and the app tidies it into the template. The default tenant has a template for this.</p></div>
+    <div class="tile"><h3>Jot while listening</h3><p>A pad on the recording screen takes the clinician's own jottings. The draft covers what they wrote first, and treats it as what matters most.</p></div>
+    <div class="tile"><h3>Review and sign off</h3><p>Every draft carries "AI draft · Not reviewed" and the tenant's own warning. The clinician edits it in place, then marks it reviewed, which records when.</p></div>
+    <div class="tile"><h3>Move it to the record</h3><p>Copy and Share appear only on a reviewed note. The text goes to the clipboard or the system share sheet, for pasting into the practice's record system.</p></div>
+    <div class="tile"><h3>A second note from one visit</h3><p>"Write as another note" writes the same recording under another template, such as a referral letter after a SOAP note. Both notes share the recording. Deleting one leaves the other, and the recording goes only with the last.</p></div>
+    <div class="tile"><h3>Format without Markdown</h3><p>The jottings pad and the draft have a toolbar: bold, headings, bullets, numbered lists, to-dos, quotes, and links. The note stays plain Markdown, so it pastes cleanly into a record system.</p></div>
+    <div class="tile"><h3>Start over safely</h3><p>"Write again" and "Transcribe again" rerun the models, for example after a tier change. If the clinician has edited the draft, the app asks before it replaces those edits.</p></div>
+  </div>
+</section>
+
+<section>
+  <span class="eyebrow">After the first note</span>
+  <h2>A second note from the same visit</h2>
+  <p>A clinician often needs two documents from one conversation: the note for the record, and a letter or a summary for someone else. The second is written from the same transcript, with no second recording.</p>
+  <ol class="steps" id="rewrite-steps"></ol>
+  <p class="note" id="rewrite-note" hidden>These captures are from the default tenant. The flow is the same under every brand.</p>
+</section>
+
+<section>
+  <span class="eyebrow">White-label</span>
+  <h2>The same app, three brands</h2>
+  <p>Name, tagline, colors, the word for the person being seen, the warning on drafts, the templates, and the app's id all come from the tenant's file. These three ship as examples, with invented names.</p>
+  <div class="brands" id="brands"></div>
+<pre><code>// tenants/riverbend.ts: the whole definition of a new tenant
+import { defineTenant } from './schema';
+
+export default defineTenant({
+  slug: 'riverbend',
+  app: { name: 'Riverbend Notes', shortName: 'Riverbend', tagline: 'Visit notes, drafted on this device.',
+         bundleId: 'org.example.riverbend', version: '0.1.0' },
+  colors: { accent: { light: '#1f6f66', dark: '#4fa79b' }, /* twelve more tokens, light and dark */ },
+  copy: { welcomeTitle: 'Welcome', welcomeBody: '…', person: { singular: 'patient', plural: 'patients' },
+          reviewDisclaimer: 'Check every line before you use it.', privacy: '…' },
+  templates: [{ id: 'soap', name: 'SOAP', description: '…', sections: [
+    { heading: 'Subjective', guidance: 'What the patient reported.' }, /* … */ ] }],
+  defaults: { template: 'soap', tier: 'auto' },   // a type error unless a template has this id
+  features: { jottings: true, copy: true, share: true, playback: true },
+  icon: 'icons/riverbend.png',
+});</code></pre>
+<pre><code>bun tools/tenant.mjs check riverbend         # types, contrast, unique ids, bundle id, icon
+bun tools/tenant.mjs build riverbend web     # or android, ios
+bun tools/tenant.mjs flows riverbend web     # every flow below, with captures</code></pre>
+  <p>The check refuses text under 4.5 to 1 contrast on its surface and white under 3 to 1 on the accent, in both schemes, and names the field and the fix. The author's guide is <code>tenants/README.md</code>.</p>
+</section>
+
+<section>
+  <span class="eyebrow">Watch it</span>
+  <h2>Flows on video</h2>
+  <p>One video per flow for the selected tenant, at phone size.</p>
+  <div class="videos" id="videos"></div>
+</section>
+
+<section>
+  <span class="eyebrow">What protects the patient and the clinician</span>
+  <h2>Safeguards</h2>
+  <div class="grid">
+    <div class="tile"><h3>Nothing leaves the device</h3><p>Recording, transcription, and drafting run on the device. The only network use is downloading the models once. There are no analytics and no remote logs.</p></div>
+    <div class="tile"><h3>Only what was said</h3><p>The model is told never to add findings, diagnoses, medications, doses, or plans that were not said, to write "Not discussed." under an empty heading, and to keep the clinician's wording for clinical terms.</p></div>
+    <div class="tile"><h3>Edits belong to the clinician</h3><p>The model's output and the clinician's edits are separate files. The pipeline cannot overwrite an edit.</p></div>
+    <div class="tile"><h3>Samples say they are samples</h3><p>Where a device cannot run the models, the app shows sample text, labels it on the home screen, the note, and the draft itself, and says why.</p></div>
+  </div>
+  <p class="note">The app claims no regulatory compliance. It says what it does. Whether that meets the rules where a clinic operates is for the owner to establish before any real patient.</p>
+</section>
+
+<section>
+  <span class="eyebrow">What was run, and what was not</span>
+  <h2>Status</h2>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Check</th><th>Result</th><th>Detail</th></tr></thead>
+    <tbody>
+      <tr><td>Web, all three tenants</td><td><span class="pill ok">All flows pass</span></td><td>Six flows for each tenant at desktop and phone size, plus the second-note and toolbar flows for the default tenant, on the demo engine. Exact's own screen checks are clean for each tenant.</td></tr>
+      <tr><td>Real models, web</td><td><span class="pill ok">Ran for one tenant</span></td><td id="real-detail">A synthetic consultation played as the microphone.</td></tr>
+      <tr><td>Draft quality on the Lite tier</td><td><span class="pill part">Weak</span></td><td>The draft had the right headings and added nothing unsaid, but it copied guidance sentences and repeated the history under the impression. Larger tiers are not measured for clinical notes.</td></tr>
+      <tr><td>Android</td><td><span class="pill ok">Builds, toolbar flow passes</span></td><td>The default tenant builds and installs on an emulator, and its formatting-toolbar flow passes there (72 checks). The other clinical flows were last run on Android before the recording fix in the flow runner and have not been rerun. Alona's own Android build runs real models; the clinical build has not been measured on them.</td></tr>
+      <tr><td>iOS</td><td><span class="pill part">Not built</span></td><td>Xcode 27.1 is installed on the build machine but its license is not accepted yet.</td></tr>
+      <tr><td>Real consultations</td><td><span class="pill part">Not run</span></td><td>Every figure comes from synthetic speech, which is far cleaner than a real room.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <h3>Decisions for the owner</h3>
+  <ul class="plain">
+    <li>A regulatory review before any real-patient use.</li>
+    <li>Accuracy measured on real consultations, and a better prompt or a larger default tier if Lite drafts stay weak.</li>
+    <li>Whether the patient reference should be screened for identifiers, not only hinted.</li>
+    <li>Whether the audio is deleted once a note is reviewed.</li>
+  </ul>
+  <footer>Design and data shapes: <code>docs/rewrite/clinic-app.md</code>. Captures: <code>docs/media/clinic/</code>.</footer>
+</section>
+
+</main>
+</div>
+<script src="data.js"></script>
+<script>
+(function () {
+  var data = window.ALONA || {};
+  var tenants = data.tenants || {}, clinic = data.clinic || {}, checks = data.checks || [];
+  var slugs = Object.keys(tenants);
+  var el = function (tag, attrs, children) {
+    var node = document.createElement(tag);
+    for (var k in attrs || {}) { if (k === 'text') node.textContent = attrs[k]; else node.setAttribute(k, attrs[k]); }
+    (children || []).forEach(function (c) { node.appendChild(c); });
+    return node;
+  };
+  var dark = function () {
+    var forced = document.documentElement.getAttribute('data-theme');
+    return forced ? forced === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+  };
+  var shot = function (slug, flow, label) {
+    var targets = clinic[slug] || {};
+    var media = (targets['web-phone'] || targets.web || {})[flow];
+    if (!media) return null;
+    return media.shots.filter(function (s) { return s.label === label; })[0] || null;
+  };
+
+  var STEPS = [
+    ['record', 'new note sheet', 'Start a note', 'A short sheet opens. Nothing is recorded yet.'],
+    ['record', 'reference and template', 'Reference and template', 'A short reference for the person, and the kind of note.'],
+    ['record', 'jottings while recording', 'Record, and jot', 'A timer and a waveform, with a pad for the clinician\'s own points.'],
+    ['record', 'writing draft', 'Transcribe and draft', 'Stop saves the recording. The transcript comes first, then the draft.'],
+    ['review', 'ai draft', 'An AI draft, labelled', 'The template\'s headings, filled from what was said.'],
+    ['review', 'edit saved', 'Edit it', 'The clinician corrects the draft in place. Edits save by themselves.'],
+    ['review', 'reviewed', 'Mark it reviewed', 'The label changes and the time is recorded.'],
+    ['review', 'copied', 'Copy or share', 'Only now can the note leave the app, to the record system.'],
+  ];
+  var REWRITE = [
+    ['rewrite', 'reviewed first', 'Start from a finished note', 'The first note is reviewed and stays as it is.'],
+    ['rewrite', 'write as sheet', 'Write as another note', 'A sheet lists the tenant\'s other templates.'],
+    ['rewrite', 'second draft', 'A second draft', 'Written from the same transcript, under the new headings, and labelled as a draft.'],
+    ['rewrite', 'first untouched after delete', 'Each note stands alone', 'Deleting one note leaves the other, with the recording.'],
+  ];
+  var VIDEOS = [['onboarding', 'First launch'], ['record', 'New note'], ['review', 'Review and sign off'], ['rewrite', 'Write as another note'], ['toolbar', 'Formatting toolbar'], ['library', 'Notes list'], ['leaving', 'Leaving mid-task'], ['settings', 'Settings']];
+
+  function paint(slug) {
+    var t = tenants[slug];
+    var root = document.documentElement.style, scheme = dark() ? 'dark' : 'light', c = t.colors;
+    var map = { '--page': c.page, '--card': c.card, '--raised': c.raised, '--line': c.line, '--ink': c.text, '--muted': c.muted,
+      '--accent': c.accent, '--soft': c.progressSoft, '--soft-ink': c.progressInk, '--notice': c.noticeSoft, '--notice-ink': c.noticeInk };
+    Object.keys(map).forEach(function (name) { root.setProperty(name, map[name][scheme]); });
+  }
+
+  function show(slug) {
+    var t = tenants[slug];
+    paint(slug);
+    Array.prototype.forEach.call(document.getElementById('tenants').children, function (b) { b.setAttribute('aria-pressed', String(b.dataset.key === slug)); });
+    document.getElementById('brand-name').textContent = t.name;
+    document.getElementById('brand-tagline').textContent = t.tagline;
+    Array.prototype.forEach.call(document.querySelectorAll('[data-person]'), function (n) { n.textContent = t.person[n.dataset.person]; });
+
+    var phones = document.getElementById('hero-phones');
+    phones.replaceChildren();
+    [['onboarding', 'welcome', 'First launch'], ['review', 'ai draft', 'The draft'], ['review', 'reviewed', 'Reviewed']].forEach(function (p) {
+      var s = shot(slug, p[0], p[1]);
+      if (s) phones.appendChild(el('figure', { class: 'phone' }, [el('img', { src: s.src, alt: t.name + ': ' + p[2] }), el('figcaption', { text: p[2] })]));
+    });
+
+    var steps = document.getElementById('steps');
+    steps.replaceChildren();
+    STEPS.forEach(function (step) {
+      var s = shot(slug, step[0], step[1]);
+      if (!s) return;
+      steps.appendChild(el('li', {}, [el('img', { src: s.src, alt: step[2], loading: 'lazy' }), el('h3', { text: step[2] }), el('p', { text: step[3] })]));
+    });
+
+    var rewrite = document.getElementById('rewrite-steps'), borrowed = false;
+    rewrite.replaceChildren();
+    REWRITE.forEach(function (step) {
+      var s = shot(slug, step[0], step[1]);
+      if (!s) { s = shot('default', step[0], step[1]); borrowed = borrowed || !!s; }
+      if (!s) return;
+      rewrite.appendChild(el('li', {}, [el('img', { src: s.src, alt: step[2], loading: 'lazy' }), el('h3', { text: step[2] }), el('p', { text: step[3] })]));
+    });
+    document.getElementById('rewrite-note').hidden = !borrowed;
+
+    var templates = document.getElementById('templates');
+    templates.replaceChildren();
+    t.templates.forEach(function (template) {
+      templates.appendChild(el('div', { class: 'tile' }, [
+        el('h3', { text: template.name }), el('p', { text: template.description }),
+        el('div', { class: 'chips' }, template.sections.map(function (heading) { return el('span', { class: 'chip', text: heading }); })),
+      ]));
+    });
+
+    var videos = document.getElementById('videos');
+    videos.replaceChildren();
+    var flows = (clinic[slug] || {})['web-phone'] || (clinic[slug] || {}).web || {};
+    VIDEOS.forEach(function (v) {
+      if (!flows[v[0]] || !flows[v[0]].video) return;
+      videos.appendChild(el('figure', {}, [el('video', { src: flows[v[0]].video, controls: '', preload: 'metadata', 'aria-label': v[1] }), el('figcaption', { text: v[1] })]));
+    });
+  }
+
+  var tabs = document.getElementById('tenants');
+  slugs.forEach(function (slug) {
+    var b = el('button', { type: 'button', 'data-key': slug, text: tenants[slug].name });
+    b.addEventListener('click', function () { current = slug; show(slug); });
+    tabs.appendChild(b);
+  });
+
+  var brands = document.getElementById('brands');
+  slugs.forEach(function (slug) {
+    var t = tenants[slug], s = shot(slug, 'review', 'ai draft') || shot(slug, 'onboarding', 'welcome');
+    var swatches = ['accent', 'page', 'card', 'progressSoft', 'attentionSoft', 'noticeSoft'].map(function (name) {
+      return el('i', { style: 'background:' + t.colors[name].light, title: name + ' ' + t.colors[name].light });
+    });
+    brands.appendChild(el('div', { class: 'brand', style: 'background:' + t.colors.page.light + ';color:' + t.colors.text.light }, [
+      s ? el('img', { src: s.src, alt: t.name + ' draft screen', loading: 'lazy' }) : el('span'),
+      el('h3', { text: t.name }),
+      el('small', { text: t.tagline }),
+      el('small', { text: 'Says "' + t.person.plural + '". ' + t.templates.length + ' templates. ' + t.bundleId }),
+      el('div', { class: 'sw' }, swatches),
+    ]));
+  });
+
+  var real = checks.filter(function (c) { return c.target === 'clinic' && c.wer; })[0];
+  if (real) {
+    document.getElementById('real-detail').textContent = 'A synthetic consultation played as the microphone: ' + (real.wer.rate * 100).toFixed(1) +
+      '% word error (' + real.wer.errors + ' of ' + real.wer.words + ' words), ' + real.runs[0].totalSeconds + ' s from stop to draft, and exactly the template\'s headings. Source: ' + real.file + '.';
+  }
+
+  var current = slugs[0];
+  if (current) show(current);
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () { if (current) paint(current); });
+})();
+</script>
+</body>
+</html>

@@ -27,6 +27,8 @@ export interface SetupView {
   /** Why the demo engine is in use, shown wherever sample content appears. Empty with a real engine. */
   demoNote: string;
   deviceLine: string;
+  /** The device's host (`macos`, `ios`, `android`, `web`, …), for a view that must leave out what a host lacks. */
+  host: string;
   recommended: string;
   recommendedLabel: string;
   active: string;
@@ -125,6 +127,10 @@ interface TierState {
 export interface ServiceOptions {
   /** The note format of one meeting. Alona's for every meeting when absent. */
   profileOf?: (meeting: StoredMeeting) => Promise<NotesProfile>;
+  /** The recording a new meeting keeps, given the microphone's: system audio may be mixed in. */
+  finishRecording?: (id: string, audio: string) => Promise<string>;
+  /** Runs when no meeting is being worked on: after launch, and when the last one finishes. */
+  onIdle?: () => Promise<void>;
 }
 
 /**
@@ -141,7 +147,7 @@ export function service(engine: Engine, store: MeetingStore, demoNote: string, o
 
   /** Orphaned recordings are adopted once, at the first read after launch, when none can be in progress. */
   const meetings = async (): Promise<StoredMeeting[]> => {
-    await (adopted ??= store.adoptOrphans());
+    await (adopted ??= store.adoptOrphans().then(() => options.onIdle?.()));
     return store.list();
   };
 
@@ -221,6 +227,7 @@ export function service(engine: Engine, store: MeetingStore, demoNote: string, o
         demo,
         demoNote,
         deviceLine: deviceLine(d),
+        host: d.host,
         recommended: a.recommended,
         recommendedLabel: LINEUP[a.recommended].label,
         active,
@@ -265,7 +272,10 @@ export function service(engine: Engine, store: MeetingStore, demoNote: string, o
       try {
         const waiting = (await meetings()).filter(isWorking).sort((x, y) => x.createdAt - y.createdAt);
         const next = waiting[0];
-        if (!next) return { working: false };
+        if (!next) {
+          await options.onIdle?.();
+          return { working: false };
+        }
         const active = await activeArtifacts(picked);
         if (!active) return { working: true };
         const { stt, llm } = active.artifacts;
@@ -301,7 +311,8 @@ export function service(engine: Engine, store: MeetingStore, demoNote: string, o
       return {
         ...row(m),
         found: true,
-        audio: m.audio,
+        // A meeting in the person's folder has an absolute path, which the player reads as a file URL.
+        audio: m.audio.startsWith('/') ? `file://${encodeURI(m.audio)}` : m.audio,
         error: m.stage.kind === 'failed' ? m.stage.error : '',
         aiNotes: await store.readAiNotes(id),
         userNotes: await store.readUserNotes(id),
@@ -311,7 +322,8 @@ export function service(engine: Engine, store: MeetingStore, demoNote: string, o
 
     async create(id: string, title: string, audio: string, durationMs: number, userNotes: string, createdAt: number, tier: string): Promise<Reply> {
       if (!isMeetingId(id) || audio === '') return refused('The recording was not saved.');
-      await store.create({ id, title, audio, durationS: durationMs / 1000, userNotes, createdAt, tier: isTierId(tier) ? tier : 'lite' });
+      const kept = options.finishRecording ? await options.finishRecording(id, audio) : audio;
+      await store.create({ id, title, audio: kept, durationS: durationMs / 1000, userNotes, createdAt, tier: isTierId(tier) ? tier : 'lite' });
       return OK;
     },
 
@@ -327,10 +339,37 @@ export function service(engine: Engine, store: MeetingStore, demoNote: string, o
       return OK;
     },
 
+    /**
+     * A second meeting from a finished one, waiting for its notes: it plays the same recording
+     * file, and starts from a copy of the transcript and of the person's notes, so its notes and
+     * the first meeting's are written and kept apart.
+     */
+    async fork(from: string, id: string): Promise<Reply> {
+      if (!isMeetingId(from) || !isMeetingId(id)) return refused(GONE);
+      const m = await store.load(from);
+      if (!m) return refused(GONE);
+      if (m.stage.kind !== 'done') return refused('The first notes are still being written.');
+      if (await store.load(id)) return refused('That meeting already exists.');
+      await store.mkdirMeeting(id);
+      await store.writeTranscript(id, await store.readTranscript(from));
+      await store.saveProgress({ ...regenerate({ ...m, id, attempt: 0 }), progress: 0, suggestedTitle: '' });
+      // Last, so the list never shows a meeting whose transcript or stage is not written yet.
+      await store.create({ id, title: m.title, audio: m.audio, durationS: m.durationS, createdAt: m.createdAt, tier: m.tier, userNotes: await store.readUserNotes(from) });
+      return OK;
+    },
+
+    /** Removes a meeting's folder. A recording in it that another meeting still plays moves to that meeting's folder first. */
     async remove(id: string): Promise<Reply> {
       if (!isMeetingId(id)) return refused(GONE);
       const m = await store.load(id);
       if (m && (m.stage.kind === 'transcribing' || m.stage.kind === 'summarizing')) await engine.cancel(m.stage.job);
+      if (m && m.audio.startsWith(`${store.dir(id)}/`)) {
+        const sharing = (await store.list()).filter((o) => o.id !== id && o.audio === m.audio);
+        if (sharing.length > 0) {
+          const kept = await store.copyAudio(m.audio, sharing[0].id);
+          for (const o of sharing) await store.relocateAudio(o.id, kept);
+        }
+      }
       await store.remove(id);
       return OK;
     },

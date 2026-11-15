@@ -1,0 +1,13 @@
+{
+  "name": "@alona/engine",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "exports": {
+    ".": {
+      "contract": "./exact.json",
+      "default": "./index.js"
+    },
+    "./android": "./android/exact.json"
+  }
+}

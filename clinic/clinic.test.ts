@@ -161,6 +161,77 @@ describe('clinic notes', () => {
   });
 });
 
+describe('writing a note again as another template', () => {
+  async function reviewedConsultation() {
+    const h = clinic();
+    await h.ready();
+    await h.files.atomicWriteFile('app:/data/meetings/n1/audio.m4a', new Uint8Array([7, 7]));
+    await h.c.create('n1', 'Bed 4', 'consultation', 'app:/data/meetings/n1/audio.m4a', 44000, '- L knee', 100, 'balanced');
+    await h.settle();
+    await h.c.saveEdits('n1', `${(await h.c.detail('n1')).note}\nChecked.`);
+    await h.c.markReviewed('n1', 500);
+    return { ...h, first: await h.c.detail('n1') };
+  }
+
+  test('a referral letter sits beside the reviewed consultation note, same reference and recording, as an unreviewed draft', async () => {
+    const { c, settle, first } = await reviewedConsultation();
+    expect(await c.writeAs('n1', 'referral', 'n2')).toEqual({ ok: true, error: '' });
+    expect((await c.detail('n2')).state).toBe('processing');
+    await settle();
+    const rows = await c.rows();
+    expect(rows.map((r) => [r.id, r.patientRef, r.templateName, r.state]).sort()).toEqual([
+      ['n1', 'Bed 4', 'General consultation', 'reviewed'],
+      ['n2', 'Bed 4', 'Referral letter', 'draft'],
+    ]);
+    const second = await c.detail('n2');
+    expect(headingsOf(second.note)).toEqual(['Reason for referral', 'History', 'Findings', 'Current treatment', 'Request']);
+    expect([second.hasEdits, second.reviewedAt, second.writtenFrom, second.sharesRecording]).toEqual([false, 0, 'General consultation', true]);
+    expect([second.audio, second.jottings, second.createdAt]).toEqual([first.audio, '- L knee', first.createdAt]);
+    expect(second.segments).toEqual(first.segments);
+    expect(await c.detail('n1')).toEqual({ ...first, sharesRecording: true });
+  });
+
+  test("the new note's edits and review are its own", async () => {
+    const { c, settle, first } = await reviewedConsultation();
+    await c.writeAs('n1', 'visit-summary', 'n2');
+    await settle();
+    await c.saveEdits('n2', 'Plain words.');
+    await c.markReviewed('n2', 900);
+    expect((await c.detail('n2')).state).toBe('reviewed');
+    const again = await c.detail('n1');
+    expect([again.note, again.state, again.reviewedAt]).toEqual([first.note, 'reviewed', 500]);
+  });
+
+  test('deleting either note keeps the recording the other plays', async () => {
+    const one = await reviewedConsultation();
+    await one.c.writeAs('n1', 'referral', 'n2');
+    await one.settle();
+    await one.c.remove('n2');
+    expect((await one.c.detail('n1')).audio).toBe('app:/data/meetings/n1/audio.m4a');
+    expect([...new Uint8Array(await one.files.readFile('app:/data/meetings/n1/audio.m4a'))]).toEqual([7, 7]);
+    expect((await one.c.detail('n1')).sharesRecording).toBe(false);
+
+    const two = await reviewedConsultation();
+    await two.c.writeAs('n1', 'referral', 'n2');
+    await two.settle();
+    await two.c.remove('n1');
+    const kept = await two.c.detail('n2');
+    expect([...new Uint8Array(await two.files.readFile(kept.audio))]).toEqual([7, 7]);
+    expect(kept.writtenFrom).toBe('General consultation');
+  });
+
+  test('an unknown template, a draft still being written, or an id in use is refused, and leaves nothing behind', async () => {
+    const { c, files, ready } = clinic();
+    await ready();
+    await c.create('n1', 'A', 'soap', 'app:/data/meetings/n1/audio.m4a', 1000, '', 1, 'balanced');
+    expect((await c.writeAs('n1', 'referral', 'n2')).ok).toBe(false);
+    expect((await c.writeAs('n1', 'no-such', 'n2')).ok).toBe(false);
+    expect((await c.writeAs('n1', 'referral', 'n1')).ok).toBe(false);
+    expect((await c.writeAs('gone', 'referral', 'n2')).ok).toBe(false);
+    expect(files.paths().filter((p) => p.includes('/n2/'))).toEqual([]);
+  });
+});
+
 describe('the demo engine', () => {
   test('its draft has exactly the requested sections, so every template looks right in a demo build', () => {
     for (const template of [...base.templates, ...tidewell.templates]) {

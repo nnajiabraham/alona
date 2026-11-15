@@ -1,7 +1,7 @@
 clock data
   {"clock":0,"settled":true}
 tap continue
-  {"at":[195,758],"tapped":28,"target":"continue","delivery":"platform","carrier":"web","mode":"agent","clock":0,"epoch":17,"incarnation":1}
+  {"at":[195,758],"tapped":28,"target":"continue","delivery":"platform","carrier":"web","mode":"agent","clock":0,"epoch":18,"incarnation":1}
 clock data
   {"clock":0,"settled":true}
 clock +6000
@@ -9,19 +9,19 @@ clock +6000
 clock data
   {"clock":6000,"settled":true}
 tap start-recording
-  {"at":[195,213.59375],"tapped":52,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6000,"epoch":38,"incarnation":1}
+  {"at":[195,213.59375],"tapped":64,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6000,"epoch":39,"incarnation":1}
 clock data
   {"clock":6000,"settled":true}
 clock settle
   {"clock":6400,"settled":true}
 type record-title Launch sync
-  {"at":[195,310],"typed":76,"target":"record-title","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":44,"incarnation":1}
+  {"at":[195,321],"typed":90,"target":"record-title","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":47,"incarnation":1}
 type record-notes - Ask about the login fix
-  {"at":[195,499],"typed":62,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":45,"incarnation":1}
+  {"at":[195,568],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":49,"incarnation":1}
 clock +5000
   {"clock":11400}
 tap stop-recording
-  {"at":[195,242],"tapped":73,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":11400,"epoch":64,"incarnation":1}
+  {"at":[195,253],"tapped":87,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":11400,"epoch":68,"incarnation":1}
 clock data
   {"clock":11400,"settled":true}
 clock settle
@@ -33,17 +33,17 @@ clock data
 state detail.status
   "done"
 screenshot docs/media/web-phone/review/01-ai-notes.png
-  {"clock":23800,"epoch":102,"incarnation":1,"screenshot":"docs/media/web-phone/review/01-ai-notes.png","w":390,"h":844}
+  {"clock":23800,"epoch":106,"incarnation":1,"screenshot":"docs/media/web-phone/review/01-ai-notes.png","w":390,"h":844}
 tap pane-transcript
-  {"at":[308.6796875,216],"tapped":105,"target":"pane-transcript","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":105,"incarnation":1}
+  {"at":[308.6796875,262],"tapped":157,"target":"pane-transcript","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":109,"incarnation":1}
 state pane
   "transcript"
 screenshot docs/media/web-phone/review/02-transcript.png
-  {"clock":23800,"epoch":105,"incarnation":1,"screenshot":"docs/media/web-phone/review/02-transcript.png","w":390,"h":844}
+  {"clock":23800,"epoch":109,"incarnation":1,"screenshot":"docs/media/web-phone/review/02-transcript.png","w":390,"h":844}
 tap pane-mine
-  {"at":[187.6484375,216],"tapped":103,"target":"pane-mine","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":108,"incarnation":1}
+  {"at":[187.6484375,262],"tapped":155,"target":"pane-mine","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":113,"incarnation":1}
 type my-notes ## Follow up
-  {"at":[195,380],"typed":131,"target":"my-notes","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":109,"incarnation":1}
+  {"at":[195,484],"typed":185,"target":"my-notes","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":115,"incarnation":1}
 clock +1000
   {"clock":24800}
 clock data
@@ -53,21 +53,21 @@ state detail.userNotes
 state noteDirty
   false
 screenshot docs/media/web-phone/review/03-my-notes-saved.png
-  {"clock":24800,"epoch":113,"incarnation":1,"screenshot":"docs/media/web-phone/review/03-my-notes-saved.png","w":390,"h":844}
+  {"clock":24800,"epoch":119,"incarnation":1,"screenshot":"docs/media/web-phone/review/03-my-notes-saved.png","w":390,"h":844}
 type title-field Q1 launch plan
-  {"at":[195,81],"typed":98,"target":"title-field","delivery":"platform","carrier":"web","mode":"agent","clock":24800,"epoch":115,"incarnation":1}
+  {"at":[195,81],"typed":149,"target":"title-field","delivery":"platform","carrier":"web","mode":"agent","clock":24800,"epoch":121,"incarnation":1}
 type title-field key Enter
-  {"at":[195,81],"typed":98,"target":"title-field","delivery":"platform","carrier":"web","mode":"agent","clock":24800,"epoch":119,"incarnation":1}
+  {"at":[195,81],"typed":149,"target":"title-field","delivery":"platform","carrier":"web","mode":"agent","clock":24800,"epoch":125,"incarnation":1}
 clock data
   {"clock":24800,"settled":true}
 state detail.title
   "Q1 launch plan"
 screenshot docs/media/web-phone/review/04-renamed.png
-  {"clock":24800,"epoch":119,"incarnation":1,"screenshot":"docs/media/web-phone/review/04-renamed.png","w":390,"h":844}
+  {"clock":24800,"epoch":125,"incarnation":1,"screenshot":"docs/media/web-phone/review/04-renamed.png","w":390,"h":844}
 tap pane-ai
-  {"at":[73.96875,216],"tapped":101,"target":"pane-ai","delivery":"platform","carrier":"web","mode":"agent","clock":24800,"epoch":122,"incarnation":1}
+  {"at":[73.96875,262],"tapped":153,"target":"pane-ai","delivery":"platform","carrier":"web","mode":"agent","clock":24800,"epoch":128,"incarnation":1}
 tap regenerate
-  {"at":[195,810],"tapped":136,"target":"regenerate","scrolled":{"from":[195,887],"to":[195,810]},"delivery":"platform","carrier":"web","mode":"agent","clock":24800,"epoch":126,"incarnation":1}
+  {"at":[195,810],"tapped":225,"target":"regenerate","scrolled":{"from":[195,1006],"to":[195,810]},"delivery":"platform","carrier":"web","mode":"agent","clock":24800,"epoch":132,"incarnation":1}
 clock data
   {"clock":24800,"settled":true}
 clock +1000
@@ -77,7 +77,7 @@ clock data
 state detail.status
   "summarizing"
 screenshot docs/media/web-phone/review/05-writing-again.png
-  {"clock":25800,"epoch":131,"incarnation":1,"screenshot":"docs/media/web-phone/review/05-writing-again.png","w":390,"h":844}
+  {"clock":25800,"epoch":137,"incarnation":1,"screenshot":"docs/media/web-phone/review/05-writing-again.png","w":390,"h":844}
 clock +6000
   {"clock":31800}
 clock data

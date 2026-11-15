@@ -3,6 +3,7 @@
 // fixture, then checks accuracy, structure, speed, and memory.
 //
 //   bun tools/e2e-native.mjs [lite|balanced|quality] [--cycles 3]
+//   bun tools/e2e-native.mjs --long 10     memory over a 10-minute recording with system audio on
 //
 // The agent's recorder writes a synthetic tone, so the script records a short
 // take, replaces its audio file with tools/fixture/meeting-fixture.wav, and
@@ -13,21 +14,26 @@
 // check held.
 import { dlopen, ptr } from 'bun:ffi';
 import { spawn, spawnSync } from 'node:child_process';
-import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 
 const ROOT = resolve(dirname(new URL(import.meta.url).pathname), '..');
 const APP_ID = 'com.alona.app';
-const FIXTURE = join(ROOT, 'tools', 'fixture', 'meeting-fixture.wav');
-const REFERENCE = join(ROOT, 'tools', 'fixture', 'reference.txt');
+const DEFAULT_FIXTURE = join(ROOT, 'tools', 'fixture', 'meeting-fixture.wav');
 const HEADINGS = ['## Summary', '## Key points', '## Decisions', '## Action items', '## Open questions'];
 const WER_LIMIT = 0.15;
 
 const args = process.argv.slice(2);
 const tier = ['lite', 'balanced', 'quality'].find((t) => args.includes(t)) ?? 'lite';
 const cycles = Number(args[args.indexOf('--cycles') + 1]) || 3;
-const storage = `e2e-${tier}`;
+// --fixture <wav> runs your own recording. A reference transcript beside it, with the same name and
+// a .txt ending, turns on the word error rate check; without one the check is skipped.
+const FIXTURE = args.includes('--fixture') ? resolve(args[args.indexOf('--fixture') + 1]) : DEFAULT_FIXTURE;
+const REFERENCE = FIXTURE === DEFAULT_FIXTURE ? join(ROOT, 'tools', 'fixture', 'reference.txt') : FIXTURE.replace(/\.[^.]+$/, '.txt');
+const audioSeconds = Number(spawnSync('ffprobe', ['-loglevel', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', FIXTURE], { encoding: 'utf8' }).stdout) || 60;
+const longMinutes = args.includes('--long') ? Number(args[args.indexOf('--long') + 1]) || 10 : 0;
+const storage = longMinutes ? 'e2e-long' : `e2e-${tier}`;
 const dataDir = join(homedir(), 'Library', 'Caches', 'exact', APP_ID, 'agent', storage, 'data');
 const out = join(ROOT, 'docs', 'media', 'macos-real');
 
@@ -104,6 +110,56 @@ const need = (ok, message) => {
   if (!ok) failures.push(message);
 };
 
+if (longMinutes) {
+  // The demo engine writes the notes: this measures the recording and the mix at its end, not the models.
+  // Under the agent the microphone is Exact's synthetic tone and the system audio Alona's stand-in, so the
+  // Core Audio tap itself is not running; the recorder, the stand-in's chunked writer and the mixer are.
+  mkdirSync(dataDir, { recursive: true });
+  writeFileSync(join(dataDir, 'demo-engine'), '');
+  console.log(`e2e macos: recording for ${longMinutes} minutes, system audio ${args.includes('--mic-only') ? 'off' : 'on'}`);
+  const ops = ['clock data', 'tap continue', 'clock data', 'clock +6000', 'clock data',
+    'tap open-settings', 'clock data', 'clock settle', ...(args.includes('--mic-only') ? ['clock data'] : ['tap capture-switch']), 'clock data', 'state captureOn', 'back', 'clock data',
+    'tap start-recording', 'clock data', 'clock settle', 'state rec.state'];
+  const startAt = ops.length;
+  for (let m = 0; m < longMinutes; m++) ops.push('clock +60000 real', 'state rec.state');
+  const stopAt = ops.length;
+  ops.push('tap stop-recording', 'clock data', 'clock settle');
+  for (let p = 0; p < 90; p++) ops.push('clock +2000 real', 'state detail.status');
+  ops.push('state detail.audio', 'state detail.title');
+  const samples = [];
+  const sampler = setInterval(() => samples.push({ at: Date.now(), mb: appFootprintMB() }), 500);
+  const replies = await drive(ops, { fresh: true });
+  clearInterval(sampler);
+  const near = (at) => samples.filter((s) => s.mb > 0).reduce((best, s) => (Math.abs(s.at - at) < Math.abs(best.at - at) ? s : best), { at: 0, mb: 0 }).mb;
+  const minutes = [];
+  for (let m = 0; m <= longMinutes; m++) minutes.push(Math.round(near(replies[m === 0 ? startAt - 1 : startAt + m * 2 - 1].at)));
+  const stopped = replies[stopAt].at;
+  const after = samples.filter((s) => s.at >= stopped && s.mb > 0).map((s) => s.mb);
+  const audio = String(value(replies.at(-2)));
+  const statuses = replies.slice(stopAt + 3, -2).map(value);
+  const file = join(dataDir, audio.replace('app:/data/', ''));
+  const probe = spawnSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', file], { encoding: 'utf8' });
+  const seconds = Number(probe.stdout.trim());
+  const micOnly = args.includes('--mic-only');
+  need(value(replies[10]) === !micOnly, `system audio is ${value(replies[10])}`);
+  need(micOnly || audio.endsWith('audio-mixed.m4a'), `the meeting kept ${audio}, not the mix`);
+  need(Math.abs(seconds - longMinutes * 60) < 30, `the mix lasts ${seconds} s`);
+  need(statuses.includes('done'), `the meeting ended as ${statuses.at(-1)}`);
+  need(minutes.at(-1) <= minutes[1] + 50, `memory grew from ${minutes[1]} MB at minute 1 to ${minutes.at(-1)} MB at minute ${longMinutes}`);
+  const result = {
+    host: 'macos', date: new Date().toISOString(), minutes: longMinutes,
+    method: 'physical footprint of the app process (proc_pid_rusage), sampled every 500 ms; one figure per minute of recording, and the peak from Stop until the meeting is done (the mix runs then)',
+    footprintMBPerMinute: minutes, peakAfterStopMB: Math.round(Math.max(0, ...after)), mixSeconds: seconds, audio, failures,
+  };
+  mkdirSync(out, { recursive: true });
+  writeFileSync(join(out, `long-recording-${longMinutes}min${args.includes('--mic-only') ? '-mic-only' : ''}.json`), `${JSON.stringify(result, null, 2)}\n`);
+  console.log(`footprint by minute (MB): ${minutes.join(', ')}`);
+  console.log(`peak from Stop to done: ${result.peakAfterStopMB} MB; mix ${seconds} s at ${audio}`);
+  for (const f of failures) console.log(`FAIL ${f}`);
+  console.log(failures.length === 0 ? 'long recording: ok' : `long recording: ${failures.length} failed`);
+  process.exit(failures.length === 0 ? 0 : 1);
+}
+
 console.log(`e2e macos ${tier}: preparing models`);
 // The welcome screen offers "Not now" only while the recommended tier is not on this machine yet.
 const welcome = await drive(['clock data', 'state setup.activeInstalled'], { fresh: true });
@@ -132,7 +188,7 @@ need(value(recorded.at(-3)) === 'done', `the tone recording ended as ${recorded.
 copyFileSync(FIXTURE, join(dataDir, String(audio).replace('app:/data/', '')));
 
 console.log(`running the pipeline ${cycles} times on the fixture`);
-const POLLS = tier === 'quality' ? 180 : 60;
+const POLLS = (tier === 'quality' ? 180 : 60) + Math.ceil(audioSeconds / 6);
 const ops = ['clock data', `tap "${firstTitle}"`, 'clock data', 'tap pane-transcript'];
 const marks = [];
 for (let c = 0; c < cycles; c++) {
@@ -163,7 +219,7 @@ const segments = value(replies[tail]);
 const notes = String(value(replies[tail + 1]));
 const title = String(value(replies[tail + 2]));
 const transcript = Array.isArray(segments) ? segments.map((s) => s.text).join(' ') : '';
-const wer = wordErrorRate(readFileSync(REFERENCE, 'utf8'), transcript);
+const wer = existsSync(REFERENCE) ? wordErrorRate(readFileSync(REFERENCE, 'utf8'), transcript) : null;
 
 const between = (from, to) => samples.filter((s) => s.at >= from && s.at <= to && s.mb > 0).map((s) => s.mb);
 const runs = marks.map((m) => {
@@ -185,7 +241,7 @@ const runs = marks.map((m) => {
 });
 
 for (const run of runs) need(run.finished, `cycle ${run.cycle} did not reach done within ${POLLS} s`);
-need(wer.rate <= WER_LIMIT, `word error rate ${(wer.rate * 100).toFixed(1)}% is over ${WER_LIMIT * 100}%`);
+if (wer) need(wer.rate <= WER_LIMIT, `word error rate ${(wer.rate * 100).toFixed(1)}% is over ${WER_LIMIT * 100}%`);
 for (const heading of HEADINGS) need(notes.includes(heading), `the notes lack "${heading}"`);
 need(title !== '' && title !== 'Untitled meeting', 'the notes model proposed no title');
 const idle = runs.map((r) => r.idleMB).filter(Number.isFinite);
@@ -196,22 +252,24 @@ if (idle.length >= 2) {
 const result = {
   host: 'macos', tier, date: new Date().toISOString(),
   method: {
-    audio: 'tools/fixture/meeting-fixture.wav (53 s synthetic three-speaker meeting), copied over the recorded take',
+    audio: FIXTURE === DEFAULT_FIXTURE
+      ? 'tools/fixture/meeting-fixture.wav (53 s synthetic three-speaker meeting), copied over the recorded take'
+      : `${Math.round(audioSeconds)} s recording given with --fixture, copied over the recorded take`,
     wer: 'lowercase, punctuation stripped, word-level edit distance, no number normalization',
     timing: 'wall time between agent replies polled once a second, so each figure is accurate to about one second',
     memory: 'physical footprint of the app process (proc_pid_rusage), sampled every 250 ms; idle is the lowest sample in the 3 s that end a cycle, about a minute after the notes finish',
   },
   downloadSeconds: Math.round(downloadSeconds),
-  wer: { ...wer, rate: Number(wer.rate.toFixed(4)) },
+  wer: wer ? { ...wer, rate: Number(wer.rate.toFixed(4)) } : undefined,
   title, transcript, notes, runs, failures,
 };
-writeFileSync(join(out, `e2e-${tier}.json`), `${JSON.stringify(result, null, 2)}\n`);
+writeFileSync(join(out, FIXTURE === DEFAULT_FIXTURE ? `e2e-${tier}.json` : `e2e-${tier}-custom.json`), `${JSON.stringify(result, null, 2)}\n`);
 
 // Best effort: a sleeping display or a locked screen gives no picture, and that must not cost the measurements.
 await drive(['clock data', `tap "${title}"`, 'clock data', `screenshot ${join(out, `notes-${tier}.png`)}`])
   .catch((e) => console.log(`no screenshot: ${e.message.split(':').slice(0, 2).join(':')}`));
 
-console.log(`word error rate: ${(wer.rate * 100).toFixed(1)}% (${wer.errors} of ${wer.words})`);
+console.log(wer ? `word error rate: ${(wer.rate * 100).toFixed(1)}% (${wer.errors} of ${wer.words})` : 'word error rate: not checked (no reference transcript)');
 console.log(`title: ${title}`);
 for (const r of runs) {
   console.log(`cycle ${r.cycle}: transcribe ${r.transcribeSeconds} s, notes ${r.notesSeconds} s, total ${r.totalSeconds} s, peak ${r.peakMB} MB, idle after ${r.idleMB} MB`);

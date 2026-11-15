@@ -1,0 +1,452 @@
+clock data
+  {"clock":0,"settled":true}
+tap continue
+  {"at":[550,674],"tapped":28,"target":"continue","delivery":"platform","carrier":"web","mode":"agent","clock":0,"epoch":18,"incarnation":1}
+clock data
+  {"clock":0,"settled":true}
+clock +6000
+  {"clock":6000}
+clock data
+  {"clock":6000,"settled":true}
+tap new-note-button
+  {"at":[550,198.59375],"tapped":60,"target":"new-note-button","delivery":"platform","carrier":"web","mode":"agent","clock":6000,"epoch":27,"incarnation":1}
+clock settle
+  {"clock":6400,"settled":true}
+type new-ref Bed 4
+  {"at":[550,150],"typed":80,"target":"new-ref","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":28,"incarnation":1}
+tap start-recording
+  {"at":[550,694],"tapped":116,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":41,"incarnation":1}
+clock data
+  {"clock":6400,"settled":true}
+clock settle
+  {"clock":6800,"settled":true}
+screenshot docs/media/clinic/default/web/toolbar/01-jottings-pad.png
+  {"clock":6800,"epoch":47,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar/01-jottings-pad.png","w":1100,"h":760}
+type record-jottings Agenda
+  {"at":[550,536.5],"typed":120,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":50,"incarnation":1}
+type record-jottings key Meta+a
+  {"at":[550,536.5],"typed":120,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":50,"incarnation":1}
+tap rec-bold
+  {"at":[318,414.5],"tapped":143,"target":"rec-bold","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":53,"incarnation":1}
+clock data
+  {"clock":6800,"settled":true}
+state recJottings
+  "**Agenda**"
+tree rec-bold
+  {"nodes":[{"id":143,"type":"Pressable","depth":8,"props":{"testId":"rec-bold","accessibilityRole":"button","accessibilityLabel":"Bold","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[144]},{"id":144,"type":"Text","depth":9,"props":{"text":"B","accessibilityElementsHidden":true},"children":[]}],"roots":[143],"clock":6800,"epoch":53,"incarnation":1}
+screenshot docs/media/clinic/default/web/toolbar/02-rec-bold.png
+  {"clock":6800,"epoch":53,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar/02-rec-bold.png","w":1100,"h":760}
+type record-jottings Agenda
+  {"at":[550,536.5],"typed":120,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":57,"incarnation":1}
+type record-jottings key Meta+a
+  {"at":[550,536.5],"typed":120,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":57,"incarnation":1}
+tap rec-italic
+  {"at":[386,414.5],"tapped":145,"target":"rec-italic","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":60,"incarnation":1}
+clock data
+  {"clock":6800,"settled":true}
+state recJottings
+  "*Agenda*"
+tree rec-italic
+  {"nodes":[{"id":145,"type":"Pressable","depth":8,"props":{"testId":"rec-italic","accessibilityRole":"button","accessibilityLabel":"Italic","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[146]},{"id":146,"type":"Text","depth":9,"props":{"text":"I","accessibilityElementsHidden":true},"children":[]}],"roots":[145],"clock":6800,"epoch":60,"incarnation":1}
+type record-jottings Agenda
+  {"at":[550,536.5],"typed":120,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":62,"incarnation":1}
+type record-jottings key Meta+a
+  {"at":[550,536.5],"typed":120,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":62,"incarnation":1}
+tap rec-strike
+  {"at":[454,414.5],"tapped":147,"target":"rec-strike","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":65,"incarnation":1}
+clock data
+  {"clock":6800,"settled":true}
+state recJottings
+  "~~Agenda~~"
+tree rec-strike
+  {"nodes":[{"id":147,"type":"Pressable","depth":8,"props":{"testId":"rec-strike","accessibilityRole":"button","accessibilityLabel":"Strikethrough","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[148]},{"id":148,"type":"Text","depth":9,"props":{"text":"S","accessibilityElementsHidden":true},"children":[]}],"roots":[147],"clock":6800,"epoch":65,"incarnation":1}
+screenshot docs/media/clinic/default/web/toolbar/03-rec-strike.png
+  {"clock":6800,"epoch":65,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar/03-rec-strike.png","w":1100,"h":760}
+type record-jottings Agenda
+  {"at":[550,536.5],"typed":120,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":69,"incarnation":1}
+tap rec-title
+  {"at":[526.1875,414.5],"tapped":150,"target":"rec-title","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":72,"incarnation":1}
+clock data
+  {"clock":6800,"settled":true}
+state recJottings
+  "## Agenda"
+tree rec-title
+  {"nodes":[{"id":150,"type":"Pressable","depth":8,"props":{"testId":"rec-title","accessibilityRole":"button","accessibilityLabel":"Title","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[151]},{"id":151,"type":"Text","depth":9,"props":{"text":"Title"},"children":[]}],"roots":[150],"clock":6800,"epoch":72,"incarnation":1}
+tree rec-plain
+  {"nodes":[{"id":154,"type":"Pressable","depth":8,"props":{"testId":"rec-plain","accessibilityRole":"button","accessibilityLabel":"Plain text","accessibilityPressed":"false","type":"button"},"handlers":["press"],"children":[155]},{"id":155,"type":"Text","depth":9,"props":{"text":"Text"},"children":[]}],"roots":[154],"clock":6800,"epoch":72,"incarnation":1}
+screenshot docs/media/clinic/default/web/toolbar/04-rec-title.png
+  {"clock":6800,"epoch":72,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar/04-rec-title.png","w":1100,"h":760}
+tap rec-subtitle
+  {"at":[596.9453125,414.5],"tapped":152,"target":"rec-subtitle","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":77,"incarnation":1}
+clock data
+  {"clock":6800,"settled":true}
+state recJottings
+  "### Agenda"
+tree rec-subtitle
+  {"nodes":[{"id":152,"type":"Pressable","depth":8,"props":{"testId":"rec-subtitle","accessibilityRole":"button","accessibilityLabel":"Subtitle","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[153]},{"id":153,"type":"Text","depth":9,"props":{"text":"Subtitle"},"children":[]}],"roots":[152],"clock":6800,"epoch":77,"incarnation":1}
+tree rec-title
+  {"nodes":[{"id":150,"type":"Pressable","depth":8,"props":{"testId":"rec-title","accessibilityRole":"button","accessibilityLabel":"Title","accessibilityPressed":"false","type":"button"},"handlers":["press"],"children":[151]},{"id":151,"type":"Text","depth":9,"props":{"text":"Title"},"children":[]}],"roots":[150],"clock":6800,"epoch":77,"incarnation":1}
+tap rec-plain
+  {"at":[665.6953125,414.5],"tapped":154,"target":"rec-plain","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":80,"incarnation":1}
+clock data
+  {"clock":6800,"settled":true}
+state recJottings
+  "Agenda"
+tree rec-plain
+  {"nodes":[{"id":154,"type":"Pressable","depth":8,"props":{"testId":"rec-plain","accessibilityRole":"button","accessibilityLabel":"Plain text","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[155]},{"id":155,"type":"Text","depth":9,"props":{"text":"Text"},"children":[]}],"roots":[154],"clock":6800,"epoch":80,"incarnation":1}
+tree rec-subtitle
+  {"nodes":[{"id":152,"type":"Pressable","depth":8,"props":{"testId":"rec-subtitle","accessibilityRole":"button","accessibilityLabel":"Subtitle","accessibilityPressed":"false","type":"button"},"handlers":["press"],"children":[153]},{"id":153,"type":"Text","depth":9,"props":{"text":"Subtitle"},"children":[]}],"roots":[152],"clock":6800,"epoch":80,"incarnation":1}
+type record-jottings Agenda
+  {"at":[550,536.5],"typed":120,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":80,"incarnation":1}
+tap rec-bullet
+  {"at":[749.9453125,414.5],"tapped":157,"target":"rec-bullet","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":83,"incarnation":1}
+clock data
+  {"clock":6800,"settled":true}
+state recJottings
+  "- Agenda"
+tree rec-bullet
+  {"nodes":[{"id":157,"type":"Pressable","depth":8,"props":{"testId":"rec-bullet","accessibilityRole":"button","accessibilityLabel":"Bulleted list","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[158,159]},{"id":158,"type":"Image","depth":9,"props":{"imageSource":"symbol:list","accessibilityElementsHidden":true},"children":[]},{"id":159,"type":"Text","depth":9,"props":{"text":"Bullets"},"children":[]}],"roots":[157],"clock":6800,"epoch":83,"incarnation":1}
+screenshot docs/media/clinic/default/web/toolbar/05-rec-bullet.png
+  {"clock":6800,"epoch":83,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar/05-rec-bullet.png","w":1100,"h":760}
+tree rec-plain
+  {"nodes":[{"id":154,"type":"Pressable","depth":8,"props":{"testId":"rec-plain","accessibilityRole":"button","accessibilityLabel":"Plain text","accessibilityPressed":"false","type":"button"},"handlers":["press"],"children":[155]},{"id":155,"type":"Text","depth":9,"props":{"text":"Text"},"children":[]}],"roots":[154],"clock":6800,"epoch":85,"incarnation":1}
+tap rec-plain
+  {"at":[665.6953125,414.5],"tapped":154,"target":"rec-plain","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":88,"incarnation":1}
+clock data
+  {"clock":6800,"settled":true}
+state recJottings
+  "Agenda"
+tree rec-plain
+  {"nodes":[{"id":154,"type":"Pressable","depth":8,"props":{"testId":"rec-plain","accessibilityRole":"button","accessibilityLabel":"Plain text","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[155]},{"id":155,"type":"Text","depth":9,"props":{"text":"Text"},"children":[]}],"roots":[154],"clock":6800,"epoch":88,"incarnation":1}
+tree rec-bullet
+  {"nodes":[{"id":157,"type":"Pressable","depth":8,"props":{"testId":"rec-bullet","accessibilityRole":"button","accessibilityLabel":"Bulleted list","accessibilityPressed":"false","type":"button"},"handlers":["press"],"children":[158,159]},{"id":158,"type":"Image","depth":9,"props":{"imageSource":"symbol:list","accessibilityElementsHidden":true},"children":[]},{"id":159,"type":"Text","depth":9,"props":{"text":"Bullets"},"children":[]}],"roots":[157],"clock":6800,"epoch":88,"incarnation":1}
+type record-jottings Agenda
+  {"at":[550,536.5],"typed":120,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":88,"incarnation":1}
+tap rec-ordered
+  {"at":[762.234375,414.5],"tapped":160,"target":"rec-ordered","scrolled":{"from":[852.234375,414.5],"to":[762.234375,414.5]},"delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":91,"incarnation":1}
+clock data
+  {"clock":6800,"settled":true}
+state recJottings
+  "1. Agenda"
+tree rec-ordered
+  {"nodes":[{"id":160,"type":"Pressable","depth":8,"props":{"testId":"rec-ordered","accessibilityRole":"button","accessibilityLabel":"Numbered list","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[161,162]},{"id":161,"type":"Text","depth":9,"props":{"text":"1.","accessibilityElementsHidden":true},"children":[]},{"id":162,"type":"Text","depth":9,"props":{"text":"Numbers"},"children":[]}],"roots":[160],"clock":6800,"epoch":91,"incarnation":1}
+tree rec-bullet
+  {"nodes":[{"id":157,"type":"Pressable","depth":8,"props":{"testId":"rec-bullet","accessibilityRole":"button","accessibilityLabel":"Bulleted list","accessibilityPressed":"false","type":"button"},"handlers":["press"],"children":[158,159]},{"id":158,"type":"Image","depth":9,"props":{"imageSource":"symbol:list","accessibilityElementsHidden":true},"children":[]},{"id":159,"type":"Text","depth":9,"props":{"text":"Bullets"},"children":[]}],"roots":[157],"clock":6800,"epoch":91,"incarnation":1}
+type record-jottings Agenda
+  {"at":[550,536.5],"typed":120,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":93,"incarnation":1}
+tap rec-task
+  {"at":[770.703125,414.5],"tapped":163,"target":"rec-task","scrolled":{"from":[861.703125,414.5],"to":[770.703125,414.5]},"delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":96,"incarnation":1}
+clock data
+  {"clock":6800,"settled":true}
+state recJottings
+  "- [ ] Agenda"
+tree rec-task
+  {"nodes":[{"id":163,"type":"Pressable","depth":8,"props":{"testId":"rec-task","accessibilityRole":"button","accessibilityLabel":"Checklist","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[164,165]},{"id":164,"type":"Image","depth":9,"props":{"imageSource":"symbol:checkmark","accessibilityElementsHidden":true},"children":[]},{"id":165,"type":"Text","depth":9,"props":{"text":"To-do"},"children":[]}],"roots":[163],"clock":6800,"epoch":96,"incarnation":1}
+screenshot docs/media/clinic/default/web/toolbar/06-rec-checklist.png
+  {"clock":6800,"epoch":96,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar/06-rec-checklist.png","w":1100,"h":760}
+type record-jottings Agenda
+  {"at":[550,536.5],"typed":120,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":100,"incarnation":1}
+tap rec-quote
+  {"at":[769.7578125,414.5],"tapped":166,"target":"rec-quote","scrolled":{"from":[861.7578125,414.5],"to":[769.7578125,414.5]},"delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":103,"incarnation":1}
+clock data
+  {"clock":6800,"settled":true}
+state recJottings
+  "> Agenda"
+tree rec-quote
+  {"nodes":[{"id":166,"type":"Pressable","depth":8,"props":{"testId":"rec-quote","accessibilityRole":"button","accessibilityLabel":"Quote","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[167,168]},{"id":167,"type":"Image","depth":9,"props":{"imageSource":"symbol:quote","accessibilityElementsHidden":true},"children":[]},{"id":168,"type":"Text","depth":9,"props":{"text":"Quote"},"children":[]}],"roots":[166],"clock":6800,"epoch":103,"incarnation":1}
+screenshot docs/media/clinic/default/web/toolbar/07-rec-quote.png
+  {"clock":6800,"epoch":103,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar/07-rec-quote.png","w":1100,"h":760}
+type record-jottings Alona site
+  {"at":[550,536.5],"typed":120,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":107,"incarnation":1}
+type record-jottings key Meta+a
+  {"at":[550,536.5],"typed":120,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":107,"incarnation":1}
+tap rec-link
+  {"at":[777.0703125,414.5],"tapped":169,"target":"rec-link","scrolled":{"from":[937.0703125,414.5],"to":[777.0703125,414.5]},"delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":108,"incarnation":1}
+clock settle
+  {"clock":6800,"settled":true}
+type rec-link-url https://example.com
+  {"at":[454.7265625,443.5],"typed":173,"target":"rec-link-url","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":109,"incarnation":1}
+tap rec-link-apply
+  {"at":[676.234375,443.5],"tapped":175,"target":"rec-link-apply","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":112,"incarnation":1}
+clock data
+  {"clock":6800,"settled":true}
+state recJottings
+  "[Alona site](https://example.com)"
+tree rec-link
+  {"nodes":[{"id":169,"type":"Pressable","depth":8,"props":{"testId":"rec-link","accessibilityRole":"button","accessibilityLabel":"Link","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[170,171]},{"id":170,"type":"Image","depth":9,"props":{"imageSource":"symbol:link","accessibilityElementsHidden":true},"children":[]},{"id":171,"type":"Text","depth":9,"props":{"text":"Link"},"children":[]}],"roots":[169],"clock":6800,"epoch":112,"incarnation":1}
+screenshot docs/media/clinic/default/web/toolbar/08-rec-link.png
+  {"clock":6800,"epoch":112,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar/08-rec-link.png","w":1100,"h":760}
+type record-jottings Plain **bold**
+  {"at":[550,536.5],"typed":120,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":116,"incarnation":1}
+type record-jottings key Home
+  {"at":[550,536.5],"typed":120,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":116,"incarnation":1}
+clock data
+  {"clock":6800,"settled":true}
+tree rec-bold
+  {"nodes":[{"id":143,"type":"Pressable","depth":8,"props":{"testId":"rec-bold","accessibilityRole":"button","accessibilityLabel":"Bold","accessibilityPressed":"false","type":"button"},"handlers":["press"],"children":[144]},{"id":144,"type":"Text","depth":9,"props":{"text":"B","accessibilityElementsHidden":true},"children":[]}],"roots":[143],"clock":6800,"epoch":116,"incarnation":1}
+screenshot docs/media/clinic/default/web/toolbar/09-rec-caret-in-plain.png
+  {"clock":6800,"epoch":116,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar/09-rec-caret-in-plain.png","w":1100,"h":760}
+type record-jottings key End
+  {"at":[550,536.5],"typed":120,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":119,"incarnation":1}
+clock data
+  {"clock":6800,"settled":true}
+tree rec-bold
+  {"nodes":[{"id":143,"type":"Pressable","depth":8,"props":{"testId":"rec-bold","accessibilityRole":"button","accessibilityLabel":"Bold","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[144]},{"id":144,"type":"Text","depth":9,"props":{"text":"B","accessibilityElementsHidden":true},"children":[]}],"roots":[143],"clock":6800,"epoch":119,"incarnation":1}
+screenshot docs/media/clinic/default/web/toolbar/10-rec-caret-in-bold.png
+  {"clock":6800,"epoch":119,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar/10-rec-caret-in-bold.png","w":1100,"h":760}
+type record-jottings Agenda
+  {"at":[550,536.5],"typed":120,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":124,"incarnation":1}
+type record-jottings key Meta+a
+  {"at":[550,536.5],"typed":120,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":124,"incarnation":1}
+type record-jottings key Meta+b
+  {"at":[550,536.5],"typed":120,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":126,"incarnation":1}
+clock data
+  {"clock":6800,"settled":true}
+state recJottings
+  "**Agenda**"
+tree rec-bold
+  {"nodes":[{"id":143,"type":"Pressable","depth":8,"props":{"testId":"rec-bold","accessibilityRole":"button","accessibilityLabel":"Bold","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[144]},{"id":144,"type":"Text","depth":9,"props":{"text":"B","accessibilityElementsHidden":true},"children":[]}],"roots":[143],"clock":6800,"epoch":126,"incarnation":1}
+screenshot docs/media/clinic/default/web/toolbar/11-rec-shortcut-bold.png
+  {"clock":6800,"epoch":126,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar/11-rec-shortcut-bold.png","w":1100,"h":760}
+clock +5000
+  {"clock":11800}
+tap stop-recording
+  {"at":[550,293.5],"tapped":134,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":11800,"epoch":147,"incarnation":1}
+clock data
+  {"clock":11800,"settled":true}
+clock settle
+  {"clock":12200,"settled":true}
+clock +12000
+  {"clock":24200}
+clock data
+  {"clock":24200,"settled":true}
+state detail.state
+  "draft"
+tap edit-note
+  {"at":[253.34375,674],"tapped":213,"target":"edit-note","scrolled":{"from":[253.34375,857],"to":[253.34375,674]},"delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":187,"incarnation":1}
+clock settle
+  {"clock":24200,"settled":true}
+screenshot docs/media/clinic/default/web/toolbar/12-draft-pad.png
+  {"clock":24200,"epoch":187,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar/12-draft-pad.png","w":1100,"h":760}
+type note-editor Agenda
+  {"at":[550,431.65625],"typed":226,"target":"note-editor","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":192,"incarnation":1}
+type note-editor key Meta+a
+  {"at":[550,469],"typed":226,"target":"note-editor","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":192,"incarnation":1}
+tap draft-bold
+  {"at":[238,277],"tapped":231,"target":"draft-bold","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":195,"incarnation":1}
+clock data
+  {"clock":24200,"settled":true}
+state editDraft
+  "**Agenda**"
+tree draft-bold
+  {"nodes":[{"id":231,"type":"Pressable","depth":8,"props":{"testId":"draft-bold","accessibilityRole":"button","accessibilityLabel":"Bold","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[232]},{"id":232,"type":"Text","depth":9,"props":{"text":"B","accessibilityElementsHidden":true},"children":[]}],"roots":[231],"clock":24200,"epoch":195,"incarnation":1}
+screenshot docs/media/clinic/default/web/toolbar/13-draft-bold.png
+  {"clock":24200,"epoch":195,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar/13-draft-bold.png","w":1100,"h":760}
+type note-editor Agenda
+  {"at":[550,469],"typed":226,"target":"note-editor","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":199,"incarnation":1}
+type note-editor key Meta+a
+  {"at":[550,469],"typed":226,"target":"note-editor","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":199,"incarnation":1}
+tap draft-italic
+  {"at":[306,277],"tapped":233,"target":"draft-italic","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":202,"incarnation":1}
+clock data
+  {"clock":24200,"settled":true}
+state editDraft
+  "*Agenda*"
+tree draft-italic
+  {"nodes":[{"id":233,"type":"Pressable","depth":8,"props":{"testId":"draft-italic","accessibilityRole":"button","accessibilityLabel":"Italic","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[234]},{"id":234,"type":"Text","depth":9,"props":{"text":"I","accessibilityElementsHidden":true},"children":[]}],"roots":[233],"clock":24200,"epoch":202,"incarnation":1}
+type note-editor Agenda
+  {"at":[550,469],"typed":226,"target":"note-editor","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":204,"incarnation":1}
+type note-editor key Meta+a
+  {"at":[550,469],"typed":226,"target":"note-editor","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":204,"incarnation":1}
+tap draft-strike
+  {"at":[374,277],"tapped":235,"target":"draft-strike","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":207,"incarnation":1}
+clock data
+  {"clock":24200,"settled":true}
+state editDraft
+  "~~Agenda~~"
+tree draft-strike
+  {"nodes":[{"id":235,"type":"Pressable","depth":8,"props":{"testId":"draft-strike","accessibilityRole":"button","accessibilityLabel":"Strikethrough","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[236]},{"id":236,"type":"Text","depth":9,"props":{"text":"S","accessibilityElementsHidden":true},"children":[]}],"roots":[235],"clock":24200,"epoch":207,"incarnation":1}
+screenshot docs/media/clinic/default/web/toolbar/14-draft-strike.png
+  {"clock":24200,"epoch":207,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar/14-draft-strike.png","w":1100,"h":760}
+type note-editor Agenda
+  {"at":[550,469],"typed":226,"target":"note-editor","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":211,"incarnation":1}
+tap draft-title
+  {"at":[446.1875,277],"tapped":238,"target":"draft-title","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":214,"incarnation":1}
+clock data
+  {"clock":24200,"settled":true}
+state editDraft
+  "## Agenda"
+tree draft-title
+  {"nodes":[{"id":238,"type":"Pressable","depth":8,"props":{"testId":"draft-title","accessibilityRole":"button","accessibilityLabel":"Title","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[239]},{"id":239,"type":"Text","depth":9,"props":{"text":"Title"},"children":[]}],"roots":[238],"clock":24200,"epoch":214,"incarnation":1}
+tree draft-plain
+  {"nodes":[{"id":242,"type":"Pressable","depth":8,"props":{"testId":"draft-plain","accessibilityRole":"button","accessibilityLabel":"Plain text","accessibilityPressed":"false","type":"button"},"handlers":["press"],"children":[243]},{"id":243,"type":"Text","depth":9,"props":{"text":"Text"},"children":[]}],"roots":[242],"clock":24200,"epoch":214,"incarnation":1}
+screenshot docs/media/clinic/default/web/toolbar/15-draft-title.png
+  {"clock":24200,"epoch":214,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar/15-draft-title.png","w":1100,"h":760}
+tap draft-subtitle
+  {"at":[516.9453125,277],"tapped":240,"target":"draft-subtitle","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":219,"incarnation":1}
+clock data
+  {"clock":24200,"settled":true}
+state editDraft
+  "### Agenda"
+tree draft-subtitle
+  {"nodes":[{"id":240,"type":"Pressable","depth":8,"props":{"testId":"draft-subtitle","accessibilityRole":"button","accessibilityLabel":"Subtitle","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[241]},{"id":241,"type":"Text","depth":9,"props":{"text":"Subtitle"},"children":[]}],"roots":[240],"clock":24200,"epoch":219,"incarnation":1}
+tree draft-title
+  {"nodes":[{"id":238,"type":"Pressable","depth":8,"props":{"testId":"draft-title","accessibilityRole":"button","accessibilityLabel":"Title","accessibilityPressed":"false","type":"button"},"handlers":["press"],"children":[239]},{"id":239,"type":"Text","depth":9,"props":{"text":"Title"},"children":[]}],"roots":[238],"clock":24200,"epoch":219,"incarnation":1}
+tap draft-plain
+  {"at":[585.6953125,277],"tapped":242,"target":"draft-plain","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":222,"incarnation":1}
+clock data
+  {"clock":24200,"settled":true}
+state editDraft
+  "Agenda"
+tree draft-plain
+  {"nodes":[{"id":242,"type":"Pressable","depth":8,"props":{"testId":"draft-plain","accessibilityRole":"button","accessibilityLabel":"Plain text","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[243]},{"id":243,"type":"Text","depth":9,"props":{"text":"Text"},"children":[]}],"roots":[242],"clock":24200,"epoch":222,"incarnation":1}
+tree draft-subtitle
+  {"nodes":[{"id":240,"type":"Pressable","depth":8,"props":{"testId":"draft-subtitle","accessibilityRole":"button","accessibilityLabel":"Subtitle","accessibilityPressed":"false","type":"button"},"handlers":["press"],"children":[241]},{"id":241,"type":"Text","depth":9,"props":{"text":"Subtitle"},"children":[]}],"roots":[240],"clock":24200,"epoch":222,"incarnation":1}
+type note-editor Agenda
+  {"at":[550,469],"typed":226,"target":"note-editor","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":222,"incarnation":1}
+tap draft-bullet
+  {"at":[669.9453125,277],"tapped":245,"target":"draft-bullet","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":225,"incarnation":1}
+clock data
+  {"clock":24200,"settled":true}
+state editDraft
+  "- Agenda"
+tree draft-bullet
+  {"nodes":[{"id":245,"type":"Pressable","depth":8,"props":{"testId":"draft-bullet","accessibilityRole":"button","accessibilityLabel":"Bulleted list","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[246,247]},{"id":246,"type":"Image","depth":9,"props":{"imageSource":"symbol:list","accessibilityElementsHidden":true},"children":[]},{"id":247,"type":"Text","depth":9,"props":{"text":"Bullets"},"children":[]}],"roots":[245],"clock":24200,"epoch":225,"incarnation":1}
+screenshot docs/media/clinic/default/web/toolbar/16-draft-bullet.png
+  {"clock":24200,"epoch":225,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar/16-draft-bullet.png","w":1100,"h":760}
+tree draft-plain
+  {"nodes":[{"id":242,"type":"Pressable","depth":8,"props":{"testId":"draft-plain","accessibilityRole":"button","accessibilityLabel":"Plain text","accessibilityPressed":"false","type":"button"},"handlers":["press"],"children":[243]},{"id":243,"type":"Text","depth":9,"props":{"text":"Text"},"children":[]}],"roots":[242],"clock":24200,"epoch":227,"incarnation":1}
+tap draft-plain
+  {"at":[585.6953125,277],"tapped":242,"target":"draft-plain","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":230,"incarnation":1}
+clock data
+  {"clock":24200,"settled":true}
+state editDraft
+  "Agenda"
+tree draft-plain
+  {"nodes":[{"id":242,"type":"Pressable","depth":8,"props":{"testId":"draft-plain","accessibilityRole":"button","accessibilityLabel":"Plain text","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[243]},{"id":243,"type":"Text","depth":9,"props":{"text":"Text"},"children":[]}],"roots":[242],"clock":24200,"epoch":230,"incarnation":1}
+tree draft-bullet
+  {"nodes":[{"id":245,"type":"Pressable","depth":8,"props":{"testId":"draft-bullet","accessibilityRole":"button","accessibilityLabel":"Bulleted list","accessibilityPressed":"false","type":"button"},"handlers":["press"],"children":[246,247]},{"id":246,"type":"Image","depth":9,"props":{"imageSource":"symbol:list","accessibilityElementsHidden":true},"children":[]},{"id":247,"type":"Text","depth":9,"props":{"text":"Bullets"},"children":[]}],"roots":[245],"clock":24200,"epoch":230,"incarnation":1}
+type note-editor Agenda
+  {"at":[550,469],"typed":226,"target":"note-editor","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":230,"incarnation":1}
+tap draft-ordered
+  {"at":[772.234375,277],"tapped":248,"target":"draft-ordered","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":233,"incarnation":1}
+clock data
+  {"clock":24200,"settled":true}
+state editDraft
+  "1. Agenda"
+tree draft-ordered
+  {"nodes":[{"id":248,"type":"Pressable","depth":8,"props":{"testId":"draft-ordered","accessibilityRole":"button","accessibilityLabel":"Numbered list","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[249,250]},{"id":249,"type":"Text","depth":9,"props":{"text":"1.","accessibilityElementsHidden":true},"children":[]},{"id":250,"type":"Text","depth":9,"props":{"text":"Numbers"},"children":[]}],"roots":[248],"clock":24200,"epoch":233,"incarnation":1}
+tree draft-bullet
+  {"nodes":[{"id":245,"type":"Pressable","depth":8,"props":{"testId":"draft-bullet","accessibilityRole":"button","accessibilityLabel":"Bulleted list","accessibilityPressed":"false","type":"button"},"handlers":["press"],"children":[246,247]},{"id":246,"type":"Image","depth":9,"props":{"imageSource":"symbol:list","accessibilityElementsHidden":true},"children":[]},{"id":247,"type":"Text","depth":9,"props":{"text":"Bullets"},"children":[]}],"roots":[245],"clock":24200,"epoch":233,"incarnation":1}
+type note-editor Agenda
+  {"at":[550,469],"typed":226,"target":"note-editor","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":235,"incarnation":1}
+tap draft-task
+  {"at":[871.703125,277],"tapped":251,"target":"draft-task","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":238,"incarnation":1}
+clock data
+  {"clock":24200,"settled":true}
+state editDraft
+  "- [ ] Agenda"
+tree draft-task
+  {"nodes":[{"id":251,"type":"Pressable","depth":8,"props":{"testId":"draft-task","accessibilityRole":"button","accessibilityLabel":"Checklist","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[252,253]},{"id":252,"type":"Image","depth":9,"props":{"imageSource":"symbol:checkmark","accessibilityElementsHidden":true},"children":[]},{"id":253,"type":"Text","depth":9,"props":{"text":"To-do"},"children":[]}],"roots":[251],"clock":24200,"epoch":238,"incarnation":1}
+screenshot docs/media/clinic/default/web/toolbar/17-draft-checklist.png
+  {"clock":24200,"epoch":238,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar/17-draft-checklist.png","w":1100,"h":760}
+type note-editor Agenda
+  {"at":[550,469],"typed":226,"target":"note-editor","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":242,"incarnation":1}
+tap draft-quote
+  {"at":[849.7578125,384],"tapped":254,"target":"draft-quote","scrolled":{"from":[962.7578125,277],"to":[849.7578125,384]},"delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":245,"incarnation":1}
+clock data
+  {"clock":24200,"settled":true}
+state editDraft
+  "> Agenda"
+tree draft-quote
+  {"nodes":[{"id":254,"type":"Pressable","depth":8,"props":{"testId":"draft-quote","accessibilityRole":"button","accessibilityLabel":"Quote","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[255,256]},{"id":255,"type":"Image","depth":9,"props":{"imageSource":"symbol:quote","accessibilityElementsHidden":true},"children":[]},{"id":256,"type":"Text","depth":9,"props":{"text":"Quote"},"children":[]}],"roots":[254],"clock":24200,"epoch":245,"incarnation":1}
+screenshot docs/media/clinic/default/web/toolbar/18-draft-quote.png
+  {"clock":24200,"epoch":245,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar/18-draft-quote.png","w":1100,"h":760}
+type note-editor Alona site
+  {"at":[550,576],"typed":226,"target":"note-editor","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":249,"incarnation":1}
+type note-editor key Meta+a
+  {"at":[550,576],"typed":226,"target":"note-editor","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":249,"incarnation":1}
+tap draft-link
+  {"at":[857.0703125,384],"tapped":257,"target":"draft-link","scrolled":{"from":[934.0703125,384],"to":[857.0703125,384]},"delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":250,"incarnation":1}
+clock settle
+  {"clock":24200,"settled":true}
+type draft-link-url https://example.com
+  {"at":[454.7265625,434],"typed":265,"target":"draft-link-url","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":251,"incarnation":1}
+tap draft-link-apply
+  {"at":[756.234375,434],"tapped":267,"target":"draft-link-apply","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":254,"incarnation":1}
+clock data
+  {"clock":24200,"settled":true}
+state editDraft
+  "[Alona site](https://example.com)"
+tree draft-link
+  {"nodes":[{"id":257,"type":"Pressable","depth":8,"props":{"testId":"draft-link","accessibilityRole":"button","accessibilityLabel":"Link","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[258,259]},{"id":258,"type":"Image","depth":9,"props":{"imageSource":"symbol:link","accessibilityElementsHidden":true},"children":[]},{"id":259,"type":"Text","depth":9,"props":{"text":"Link"},"children":[]}],"roots":[257],"clock":24200,"epoch":254,"incarnation":1}
+screenshot docs/media/clinic/default/web/toolbar/19-draft-link.png
+  {"clock":24200,"epoch":254,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar/19-draft-link.png","w":1100,"h":760}
+type note-editor Plain **bold**
+  {"at":[550,576],"typed":226,"target":"note-editor","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":258,"incarnation":1}
+type note-editor key Home
+  {"at":[550,576],"typed":226,"target":"note-editor","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":258,"incarnation":1}
+clock data
+  {"clock":24200,"settled":true}
+tree draft-bold
+  {"nodes":[{"id":231,"type":"Pressable","depth":8,"props":{"testId":"draft-bold","accessibilityRole":"button","accessibilityLabel":"Bold","accessibilityPressed":"false","type":"button"},"handlers":["press"],"children":[232]},{"id":232,"type":"Text","depth":9,"props":{"text":"B","accessibilityElementsHidden":true},"children":[]}],"roots":[231],"clock":24200,"epoch":258,"incarnation":1}
+screenshot docs/media/clinic/default/web/toolbar/20-draft-caret-in-plain.png
+  {"clock":24200,"epoch":258,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar/20-draft-caret-in-plain.png","w":1100,"h":760}
+type note-editor key End
+  {"at":[550,576],"typed":226,"target":"note-editor","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":261,"incarnation":1}
+clock data
+  {"clock":24200,"settled":true}
+tree draft-bold
+  {"nodes":[{"id":231,"type":"Pressable","depth":8,"props":{"testId":"draft-bold","accessibilityRole":"button","accessibilityLabel":"Bold","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[232]},{"id":232,"type":"Text","depth":9,"props":{"text":"B","accessibilityElementsHidden":true},"children":[]}],"roots":[231],"clock":24200,"epoch":261,"incarnation":1}
+screenshot docs/media/clinic/default/web/toolbar/21-draft-caret-in-bold.png
+  {"clock":24200,"epoch":261,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar/21-draft-caret-in-bold.png","w":1100,"h":760}
+type note-editor Agenda
+  {"at":[550,576],"typed":226,"target":"note-editor","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":266,"incarnation":1}
+type note-editor key Meta+a
+  {"at":[550,576],"typed":226,"target":"note-editor","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":266,"incarnation":1}
+type note-editor key Meta+b
+  {"at":[550,576],"typed":226,"target":"note-editor","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":268,"incarnation":1}
+clock data
+  {"clock":24200,"settled":true}
+state editDraft
+  "**Agenda**"
+tree draft-bold
+  {"nodes":[{"id":231,"type":"Pressable","depth":8,"props":{"testId":"draft-bold","accessibilityRole":"button","accessibilityLabel":"Bold","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[232]},{"id":232,"type":"Text","depth":9,"props":{"text":"B","accessibilityElementsHidden":true},"children":[]}],"roots":[231],"clock":24200,"epoch":268,"incarnation":1}
+screenshot docs/media/clinic/default/web/toolbar/22-draft-shortcut-bold.png
+  {"clock":24200,"epoch":268,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar/22-draft-shortcut-bold.png","w":1100,"h":760}
+clock +1500
+  {"clock":25700}
+clock data
+  {"clock":25700,"settled":true}
+state detail.note
+  "**Agenda**"
+state detail.hasEdits
+  true
+tap done-editing
+  {"at":[857.515625,674],"tapped":263,"target":"done-editing","scrolled":{"from":[857.515625,781],"to":[857.515625,674]},"delivery":"platform","carrier":"web","mode":"agent","clock":25700,"epoch":276,"incarnation":1}
+clock data
+  {"clock":25700,"settled":true}
+clock settle
+  {"clock":25700,"settled":true}
+tap pane-jottings
+  {"at":[775.671875,247],"tapped":205,"target":"pane-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":25700,"epoch":278,"incarnation":1}
+clock settle
+  {"clock":25700,"settled":true}
+type jottings Follow up
+  {"at":[550,449],"typed":280,"target":"jottings","delivery":"platform","carrier":"web","mode":"agent","clock":25700,"epoch":280,"incarnation":1}
+tap jot-task
+  {"at":[871.703125,307],"tapped":305,"target":"jot-task","delivery":"platform","carrier":"web","mode":"agent","clock":25700,"epoch":283,"incarnation":1}
+clock data
+  {"clock":25700,"settled":true}
+state jotDraft
+  "- [ ] Follow up"
+tree jot-task
+  {"nodes":[{"id":305,"type":"Pressable","depth":8,"props":{"testId":"jot-task","accessibilityRole":"button","accessibilityLabel":"Checklist","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[306,307]},{"id":306,"type":"Image","depth":9,"props":{"imageSource":"symbol:checkmark","accessibilityElementsHidden":true},"children":[]},{"id":307,"type":"Text","depth":9,"props":{"text":"To-do"},"children":[]}],"roots":[305],"clock":25700,"epoch":283,"incarnation":1}
+clock +1500
+  {"clock":27200}
+clock data
+  {"clock":27200,"settled":true}
+state detail.jottings
+  "- [ ] Follow up"
+screenshot docs/media/clinic/default/web/toolbar/23-jottings-pane.png
+  {"clock":27200,"epoch":287,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar/23-jottings-pane.png","w":1100,"h":760}

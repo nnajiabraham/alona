@@ -1,0 +1,104 @@
+clock data
+  {"clock":0,"incarnation":1,"settled":true,"epoch":5}
+tap continue
+  {"at":[210,832],"delivery":"platform","tapped":28,"target":"continue","carrier":"macos","mode":"agent","epoch":6,"incarnation":1,"clock":0}
+clock data
+  {"incarnation":1,"epoch":6,"settled":true,"clock":0}
+clock +6000
+  {"epoch":11,"incarnation":1,"clock":6000}
+clock data
+  {"incarnation":1,"epoch":11,"settled":true,"clock":6000}
+tap start-recording
+  {"delivery":"platform","tapped":69,"at":[210,174],"target":"start-recording","carrier":"macos","mode":"agent","epoch":12,"incarnation":1,"clock":6000}
+clock until state rec.state == "recording" within 15000
+  {"clock":6000,"real":183,"until":"met","value":"recording"}
+clock data
+  {"incarnation":1,"epoch":16,"clock":6000,"settled":true}
+clock settle
+  {"incarnation":1,"clock":6000,"settled":true,"epoch":16}
+type record-title Launch sync
+  {"typed":109,"value":"Launch sync","target":"record-title","delivery":"platform","carrier":"macos","mode":"agent","epoch":17,"incarnation":1,"clock":6000}
+type record-notes - Ask about the login fix
+  {"value":"- Ask about the login fix","typed":147,"target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":19,"incarnation":1,"clock":6000}
+clock +5000
+  {"clock":11000,"incarnation":1,"epoch":21}
+tap stop-recording
+  {"at":[210,208],"tapped":106,"delivery":"platform","target":"stop-recording","carrier":"macos","mode":"agent","epoch":22,"incarnation":1,"clock":11000}
+clock data
+  {"incarnation":1,"epoch":27,"settled":true,"clock":11000}
+clock settle
+  {"epoch":27,"settled":true,"clock":11000,"incarnation":1}
+clock +12000
+  {"incarnation":1,"epoch":42,"clock":23000}
+clock data
+  {"settled":true,"epoch":42,"clock":23000,"incarnation":1}
+back
+  {"delivery":"platform","back":"route","carrier":"macos","epoch":43,"incarnation":1,"clock":23000}
+clock data
+  {"settled":true,"incarnation":1,"clock":23000,"epoch":43}
+clock settle
+  {"settled":true,"clock":23000,"incarnation":1,"epoch":43}
+tap open-settings
+  {"delivery":"platform","tapped":57,"at":[384,21],"target":"open-settings","carrier":"macos","mode":"agent","epoch":44,"incarnation":1,"clock":23000}
+clock data
+  {"epoch":44,"incarnation":1,"clock":23000,"settled":true}
+clock settle
+  {"settled":true,"incarnation":1,"clock":23000,"epoch":44}
+state desk.foldersSupported
+  true
+state desk.folder
+  ""
+screenshot docs/media/macos/folder/01-app-storage.png
+  {"w":420,"h":900,"epoch":44,"screenshot":"docs/media/macos/folder/01-app-storage.png","incarnation":1,"clock":23000,"scale":1}
+tap choose-folder
+  {"at":[210,693],"delivery":"platform","tapped":254,"target":"choose-folder","carrier":"macos","mode":"agent","epoch":44,"incarnation":1,"clock":23000}
+clock settle
+  {"epoch":44,"reason":"device","incarnation":1,"tickets":[178],"clock":23000,"settled":false,"diagnostic":"clock settle stops at held device requests (@178); state shows them under pending; answer with tap @N <choice> or type @N <value>"}
+type @folder-picker /var/folders/h1/8vs1fjpx751cq7y7d5kcr9s80000gn/T/alona-flows/flow-folder-1794722695705/Meetings
+  {"ticket":178,"delivery":"substituted","node":42,"answered":"value","capability":"open-directory","epoch":45,"incarnation":1,"clock":23000}
+clock data
+  {"epoch":47,"incarnation":1,"clock":23000,"settled":true}
+clock settle
+  {"clock":23000,"settled":true,"incarnation":1,"epoch":47}
+clock +2000
+  {"epoch":47,"incarnation":1,"clock":25000}
+clock data
+  {"clock":25000,"settled":true,"incarnation":1,"epoch":47}
+state desk.folder
+  "/private/var/folders/h1/8vs1fjpx751cq7y7d5kcr9s80000gn/T/alona-flows/flow-folder-1794722695705/Meetings"
+state desk.folderReachable
+  true
+state desk.waiting
+  0
+screenshot docs/media/macos/folder/02-folder-chosen.png
+  {"w":420,"h":900,"epoch":47,"screenshot":"docs/media/macos/folder/02-folder-chosen.png","incarnation":1,"clock":25000,"scale":1}
+back
+  {"back":"route","delivery":"platform","carrier":"macos","epoch":48,"incarnation":1,"clock":25000}
+clock data
+  {"clock":25000,"incarnation":1,"settled":true,"epoch":48}
+clock settle
+  {"settled":true,"clock":25000,"epoch":48,"incarnation":1}
+state lib.length
+  1
+tap "Launch sync"
+  {"at":[165.5,269],"tapped":171,"delivery":"platform","target":"Launch sync","carrier":"macos","mode":"agent","epoch":49,"incarnation":1,"clock":25000}
+clock data
+  {"settled":true,"clock":25000,"epoch":50,"incarnation":1}
+clock settle
+  {"settled":true,"incarnation":1,"clock":25000,"epoch":50}
+state detail.status
+  "done"
+state detail.userNotes
+  "- Ask about the login fix"
+screenshot docs/media/macos/folder/03-meeting-from-folder.png
+  {"w":420,"h":900,"incarnation":1,"screenshot":"docs/media/macos/folder/03-meeting-from-folder.png","epoch":50,"clock":25000,"scale":1}
+tap pane-mine
+  {"delivery":"host-activation","tapped":317,"native":"segmented-control","target":"pane-mine","carrier":"macos","mode":"agent","epoch":51,"incarnation":1,"clock":25000}
+type my-notes - Edited in the folder
+  {"value":"- Edited in the folder","typed":361,"target":"my-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":53,"incarnation":1,"clock":25000}
+clock +1000
+  {"epoch":53,"clock":26000,"inflight":1,"incarnation":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+clock data
+  {"settled":true,"epoch":54,"clock":26000,"incarnation":1}
+state detail.userNotes
+  "- Edited in the folder"

@@ -92,11 +92,36 @@ const check = (target, file, read) => {
     console.warn(`skipped ${file}: ${e.message}`);
   }
 };
+// A target's folder also holds evidence from intermediate runs. Only the check's own result is a headline.
+const HEADLINE = /^e2e(-(lite|balanced|quality))?\.json$/;
 for (const target of dirs(MEDIA).filter((t) => t !== 'clinic' && t !== 'desktop')) {
-  for (const name of files(join(MEDIA, target), '.json')) {
+  for (const name of files(join(MEDIA, target), '.json').filter((n) => HEADLINE.test(n))) {
     check(target, `docs/media/${target}/${name}`, (raw) => (raw.browser ? fromWeb(raw) : raw));
   }
 }
+
+/** Memory followed over time: a long recording by the minute, and idle memory after each of many cycles. */
+const memory = [];
+const series = (file, read) => {
+  const path = join(ROOT, file);
+  if (!existsSync(path)) return;
+  const raw = JSON.parse(readFileSync(path, 'utf8'));
+  memory.push({ file, date: raw.date, method: typeof raw.method === 'string' ? raw.method : raw.method?.memory ?? '', ...read(raw) });
+};
+for (const name of existsSync(join(MEDIA, 'macos-real')) ? files(join(MEDIA, 'macos-real'), '.json').filter((n) => n.startsWith('long-recording')) : []) {
+  series(`docs/media/macos-real/${name}`, (raw) => ({
+    title: `macOS, a ${raw.minutes}-minute recording${name.includes('mic-only') ? ', microphone only' : ''}`,
+    unit: 'MB of physical footprint at each minute of recording',
+    values: raw.footprintMBPerMinute,
+    after: `Peak from Stop until the notes were done: ${raw.peakAfterStopMB} MB.`,
+  }));
+}
+series('docs/media/android-real/e2e-lite-soak.json', (raw) => ({
+  title: `Android, ${raw.runs.length} meetings in one process, ${raw.tier} tier`,
+  unit: 'MiB of process memory (PSS) at idle after each meeting',
+  values: raw.runs.map((r) => r.idleMB),
+  after: `Peak while working: ${Math.max(...raw.runs.map((r) => r.peakMB))} MiB.`,
+}));
 for (const platform of dirs(join(MEDIA, 'desktop'))) {
   check('desktop', `docs/media/desktop/${platform}/e2e.json`, (raw) =>
     fromSingleRun(raw, `desktop shell on ${platform}`, 'lite', raw.stopToNotesSeconds, raw.notes, raw.peakMemoryMB));
@@ -120,5 +145,20 @@ for (const slug of dirs(join(MEDIA, 'clinic'))) {
   }
 }
 
-writeFileSync(join(ROOT, 'docs', 'explainer', 'data.js'), `window.ALONA = ${JSON.stringify({ flows, checks, clinic }, null, 1)};\n`);
+/** Each tenant's brand and templates, read from its config file, so the clinical guide shows what a tenant file produces. */
+const tenants = {};
+for (const file of readdirSync(join(ROOT, 'tenants')).filter((n) => n.endsWith('.ts') && !['schema.ts', 'validate.ts'].includes(n) && !n.endsWith('.test.ts')).sort()) {
+  const tenant = (await import(join(ROOT, 'tenants', file))).default;
+  tenants[tenant.slug] = {
+    name: tenant.app.name,
+    tagline: tenant.app.tagline,
+    bundleId: tenant.app.bundleId,
+    person: tenant.copy.person,
+    disclaimer: tenant.copy.reviewDisclaimer,
+    colors: tenant.colors,
+    templates: tenant.templates.map((t) => ({ name: t.name, description: t.description, sections: t.sections.map((x) => x.heading) })),
+  };
+}
+
+writeFileSync(join(ROOT, 'docs', 'explainer', 'data.js'), `window.ALONA = ${JSON.stringify({ flows, checks, memory, clinic, tenants }, null, 1)};\n`);
 console.log(`explainer data: ${Object.keys(flows).length} targets, ${Object.keys(clinic).length} clinic tenants, ${checks.length} checks`);

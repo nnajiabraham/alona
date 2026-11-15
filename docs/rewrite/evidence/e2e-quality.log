@@ -1,0 +1,8 @@
+e2e macos quality: preparing models
+recording a take and swapping in the spoken fixture
+running the pipeline 2 times on the fixture
+word error rate: 4.8% (8 of 168)
+title: Mobile App Launch Planning
+cycle 1: transcribe 5.206 s, notes 12.351 s, total 17.557 s, peak 6688 MB, idle after 620 MB
+cycle 2: transcribe 5.173 s, notes 12.488 s, total 17.661 s, peak 6738 MB, idle after 642 MB
+e2e: ok

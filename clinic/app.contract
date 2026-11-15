@@ -4,6 +4,7 @@
 // brand comes from the tenant (loadBrand); every colour from app.tamber,
 // which tools/tenant.mjs writes from the tenant file.
 use EmptyState, Badge from "exact:content"
+use NotesPad, PadEdit, PadFormats from "./ui/notes-pad.contract"
 use getUserMedia, stopTrack, microphoneStatus, MediaStream, MediaStreamTrack, MicrophoneStatus from "@exact/media-capture"
 use startMediaRecorder, stopMediaRecorder, mediaRecorderState, MediaRecorderInfo, RecordedMedia from "@exact/recording"
 
@@ -11,6 +12,7 @@ routes nav
   home "/"
     note "/note/:id"
     start "/new"
+    writeAs "/as/:id"
     record "/record"
     settings "/settings"
 
@@ -65,6 +67,7 @@ shape Setup
   demo: bool
   demoNote: string
   deviceLine: string
+  host: string
   recommended: string
   recommendedLabel: string
   active: string
@@ -111,6 +114,8 @@ shape NoteDetail
   reviewedAt: number
   jottings: string
   segments: SegmentView[]
+  writtenFrom: string
+  sharesRecording: bool
 
 shape Reply
   ok: bool
@@ -139,6 +144,14 @@ component Clinic
   state recRef = ""
   state recTemplate = ""
   state recJottings = ""
+  // The notes pad that last reported its selection, and that selection, where the pad edits the
+  // Markdown itself (ui/notes-pad.contract, `ownFormat`).
+  state padField = ""
+  state padStart = 0
+  state padEnd = 0
+  // The note the held selection was reported in. A selection held for another note, or for another
+  // pad, says nothing about the one a button is pressed over.
+  state padFor = ""
   // The note screen: its pane, the edit in progress and the jottings being typed.
   state pane = "note"
   state editing = false
@@ -155,6 +168,8 @@ component Clinic
   state aimed = ""
   state replacing = ""
   state copied = false
+  // The note being written again as another template: its id, made when the clinician picks one.
+  state rewriteId = ""
 
   resource brand = loadBrand() as shape Brand else empty()
   resource time = exactTime() as shape Time
@@ -179,6 +194,9 @@ component Clinic
   mutation reviewed as shape Reply refreshes lib, detail
   mutation deleted as shape Reply refreshes lib
   mutation rerun as shape Reply refreshes lib, detail
+  mutation rewritten as shape Reply refreshes lib then openRewritten
+  resource padHere = markdownFormats(padSource, padStart, padEnd) when padOwn and padField != "" and padFor == selected as shape PadFormats else empty()
+  mutation padEdit as shape PadEdit then padLanded
 
   derive choice = picked != "" ? picked : brand.defaultTier
   derive recording = recorderId != ""
@@ -188,6 +206,10 @@ component Clinic
   derive busy = anyWorking or setup.activeDownloading or not setup.ready
   derive shownNote = editDirty and editFor == selected ? editDraft : detail.note
   derive shownJottings = jotDirty and jotFor == selected ? jotDraft : detail.jottings
+  // Android's editor runs no `format`, so its pads edit the Markdown themselves.
+  derive padOwn = setup.host == "android"
+  derive padActive = padFor == selected ? padField : ""
+  derive padSource = padField == "note-editor-field" ? shownNote : (padField == "jottings-editor" ? shownJottings : recJottings)
   derive today = time.epochAtZero + now
   derive done = detail.status == "done"
 
@@ -255,6 +277,8 @@ component Clinic
     recRef = ref.trim()
     recTemplate = template
     recJottings = ""
+    // A new recording starts an empty pad: the last one's selection is not its selection.
+    padField = ""
     send opened = getUserMedia(audio=true)
   action arm
     match opened
@@ -283,6 +307,30 @@ component Clinic
     recId = ""
   action editRecJottings(v: string)
     recJottings = v
+  action padMoved(editor: string, start: number, end: number)
+    padField = editor
+    padFor = selected
+    padStart = start
+    padEnd = end
+  action padAsk(editor: string, value: string, command: string, argument: string)
+    // With no selection known for this pad on this note, the edit goes at the end of the text.
+    send padEdit = formatMarkdown(value, padField == editor and padFor == selected ? padStart : value.length, padField == editor and padFor == selected ? padEnd : value.length, command, argument)
+    padField = editor
+    padFor = selected
+  action padLanded
+    match padEdit
+      case some(r)
+        if padField == "note-editor-field"
+          editNote(r.value)
+        else if padField == "jottings-editor"
+          editJottings(r.value)
+        else
+          editRecJottings(r.value)
+        padStart = r.start
+        padEnd = r.end
+        setSelectionRange(padField, r.start, r.end)
+      case none
+        padField = padField
   action stopRecording
     if recording and not pending(saved)
       send saved = stopMediaRecorder(recorder=recorderId)
@@ -362,6 +410,20 @@ component Clinic
       send rerun = transcribeAgain(selected)
     else
       send rerun = writeAgain(selected)
+  action openWriteAs
+    nav = push(nav, path("writeAs", selected))
+  action writeAs(from: string, templateId: string)
+    let id = `m${round(time.epochAtZero + performanceNow())}`
+    rewriteId = id
+    send rewritten = writeAs(from, templateId, id)
+  // The new note takes the sheet's place, so Back returns to the note it was written from.
+  action openRewritten
+    match rewritten
+      case some(r)
+        if r.ok
+          nav = push(back(nav), path("note", rewriteId))
+      case none
+        rewriteId = rewriteId
   action askDelete(id: string)
     aimed = id
     showModal("delete-note")
@@ -441,6 +503,9 @@ component Clinic
                 if setup.ready and not setup.activeInstalled
                   button press=skipDownload testId="skip-download"
                     text "Not now"
+        if e.name == "writeAs"
+          WriteAs(route=e.id, brand=brand, from=e.params.id, current=detail.templateId, ref=detail.patientRef,
+            busy=pending(rewritten), failure=match rewritten { case some(r) => r.error, case none => "" }, write=writeAs, cancel=back)
         if e.name == "start"
           NewNote(route=e.id, brand=brand, opening=(pending(opened) or pending(started)), failure=startFailure,
             start=startRecording, cancel=back)
@@ -469,8 +534,8 @@ component Clinic
                   column gap=6
                     text "Your jottings" font="-exact-headline"
                     text "The draft uses these too. Avoid full names and dates of birth." font="-exact-footnote" color="text.muted"
-                    textarea value=recJottings input=editRecJottings markup="markdown" placeholder="- BP, findings, follow-ups"
-                      aria-label="Your jottings" rows=8 testId="record-jottings" min-height=180
+                    NotesPad(editor="record-jottings-editor", value=recJottings, edit=editRecJottings, label="Your jottings",
+                      placeholder="BP, findings, follow-ups", rows=8, minHeight=180, prefix="rec", field="record-jottings", ground="-exact-background", stamp="", ownFormat=padOwn, active=padActive, here=padHere, report=padMoved, ask=padAsk)
         if e.name == "note"
           column navigationKey=`${e.id}` navigationScroll="note-scroll" position="absolute" inset=0
             display="flex" flex-direction="column"
@@ -487,6 +552,8 @@ component Clinic
                       testId="ref-field"
                     text `${detail.templateName} · ${formatDate(detail.createdAt, time.utcOffset, "medium")} · ${formatTime(detail.createdAt, time.utcOffset, "short")} · ${lasted(detail.durationS)}`
                       font="-exact-footnote" color="text.muted" testId="detail-meta"
+                    if detail.writtenFrom != ""
+                      text `Written again from the ${detail.writtenFrom} note of this visit.` font="-exact-footnote" color="text.muted" testId="written-from"
                   if brand.playback and detail.audio != ""
                     audio src=detail.audio controls=true preload="metadata" width="100%" testId="player"
                   if setup.demo
@@ -522,8 +589,8 @@ component Clinic
                             color="progress.ink" font="-exact-headline" flex=1 min-width=0
                       if editing
                         column gap=6
-                          textarea value=shownNote input=editNote markup="markdown" aria-label="Note" rows=16 min-height=320
-                            testId="note-editor"
+                          NotesPad(editor="note-editor-field", value=shownNote, edit=editNote, label="Note",
+                            placeholder="", rows=16, minHeight=320, prefix="draft", field="note-editor", ground="surface.page", stamp="", ownFormat=padOwn, active=padActive, here=padHere, report=padMoved, ask=padAsk)
                           row gap=8 align-items="center"
                             text (editDirty ? "Saving…" : "Saved on this device") font="-exact-footnote" color="text.muted" flex=1 testId="edit-state"
                             button press=stopEditing buttonStyle="bordered" testId="done-editing"
@@ -548,9 +615,13 @@ component Clinic
                               button press=shareNote buttonStyle="bordered" testId="share-note"
                                 image "symbol:share"
                                 text "Share"
-                      button press=askWriteAgain disabled=(pending(rerun) or not done) testId="write-again"
-                        image "symbol:refresh"
-                        text "Write again"
+                      row gap=8 flex-wrap="wrap"
+                        button press=askWriteAgain disabled=(pending(rerun) or not done) testId="write-again"
+                          image "symbol:refresh"
+                          text "Write again"
+                        button press=openWriteAs disabled=(pending(rerun) or not done) testId="write-as"
+                          image "symbol:add"
+                          text "Write as another note"
                     else
                       text (detail.state == "processing" ? "The draft appears here when the transcript is ready." : "No draft for this note.")
                         color="text.muted" testId="note-empty"
@@ -569,8 +640,8 @@ component Clinic
                             text s.text flex=1 min-width=0
                   if pane == "jottings"
                     column gap=6
-                      textarea value=shownJottings input=editJottings markup="markdown" placeholder="Write in Markdown"
-                        aria-label="Your jottings" rows=10 min-height=220 testId="jottings"
+                      NotesPad(editor="jottings-editor", value=shownJottings, edit=editJottings, label="Your jottings",
+                        placeholder="Write your jottings", rows=10, minHeight=220, prefix="jot", field="jottings", ground="surface.page", stamp="", ownFormat=padOwn, active=padActive, here=padHere, report=padMoved, ask=padAsk)
                       text (jotDirty ? "Saving…" : "Saved on this device. Write again to use them in the draft.") font="-exact-footnote" color="text.muted" testId="jottings-state"
             else if not pending(detail)
               EmptyState(symbol="symbol:alert", title="No such note", message="It may have been deleted.")
@@ -636,7 +707,7 @@ component Clinic
                   text brand.name flex=1
                   text `Version ${brand.version}` color="-exact-secondary-label" testId="settings-version"
       dialog id="delete-note" role="alertdialog" aria-label="Delete this note?"
-        text "Its recording, transcript, draft and your edits are removed from this device."
+        text (detail.sharesRecording ? "Its transcript, draft and your edits are removed from this device. The recording stays, because another note from this visit uses it." : "Its recording, transcript, draft and your edits are removed from this device.")
         button press=remove(aimed) destructive=true commandfor="delete-note" command="close" testId="delete-confirm"
           text "Delete"
         button commandfor="delete-note" command="close" testId="delete-cancel"
@@ -697,6 +768,51 @@ component NewNote
         button press=start(ref, chosen) buttonStyle="filled" disabled=opening testId="start-recording"
           image "symbol:microphone"
           text (opening ? "Opening microphone…" : "Start recording")
+
+// Another document from the same visit: the clinician picks a template and a new note is drafted
+// from the same transcript and jottings, beside the one it came from.
+component WriteAs
+  props
+    route: number
+    brand: Brand
+    from: string
+    current: string
+    ref: string
+    busy: bool
+    failure: string
+    write: action
+    cancel: action
+  state template = ""
+  derive others = brand.templates.filter(t => t.id != current)
+  derive chosen = template != "" ? template : match others.at(0) { case some(t) => t.id, case none => "" }
+  derive chosenName = match others.filter(t => t.id == chosen).at(0) { case some(t) => t.name, case none => "" }
+  action choose(id: string)
+    template = id
+  view
+    column navigationKey=`${route}` navigationPresentation="modal" position="absolute" inset=0 testId="write-as-sheet"
+      header display="flex" align-items="center" justify-content="space-between" padding="8px 16px"
+        button id="back" press=cancel aria-label="Cancel" testId="write-as-cancel"
+          image "symbol:close"
+        text "Write as another note" role="heading"
+      list appearance="auto" listStyle="inset-grouped" flex=1 min-height=0
+        section
+          header
+            text "Note template"
+          for t in others key=t.id
+            button press=choose(t.id) testId=`write-as-${t.id}`
+              column flex=1 min-width=0 gap=2
+                text t.name
+                text t.description font="-exact-footnote" color="-exact-secondary-label"
+                text t.headings font="-exact-footnote" color="-exact-secondary-label"
+              if chosen == t.id
+                image "symbol:checkmark"
+          footer
+            text (failure != "" ? failure : `A new draft is written from this visit’s transcript and jottings, for ${ref}. This note and its review stay as they are.`)
+              testId="write-as-footer"
+      column gap=8 padding=16 max-width="45rem" width="100%" margin="0 auto" box-sizing="border-box"
+        button press=write(from, chosen) buttonStyle="filled" disabled=(busy or chosen == "") testId="write-as-start"
+          image "symbol:sparkles"
+          text (busy ? "Starting…" : `Write as ${chosenName}`)
 
 component Promise
   props

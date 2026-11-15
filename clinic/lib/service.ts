@@ -10,6 +10,11 @@ import { templateOf, templateProfile } from './profile';
  * beside the pipeline's: `clinic.json` (patient reference and template),
  * `edited.md` (their edits of the draft) and `review.json` (when they
  * reviewed it, and the text they reviewed). The pipeline writes none of them.
+ *
+ * A note written again as another template is a second meeting of its own
+ * (core's `fork`): it plays the first note's recording and starts from copies
+ * of its transcript and jottings, so its draft, edits and review never touch
+ * the first note's. Its `clinic.json` names the note it came from.
  */
 const FILES = { record: 'clinic.json', edits: 'edited.md', review: 'review.json' } as const;
 
@@ -18,6 +23,8 @@ export type NoteState = 'processing' | 'failed' | 'draft' | 'reviewed';
 interface ClinicRecord {
   patientRef: string;
   templateId: string;
+  /** The template of the note this one was written again from, or '' for a note from a recording. */
+  fromTemplateId: string;
 }
 
 interface Review {
@@ -57,6 +64,10 @@ export interface NoteDetail extends NoteRow {
   reviewedAt: number;
   jottings: string;
   segments: SegmentView[];
+  /** The name of the template this note was written again from, or '' for a note from a recording. */
+  writtenFrom: string;
+  /** Another note plays the same recording, so deleting this one keeps it. */
+  sharesRecording: boolean;
 }
 
 export interface Reply {
@@ -98,7 +109,7 @@ export interface BrandView {
 const MISSING: NoteDetail = {
   found: false, id: '', patientRef: '', templateName: '', templateId: '', createdAt: 0, durationS: 0, state: 'processing',
   stateLabel: '', progress: 0, status: '', audio: '', error: '', draft: '', note: '', hasEdits: false, reviewedAt: 0,
-  jottings: '', segments: [],
+  jottings: '', segments: [], writtenFrom: '', sharesRecording: false,
 };
 
 const OK: Reply = { ok: true, error: '' };
@@ -120,7 +131,8 @@ function parse(text: string): Record<string, unknown> {
 
 const parseRecord = (text: string): ClinicRecord => {
   const r = parse(text);
-  return { patientRef: typeof r.patientRef === 'string' ? r.patientRef : '', templateId: typeof r.templateId === 'string' ? r.templateId : '' };
+  const str = (v: unknown): string => (typeof v === 'string' ? v : '');
+  return { patientRef: str(r.patientRef), templateId: str(r.templateId), fromTemplateId: str(r.fromTemplateId) };
 };
 
 const parseReview = (text: string): Review | null => {
@@ -203,7 +215,7 @@ export function clinicService(core: Service, store: MeetingStore, tenant: Tenant
       stateLabel: stateLabel(state, status),
       progress,
     };
-    return { row, templateId: template.id, note, edits: f.edits, review: f.review };
+    return { row, record: f.record, templateId: template.id, note, edits: f.edits, review: f.review };
   }
 
   /** The person's pick of model tier, or the tenant's default before they pick. */
@@ -224,6 +236,8 @@ export function clinicService(core: Service, store: MeetingStore, tenant: Tenant
       const d = await core.detail(id);
       if (!d.found) return MISSING;
       const n = await noteOf(id, d.status, d.createdAt, d.durationS, d.progress);
+      const own = await store.load(id);
+      const sharesRecording = own !== null && (await store.list()).some((m) => m.id !== id && m.audio === own.audio);
       return {
         ...n.row,
         found: true,
@@ -237,6 +251,8 @@ export function clinicService(core: Service, store: MeetingStore, tenant: Tenant
         reviewedAt: n.row.state === 'reviewed' && n.review ? n.review.at : 0,
         jottings: d.userNotes,
         segments: d.segments,
+        writtenFrom: n.record.fromTemplateId !== '' ? templateOf(tenant, n.record.fromTemplateId).name : '',
+        sharesRecording,
       };
     },
 
@@ -244,7 +260,7 @@ export function clinicService(core: Service, store: MeetingStore, tenant: Tenant
       if (!isNoteId(id) || audio === '') return refused('The recording was not saved.');
       const template = templateOf(tenant, templateId);
       // The record is written first, so the pipeline never starts this note with another template.
-      await store.writeExtra(id, FILES.record, JSON.stringify({ patientRef: patientRef.trim(), templateId: template.id } satisfies ClinicRecord));
+      await store.writeExtra(id, FILES.record, JSON.stringify({ patientRef: patientRef.trim(), templateId: template.id, fromTemplateId: '' } satisfies ClinicRecord));
       return core.create(id, '', audio, durationMs, jottings, createdAt, isTierId(tier) ? tier : 'lite');
     },
 
@@ -280,6 +296,28 @@ export function clinicService(core: Service, store: MeetingStore, tenant: Tenant
       if (!(await exists(id))) return refused(GONE);
       await discardEdits(id);
       return core.regenerate(id);
+    },
+
+    /**
+     * A new note `id` beside note `from`, in another template, drafted from the same transcript
+     * and jottings for the same patient reference. It starts as an unreviewed draft; `from` and
+     * its review are untouched.
+     */
+    async writeAs(from: string, templateId: string, id: string): Promise<Reply> {
+      if (!(await exists(from))) return refused(GONE);
+      const template = tenant.templates.find((t) => t.id === templateId);
+      if (!template) return refused('That template is not offered here.');
+      if (!isNoteId(id) || (await store.load(id)) !== null) return refused('That note already exists.');
+      if ((await store.load(from))?.stage.kind !== 'done') return refused('The draft is still being written.');
+      const source = (await files(from)).record;
+      // The record is written before the meeting exists, so the pipeline never drafts this note with another template.
+      await store.mkdirMeeting(id);
+      await store.writeExtra(id, FILES.record, JSON.stringify({
+        patientRef: source.patientRef, templateId: template.id, fromTemplateId: templateOf(tenant, source.templateId).id,
+      } satisfies ClinicRecord));
+      const reply = await core.fork(from, id);
+      if (!reply.ok) await store.remove(id);
+      return reply;
     },
 
     async transcribeAgain(id: string): Promise<Reply> {

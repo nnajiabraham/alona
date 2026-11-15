@@ -1,0 +1,58 @@
+clock data
+  {"settled":true,"clock":0,"epoch":5,"incarnation":1}
+tap continue
+  {"tapped":28,"at":[210,832],"delivery":"platform","target":"continue","carrier":"macos","mode":"agent","epoch":6,"incarnation":1,"clock":0}
+clock data
+  {"epoch":6,"settled":true,"clock":0,"incarnation":1}
+clock +6000
+  {"incarnation":1,"epoch":11,"clock":6000}
+clock data
+  {"incarnation":1,"settled":true,"epoch":11,"clock":6000}
+tap start-recording
+  {"at":[210,174],"tapped":69,"delivery":"platform","target":"start-recording","carrier":"macos","mode":"agent","epoch":12,"incarnation":1,"clock":6000}
+clock until state rec.state == "recording" within 15000
+  {"clock":6000,"real":185,"until":"met","value":"recording"}
+clock data
+  {"settled":true,"epoch":16,"incarnation":1,"clock":6000}
+clock settle
+  {"clock":6000,"settled":true,"incarnation":1,"epoch":16}
+type record-title Launch sync
+  {"typed":109,"value":"Launch sync","target":"record-title","delivery":"platform","carrier":"macos","mode":"agent","epoch":17,"incarnation":1,"clock":6000}
+type record-notes - Ask about the login fix
+  {"value":"- Ask about the login fix","typed":147,"target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":19,"incarnation":1,"clock":6000}
+clock +5000
+  {"clock":11000,"incarnation":1,"epoch":21}
+tap stop-recording
+  {"at":[210,208],"delivery":"platform","tapped":106,"target":"stop-recording","carrier":"macos","mode":"agent","epoch":22,"incarnation":1,"clock":11000}
+clock data
+  {"settled":true,"clock":11000,"epoch":27,"incarnation":1}
+clock settle
+  {"settled":true,"clock":11000,"epoch":27,"incarnation":1}
+clock +12000
+  {"incarnation":1,"clock":23000,"epoch":42}
+clock data
+  {"settled":true,"incarnation":1,"clock":23000,"epoch":42}
+state detail.status
+  "done"
+back
+  {"delivery":"platform","back":"route","carrier":"macos","epoch":43,"incarnation":1,"clock":23000}
+clock data
+  {"clock":23000,"incarnation":1,"epoch":43,"settled":true}
+clock settle
+  {"epoch":43,"incarnation":1,"settled":true,"clock":23000}
+state lib.length
+  1
+screenshot docs/media/macos/folder-missing/01-meetings-still-listed.png
+  {"screenshot":"docs/media/macos/folder-missing/01-meetings-still-listed.png","h":900,"incarnation":1,"epoch":43,"w":420,"clock":23000,"scale":1}
+tap open-settings
+  {"at":[384,21],"tapped":57,"delivery":"platform","target":"open-settings","carrier":"macos","mode":"agent","epoch":44,"incarnation":1,"clock":23000}
+clock data
+  {"clock":23000,"incarnation":1,"settled":true,"epoch":45}
+clock settle
+  {"clock":23000,"settled":true,"incarnation":1,"epoch":45}
+state desk.folderReachable
+  false
+state desk.waiting
+  1
+screenshot docs/media/macos/folder-missing/02-folder-missing.png
+  {"h":900,"screenshot":"docs/media/macos/folder-missing/02-folder-missing.png","clock":23000,"incarnation":1,"epoch":45,"w":420,"scale":1}

@@ -17,13 +17,19 @@
         "width": 1040,
         "height": 760,
         "minWidth": 420,
-        "minHeight": 560
+        "minHeight": 560,
+        "keepRunning": true
       },
       "link": [
         "-lc++"
       ]
     },
-    "android": {},
+    "android": {
+      "maven": [
+        "com.alona.local:sherpa:2.0.1",
+        "com.alona.local:llama:b12383"
+      ]
+    },
     "ios": {
       "minimumOS": "17.0",
       "deviceFamily": [

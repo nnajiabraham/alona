@@ -4,6 +4,7 @@ import { demoDraft, DEMO_CONSULTATION } from './clinic/lib/demo';
 import { brandView, clinicService, profileFor, type ClinicService } from './clinic/lib/service';
 import { TENANT } from './tenant';
 import { meetingStore } from './core/store';
+import { applyFormat, formatsAt } from './core/markdown';
 
 const DIR = 'app:/data';
 export const grants = `device.microphone purpose.microphone\nfs.read ${DIR}\nfs.write ${DIR}`;
@@ -25,6 +26,8 @@ const app = (storage: Storage, native: NativeModule | null | undefined): Promise
   (current ??= build(storage, native));
 
 const sources: Sources = {
+  formatMarkdown: async ([source, start, end, command, argument]) => applyFormat(source, start, end, command, argument),
+  markdownFormats: async ([source, start, end]) => formatsAt(source, start, end),
   loadBrand: async () => brandView(TENANT),
   loadSetup: async ([picked], _store, storage, native) => (await app(storage, native)).setup(picked),
   downloadTier: async ([tier], _store, storage, native) => (await app(storage, native)).downloadTier(tier),
@@ -39,6 +42,7 @@ const sources: Sources = {
   saveJottings: async ([id, text], _store, storage, native) => (await app(storage, native)).saveJottings(id, text),
   markReviewed: async ([id, at], _store, storage, native) => (await app(storage, native)).markReviewed(id, at),
   writeAgain: async ([id], _store, storage, native) => (await app(storage, native)).writeAgain(id),
+  writeAs: async ([from, templateId, id], _store, storage, native) => (await app(storage, native)).writeAs(from, templateId, id),
   transcribeAgain: async ([id], _store, storage, native) => (await app(storage, native)).transcribeAgain(id),
   retryNote: async ([id], _store, storage, native) => (await app(storage, native)).retry(id),
   deleteNote: async ([id], _store, storage, native) => (await app(storage, native)).remove(id),

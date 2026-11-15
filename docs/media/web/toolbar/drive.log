@@ -1,0 +1,266 @@
+clock data
+  {"clock":0,"settled":true}
+tap continue
+  {"at":[550,674],"tapped":28,"target":"continue","delivery":"platform","carrier":"web","mode":"agent","clock":0,"epoch":18,"incarnation":1}
+clock data
+  {"clock":0,"settled":true}
+clock +6000
+  {"clock":6000}
+clock data
+  {"clock":6000,"settled":true}
+tap start-recording
+  {"at":[550,198.59375],"tapped":64,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6000,"epoch":39,"incarnation":1}
+clock data
+  {"clock":6000,"settled":true}
+clock settle
+  {"clock":6400,"settled":true}
+screenshot docs/media/web/toolbar/01-empty-pad.png
+  {"clock":6400,"epoch":46,"incarnation":1,"screenshot":"docs/media/web/toolbar/01-empty-pad.png","w":1100,"h":760}
+type record-notes Agenda
+  {"at":[550,548.5],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":49,"incarnation":1}
+type record-notes key Meta+a
+  {"at":[550,548.5],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":49,"incarnation":1}
+tap rec-bold
+  {"at":[387.328125,406.5],"tapped":99,"target":"rec-bold","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":52,"incarnation":1}
+clock data
+  {"clock":6400,"settled":true}
+state recNotes
+  "**Agenda**"
+tree rec-bold
+  {"nodes":[{"id":99,"type":"Pressable","depth":8,"props":{"testId":"rec-bold","accessibilityRole":"button","accessibilityLabel":"Bold","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[100]},{"id":100,"type":"Text","depth":9,"props":{"text":"B","accessibilityElementsHidden":true},"children":[]}],"roots":[99],"clock":6400,"epoch":52,"incarnation":1}
+screenshot docs/media/web/toolbar/02-rec-bold.png
+  {"clock":6400,"epoch":52,"incarnation":1,"screenshot":"docs/media/web/toolbar/02-rec-bold.png","w":1100,"h":760}
+type record-notes Agenda
+  {"at":[550,548.5],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":56,"incarnation":1}
+type record-notes key Meta+a
+  {"at":[550,548.5],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":56,"incarnation":1}
+tap rec-italic
+  {"at":[455.328125,406.5],"tapped":101,"target":"rec-italic","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":59,"incarnation":1}
+clock data
+  {"clock":6400,"settled":true}
+state recNotes
+  "*Agenda*"
+tree rec-italic
+  {"nodes":[{"id":101,"type":"Pressable","depth":8,"props":{"testId":"rec-italic","accessibilityRole":"button","accessibilityLabel":"Italic","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[102]},{"id":102,"type":"Text","depth":9,"props":{"text":"I","accessibilityElementsHidden":true},"children":[]}],"roots":[101],"clock":6400,"epoch":59,"incarnation":1}
+type record-notes Agenda
+  {"at":[550,548.5],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":61,"incarnation":1}
+type record-notes key Meta+a
+  {"at":[550,548.5],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":61,"incarnation":1}
+tap rec-strike
+  {"at":[523.328125,406.5],"tapped":103,"target":"rec-strike","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":64,"incarnation":1}
+clock data
+  {"clock":6400,"settled":true}
+state recNotes
+  "~~Agenda~~"
+tree rec-strike
+  {"nodes":[{"id":103,"type":"Pressable","depth":8,"props":{"testId":"rec-strike","accessibilityRole":"button","accessibilityLabel":"Strikethrough","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[104]},{"id":104,"type":"Text","depth":9,"props":{"text":"S","accessibilityElementsHidden":true},"children":[]}],"roots":[103],"clock":6400,"epoch":64,"incarnation":1}
+screenshot docs/media/web/toolbar/03-rec-strike.png
+  {"clock":6400,"epoch":64,"incarnation":1,"screenshot":"docs/media/web/toolbar/03-rec-strike.png","w":1100,"h":760}
+type record-notes Agenda
+  {"at":[550,548.5],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":68,"incarnation":1}
+tap rec-title
+  {"at":[595.515625,406.5],"tapped":106,"target":"rec-title","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":71,"incarnation":1}
+clock data
+  {"clock":6400,"settled":true}
+state recNotes
+  "## Agenda"
+tree rec-title
+  {"nodes":[{"id":106,"type":"Pressable","depth":8,"props":{"testId":"rec-title","accessibilityRole":"button","accessibilityLabel":"Title","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[107]},{"id":107,"type":"Text","depth":9,"props":{"text":"Title"},"children":[]}],"roots":[106],"clock":6400,"epoch":71,"incarnation":1}
+tree rec-plain
+  {"nodes":[{"id":110,"type":"Pressable","depth":8,"props":{"testId":"rec-plain","accessibilityRole":"button","accessibilityLabel":"Plain text","accessibilityPressed":"false","type":"button"},"handlers":["press"],"children":[111]},{"id":111,"type":"Text","depth":9,"props":{"text":"Text"},"children":[]}],"roots":[110],"clock":6400,"epoch":71,"incarnation":1}
+screenshot docs/media/web/toolbar/04-rec-title.png
+  {"clock":6400,"epoch":71,"incarnation":1,"screenshot":"docs/media/web/toolbar/04-rec-title.png","w":1100,"h":760}
+tap rec-subtitle
+  {"at":[666.2734375,406.5],"tapped":108,"target":"rec-subtitle","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":76,"incarnation":1}
+clock data
+  {"clock":6400,"settled":true}
+state recNotes
+  "### Agenda"
+tree rec-subtitle
+  {"nodes":[{"id":108,"type":"Pressable","depth":8,"props":{"testId":"rec-subtitle","accessibilityRole":"button","accessibilityLabel":"Subtitle","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[109]},{"id":109,"type":"Text","depth":9,"props":{"text":"Subtitle"},"children":[]}],"roots":[108],"clock":6400,"epoch":76,"incarnation":1}
+tree rec-title
+  {"nodes":[{"id":106,"type":"Pressable","depth":8,"props":{"testId":"rec-title","accessibilityRole":"button","accessibilityLabel":"Title","accessibilityPressed":"false","type":"button"},"handlers":["press"],"children":[107]},{"id":107,"type":"Text","depth":9,"props":{"text":"Title"},"children":[]}],"roots":[106],"clock":6400,"epoch":76,"incarnation":1}
+tap rec-plain
+  {"at":[735.0234375,406.5],"tapped":110,"target":"rec-plain","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":79,"incarnation":1}
+clock data
+  {"clock":6400,"settled":true}
+state recNotes
+  "Agenda"
+tree rec-plain
+  {"nodes":[{"id":110,"type":"Pressable","depth":8,"props":{"testId":"rec-plain","accessibilityRole":"button","accessibilityLabel":"Plain text","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[111]},{"id":111,"type":"Text","depth":9,"props":{"text":"Text"},"children":[]}],"roots":[110],"clock":6400,"epoch":79,"incarnation":1}
+tree rec-subtitle
+  {"nodes":[{"id":108,"type":"Pressable","depth":8,"props":{"testId":"rec-subtitle","accessibilityRole":"button","accessibilityLabel":"Subtitle","accessibilityPressed":"false","type":"button"},"handlers":["press"],"children":[109]},{"id":109,"type":"Text","depth":9,"props":{"text":"Subtitle"},"children":[]}],"roots":[108],"clock":6400,"epoch":79,"incarnation":1}
+type record-notes Agenda
+  {"at":[550,548.5],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":79,"incarnation":1}
+tap rec-bullet
+  {"at":[768.2734375,406.5],"tapped":113,"target":"rec-bullet","scrolled":{"from":[819.2734375,406.5],"to":[768.2734375,406.5]},"delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":82,"incarnation":1}
+clock data
+  {"clock":6400,"settled":true}
+state recNotes
+  "- Agenda"
+tree rec-bullet
+  {"nodes":[{"id":113,"type":"Pressable","depth":8,"props":{"testId":"rec-bullet","accessibilityRole":"button","accessibilityLabel":"Bulleted list","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[114,115]},{"id":114,"type":"Image","depth":9,"props":{"imageSource":"symbol:list","accessibilityElementsHidden":true},"children":[]},{"id":115,"type":"Text","depth":9,"props":{"text":"Bullets"},"children":[]}],"roots":[113],"clock":6400,"epoch":82,"incarnation":1}
+screenshot docs/media/web/toolbar/05-rec-bullet.png
+  {"clock":6400,"epoch":82,"incarnation":1,"screenshot":"docs/media/web/toolbar/05-rec-bullet.png","w":1100,"h":760}
+tree rec-plain
+  {"nodes":[{"id":110,"type":"Pressable","depth":8,"props":{"testId":"rec-plain","accessibilityRole":"button","accessibilityLabel":"Plain text","accessibilityPressed":"false","type":"button"},"handlers":["press"],"children":[111]},{"id":111,"type":"Text","depth":9,"props":{"text":"Text"},"children":[]}],"roots":[110],"clock":6400,"epoch":84,"incarnation":1}
+tap rec-plain
+  {"at":[684.0234375,406.5],"tapped":110,"target":"rec-plain","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":87,"incarnation":1}
+clock data
+  {"clock":6400,"settled":true}
+state recNotes
+  "Agenda"
+tree rec-plain
+  {"nodes":[{"id":110,"type":"Pressable","depth":8,"props":{"testId":"rec-plain","accessibilityRole":"button","accessibilityLabel":"Plain text","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[111]},{"id":111,"type":"Text","depth":9,"props":{"text":"Text"},"children":[]}],"roots":[110],"clock":6400,"epoch":87,"incarnation":1}
+tree rec-bullet
+  {"nodes":[{"id":113,"type":"Pressable","depth":8,"props":{"testId":"rec-bullet","accessibilityRole":"button","accessibilityLabel":"Bulleted list","accessibilityPressed":"false","type":"button"},"handlers":["press"],"children":[114,115]},{"id":114,"type":"Image","depth":9,"props":{"imageSource":"symbol:list","accessibilityElementsHidden":true},"children":[]},{"id":115,"type":"Text","depth":9,"props":{"text":"Bullets"},"children":[]}],"roots":[113],"clock":6400,"epoch":87,"incarnation":1}
+type record-notes Agenda
+  {"at":[550,548.5],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":87,"incarnation":1}
+tap rec-ordered
+  {"at":[761.5625,406.5],"tapped":116,"target":"rec-ordered","scrolled":{"from":[870.5625,406.5],"to":[761.5625,406.5]},"delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":90,"incarnation":1}
+clock data
+  {"clock":6400,"settled":true}
+state recNotes
+  "1. Agenda"
+tree rec-ordered
+  {"nodes":[{"id":116,"type":"Pressable","depth":8,"props":{"testId":"rec-ordered","accessibilityRole":"button","accessibilityLabel":"Numbered list","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[117,118]},{"id":117,"type":"Text","depth":9,"props":{"text":"1.","accessibilityElementsHidden":true},"children":[]},{"id":118,"type":"Text","depth":9,"props":{"text":"Numbers"},"children":[]}],"roots":[116],"clock":6400,"epoch":90,"incarnation":1}
+tree rec-bullet
+  {"nodes":[{"id":113,"type":"Pressable","depth":8,"props":{"testId":"rec-bullet","accessibilityRole":"button","accessibilityLabel":"Bulleted list","accessibilityPressed":"false","type":"button"},"handlers":["press"],"children":[114,115]},{"id":114,"type":"Image","depth":9,"props":{"imageSource":"symbol:list","accessibilityElementsHidden":true},"children":[]},{"id":115,"type":"Text","depth":9,"props":{"text":"Bullets"},"children":[]}],"roots":[113],"clock":6400,"epoch":90,"incarnation":1}
+type record-notes Agenda
+  {"at":[550,548.5],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":92,"incarnation":1}
+tap rec-task
+  {"at":[771.03125,406.5],"tapped":119,"target":"rec-task","scrolled":{"from":[861.03125,406.5],"to":[771.03125,406.5]},"delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":95,"incarnation":1}
+clock data
+  {"clock":6400,"settled":true}
+state recNotes
+  "- [ ] Agenda"
+tree rec-task
+  {"nodes":[{"id":119,"type":"Pressable","depth":8,"props":{"testId":"rec-task","accessibilityRole":"button","accessibilityLabel":"Checklist","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[120,121]},{"id":120,"type":"Image","depth":9,"props":{"imageSource":"symbol:checkmark","accessibilityElementsHidden":true},"children":[]},{"id":121,"type":"Text","depth":9,"props":{"text":"To-do"},"children":[]}],"roots":[119],"clock":6400,"epoch":95,"incarnation":1}
+screenshot docs/media/web/toolbar/06-rec-checklist.png
+  {"clock":6400,"epoch":95,"incarnation":1,"screenshot":"docs/media/web/toolbar/06-rec-checklist.png","w":1100,"h":760}
+type record-notes Agenda
+  {"at":[550,548.5],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":99,"incarnation":1}
+tap rec-quote
+  {"at":[770.0859375,406.5],"tapped":122,"target":"rec-quote","scrolled":{"from":[862.0859375,406.5],"to":[770.0859375,406.5]},"delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":102,"incarnation":1}
+clock data
+  {"clock":6400,"settled":true}
+state recNotes
+  "> Agenda"
+tree rec-quote
+  {"nodes":[{"id":122,"type":"Pressable","depth":8,"props":{"testId":"rec-quote","accessibilityRole":"button","accessibilityLabel":"Quote","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[123,124]},{"id":123,"type":"Image","depth":9,"props":{"imageSource":"symbol:quote","accessibilityElementsHidden":true},"children":[]},{"id":124,"type":"Text","depth":9,"props":{"text":"Quote"},"children":[]}],"roots":[122],"clock":6400,"epoch":102,"incarnation":1}
+screenshot docs/media/web/toolbar/07-rec-quote.png
+  {"clock":6400,"epoch":102,"incarnation":1,"screenshot":"docs/media/web/toolbar/07-rec-quote.png","w":1100,"h":760}
+type record-notes Alona site
+  {"at":[550,548.5],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":106,"incarnation":1}
+type record-notes key Meta+a
+  {"at":[550,548.5],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":106,"incarnation":1}
+tap rec-link
+  {"at":[777.3984375,406.5],"tapped":125,"target":"rec-link","scrolled":{"from":[937.3984375,406.5],"to":[777.3984375,406.5]},"delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":107,"incarnation":1}
+clock settle
+  {"clock":6400,"settled":true}
+type rec-link-url https://example.com
+  {"at":[454.7265625,435.5],"typed":131,"target":"rec-link-url","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":108,"incarnation":1}
+tap rec-link-apply
+  {"at":[676.234375,435.5],"tapped":133,"target":"rec-link-apply","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":111,"incarnation":1}
+clock data
+  {"clock":6400,"settled":true}
+state recNotes
+  "[Alona site](https://example.com)"
+tree rec-link
+  {"nodes":[{"id":125,"type":"Pressable","depth":8,"props":{"testId":"rec-link","accessibilityRole":"button","accessibilityLabel":"Link","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[126,127]},{"id":126,"type":"Image","depth":9,"props":{"imageSource":"symbol:link","accessibilityElementsHidden":true},"children":[]},{"id":127,"type":"Text","depth":9,"props":{"text":"Link"},"children":[]}],"roots":[125],"clock":6400,"epoch":111,"incarnation":1}
+screenshot docs/media/web/toolbar/08-rec-link.png
+  {"clock":6400,"epoch":111,"incarnation":1,"screenshot":"docs/media/web/toolbar/08-rec-link.png","w":1100,"h":760}
+type record-notes Plain **bold**
+  {"at":[550,548.5],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":115,"incarnation":1}
+type record-notes key Home
+  {"at":[550,548.5],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":115,"incarnation":1}
+clock data
+  {"clock":6400,"settled":true}
+tree rec-bold
+  {"nodes":[{"id":99,"type":"Pressable","depth":8,"props":{"testId":"rec-bold","accessibilityRole":"button","accessibilityLabel":"Bold","accessibilityPressed":"false","type":"button"},"handlers":["press"],"children":[100]},{"id":100,"type":"Text","depth":9,"props":{"text":"B","accessibilityElementsHidden":true},"children":[]}],"roots":[99],"clock":6400,"epoch":115,"incarnation":1}
+screenshot docs/media/web/toolbar/09-rec-caret-in-plain.png
+  {"clock":6400,"epoch":115,"incarnation":1,"screenshot":"docs/media/web/toolbar/09-rec-caret-in-plain.png","w":1100,"h":760}
+type record-notes key End
+  {"at":[550,548.5],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":118,"incarnation":1}
+clock data
+  {"clock":6400,"settled":true}
+tree rec-bold
+  {"nodes":[{"id":99,"type":"Pressable","depth":8,"props":{"testId":"rec-bold","accessibilityRole":"button","accessibilityLabel":"Bold","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[100]},{"id":100,"type":"Text","depth":9,"props":{"text":"B","accessibilityElementsHidden":true},"children":[]}],"roots":[99],"clock":6400,"epoch":118,"incarnation":1}
+screenshot docs/media/web/toolbar/10-rec-caret-in-bold.png
+  {"clock":6400,"epoch":118,"incarnation":1,"screenshot":"docs/media/web/toolbar/10-rec-caret-in-bold.png","w":1100,"h":760}
+type record-notes Agenda
+  {"at":[550,548.5],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":123,"incarnation":1}
+type record-notes key Meta+a
+  {"at":[550,548.5],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":123,"incarnation":1}
+type record-notes key Meta+b
+  {"at":[550,548.5],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":125,"incarnation":1}
+clock data
+  {"clock":6400,"settled":true}
+state recNotes
+  "**Agenda**"
+tree rec-bold
+  {"nodes":[{"id":99,"type":"Pressable","depth":8,"props":{"testId":"rec-bold","accessibilityRole":"button","accessibilityLabel":"Bold","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[100]},{"id":100,"type":"Text","depth":9,"props":{"text":"B","accessibilityElementsHidden":true},"children":[]}],"roots":[99],"clock":6400,"epoch":125,"incarnation":1}
+screenshot docs/media/web/toolbar/11-rec-shortcut-bold.png
+  {"clock":6400,"epoch":125,"incarnation":1,"screenshot":"docs/media/web/toolbar/11-rec-shortcut-bold.png","w":1100,"h":760}
+type record-notes Agenda
+  {"at":[550,548.5],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":129,"incarnation":1}
+clock +5000
+  {"clock":11400}
+clock data
+  {"clock":11400,"settled":true}
+tap rec-stamp
+  {"at":[318.6640625,406.5],"tapped":97,"target":"rec-stamp","scrolled":{"from":[59.6640625,406.5],"to":[318.6640625,406.5]},"delivery":"platform","carrier":"web","mode":"agent","clock":11400,"epoch":137,"incarnation":1}
+clock data
+  {"clock":11400,"settled":true}
+state recNotes
+  "Agenda[0:05] "
+screenshot docs/media/web/toolbar/12-timestamp.png
+  {"clock":11400,"epoch":137,"incarnation":1,"screenshot":"docs/media/web/toolbar/12-timestamp.png","w":1100,"h":760}
+tap stop-recording
+  {"at":[550,233.5],"tapped":87,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":11400,"epoch":152,"incarnation":1}
+clock data
+  {"clock":11400,"settled":true}
+clock settle
+  {"clock":11800,"settled":true}
+clock +12000
+  {"clock":23800}
+clock data
+  {"clock":23800,"settled":true}
+state detail.status
+  "done"
+tap pane-mine
+  {"at":[542.6484375,247],"tapped":161,"target":"pane-mine","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":192,"incarnation":1}
+clock settle
+  {"clock":23800,"settled":true}
+type my-notes Decisions
+  {"at":[550,469],"typed":172,"target":"my-notes","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":193,"incarnation":1}
+tap mine-title
+  {"at":[515.515625,307],"tapped":186,"target":"mine-title","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":196,"incarnation":1}
+clock data
+  {"clock":23800,"settled":true}
+state noteDraft
+  "## Decisions"
+tree mine-title
+  {"nodes":[{"id":186,"type":"Pressable","depth":8,"props":{"testId":"mine-title","accessibilityRole":"button","accessibilityLabel":"Title","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[187]},{"id":187,"type":"Text","depth":9,"props":{"text":"Title"},"children":[]}],"roots":[186],"clock":23800,"epoch":196,"incarnation":1}
+tap mine-plain
+  {"at":[655.0234375,307],"tapped":190,"target":"mine-plain","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":199,"incarnation":1}
+clock data
+  {"clock":23800,"settled":true}
+state noteDraft
+  "Decisions"
+tap mine-ordered
+  {"at":[841.5625,307],"tapped":196,"target":"mine-ordered","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":202,"incarnation":1}
+clock data
+  {"clock":23800,"settled":true}
+state noteDraft
+  "1. Decisions"
+tree mine-ordered
+  {"nodes":[{"id":196,"type":"Pressable","depth":8,"props":{"testId":"mine-ordered","accessibilityRole":"button","accessibilityLabel":"Numbered list","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[197,198]},{"id":197,"type":"Text","depth":9,"props":{"text":"1.","accessibilityElementsHidden":true},"children":[]},{"id":198,"type":"Text","depth":9,"props":{"text":"Numbers"},"children":[]}],"roots":[196],"clock":23800,"epoch":202,"incarnation":1}
+screenshot docs/media/web/toolbar/13-my-notes-numbered.png
+  {"clock":23800,"epoch":202,"incarnation":1,"screenshot":"docs/media/web/toolbar/13-my-notes-numbered.png","w":1100,"h":760}
+clock +1500
+  {"clock":25300}
+clock data
+  {"clock":25300,"settled":true}
+state detail.userNotes
+  "1. Decisions"

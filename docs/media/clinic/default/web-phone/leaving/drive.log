@@ -13,7 +13,7 @@ tap new-note-button
 clock settle
   {"clock":6400,"settled":true}
 tap start-recording
-  {"at":[195,810],"tapped":101,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":40,"incarnation":1}
+  {"at":[195,810],"tapped":116,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":40,"incarnation":1}
 clock data
   {"clock":6400,"settled":true}
 clock settle
@@ -23,9 +23,9 @@ clock +3000
 state rec.state
   "recording"
 screenshot docs/media/clinic/default/web-phone/leaving/01-recording.png
-  {"clock":9800,"epoch":51,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/leaving/01-recording.png","w":390,"h":844}
+  {"clock":9800,"epoch":52,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/leaving/01-recording.png","w":390,"h":844}
 back
-  {"history":-1,"delivery":"platform","back":"sheet","refused":"the app kept the route: its Back control is disabled, its closedby is \"none\", or its navigate changed nothing (logs say which)","carrier":"web","clock":9800,"epoch":57,"incarnation":1}
+  {"history":-1,"delivery":"platform","back":"sheet","refused":"the app kept the route: its Back control is disabled, its closedby is \"none\", or its navigate changed nothing (logs say which)","carrier":"web","clock":9800,"epoch":58,"incarnation":1}
 clock data
   {"clock":9800,"settled":true}
 clock settle
@@ -37,7 +37,7 @@ state trackId
 state lib.length
   1
 screenshot docs/media/clinic/default/web-phone/leaving/02-back-stopped-and-saved.png
-  {"clock":10200,"epoch":69,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/leaving/02-back-stopped-and-saved.png","w":390,"h":844}
+  {"clock":10200,"epoch":70,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/leaving/02-back-stopped-and-saved.png","w":390,"h":844}
 clock +12000
   {"clock":22200}
 clock data
@@ -45,13 +45,13 @@ clock data
 state detail.state
   "draft"
 tap edit-note
-  {"at":[63.34375,758],"tapped":170,"target":"edit-note","scrolled":{"from":[63.34375,944],"to":[63.34375,758]},"delivery":"platform","carrier":"web","mode":"agent","clock":22200,"epoch":107,"incarnation":1}
+  {"at":[63.34375,714],"tapped":218,"target":"edit-note","scrolled":{"from":[63.34375,944],"to":[63.34375,714]},"delivery":"platform","carrier":"web","mode":"agent","clock":22200,"epoch":109,"incarnation":1}
 clock settle
   {"clock":22200,"settled":true}
 type note-editor ## Typed just before Back
-  {"at":[195,509.65625],"typed":179,"target":"note-editor","delivery":"platform","carrier":"web","mode":"agent","clock":22200,"epoch":108,"incarnation":1}
+  {"at":[195,429.65625],"typed":231,"target":"note-editor","delivery":"platform","carrier":"web","mode":"agent","clock":22200,"epoch":112,"incarnation":1}
 back
-  {"history":-1,"delivery":"platform","back":"route","carrier":"web","clock":22200,"epoch":109,"incarnation":1}
+  {"history":-1,"delivery":"platform","back":"route","carrier":"web","clock":22200,"epoch":114,"incarnation":1}
 clock data
   {"clock":22200,"settled":true}
 clock +1500
@@ -61,9 +61,9 @@ clock data
 state lib.length
   1
 screenshot docs/media/clinic/default/web-phone/leaving/03-notes-after-back.png
-  {"clock":23700,"epoch":112,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/leaving/03-notes-after-back.png","w":390,"h":844}
+  {"clock":23700,"epoch":117,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/leaving/03-notes-after-back.png","w":390,"h":844}
 tap "No patient reference"
-  {"at":[166.9765625,317.59375],"tapped":130,"target":"No patient reference","delivery":"platform","carrier":"web","mode":"agent","clock":23700,"epoch":116,"incarnation":1}
+  {"at":[166.9765625,317.59375],"tapped":178,"target":"No patient reference","delivery":"platform","carrier":"web","mode":"agent","clock":23700,"epoch":121,"incarnation":1}
 clock data
   {"clock":23700,"settled":true}
 clock settle
@@ -73,4 +73,4 @@ state detail.hasEdits
 state detail.note
   "## Typed just before Back"
 screenshot docs/media/clinic/default/web-phone/leaving/04-edits-kept.png
-  {"clock":23700,"epoch":116,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/leaving/04-edits-kept.png","w":390,"h":844}
+  {"clock":23700,"epoch":121,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/leaving/04-edits-kept.png","w":390,"h":844}

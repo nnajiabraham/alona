@@ -125,8 +125,10 @@ footer { color: var(--muted); font-size: 0.86rem; }
   <a href="#system">System design</a>
   <a href="#pipeline">The pipeline</a>
   <a href="#models">Models and tiers</a>
+  <a href="#features">Notes pad and Mac features</a>
   <a href="#flows">App flows</a>
   <a href="#clinic">Clinical app</a>
+  <a href="clinic.html">Clinical guide →</a>
   <a href="#checks">Measured results</a>
   <a href="#brand">Brand guide</a>
   <a href="#dev">Developer onboarding</a>
@@ -137,9 +139,10 @@ footer { color: var(--muted); font-size: 0.86rem; }
 <section class="hero" id="what">
   <span class="eyebrow">Field guide · November 2026</span>
   <h1>Meeting notes that never leave the device</h1>
-  <p class="lede">Alona records a meeting, transcribes it with a small speech model, and has a small language model write the notes. Both models run on the device. One codebase builds the web, macOS, iOS, and Android apps.</p>
+  <p>This repository also holds a white-label app for health professionals. <a href="clinic.html">See the clinical guide</a>. Test builds for every platform that builds today are on the <a href="https://github.com/nnajiabraham/alona/releases">release page</a>.</p>
+  <p class="lede">Alona records a meeting, transcribes it with a small speech model, and has a small language model write the notes. Both models run on the device. One codebase builds the web, macOS, iOS, and Android apps, and the web build is packaged for Windows and Linux.</p>
   <div class="grid">
-    <div class="tile"><span class="k">Record</span><h3>Microphone and a notes pad</h3><p>A timer, a live waveform, and a Markdown pad for your own notes while the meeting runs.</p></div>
+    <div class="tile"><span class="k">Record</span><h3>Microphone and a notes pad</h3><p>A timer, a live waveform, and a pad for your own notes while the meeting runs. Type Markdown, or use the formatting buttons if you do not know it.</p></div>
     <div class="tile"><span class="k">Transcribe</span><h3>Speech to text, locally</h3><p>Voice activity detection cuts the audio into speech, and each stretch is decoded as it is found.</p></div>
     <div class="tile"><span class="k">Write</span><h3>Notes from a small LLM</h3><p>Summary, key points, decisions, action items, and open questions, led by what you wrote yourself.</p></div>
     <div class="tile"><span class="k">Fit</span><h3>A model tier per device</h3><p>First launch checks memory and GPU, recommends a tier, and Settings lets you move to a lighter one.</p></div>
@@ -154,12 +157,12 @@ footer { color: var(--muted); font-size: 0.86rem; }
   <table>
     <thead><tr><th>Platform</th><th>Screens and flows</th><th>Real models</th><th>Notes</th></tr></thead>
     <tbody id="status-rows">
-      <tr><td><b>macOS</b></td><td><span class="pill ok">6 of 6 flows</span></td><td><span class="pill ok">All three tiers</span></td><td>Swift engine with sherpa-onnx and llama.cpp. The real-model check feeds a spoken fixture in place of the recorded take, so a hardware microphone has not been exercised. Capturing other apps' audio needs an Exact permission that does not exist yet.</td></tr>
-      <tr><td><b>Web</b></td><td><span class="pill ok">6 of 6 flows</span></td><td><span class="pill ok">Lite tier, in Chrome</span></td><td>WebGPU engine in a worker. The real-model run records through the browser's own recorder from Chrome's fake microphone, which plays the fixture. A hardware microphone, Safari, and Firefox are untested.</td></tr>
-      <tr><td><b>Android</b></td><td><span class="pill part">6 of 6, with a flake</span></td><td><span class="pill no">Demo engine</span></td><td>Driven on an emulator. The recording flow fails about one run in four there: the recorder starts but its reply never reaches the app. The cause is below the app and not found. Real models need a Kotlin bridge to the native runtimes, which is not built. The audio player does not draw on Android.</td></tr>
+      <tr><td><b>macOS</b></td><td><span class="pill ok">14 of 14 flows</span></td><td><span class="pill ok">All three tiers</span></td><td>Swift engine with sherpa-onnx and llama.cpp. The real-model check feeds a spoken fixture in place of the recorded take, so a hardware microphone has not been exercised. The six Mac features pass their flows with stand-ins for the parts behind a permission prompt. The real system-audio capture, live Zoom and Meet detection, and notifications have not been seen working by a person or an agent.</td></tr>
+      <tr><td><b>Web</b></td><td><span class="pill ok">8 of 8 flows</span></td><td><span class="pill ok">Lite tier, in Chrome</span></td><td>WebGPU engine in a worker. The real-model run records through the browser's own recorder from Chrome's fake microphone, which plays the fixture. A hardware microphone, Safari, and Firefox are untested.</td></tr>
+      <tr><td><b>Android</b></td><td><span class="pill ok">8 of 8 flows</span></td><td><span class="pill ok">Lite and Balanced</span></td><td>Kotlin engine with sherpa-onnx and llama.cpp, run on an 8 GB arm64 emulator. Never run on a physical phone. Exact's Android host has no Markdown editor, so the pad shows the Markdown source and the toolbar edits it through <code>core/markdown.ts</code>. A toolbar edit is not one undo step there, and touch selection was not driven.</td></tr>
       <tr><td><b>Linux</b></td><td><span class="pill part">In a container</span></td><td><span class="pill no">Demo engine</span></td><td>A <code>.deb</code> for x64 and arm64, built as an Electron shell around the web build because Exact's Linux host cannot edit text or be packaged. The arm64 package installs on Ubuntu 24.04 and passes the flows in a container, which has no GPU. Real models on Linux and the x64 package are not verified.</td></tr>
       <tr><td><b>Windows</b></td><td><span class="pill no">Not run</span></td><td><span class="pill no">Not run</span></td><td>An x64 installer from the same shell, built on a Mac. Nothing has been run on Windows. The steps to verify it are in <code>docs/rewrite/desktop-shell.md</code>.</td></tr>
-      <tr><td><b>iOS</b></td><td><span class="pill no">Not built</span></td><td><span class="pill no">Not run</span></td><td>Exact's iOS host needs Xcode 27.1 and this Mac has 26.1.1. The Apple engine source is shared with macOS and has never been compiled for iOS.</td></tr>
+      <tr><td><b>iOS</b></td><td><span class="pill no">Not built</span></td><td><span class="pill no">Not run</span></td><td>Exact's iOS host needs Xcode 27.1. It is installed beside Xcode 26.1.1 on the build machine, but its license has not been accepted, which needs the owner's password. The Apple engine source is shared with macOS and has never been compiled for iOS.</td></tr>
     </tbody>
   </table>
   </div>
@@ -197,16 +200,16 @@ footer { color: var(--muted); font-size: 0.86rem; }
       <text class="label" x="270" y="354">Web engine</text>
       <text class="small" x="270" y="374">modules/web, a Worker</text>
       <text class="small" x="270" y="392">transformers.js on WebGPU</text>
-      <rect class="warn" x="488" y="328" width="216" height="82" rx="12"/>
+      <rect class="box" x="488" y="328" width="216" height="82" rx="12"/>
       <text class="label" x="504" y="354">Android engine</text>
-      <text class="small" x="504" y="374">Not built yet</text>
-      <text class="small" x="504" y="392">Needs a Kotlin bridge</text>
+      <text class="small" x="504" y="374">packages/alona-engine, Kotlin</text>
+      <text class="small" x="504" y="392">sherpa-onnx + llama.cpp</text>
       <rect class="box" x="722" y="328" width="218" height="82" rx="12"/>
       <text class="label" x="738" y="354">Demo engine</text>
       <text class="small" x="738" y="374">core/sim-engine.ts</text>
       <text class="small" x="738" y="392">Tests and hosts with no engine</text>
     </svg>
-    <figcaption>Only the bottom row differs per platform. Everything above it is one source.</figcaption>
+    <figcaption>Only the bottom row differs per platform. Everything above it is one source. The Windows and Linux packages run the web engine inside an Electron shell.</figcaption>
   </figure>
   <div class="grid">
     <div class="tile"><h3>Why one protocol</h3><p>A host only has to answer nine requests. Prompts, chunking, tier rules, and storage are written once, so notes come out the same way everywhere.</p></div>
@@ -256,13 +259,28 @@ footer { color: var(--muted); font-size: 0.86rem; }
     <thead><tr><th>Tier</th><th>Speech to text</th><th>Notes model</th><th>Download</th><th>Offered when</th></tr></thead>
     <tbody>
       <tr><td><b>Lite</b></td><td>Moonshine Base, English</td><td>Qwen3.5 0.8B</td><td class="num">674 MB native<br>761 MB web</td><td>Always. The only tier browsers are offered today.</td></tr>
-      <tr><td><b>Balanced</b></td><td>Parakeet v3, 25 languages</td><td>Qwen3.5 2B</td><td class="num">2.0 GB</td><td>Native with 6 GB of memory or more. Not offered in browsers until it has been run there.</td></tr>
+      <tr><td><b>Balanced</b></td><td>Parakeet v3, 25 languages</td><td>Qwen3.5 2B</td><td class="num">2.0 GB</td><td>macOS and Android with 6 GB of memory or more. Not offered in browsers until it has been run there.</td></tr>
       <tr><td><b>Quality</b></td><td>Parakeet v3, 25 languages</td><td>Qwen3.5 9B</td><td class="num">6.4 GB</td><td>Apple silicon Macs with 16 GB or more. Never phones or browsers.</td></tr>
     </tbody>
   </table>
   </div>
   <p>The highest tier a device can run is recommended at first launch. Settings lists every tier with its size, and a tier the device cannot run is disabled with the reason, such as "Needs 16 GB of memory. This computer has 8 GB."</p>
   <p class="note">Lite notes are draft quality. In the measured runs the 0.8B model kept the right structure but sometimes gave a task to the wrong person. The transcripts carry no speaker labels yet, which makes ownership hard for any model.</p>
+</section>
+
+<section id="features">
+  <span class="eyebrow">Beyond record and write</span>
+  <h2>The notes pad and the Mac features</h2>
+  <p>The notes pad is one component, <code>ui/notes-pad.contract</code>, used by Alona and by the clinical app. The six Mac features below came from the original Swift app. Their logic is in <code>core/</code> and one Swift file answers the parts only macOS can do.</p>
+  <div class="grid">
+    <div class="tile"><span class="k">Every platform</span><h3>Formatting without Markdown</h3><p>A toolbar over the pad: bold, italic, strikethrough, Title, Subtitle, Text, bullets, numbers, to-dos, quote, link, and a timestamp of the recording. Each button writes ordinary Markdown, so people who know it can just type. The bar scrolls sideways on a phone and stays above the keyboard.</p></div>
+    <div class="tile"><span class="k">macOS</span><h3>Other people in the call</h3><p>A Settings switch records the sound other apps play, such as the far side of a call, and mixes it with the microphone before transcription. macOS asks for System Audio Recording the first time. If the capture is silent, Settings says so.</p></div>
+    <div class="tile"><span class="k">macOS</span><h3>Meeting detection</h3><p>Alona notices a Zoom meeting or a call in a browser and shows a card on Home with a Record button. It can also send a notification. It never records by itself.</p></div>
+    <div class="tile"><span class="k">macOS</span><h3>Menu bar item</h3><p>Start and stop a recording, see the timer, and open the app from the menu bar. The app keeps running when its window is closed.</p></div>
+    <div class="tile"><span class="k">macOS</span><h3>Your own folder</h3><p>Settings chooses where meetings are kept. Each meeting is a plain folder with the audio, the transcript, and two Markdown files. If the folder goes missing, recording still works and the meetings move there when it returns.</p></div>
+    <div class="tile"><span class="k">macOS</span><h3>Old recordings</h3><p>"Find recordings" reads the Swift app's folders and imports them, with their dates and titles. The source is only read, never changed, and importing twice adds nothing.</p></div>
+  </div>
+  <p class="note">The flows for these features run with stand-ins for the parts that need a permission prompt: a stand-in capture, a stand-in detector. What a person sees with the real prompts is recorded under Platform status.</p>
 </section>
 
 <section id="flows">
@@ -277,6 +295,7 @@ footer { color: var(--muted); font-size: 0.86rem; }
 <section id="clinic">
   <span class="eyebrow">The same foundations, a second app</span>
   <h2>Clinical app</h2>
+  <p><a href="clinic.html"><b>Open the clinical guide</b></a> for how the app looks under each brand, a visit step by step, and the workflows it covers.</p>
   <p>A patient note-taking and transcription app for health professionals, on web, Android, and iOS. It shares Alona's core, pipeline, and engines. What differs is the note: the clinician picks a template, records a consultation, and gets a draft with that template's sections, written only from what was said. The draft stays marked as an AI draft until the clinician reviews it, and only a reviewed note can be copied or shared.</p>
   <div class="grid">
     <div class="tile"><h3>One file per tenant</h3><p>A tenant is one typed file under <code>tenants/</code>: name, tagline, bundle id, thirteen colors in light and dark, wording, note templates, defaults, and feature switches. The types reject a missing field or a default template that does not exist.</p></div>
@@ -308,7 +327,7 @@ bun tools/tenant.mjs flows riverbend web     # every clinical flow, with capture
   <p>Three tenants ship as examples: a neutral default, a test partner, and a counselling practice that says "clients" and uses different templates. Pick one to see its captures.</p>
   <div class="tabs" id="clinic-tenants" role="group" aria-label="Tenant"></div>
   <div class="tabs" id="clinic-targets" role="group" aria-label="Platform"></div>
-  <p class="note" id="clinic-note">These captures use the demo engine, so the transcript and draft are samples. On the Android emulator the flows that record are unreliable, so some are missing there.</p>
+  <p class="note" id="clinic-note">These captures use the demo engine, so the transcript and draft are samples.</p>
   <div id="clinic-list" style="display:flex;flex-direction:column;gap:18px"></div>
   <p class="note">On real models the Lite tier's clinical draft passed the format check and added nothing that was not said, but it was a poor note: it copied guidance sentences and repeated the history under the impression. Treat Lite drafts as a starting point until accuracy is measured on real consultations.</p>
 </section>
@@ -319,6 +338,9 @@ bun tools/tenant.mjs flows riverbend web     # every clinical flow, with capture
   <p>These come from repeatable checks that run the built app on real models with a 53-second spoken meeting (three synthetic voices) and compare the transcript with the script that was spoken. Synthetic speech is easier than a real room, so read the word error rate as a floor.</p>
   <p>Memory on macOS is the app's physical footprint, the figure Activity Monitor shows. It leaves out the model file itself, which is memory-mapped: 0.5 GB on Lite, 1.3 GB on Balanced, and 5.7 GB on Quality stay in the system's file cache while the notes model runs. Memory in the browser is resident size, which runs higher than footprint.</p>
   <div id="check-list" style="display:flex;flex-direction:column;gap:18px"></div>
+  <h3 style="margin-top:28px">Memory over time</h3>
+  <p>A leak shows as a figure that keeps climbing. These two checks follow memory through a long recording and through many meetings in one process.</p>
+  <div id="memory-list" style="display:flex;flex-direction:column;gap:18px"></div>
 </section>
 
 <section id="brand">
@@ -340,7 +362,7 @@ bun tools/tenant.mjs flows riverbend web     # every clinical flow, with capture
   <h2>Developer onboarding</h2>
   <h3>1. Tools</h3>
   <ul class="plain">
-    <li>macOS on Apple silicon, with Xcode. Exact's Apple hosts ask for Xcode 27.1. On Xcode 26.1 the macOS host builds after the patch in step 2, and the iOS host does not build.</li>
+    <li>macOS on Apple silicon, with Xcode. Exact's Apple hosts ask for Xcode 27.1. On Xcode 26.1 the macOS host builds after the patches in step 2, and the iOS host does not build.</li>
     <li>Rust through rustup, and Bun 1.4.2. Node is not needed.</li>
     <li>Google Chrome, for the web tests and the web real-model check.</li>
     <li>For Android: the Android SDK with platform 37.2, build-tools 37.0.0, an NDK, and JDK 17 or newer.</li>
@@ -353,16 +375,26 @@ bun ../exact/scripts/exact.mjs setup            # toolchains, a few minutes
 
 # Only on Xcode older than 27.1: let Exact's Swift host compile.
 git -C ../exact apply "$PWD/tools/patches/exact-3baa28f-xcode26.patch"
+# For recording other apps' audio on macOS: a permission row Exact lacks.
+git -C ../exact apply "$PWD/tools/patches/exact-3baa28f-audio-capture.patch"
 
 bun install
 bun exact.mjs update                            # point exact.mjs at your checkout
 tools/fetch-apple-frameworks.sh                 # sherpa-onnx, ONNX Runtime, llama.cpp
-bun tools/build-web-engine.mjs                  # bundle the web worker</code></pre>
+bun tools/build-web-engine.mjs                  # bundle the web worker
+
+# Only for Android: build the inference runtimes, and patch Exact to find them.
+python3 tools/build-android-runtimes.py         # llama.cpp with the NDK, sherpa-onnx's AAR
+eval "$(sh tools/prepare-android-exact.sh)"     # sets EXACT and ALONA_ANDROID_MAVEN</code></pre>
   <p>For the Windows and Linux packages, <code>bun tools/build-desktop.mjs</code> builds the web app, wraps it in the Electron shell under <code>desktop/</code>, and writes the two <code>.deb</code> files and the Windows installer. It runs on a Mac.</p>
   <h3>3. Run it</h3>
 <pre><code>bun exact.mjs web          # the web app, rebuilt on save
 bun exact.mjs mac --run    # the macOS app
-bun exact.mjs android      # build and install on the emulator or phone in ANDROID_SERIAL</code></pre>
+bun exact.mjs android      # build and install on the emulator or phone in ANDROID_SERIAL
+bun tools/tenant.mjs build default web     # the clinical app, for one tenant
+
+bun tools/release.mjs build                # every platform's package into release/
+bun tools/release.mjs publish              # a GitHub release with notes and checksums</code></pre>
   <h3>4. Check your work</h3>
   <div class="scroll">
   <table>
@@ -372,6 +404,7 @@ bun exact.mjs android      # build and install on the emulator or phone in ANDRO
       <tr><td><code>bun exact.mjs verify web</code></td><td>The Contract tests, then every end screen in light and dark, at two sizes, at the largest text size, and through the accessibility tree.</td></tr>
       <tr><td><code>bun tools/flows.mjs web</code></td><td>Every flow with state checks, and fresh screenshots and videos. Also takes <code>web-phone</code>, <code>macos</code>, and <code>android</code>.</td></tr>
       <tr><td><code>bun tools/e2e-native.mjs lite</code></td><td>The macOS app on real models: word error rate, the notes' five sections, timing, and memory over three runs.</td></tr>
+      <tr><td><code>bun tools/e2e-android.mjs</code></td><td>The Android app on real models, on the emulator or phone in <code>ANDROID_SERIAL</code>. Takes a tier.</td></tr>
       <tr><td><code>bun tools/e2e-web.mjs</code></td><td>The web app on real models in Chrome, with the fixture played as the microphone.</td></tr>
       <tr><td><code>bun tools/e2e-desktop.mjs</code></td><td>The desktop shell on real models, with the network it used.</td></tr>
       <tr><td><code>bun tools/tenant.mjs flows &lt;slug&gt; web</code></td><td>Every clinical flow for one tenant, with captures.</td></tr>
@@ -388,13 +421,15 @@ bun exact.mjs android      # build and install on the emulator or phone in ANDRO
       <tr><td><code>app.ts</code></td><td>The data module: sources the view asks for, wired to the service.</td></tr>
       <tr><td><code>app.tamber</code></td><td>Brand tokens, light and dark.</td></tr>
       <tr><td><code>core/</code></td><td>Shared TypeScript: <code>service</code>, <code>pipeline</code>, <code>notes</code>, <code>device</code>, <code>models</code>, <code>store</code>, <code>engine</code> (the protocol), <code>sim-engine</code>, and <code>artifacts.json</code>.</td></tr>
-      <tr><td><code>modules/apple/</code></td><td>The Swift engine for macOS and iOS.</td></tr>
+      <tr><td><code>modules/apple/</code></td><td>The Swift engine for macOS and iOS, and the macOS system seam (folders, detection, audio capture).</td></tr>
+      <tr><td><code>packages/alona-engine/</code></td><td>The Kotlin engine for Android, as an Exact extension package.</td></tr>
+      <tr><td><code>ui/</code></td><td>View components both apps share, such as the notes pad with its toolbar.</td></tr>
       <tr><td><code>modules/web/</code>, <code>engine/web/</code></td><td>The web engine's seam and its Worker source.</td></tr>
       <tr><td><code>clinic/</code>, <code>tenants/</code></td><td>The clinical app's view and logic, and one typed config file per tenant.</td></tr>
       <tr><td><code>desktop/</code></td><td>The Electron shell for the Windows and Linux packages.</td></tr>
-      <tr><td><code>tools/</code></td><td>Flow runner, real-model checks, model pinning, framework fetch, the Exact patch.</td></tr>
+      <tr><td><code>tools/</code></td><td>Flow runner, real-model checks, model pinning, framework fetch, tenant, desktop and release builds, the Exact patches.</td></tr>
       <tr><td><code>docs/</code></td><td>This guide, captured media, research, spike reports, and the decision trail.</td></tr>
-      <tr><td><code>legacy/macos-swift/</code></td><td>The original Swift app, kept as reference for system-audio capture and meeting detection.</td></tr>
+      <tr><td><code>legacy/macos-swift/</code></td><td>The original Swift app, kept as reference.</td></tr>
     </tbody>
   </table>
   </div>
@@ -421,16 +456,17 @@ bun exact.mjs android      # build and install on the emulator or phone in ANDRO
   <span class="eyebrow">What is not done</span>
   <h2>Open gaps</h2>
   <div class="grid">
-    <div class="tile"><span class="pill no">Blocked</span><h3>Other participants' audio on macOS</h3><p>The Swift app captured meeting audio with a Core Audio process tap. Exact has no permission entry for audio capture and refuses hand-written Info.plist keys, so the new app records the microphone only.</p></div>
-    <div class="tile"><span class="pill no">Blocked</span><h3>iOS</h3><p>Needs Xcode 27.1 on the build machine. Nothing about iOS has been compiled or run.</p></div>
-    <div class="tile"><span class="pill part">Unverified</span><h3>Windows, and Linux on a real GPU</h3><p>The Windows installer has never been run. The Linux package has only run in a container without a GPU, where it falls back to samples. Both packages are unsigned and carry the Lite tier only.</p></div>
-    <div class="tile"><span class="pill part">Owner decisions</span><h3>Clinical use</h3><p>Before real patients: a regulatory review, accuracy measured on real consultations, whether to screen the patient reference for identifiers, and whether audio is deleted after review.</p></div>
-    <div class="tile"><span class="pill part">Not built</span><h3>Android inference</h3><p>Needs a Kotlin extension package that bridges to sherpa-onnx and llama.cpp. The spike report lists the route and its risks.</p></div>
-    <div class="tile"><span class="pill part">Not built</span><h3>Meeting detection and menu bar</h3><p>Zoom and Meet detection and the menu bar item from the Swift app are not ported. Detection of Meet needs an Apple Events permission Exact cannot declare.</p></div>
-    <div class="tile"><span class="pill part">Unmeasured</span><h3>Long meetings</h3><p>The chunked path is unit-tested, but no hour-long recording has been run through real models, and no eval set scores notes quality.</p></div>
-    <div class="tile"><span class="pill part">Not ported</span><h3>Smaller Swift features</h3><p>The notes toolbar (timestamp, bullet, and action-item buttons), the choice of save folder, and migration of recordings made by the Swift app.</p></div>
+    <div class="tile"><span class="pill no">Blocked</span><h3>iOS</h3><p>Xcode 27.1 is installed but not licensed on the build machine. Nothing about iOS has been compiled or run, for Alona or for the clinical app.</p></div>
+    <div class="tile"><span class="pill part">Unverified</span><h3>The Mac features, live</h3><p>System audio capture, Zoom and Meet detection, and notifications each sit behind a macOS permission prompt. Their flows pass with stand-ins. Nobody has yet allowed the prompts and watched the real thing work. The checklist is in <code>docs/rewrite/mac-features.md</code>.</p></div>
     <div class="tile"><span class="pill part">Unverified</span><h3>Real rooms and real microphones</h3><p>Every accuracy figure comes from synthetic voices fed in as a file or a fake microphone. No hardware microphone and no real meeting has been run on any platform.</p></div>
+    <div class="tile"><span class="pill part">Unverified</span><h3>Windows, and Linux on a real GPU</h3><p>The Windows installer has never been run. The Linux package has only run in a container without a GPU, where it falls back to samples. Both packages are unsigned and carry the Lite tier only.</p></div>
+    <div class="tile"><span class="pill part">Unverified</span><h3>A physical Android phone</h3><p>Real models ran on an emulator with 8 GB of memory. Speed, heat, and memory on a real phone are not measured.</p></div>
+    <div class="tile"><span class="pill part">Unexplained</span><h3>A memory peak after Stop on macOS</h3><p>Between Stop and the finished notes, the app's footprint peaked near 1.2 GB in the long-recording check, with or without system audio. It returns to about 100 MB after. The source is not identified.</p></div>
+    <div class="tile"><span class="pill part">Known bug</span><h3>Toolbar at the largest text size</h3><p>At phone width and the largest accessibility text size, with the page scrolled, the sticky toolbar overlaps the link-address row in My notes.</p></div>
+    <div class="tile"><span class="pill part">Unmeasured</span><h3>Long meetings and note quality</h3><p>A 10-minute recording has been run through real models on macOS. No hour-long recording has, and no eval set scores the quality of the notes. Lite notes are draft quality.</p></div>
+    <div class="tile"><span class="pill part">Owner decisions</span><h3>Clinical use</h3><p>Before real patients: a regulatory review, accuracy measured on real consultations, whether to screen the patient reference for identifiers, and whether audio is deleted after review.</p></div>
     <div class="tile"><span class="pill part">Known limit</span><h3>Speaker labels</h3><p>Transcripts have timestamps but no speakers. Diarization models exist for the runtimes in use and are not wired in.</p></div>
+    <div class="tile"><span class="pill part">Known limit</span><h3>Unsigned builds</h3><p>Every package is unsigned or ad-hoc signed. macOS, Windows, and Android will warn on install until the owner signs them.</p></div>
   </div>
   <footer>Sources: <code>docs/research/local-models-2026-11.md</code>, <code>docs/rewrite/spikes/</code>, and the decision trail at <code>docs/rewrite/decisions.tsv</code>.</footer>
 </section>
@@ -447,7 +483,8 @@ bun exact.mjs android      # build and install on the emulator or phone in ANDRO
     ['web-real', 'Web, real models', 'Recorded in Chrome with real models. The spoken fixture was played as the microphone.'],
     ['macos', 'macOS', ''],
     ['macos-real', 'macOS, real models', 'The notes screen after the real-model check, one capture per tier.'],
-    ['android', 'Android', 'Android runs the demo engine: the transcript and notes shown are samples.'],
+    ['android', 'Android', 'These flow captures use the demo engine, so the transcript and notes are samples. The real-model check on Android is under Measured results.'],
+    ['android-real', 'Android, real models', 'The emulator on real models: first launch, the download, and the notes each tier wrote.'],
     ['desktop', 'Windows and Linux shell', 'The Electron shell that the Windows and Linux packages use. The macOS run used real models. The Linux run was in a container with no GPU, so it shows the demo engine.'],
   ];
   var DEMO = 'These captures use the demo engine, so the transcript and notes are samples. The agent owns the clock, so each video is one frame per step.';
@@ -458,6 +495,14 @@ bun exact.mjs android      # build and install on the emulator or phone in ANDRO
     ['library', 'Library', ['Home lists meetings, newest first, each with its state.', 'Light and dark follow the system.', 'Delete asks first, then removes the recording, transcript, and notes.']],
     ['settings', 'Settings and models', ['See what this device is and what Alona recommends.', 'Pick a lighter tier, download it, or remove one to free space.', 'A tier the device cannot run is disabled and says why.']],
     ['leaving', 'Leaving mid-task', ['Back during a recording stops it and saves the meeting, so the microphone never stays on.', 'Notes typed just before Back are saved to the meeting they belong to.']],
+    ['toolbar', 'Formatting toolbar', ['Each button applies its format to the selection and shows as pressed.', 'The timestamp button inserts the recording time at the caret.', 'The same buttons work on My notes after the meeting.']],
+    ['toolbar-large', 'Toolbar at the largest text size', ['The pad and its toolbar at the largest accessibility text size, in light and dark.']],
+    ['menubar', 'Menu bar item', ['With the window closed, the menu starts and stops a recording and shows the timer.', 'Open Alona brings the meeting up.']],
+    ['system-audio', 'Other people in the call', ['Turn on the switch in Settings.', 'The recording mixes the microphone with what other apps played, and Settings reports that sound was heard.']],
+    ['detection', 'Meeting detection', ['A card appears on Home when a meeting is on.', 'Record starts a recording named after the meeting. Turning detection off removes the card.']],
+    ['folder', 'Your own folder', ['Choose a folder in Settings.', 'Finished meetings move there as plain folders.']],
+    ['folder-missing', 'When the folder is missing', ['Settings says the folder cannot be reached.', 'Recording still works, and the meeting moves when the folder is back.']],
+    ['migration', 'Import old recordings', ['Find recordings counts the Swift app\'s folders.', 'Import brings each in with its date and title. A second import adds nothing.']],
     ['real-time', 'Real-time capture', ['Screen recordings of the installed app, driven by real taps.']],
     ['macos', 'The shell on a Mac, real models', ['First launch, download, a recording from a fake microphone, the notes, the transcript, and Settings.']],
     ['linux', 'The installed .deb on Ubuntu', ['The same steps in a container. With no GPU the app says so and shows samples.']],
@@ -514,6 +559,9 @@ bun exact.mjs android      # build and install on the emulator or phone in ANDRO
     ['library', 'Notes list', ['Newest first, with the reference, the note type, and whether it is a draft or reviewed.']],
     ['leaving', 'Leaving mid-task', ['Back during a recording stops it and saves the note. Edits typed before Back are kept.']],
     ['settings', 'Settings', ['Models, the tenant\'s privacy statement and support contact, the app\'s name and version.']],
+    ['rewrite', 'Write as another note', ['From a finished note, pick another template.', 'A second note is written from the same recording. The first note is untouched.']],
+    ['toolbar', 'Formatting toolbar', ['The same toolbar as Alona, on the jottings pad and on the draft.']],
+    ['toolbar-large', 'Toolbar at the largest text size', ['The pads at the largest accessibility text size.']],
     ['real-run', 'A run on real models', ['A synthetic consultation played as the microphone, transcribed and drafted with the Lite models.']],
   ];
   var clinic = data.clinic || {};
@@ -585,6 +633,18 @@ bun exact.mjs android      # build and install on the emulator or phone in ANDRO
     parts.push(el('p', { class: 'empty', text: 'Source: ' + c.file + (c.date ? ', run ' + c.date.slice(0, 10) : '') }));
     checks.appendChild(el('div', { class: 'flow' }, parts));
   });
+
+  var memory = document.getElementById('memory-list');
+  (data.memory || []).forEach(function (m) {
+    var cells = m.values.map(function (v, i) { return el('td', { class: 'num', text: String(v) }); });
+    var heads = m.values.map(function (v, i) { return el('th', { text: String(i + (m.unit.indexOf('minute') >= 0 ? 0 : 1)) }); });
+    var parts = [el('h3', { text: m.title }), el('p', { text: m.unit + '. ' + m.after }),
+      el('div', { class: 'scroll' }, [el('table', {}, [el('thead', {}, [el('tr', {}, heads)]), el('tbody', {}, [el('tr', {}, cells)])])])];
+    if (m.method) parts.push(el('details', {}, [el('summary', { text: 'How this was measured' }), el('p', { text: m.method })]));
+    parts.push(el('p', { class: 'empty', text: 'Source: ' + m.file + (m.date ? ', run ' + m.date.slice(0, 10) : '') }));
+    memory.appendChild(el('div', { class: 'flow' }, parts));
+  });
+  if (!(data.memory || []).length) memory.appendChild(el('p', { class: 'empty', text: 'No long run has been recorded yet.' }));
 
   var TOKENS = [
     ['AccentColor', 'The accent: filled buttons, focus', '#4d6b57', '#5f8a6e'],

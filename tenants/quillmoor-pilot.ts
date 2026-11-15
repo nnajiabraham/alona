@@ -8,7 +8,7 @@ export default defineTenant({
     shortName: 'Quillmoor',
     tagline: 'Pilot build for Quillmoor Physio. Treatment notes from your sessions.',
     bundleId: 'test.quillmoor.notes',
-    version: '0.1.0',
+    version: '0.1.1',
   },
   colors: {
     accent: { light: '#5b3fa0', dark: '#8a6fd4' },

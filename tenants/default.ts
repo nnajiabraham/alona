@@ -8,7 +8,7 @@ export default defineTenant({
     shortName: 'Clinic Notes',
     tagline: 'Visit notes, drafted on this device.',
     bundleId: 'app.clinicnotes.default',
-    version: '0.1.0',
+    version: '0.1.1',
   },
   colors: {
     accent: { light: '#1f6f6b', dark: '#2f8a84' },
@@ -55,6 +55,39 @@ export default defineTenant({
         { heading: 'Assessment', guidance: "The clinician's stated impression." },
         { heading: 'Plan', guidance: 'What was agreed: treatment, advice and tests.' },
         { heading: 'Follow-up', guidance: 'When and how the patient will be seen again.' },
+      ],
+    },
+    {
+      id: 'dictation',
+      name: 'Dictated note',
+      description: 'You dictate after the visit; the app tidies it into a note.',
+      sections: [
+        { heading: 'Summary', guidance: 'The visit in two or three sentences, as the clinician dictated it.' },
+        { heading: 'Findings', guidance: 'History and examination findings the clinician dictated.' },
+        { heading: 'Plan', guidance: 'The plan the clinician dictated, with any timing given.' },
+      ],
+    },
+    {
+      id: 'referral',
+      name: 'Referral letter',
+      description: 'A letter to another clinician, from what was said in the visit.',
+      sections: [
+        { heading: 'Reason for referral', guidance: 'What the referring clinician asks the other clinician to assess or do.' },
+        { heading: 'History', guidance: 'The relevant history the patient or clinician described.' },
+        { heading: 'Findings', guidance: 'Examination findings and results the clinician said aloud.' },
+        { heading: 'Current treatment', guidance: 'Treatment and medication mentioned in the visit, exactly as stated.' },
+        { heading: 'Request', guidance: 'What the clinician asked for and how soon, if a timing was given.' },
+      ],
+    },
+    {
+      id: 'visit-summary',
+      name: 'Visit summary for the patient',
+      description: 'Plain-language instructions the patient can take home.',
+      sections: [
+        { heading: 'What we talked about', guidance: 'The visit in plain words, without clinical jargon.' },
+        { heading: 'What to do now', guidance: 'Each instruction the clinician gave, as a short step.' },
+        { heading: 'When to get help', guidance: 'Any warning signs or reasons to come back that the clinician said.' },
+        { heading: 'Next appointment', guidance: 'When the patient will be seen again, if it was said.' },
       ],
     },
   ],

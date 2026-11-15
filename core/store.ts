@@ -10,9 +10,7 @@ export interface Files {
   rm(path: string): Promise<void>;
 }
 
-const MEETINGS_DIR = 'app:/data/meetings';
-
-const meetingDir = (id: string): string => `${MEETINGS_DIR}/${id}`;
+export const MEETINGS_DIR = 'app:/data/meetings';
 
 /**
  * A meeting is a folder. The person's actions write `meeting.json` and
@@ -20,23 +18,26 @@ const meetingDir = (id: string): string => `${MEETINGS_DIR}/${id}`;
  * `ai-notes.md`. Two writers never share a file, so a notes save cannot
  * overwrite a pipeline step that lands at the same moment.
  */
-const paths = (id: string) => ({
-  identity: `${meetingDir(id)}/meeting.json`,
-  stage: `${meetingDir(id)}/stage.json`,
-  userNotes: `${meetingDir(id)}/notes.md`,
-  transcript: `${meetingDir(id)}/transcript.json`,
-  aiNotes: `${meetingDir(id)}/ai-notes.md`,
-});
+const layout = (root: string) => {
+  const meetingDir = (id: string): string => `${root}/${id}`;
+  const paths = (id: string) => ({
+    identity: `${meetingDir(id)}/meeting.json`,
+    stage: `${meetingDir(id)}/stage.json`,
+    userNotes: `${meetingDir(id)}/notes.md`,
+    transcript: `${meetingDir(id)}/transcript.json`,
+    aiNotes: `${meetingDir(id)}/ai-notes.md`,
+  });
+  /** A file an app adds to a meeting's folder: a plain name the store does not own. */
+  const extraPath = (id: string, name: string): string => {
+    if (!/^[a-z0-9][a-z0-9.-]*$/.test(name) || OWNED.has(name) || name.startsWith('audio')) {
+      throw new Error(`"${name}" is not a file an app may add to a meeting.`);
+    }
+    return `${meetingDir(id)}/${name}`;
+  };
+  return { meetingDir, paths, extraPath };
+};
 
-const OWNED = new Set(Object.values(paths('x')).map((p) => p.slice(p.lastIndexOf('/') + 1)));
-
-/** A file an app adds to a meeting's folder: a plain name the store does not own. */
-function extraPath(id: string, name: string): string {
-  if (!/^[a-z0-9][a-z0-9.-]*$/.test(name) || OWNED.has(name) || name.startsWith('audio')) {
-    throw new Error(`"${name}" is not a file an app may add to a meeting.`);
-  }
-  return `${meetingDir(id)}/${name}`;
-}
+const OWNED = new Set(['meeting.json', 'stage.json', 'notes.md', 'transcript.json', 'ai-notes.md']);
 
 interface Identity {
   id: string;
@@ -149,7 +150,10 @@ export interface NewMeeting {
   userNotes: string;
 }
 
-export function meetingStore(files: Files) {
+/** The meetings under `root`: app storage by default, or a folder the person chose. */
+export function meetingStore(files: Files, root: string = MEETINGS_DIR) {
+  const { meetingDir, paths, extraPath } = layout(root);
+
   const load = async (id: string): Promise<StoredMeeting | null> => {
     const p = paths(id);
     const identity = parseIdentity(parseJson(await readText(files, p.identity)));
@@ -173,7 +177,7 @@ export function meetingStore(files: Files) {
     async list(): Promise<StoredMeeting[]> {
       let ids: string[];
       try {
-        ids = await files.readdir(MEETINGS_DIR);
+        ids = await files.readdir(root);
       } catch (e) {
         if (isMissing(e)) return [];
         throw e;
@@ -189,7 +193,7 @@ export function meetingStore(files: Files) {
     async adoptOrphans(): Promise<void> {
       let ids: string[];
       try {
-        ids = await files.readdir(MEETINGS_DIR);
+        ids = await files.readdir(root);
       } catch (e) {
         if (isMissing(e)) return;
         throw e;
@@ -211,7 +215,7 @@ export function meetingStore(files: Files) {
     async create(m: NewMeeting): Promise<void> {
       const p = paths(m.id);
       // mkdir refuses a folder that exists, and the recorder has usually made this one already.
-      await files.mkdir(MEETINGS_DIR).catch(() => {});
+      await files.mkdir(root).catch(() => {});
       await files.mkdir(meetingDir(m.id)).catch(() => {});
       await writeText(files, p.userNotes, m.userNotes);
       const identity: Identity = { id: m.id, title: m.title, createdAt: m.createdAt, durationS: m.durationS, audio: m.audio, tier: m.tier };
@@ -223,7 +227,27 @@ export function meetingStore(files: Files) {
       if (identity) await writeText(files, paths(id).identity, JSON.stringify({ ...identity, title }));
     },
 
+    /** Points a moved meeting at its recording's new path. */
+    async relocateAudio(id: string, audio: string): Promise<void> {
+      const identity = parseIdentity(parseJson(await readText(files, paths(id).identity)));
+      if (identity && identity.audio !== audio) await writeText(files, paths(id).identity, JSON.stringify({ ...identity, audio }));
+    },
+
+    root,
+    dir: meetingDir,
+    async mkdirMeeting(id: string): Promise<void> {
+      await files.mkdir(root).catch(() => {});
+      await files.mkdir(meetingDir(id)).catch(() => {});
+    },
+
     remove: (id: string): Promise<void> => files.rm(meetingDir(id)),
+
+    /** Copies a recording into a meeting's folder under its own file name, and answers the copy's path. */
+    async copyAudio(path: string, toId: string): Promise<string> {
+      const copy = `${meetingDir(toId)}/${path.slice(path.lastIndexOf('/') + 1)}`;
+      await files.atomicWriteFile(copy, new Uint8Array(await files.readFile(path)));
+      return copy;
+    },
 
     readUserNotes: async (id: string): Promise<string> => (await readText(files, paths(id).userNotes)) ?? '',
     writeUserNotes: (id: string, text: string): Promise<void> => writeText(files, paths(id).userNotes, text),

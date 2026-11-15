@@ -1,0 +1,6 @@
+{"clock":0,"settled":false,"reason":"requests","epoch":1,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
+{"clock":0,"real":1535,"until":"met","value":false}
+false
+"sdk_gphone64_arm64 · Android 15 · 16 GB memory"
+"balanced"
+{"screenshot":"/Users/manlikeabro/.t3/worktrees/alona/t3-aec355c6-21626171595a45e9/docs/media/android-real/first-launch.png","device":true,"epoch":2,"incarnation":1,"clock":0}
