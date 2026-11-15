@@ -4,6 +4,7 @@
 // brand comes from the tenant (loadBrand); every colour from app.tamber,
 // which tools/tenant.mjs writes from the tenant file.
 use EmptyState, Badge from "exact:content"
+use NotesPad from "./clinic/lib/notes-pad.contract"
 use getUserMedia, stopTrack, microphoneStatus, MediaStream, MediaStreamTrack, MicrophoneStatus from "@exact/media-capture"
 use startMediaRecorder, stopMediaRecorder, mediaRecorderState, MediaRecorderInfo, RecordedMedia from "@exact/recording"
 
@@ -65,6 +66,7 @@ shape Setup
   demo: bool
   demoNote: string
   deviceLine: string
+  host: string
   recommended: string
   recommendedLabel: string
   active: string
@@ -469,8 +471,8 @@ component Clinic
                   column gap=6
                     text "Your jottings" font="-exact-headline"
                     text "The draft uses these too. Avoid full names and dates of birth." font="-exact-footnote" color="text.muted"
-                    textarea value=recJottings input=editRecJottings markup="markdown" placeholder="- BP, findings, follow-ups"
-                      aria-label="Your jottings" rows=8 testId="record-jottings" min-height=180
+                    NotesPad(editor="record-jottings-editor", value=recJottings, edit=editRecJottings, label="Your jottings",
+                      placeholder="BP, findings, follow-ups", rows=8, minHeight=180, prefix="rec", field="record-jottings", ground="-exact-background", stamp="")
         if e.name == "note"
           column navigationKey=`${e.id}` navigationScroll="note-scroll" position="absolute" inset=0
             display="flex" flex-direction="column"
@@ -522,8 +524,8 @@ component Clinic
                             color="progress.ink" font="-exact-headline" flex=1 min-width=0
                       if editing
                         column gap=6
-                          textarea value=shownNote input=editNote markup="markdown" aria-label="Note" rows=16 min-height=320
-                            testId="note-editor"
+                          NotesPad(editor="note-editor-field", value=shownNote, edit=editNote, label="Note",
+                            placeholder="", rows=16, minHeight=320, prefix="draft", field="note-editor", ground="surface.page", stamp="")
                           row gap=8 align-items="center"
                             text (editDirty ? "Saving…" : "Saved on this device") font="-exact-footnote" color="text.muted" flex=1 testId="edit-state"
                             button press=stopEditing buttonStyle="bordered" testId="done-editing"
@@ -569,8 +571,8 @@ component Clinic
                             text s.text flex=1 min-width=0
                   if pane == "jottings"
                     column gap=6
-                      textarea value=shownJottings input=editJottings markup="markdown" placeholder="Write in Markdown"
-                        aria-label="Your jottings" rows=10 min-height=220 testId="jottings"
+                      NotesPad(editor="jottings-editor", value=shownJottings, edit=editJottings, label="Your jottings",
+                        placeholder="Write your jottings", rows=10, minHeight=220, prefix="jot", field="jottings", ground="surface.page", stamp="")
                       text (jotDirty ? "Saving…" : "Saved on this device. Write again to use them in the draft.") font="-exact-footnote" color="text.muted" testId="jottings-state"
             else if not pending(detail)
               EmptyState(symbol="symbol:alert", title="No such note", message="It may have been deleted.")

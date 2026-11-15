@@ -27,6 +27,8 @@ export interface SetupView {
   /** Why the demo engine is in use, shown wherever sample content appears. Empty with a real engine. */
   demoNote: string;
   deviceLine: string;
+  /** The device's host (`macos`, `ios`, `android`, `web`, …), for a view that must leave out what a host lacks. */
+  host: string;
   recommended: string;
   recommendedLabel: string;
   active: string;
@@ -225,6 +227,7 @@ export function service(engine: Engine, store: MeetingStore, demoNote: string, o
         demo,
         demoNote,
         deviceLine: deviceLine(d),
+        host: d.host,
         recommended: a.recommended,
         recommendedLabel: LINEUP[a.recommended].label,
         active,

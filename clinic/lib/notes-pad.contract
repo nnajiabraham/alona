@@ -1,0 +1,155 @@
+// The Markdown notes pad both apps use: a formatting toolbar over the editor, and a line
+// saying the buttons are optional. Every button is one of the editor's own commands, so the
+// value stays Markdown and each press is one undo step. The pad keeps the editor's selection
+// facts (`select`) to show which formats are on at the caret.
+//
+// It lives under clinic/lib because tools/tenant.mjs copies that folder into every tenant
+// build at the same relative path, so `./clinic/lib/notes-pad.contract` names this file from
+// Alona's app.contract and from a tenant's.
+
+component NotesPad
+  props
+    editor: string
+    value: string
+    edit: action
+    label: string
+    placeholder: string
+    rows: number
+    minHeight: number
+    prefix: string
+    field: string
+    // The colour behind the pad, so the sticky toolbar covers the text scrolling under it.
+    ground: string
+    // The text the timestamp button inserts, or "" for no timestamp button.
+    stamp: string
+  state formats = ""
+  state unavailable = ""
+  state currentLink = ""
+  state linkOpen = false
+  state linkUrl = ""
+  derive heading = ` ${formats} `.includes(" heading2 ") ? 2 : (` ${formats} `.includes(" heading3 ") ? 3 : 0)
+  action selected(s: MarkdownSelection)
+    formats = s.formats
+    unavailable = s.unavailable
+    currentLink = s.link
+  action apply(command: string)
+    format(editor, command)
+  action level(n: number)
+    format(editor, "heading", `${n}`)
+  // A heading command on a line already at that level takes the heading off.
+  action plain
+    if heading != 0
+      format(editor, "heading", `${heading}`)
+  action insertStamp
+    setRangeText(editor, stamp)
+  action openLink
+    linkOpen = true
+    linkUrl = currentLink
+    focus(`${prefix}-link-url`)
+  action typeLink(v: string)
+    linkUrl = v
+  action applyLink
+    format(editor, "link", linkUrl.trim())
+    linkOpen = false
+    focus(editor)
+  action cancelLink
+    linkOpen = false
+    focus(editor)
+  view
+    column gap=6 testId=`${prefix}-pad`
+      // Sticky, so the buttons stay on screen above the caret while a phone's keyboard is up.
+      scroll position="sticky" top=0 z-index=1 width="100%" overflow-x="auto" overflow-y="hidden" background-color=ground
+        testId=`${prefix}-toolbar-scroll`
+        row role="group" aria-label="Formatting" gap=4 padding="4px 0" flex-wrap="nowrap" align-items="stretch" testId=`${prefix}-toolbar`
+          if stamp != ""
+            button press=insertStamp retainFocus=true aria-label=`Insert timestamp ${stamp.trim()}` testId=`${prefix}-stamp`
+              display="flex" align-items="center" gap=4 flex-shrink=0 min-height=44 padding="0 10px" border-radius=10 background-color="surface.raised" color="text.primary"
+              text stamp.trim() font-variant-numeric="tabular-nums" white-space="nowrap"
+          FormatButton(name="bold", label="Bold", glyph="B", weight=700, slant="normal", strike=false, formats=formats, unavailable=unavailable, apply=apply, prefix=prefix)
+          FormatButton(name="italic", label="Italic", glyph="I", weight=400, slant="italic", strike=false, formats=formats, unavailable=unavailable, apply=apply, prefix=prefix)
+          FormatButton(name="strike", label="Strikethrough", glyph="S", weight=400, slant="normal", strike=true, formats=formats, unavailable=unavailable, apply=apply, prefix=prefix)
+          view width=1 flex-shrink=0 margin="8px 2px" background-color="line.soft"
+          LevelButton(label="Title", hint="Title", on=(heading == 2), off=` ${unavailable} `.includes(" heading "), press=level(2), testId=`${prefix}-title`)
+          LevelButton(label="Subtitle", hint="Subtitle", on=(heading == 3), off=` ${unavailable} `.includes(" heading "), press=level(3), testId=`${prefix}-subtitle`)
+          LevelButton(label="Text", hint="Plain text", on=(heading == 0), off=` ${unavailable} `.includes(" heading "), press=plain, testId=`${prefix}-plain`)
+          view width=1 flex-shrink=0 margin="8px 2px" background-color="line.soft"
+          BlockButton(name="bullet", label="Bullets", hint="Bulleted list", symbol="symbol:list", mark="", formats=formats, unavailable=unavailable, apply=apply, prefix=prefix)
+          BlockButton(name="ordered", label="Numbers", hint="Numbered list", symbol="", mark="1.", formats=formats, unavailable=unavailable, apply=apply, prefix=prefix)
+          BlockButton(name="task", label="To-do", hint="Checklist", symbol="symbol:checkmark", mark="", formats=formats, unavailable=unavailable, apply=apply, prefix=prefix)
+          BlockButton(name="quote", label="Quote", hint="Quote", symbol="symbol:quote", mark="", formats=formats, unavailable=unavailable, apply=apply, prefix=prefix)
+          button press=openLink retainFocus=true aria-label="Link" aria-pressed=(currentLink != "")
+            disabled=` ${unavailable} `.includes(" link ") testId=`${prefix}-link`
+            display="flex" align-items="center" gap=4 flex-shrink=0 min-height=44 padding="0 10px" border-radius=10
+            background-color=(currentLink != "" ? "AccentColor" : "surface.raised") color=(currentLink != "" ? "ink.on-fill" : "text.primary")
+            image "symbol:link" aria-hidden=true
+            text "Link" white-space="nowrap"
+      if linkOpen
+        row gap=6 align-items="center" flex-wrap="wrap" testId=`${prefix}-link-row`
+          input id=`${prefix}-link-url` value=linkUrl input=typeLink submit=applyLink type="url" aria-label="Link address"
+            placeholder="https://example.com" flex=1 min-width=160 testId=`${prefix}-link-url`
+          button press=applyLink retainFocus=true buttonStyle="filled" disabled=(linkUrl.trim() == "" and currentLink == "")
+            testId=`${prefix}-link-apply`
+            text (currentLink == "" ? "Add link" : (linkUrl.trim() == "" ? "Remove link" : "Change link"))
+          button press=cancelLink testId=`${prefix}-link-cancel`
+            text "Cancel"
+      textarea id=editor value=value input=edit select=selected markup="markdown" placeholder=placeholder
+        aria-label=label rows=rows min-height=minHeight testId=field
+      text "The buttons are optional. You can also type Markdown, such as **bold** or - for a list."
+        font="-exact-footnote" color="text.muted" testId=`${prefix}-hint`
+
+component FormatButton
+  props
+    name: string
+    label: string
+    glyph: string
+    weight: number
+    slant: string
+    strike: bool
+    formats: string
+    unavailable: string
+    apply: action
+    prefix: string
+  derive on = ` ${formats} `.includes(` ${name} `)
+  view
+    button press=apply(name) retainFocus=true aria-label=label aria-pressed=on disabled=` ${unavailable} `.includes(` ${name} `)
+      testId=`${prefix}-${name}`
+      display="flex" align-items="center" justify-content="center" flex-shrink=0 min-width=44 min-height=44 padding="0 10px" border-radius=10
+      background-color=(on ? "AccentColor" : "surface.raised") color=(on ? "ink.on-fill" : "text.primary")
+      text glyph font-weight=weight font-style=slant text-decoration-line=(strike ? "line-through" : "none") aria-hidden=true
+
+component LevelButton
+  props
+    label: string
+    hint: string
+    on: bool
+    off: bool
+    press: action
+    testId: string
+  view
+    button press=press retainFocus=true aria-label=hint aria-pressed=on disabled=off testId=testId
+      display="flex" align-items="center" flex-shrink=0 min-height=44 padding="0 10px" border-radius=10
+      background-color=(on ? "AccentColor" : "surface.raised") color=(on ? "ink.on-fill" : "text.primary")
+      text label white-space="nowrap" font-weight=(label == "Title" ? 700 : (label == "Subtitle" ? 600 : 400))
+
+component BlockButton
+  props
+    name: string
+    label: string
+    hint: string
+    symbol: string
+    mark: string
+    formats: string
+    unavailable: string
+    apply: action
+    prefix: string
+  derive on = ` ${formats} `.includes(` ${name} `)
+  view
+    button press=apply(name) retainFocus=true aria-label=hint aria-pressed=on disabled=` ${unavailable} `.includes(` ${name} `)
+      testId=`${prefix}-${name}`
+      display="flex" align-items="center" gap=4 flex-shrink=0 min-height=44 padding="0 10px" border-radius=10
+      background-color=(on ? "AccentColor" : "surface.raised") color=(on ? "ink.on-fill" : "text.primary")
+      if symbol != ""
+        image symbol aria-hidden=true
+      if mark != ""
+        text mark font-variant-numeric="tabular-nums" aria-hidden=true
+      text label white-space="nowrap"

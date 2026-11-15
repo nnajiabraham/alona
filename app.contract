@@ -1,4 +1,5 @@
 use EmptyState, Badge from "exact:content"
+use NotesPad from "./clinic/lib/notes-pad.contract"
 use getUserMedia, stopTrack, microphoneStatus, MediaStream, MediaStreamTrack, MicrophoneStatus from "@exact/media-capture"
 use startMediaRecorder, stopMediaRecorder, mediaRecorderState, MediaRecorderInfo, RecordedMedia from "@exact/recording"
 use showNotification, closeNotification, notificationStatus, requestNotificationPermission, notificationclick, NotificationStatus, NotificationEvent, NotificationAction from "@exact/notifications"
@@ -32,6 +33,7 @@ shape Setup
   demo: bool
   demoNote: string
   deviceLine: string
+  host: string
   recommended: string
   recommendedLabel: string
   active: string
@@ -164,6 +166,8 @@ component Alona
   mutation noticesAsked as shape NotificationStatus refreshes notices
 
   derive recording = recorderId != ""
+  // A timestamp is a setRangeText, which Exact's Android and Windows hosts do not run yet.
+  derive stamps = setup.host != "android" and setup.host != "windows"
   derive micDenied = mic.state == "denied"
   derive startFailure = match failure(started) { case some(f) => f.code, case none => "" }
   derive anyWorking = lib.filter(m => working(m.status)).length > 0
@@ -324,12 +328,6 @@ component Alona
     pane = p
   action heard(seconds: number)
     heardAt = seconds
-  action stamp(editor: string, seconds: number)
-    setRangeText(editor, `[${clock(seconds)}] `)
-  action mark(editor: string, command: string)
-    format(editor, command)
-  action heading(editor: string)
-    format(editor, "heading", "2")
   action editNote(v: string)
     noteDraft = v
     noteDirty = true
@@ -460,10 +458,10 @@ component Alona
                   testId="record-title"
                 column gap=6
                   text "Your notes" font="-exact-headline"
-                  text "Markdown works here. Alona covers what you write first." font="-exact-footnote" color="text.muted"
-                  NotesToolbar(editor="record-notes-editor", at=(rec.duration / 1000), prefix="rec", stamp=stamp, mark=mark, heading=heading)
-                  textarea id="record-notes-editor" value=recNotes input=editRecNotes markup="markdown" placeholder="- Topics, decisions, follow-ups"
-                    aria-label="Your notes" rows=10 testId="record-notes" min-height=220
+                  text "Alona covers what you write first." font="-exact-footnote" color="text.muted"
+                  NotesPad(editor="record-notes-editor", value=recNotes, edit=editRecNotes, label="Your notes",
+                    placeholder="Topics, decisions, follow-ups", rows=10, minHeight=220, prefix="rec", field="record-notes", ground="-exact-background",
+                    stamp=(stamps ? `[${clock(rec.duration / 1000)}] ` : ""))
         if e.name == "meeting"
           column navigationKey=`${e.id}` navigationScroll="meeting-scroll" position="absolute" inset=0
             display="flex" flex-direction="column"
@@ -516,9 +514,9 @@ component Alona
                           text "Write notes"
                   if pane == "mine"
                     column gap=6
-                      NotesToolbar(editor="my-notes-editor", at=heardAt, prefix="mine", stamp=stamp, mark=mark, heading=heading)
-                      textarea id="my-notes-editor" value=shownNotes input=editNote markup="markdown" placeholder="Write in Markdown"
-                        aria-label="My notes" rows=12 min-height=260 testId="my-notes"
+                      NotesPad(editor="my-notes-editor", value=shownNotes, edit=editNote, label="My notes",
+                        placeholder="Write your notes", rows=12, minHeight=260, prefix="mine", field="my-notes", ground="surface.page",
+                        stamp=(stamps ? `[${clock(heardAt)}] ` : ""))
                       text (noteDirty ? "Saving…" : "Saved on this device") font="-exact-footnote" color="text.muted" testId="notes-state"
                   if pane == "transcript"
                     if not working(detail.status)
@@ -734,27 +732,6 @@ component RecordCard
         text "Recording is not available on this device." font="-exact-footnote" color="text.muted" text-align="center" testId="mic-unavailable"
       else if failure != "" and not opening
         text `Recording didn’t start (${failure}).` font="-exact-footnote" color="clay.ink" text-align="center" testId="start-failed"
-
-// Each button edits the pad at its selection through the Markdown editor's own commands, so a
-// bullet or a task is list syntax the editor continues on Return. A timestamp has no command.
-component NotesToolbar
-  props
-    editor: string
-    at: number
-    prefix: string
-    stamp: action
-    mark: action
-    heading: action
-  view
-    row role="group" aria-label="Notes formatting" gap=4 flex-wrap="wrap" testId=`${prefix}-toolbar`
-      button press=stamp(editor, at) retainFocus=true aria-label=`Insert timestamp ${clock(at)}` testId=`${prefix}-stamp`
-        text `[${clock(at)}]` font-variant-numeric="tabular-nums"
-      button press=mark(editor, "bullet") retainFocus=true aria-label="Bullet" testId=`${prefix}-bullet`
-        image "symbol:list"
-      button press=mark(editor, "task") retainFocus=true aria-label="Action item" testId=`${prefix}-task`
-        image "symbol:checkmark"
-      button press=heading(editor) retainFocus=true aria-label="Heading" testId=`${prefix}-heading`
-        text "H"
 
 component StatusChip
   props

@@ -348,6 +348,11 @@ describe('model downloads', () => {
     return Object.assign(service(engine, meetingStore(files), 'Demo.'), { engine, files });
   }
 
+  test('setup names the host, so a view can leave out what that host lacks', async () => {
+    expect((await app({ device: { ...SIM_DEVICE, host: 'android', formFactor: 'phone' } }).setup('auto')).host).toBe('android');
+    expect((await app().setup('auto')).host).toBe('web');
+  });
+
   test('a tier is not installed until its download finishes, then stays installed', async () => {
     const s = app({ polls: 2 });
     expect((await s.setup('auto')).activeInstalled).toBe(false);

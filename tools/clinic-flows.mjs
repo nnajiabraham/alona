@@ -14,6 +14,7 @@
 import { spawnSync } from 'node:child_process';
 import { mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
+import { formatSteps, padClean, padOp, pressed, withKeys } from './pad-steps.mjs';
 
 const ROOT = resolve(dirname(new URL(import.meta.url).pathname), '..');
 const BUN = process.execPath;
@@ -95,6 +96,33 @@ function flows(tenant) {
       `tap "No ${tenant.copy.person.singular} reference"`, 'clock data', 'clock settle', check('detail.hasEdits', true),
       check('detail.note', '## Typed just before Back'), shot('edits-kept'),
     ],
+    // Every formatting button on each pad: the jottings while recording, the draft, and the jottings on the note.
+    toolbar: [
+      ...READY,
+      'tap new-note-button', 'clock settle', 'type new-ref Bed 4', 'tap start-recording', 'clock data', 'clock settle', shot('jottings-pad'),
+      ...(tenant.features.jottings ? formatSteps('rec', 'record-jottings', 'recJottings') : []),
+      'clock +5000', 'tap stop-recording', 'clock data', 'clock settle', 'clock +12000', 'clock data', check('detail.state', 'draft'),
+      'tap edit-note', 'clock settle', shot('draft-pad'),
+      ...formatSteps('draft', 'note-editor', 'editDraft'),
+      'clock +1500', 'clock data', check('detail.note', '**Agenda**'), check('detail.hasEdits', true),
+      'tap done-editing', 'clock data', 'clock settle',
+      ...(tenant.features.jottings
+        ? ['tap pane-jottings', 'clock settle', 'type jottings Follow up', 'tap jot-task', 'clock data', check('jotDraft', '- [ ] Follow up'),
+          pressed('jot-task', true), 'clock +1500', 'clock data', check('detail.jottings', '- [ ] Follow up'), shot('jottings-pane')]
+        : []),
+    ],
+    // The pads at the largest text size iOS offers (a 53 px root at a phone's width), light and dark.
+    'toolbar-large': [
+      ...READY, 'prefer root-font-size 53px',
+      'tap new-note-button', 'clock settle', 'tap start-recording', 'clock data', 'clock settle',
+      ...(tenant.features.jottings
+        ? ['type record-jottings - BP 120/80', 'tap rec-bold', 'clock settle', padClean('rec', 'record-jottings'), shot('jottings-large'),
+          'prefer prefers-color-scheme dark', 'clock settle', shot('jottings-large-dark'), 'prefer prefers-color-scheme light']
+        : []),
+      'tap stop-recording', 'clock data', 'clock settle', 'clock +12000', 'clock data',
+      'tap edit-note', 'clock settle', 'tap draft-link', 'clock settle', padClean('draft', 'note-editor'), shot('draft-large'),
+      'prefer prefers-color-scheme dark', 'clock settle', shot('draft-large-dark'),
+    ],
     settings: [
       ...READY,
       'tap open-settings', 'clock data', 'clock settle', check('choice', tenant.defaults.tier), shot('settings'),
@@ -114,9 +142,13 @@ function run(slug, app, targetName, flowName, steps) {
   const checks = [];
   let shots = 0;
   for (const step of steps) {
-    if (typeof step === 'string') ops.push(step);
+    if (typeof step === 'string') ops.push(withKeys(target.host, step));
     else if ('shot' in step) ops.push(`screenshot ${join(dir, `${String(++shots).padStart(2, '0')}-${step.shot}.png`)}`);
-    else {
+    else if (padOp(step)) {
+      const { op, check: c } = padOp(step);
+      checks.push({ at: ops.length, ...c });
+      ops.push(op);
+    } else {
       checks.push({ at: ops.length, ...step });
       ops.push(`state ${step.check}`);
     }
@@ -140,14 +172,14 @@ function run(slug, app, targetName, flowName, steps) {
     const raw = replies[c.at];
     let actual;
     try {
-      actual = JSON.parse(raw);
+      actual = c.read ? c.read(raw) : JSON.parse(raw);
     } catch {
       actual = raw;
     }
     if ('contains' in c) {
       if (typeof actual !== 'string' || !actual.includes(c.contains)) failures.push(`${c.check}: expected to contain ${JSON.stringify(c.contains)}, got ${(raw ?? '(no reply)').slice(0, 300)}`);
     } else if (JSON.stringify(actual) !== JSON.stringify(c.equals)) {
-      failures.push(`${c.check}: expected ${JSON.stringify(c.equals)}, got ${(raw ?? '(no reply)').slice(0, 300)}`);
+      failures.push(`${c.check}: expected ${JSON.stringify(c.equals)}, got ${c.read ? JSON.stringify(actual).slice(0, 300) : (raw ?? '(no reply)').slice(0, 300)}`);
     }
   }
 

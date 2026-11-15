@@ -14,6 +14,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readdirSync, readFileSync, realpathSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { homedir, tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
+import { check, formatSteps, padClean, padOp, pressed, shot, withKeys } from './pad-steps.mjs';
 
 const ROOT = resolve(dirname(new URL(import.meta.url).pathname), '..');
 const BUN = process.execPath;
@@ -27,8 +28,6 @@ const TARGETS = {
   ios: { host: 'ios', flags: [] },
 };
 
-const shot = (name) => ({ shot: name });
-const check = (path, equals) => ({ check: path, equals });
 
 const READY = ['clock data', 'tap continue', 'clock data', 'clock +6000', 'clock data'];
 const RECORDED = [
@@ -93,18 +92,27 @@ const FLOWS = {
     'tap remove-balanced', 'clock data', check('setup.tiers.1.installed', false), shot('balanced-removed'),
     'tap tier-auto', 'clock data', check('setup.active', 'balanced'), 'back', 'clock data', shot('needs-models-again'),
   ],
-  // The toolbar edits where the caret is, so each step types a fresh value first (an agent `type` replaces the field).
+  // Each step types a fresh value (an agent `type` replaces the field and leaves the caret at its end),
+  // selects it where the command works on a selection, presses one button and reads the stored Markdown.
+  // The pads at the largest text size iOS offers (a 53 px root at a phone's width), each scrolled into view.
+  'toolbar-large': [
+    ...READY, 'prefer root-font-size 53px', 'tap start-recording', 'clock data', 'clock settle',
+    'type record-notes - Agenda', 'tap rec-bold', 'clock settle', padClean('rec', 'record-notes'), shot('record-pad-large'),
+    'prefer prefers-color-scheme dark', 'clock settle', shot('record-pad-large-dark'), 'prefer prefers-color-scheme light',
+    'tap stop-recording', 'clock data', 'clock settle', 'clock +12000', 'clock data',
+    'tap pane-mine', 'clock settle', 'tap mine-link', 'clock settle', padClean('mine', 'my-notes'), shot('my-notes-large'),
+    'prefer prefers-color-scheme dark', 'clock settle', shot('my-notes-large-dark'),
+  ],
   toolbar: [
     ...READY,
-    'tap start-recording', 'clock data', 'clock settle', 'type record-notes Agenda', 'clock +5000', 'clock data',
-    'tap rec-stamp', 'clock data', check('recNotes', 'Agenda[0:05] '),
-    'tap rec-bullet', 'clock data', check('recNotes', '- Agenda[0:05] '), shot('stamp-and-bullet'),
-    'type record-notes Fix login', 'tap rec-task', 'clock data', check('recNotes', '- [ ] Fix login'),
-    'tap rec-heading', 'clock data', check('recNotes', '## Fix login'), shot('task-and-heading'),
+    'tap start-recording', 'clock data', 'clock settle', shot('empty-pad'),
+    ...formatSteps('rec', 'record-notes', 'recNotes'),
+    'type record-notes Agenda', 'clock +5000', 'clock data', 'tap rec-stamp', 'clock data', check('recNotes', 'Agenda[0:05] '), shot('timestamp'),
     'tap stop-recording', 'clock data', 'clock settle', 'clock +12000', 'clock data', check('detail.status', 'done'),
-    'tap pane-mine', 'clock settle', 'type my-notes Decisions', 'tap mine-heading', 'clock data', check('noteDraft', '## Decisions'),
-    'tap mine-task', 'clock data', check('noteDraft', '- [ ] Decisions'), shot('toolbar-on-my-notes'),
-    'clock +1500', 'clock data', check('detail.userNotes', '- [ ] Decisions'),
+    'tap pane-mine', 'clock settle', 'type my-notes Decisions', 'tap mine-title', 'clock data', check('noteDraft', '## Decisions'),
+    pressed('mine-title', true), 'tap mine-plain', 'clock data', check('noteDraft', 'Decisions'),
+    'tap mine-ordered', 'clock data', check('noteDraft', '1. Decisions'), pressed('mine-ordered', true), shot('my-notes-numbered'),
+    'clock +1500', 'clock data', check('detail.userNotes', '1. Decisions'),
   ],
 };
 
@@ -284,9 +292,13 @@ function run(targetName, flowName) {
   const checks = [];
   let shots = 0;
   for (const step of flow.steps) {
-    if (typeof step === 'string') ops.push(fill(step));
+    if (typeof step === 'string') ops.push(withKeys(target.host, fill(step)));
     else if ('shot' in step) ops.push(`screenshot ${join(dir, `${String(++shots).padStart(2, '0')}-${step.shot}.png`)}`);
-    else {
+    else if (padOp(step)) {
+      const { op, check: c } = padOp(step);
+      checks.push({ at: ops.length, ...c });
+      ops.push(op);
+    } else {
       checks.push({ at: ops.length, check: step.check, equals: typeof step.equals === 'string' ? fill(step.equals) : step.equals });
       ops.push(`state ${step.check}`);
     }
@@ -316,12 +328,12 @@ function run(targetName, flowName) {
     const raw = replies[c.at];
     let actual;
     try {
-      actual = JSON.parse(raw);
+      actual = c.read ? c.read(raw) : JSON.parse(raw);
     } catch {
       actual = raw;
     }
     if (JSON.stringify(actual) !== JSON.stringify(c.equals)) {
-      failures.push(`${c.check}: expected ${JSON.stringify(c.equals)}, got ${raw ?? '(no reply)'}`);
+      failures.push(`${c.check}: expected ${JSON.stringify(c.equals)}, got ${c.read && actual !== raw ? JSON.stringify(actual) : (raw ?? '(no reply)').slice(0, 300)}`);
     }
   }
 
