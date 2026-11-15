@@ -23,7 +23,7 @@ clock settle
 screenshot docs/media/clinic/default/web-phone/record/02-reference-and-template.png
   {"clock":6400,"epoch":31,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/record/02-reference-and-template.png","w":390,"h":844}
 tap start-recording
-  {"at":[195,810],"tapped":101,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":46,"incarnation":1}
+  {"at":[195,810],"tapped":116,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":46,"incarnation":1}
 clock data
   {"clock":6400,"settled":true}
 clock settle
@@ -37,13 +37,13 @@ state recTemplate
 screenshot docs/media/clinic/default/web-phone/record/03-recording-started.png
   {"clock":6800,"epoch":51,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/record/03-recording-started.png","w":390,"h":844}
 type record-jottings - L knee, 2 weeks
-  {"at":[195,466],"typed":106,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":54,"incarnation":1}
+  {"at":[195,466],"typed":121,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":54,"incarnation":1}
 clock +5000
   {"clock":11800}
 screenshot docs/media/clinic/default/web-phone/record/04-jottings-while-recording.png
   {"clock":11800,"epoch":60,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/record/04-jottings-while-recording.png","w":390,"h":844}
 tap stop-recording
-  {"at":[195,281],"tapped":120,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":11800,"epoch":75,"incarnation":1}
+  {"at":[195,281],"tapped":135,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":11800,"epoch":75,"incarnation":1}
 clock data
   {"clock":11800,"settled":true}
 clock settle
@@ -95,7 +95,7 @@ state detail.note
 screenshot docs/media/clinic/default/web-phone/record/08-draft-ready.png
   {"clock":23200,"epoch":119,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/record/08-draft-ready.png","w":390,"h":844}
 tap pane-transcript
-  {"at":[182.59375,262],"tapped":161,"target":"pane-transcript","delivery":"platform","carrier":"web","mode":"agent","clock":23200,"epoch":122,"incarnation":1}
+  {"at":[182.59375,262],"tapped":176,"target":"pane-transcript","delivery":"platform","carrier":"web","mode":"agent","clock":23200,"epoch":122,"incarnation":1}
 state pane
   "transcript"
 screenshot docs/media/clinic/default/web-phone/record/09-transcript.png

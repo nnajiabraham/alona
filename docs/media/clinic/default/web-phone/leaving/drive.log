@@ -13,7 +13,7 @@ tap new-note-button
 clock settle
   {"clock":6400,"settled":true}
 tap start-recording
-  {"at":[195,810],"tapped":101,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":40,"incarnation":1}
+  {"at":[195,810],"tapped":116,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":40,"incarnation":1}
 clock data
   {"clock":6400,"settled":true}
 clock settle
@@ -45,11 +45,11 @@ clock data
 state detail.state
   "draft"
 tap edit-note
-  {"at":[63.34375,758],"tapped":170,"target":"edit-note","scrolled":{"from":[63.34375,944],"to":[63.34375,758]},"delivery":"platform","carrier":"web","mode":"agent","clock":22200,"epoch":107,"incarnation":1}
+  {"at":[63.34375,758],"tapped":185,"target":"edit-note","scrolled":{"from":[63.34375,944],"to":[63.34375,758]},"delivery":"platform","carrier":"web","mode":"agent","clock":22200,"epoch":107,"incarnation":1}
 clock settle
   {"clock":22200,"settled":true}
 type note-editor ## Typed just before Back
-  {"at":[195,509.65625],"typed":179,"target":"note-editor","delivery":"platform","carrier":"web","mode":"agent","clock":22200,"epoch":108,"incarnation":1}
+  {"at":[195,509.65625],"typed":194,"target":"note-editor","delivery":"platform","carrier":"web","mode":"agent","clock":22200,"epoch":108,"incarnation":1}
 back
   {"history":-1,"delivery":"platform","back":"route","carrier":"web","clock":22200,"epoch":109,"incarnation":1}
 clock data
@@ -63,7 +63,7 @@ state lib.length
 screenshot docs/media/clinic/default/web-phone/leaving/03-notes-after-back.png
   {"clock":23700,"epoch":112,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/leaving/03-notes-after-back.png","w":390,"h":844}
 tap "No patient reference"
-  {"at":[166.9765625,317.59375],"tapped":130,"target":"No patient reference","delivery":"platform","carrier":"web","mode":"agent","clock":23700,"epoch":116,"incarnation":1}
+  {"at":[166.9765625,317.59375],"tapped":145,"target":"No patient reference","delivery":"platform","carrier":"web","mode":"agent","clock":23700,"epoch":116,"incarnation":1}
 clock data
   {"clock":23700,"settled":true}
 clock settle

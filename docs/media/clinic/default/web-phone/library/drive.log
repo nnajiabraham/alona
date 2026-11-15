@@ -19,17 +19,17 @@ tap template-consultation
 clock settle
   {"clock":6400,"settled":true}
 tap start-recording
-  {"at":[195,810],"tapped":101,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":42,"incarnation":1}
+  {"at":[195,810],"tapped":116,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":42,"incarnation":1}
 clock data
   {"clock":6400,"settled":true}
 clock settle
   {"clock":6800,"settled":true}
 type record-jottings - L knee, 2 weeks
-  {"at":[195,466],"typed":106,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":48,"incarnation":1}
+  {"at":[195,466],"typed":121,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":48,"incarnation":1}
 clock +5000
   {"clock":11800}
 tap stop-recording
-  {"at":[195,281],"tapped":120,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":11800,"epoch":67,"incarnation":1}
+  {"at":[195,281],"tapped":135,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":11800,"epoch":67,"incarnation":1}
 clock data
   {"clock":11800,"settled":true}
 clock settle
@@ -59,7 +59,7 @@ prefer prefers-color-scheme dark
 screenshot docs/media/clinic/default/web-phone/library/02-notes-dark.png
   {"clock":24200,"epoch":109,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/library/02-notes-dark.png","w":390,"h":844}
 tap "Bed 4"
-  {"at":[166.9765625,317.59375],"tapped":132,"target":"Bed 4","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":113,"incarnation":1}
+  {"at":[166.9765625,317.59375],"tapped":147,"target":"Bed 4","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":113,"incarnation":1}
 clock data
   {"clock":24200,"settled":true}
 clock settle
@@ -69,7 +69,7 @@ screenshot docs/media/clinic/default/web-phone/library/03-note-dark.png
 prefer prefers-color-scheme light
   {"media":{"display-mode":"browser","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","prefers-color-scheme":"light","color-gamut":"srgb","dynamic-range":"standard","pointer":"fine","hover":"hover"},"clock":24200,"epoch":116,"incarnation":1}
 tap delete-note
-  {"at":[356,26],"tapped":141,"target":"delete-note","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":117,"incarnation":1}
+  {"at":[356,26],"tapped":156,"target":"delete-note","delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":117,"incarnation":1}
 clock settle
   {"clock":24200,"settled":true}
 screenshot docs/media/clinic/default/web-phone/library/04-confirm-delete.png

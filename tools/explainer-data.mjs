@@ -120,5 +120,20 @@ for (const slug of dirs(join(MEDIA, 'clinic'))) {
   }
 }
 
-writeFileSync(join(ROOT, 'docs', 'explainer', 'data.js'), `window.ALONA = ${JSON.stringify({ flows, checks, clinic }, null, 1)};\n`);
+/** Each tenant's brand and templates, read from its config file, so the clinical guide shows what a tenant file produces. */
+const tenants = {};
+for (const file of readdirSync(join(ROOT, 'tenants')).filter((n) => n.endsWith('.ts') && !['schema.ts', 'validate.ts'].includes(n) && !n.endsWith('.test.ts')).sort()) {
+  const tenant = (await import(join(ROOT, 'tenants', file))).default;
+  tenants[tenant.slug] = {
+    name: tenant.app.name,
+    tagline: tenant.app.tagline,
+    bundleId: tenant.app.bundleId,
+    person: tenant.copy.person,
+    disclaimer: tenant.copy.reviewDisclaimer,
+    colors: tenant.colors,
+    templates: tenant.templates.map((t) => ({ name: t.name, description: t.description, sections: t.sections.map((x) => x.heading) })),
+  };
+}
+
+writeFileSync(join(ROOT, 'docs', 'explainer', 'data.js'), `window.ALONA = ${JSON.stringify({ flows, checks, clinic, tenants }, null, 1)};\n`);
 console.log(`explainer data: ${Object.keys(flows).length} targets, ${Object.keys(clinic).length} clinic tenants, ${checks.length} checks`);

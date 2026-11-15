@@ -1,0 +1,9 @@
+e2e macos lite: preparing models
+recording a take and swapping in the spoken fixture
+running the pipeline 3 times on the fixture
+word error rate: 4.2% (7 of 168)
+title: Launch date and bug fixes for mobile app
+cycle 1: transcribe 4.409 s, notes 6.296 s, total 10.705 s, peak 994 MB, idle after 395 MB
+cycle 2: transcribe 4.153 s, notes 2.055 s, total 6.208 s, peak 1415 MB, idle after 481 MB
+cycle 3: transcribe 4.162 s, notes 2.062 s, total 6.224 s, peak 1416 MB, idle after 482 MB
+e2e: ok

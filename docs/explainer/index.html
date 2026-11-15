@@ -127,6 +127,7 @@ footer { color: var(--muted); font-size: 0.86rem; }
   <a href="#models">Models and tiers</a>
   <a href="#flows">App flows</a>
   <a href="#clinic">Clinical app</a>
+  <a href="clinic.html">Clinical guide →</a>
   <a href="#checks">Measured results</a>
   <a href="#brand">Brand guide</a>
   <a href="#dev">Developer onboarding</a>
@@ -137,6 +138,7 @@ footer { color: var(--muted); font-size: 0.86rem; }
 <section class="hero" id="what">
   <span class="eyebrow">Field guide · November 2026</span>
   <h1>Meeting notes that never leave the device</h1>
+  <p>This repository also holds a white-label app for health professionals. <a href="clinic.html">See the clinical guide</a>.</p>
   <p class="lede">Alona records a meeting, transcribes it with a small speech model, and has a small language model write the notes. Both models run on the device. One codebase builds the web, macOS, iOS, and Android apps.</p>
   <div class="grid">
     <div class="tile"><span class="k">Record</span><h3>Microphone and a notes pad</h3><p>A timer, a live waveform, and a Markdown pad for your own notes while the meeting runs.</p></div>
@@ -277,6 +279,7 @@ footer { color: var(--muted); font-size: 0.86rem; }
 <section id="clinic">
   <span class="eyebrow">The same foundations, a second app</span>
   <h2>Clinical app</h2>
+  <p><a href="clinic.html"><b>Open the clinical guide</b></a> for how the app looks under each brand, a visit step by step, and the workflows it covers.</p>
   <p>A patient note-taking and transcription app for health professionals, on web, Android, and iOS. It shares Alona's core, pipeline, and engines. What differs is the note: the clinician picks a template, records a consultation, and gets a draft with that template's sections, written only from what was said. The draft stays marked as an AI draft until the clinician reviews it, and only a reviewed note can be copied or shared.</p>
   <div class="grid">
     <div class="tile"><h3>One file per tenant</h3><p>A tenant is one typed file under <code>tenants/</code>: name, tagline, bundle id, thirteen colors in light and dark, wording, note templates, defaults, and feature switches. The types reject a missing field or a default template that does not exist.</p></div>

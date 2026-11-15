@@ -2068,7 +2068,458 @@ window.ALONA = {
      ],
      "video": "../media/clinic/tidewell/web/settings/settings.mp4"
     }
+   },
+   "web-phone": {
+    "leaving": {
+     "shots": [
+      {
+       "src": "../media/clinic/tidewell/web-phone/leaving/01-recording.png",
+       "label": "recording"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/leaving/02-back-stopped-and-saved.png",
+       "label": "back stopped and saved"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/leaving/03-notes-after-back.png",
+       "label": "notes after back"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/leaving/04-edits-kept.png",
+       "label": "edits kept"
+      }
+     ],
+     "video": "../media/clinic/tidewell/web-phone/leaving/leaving.mp4"
+    },
+    "library": {
+     "shots": [
+      {
+       "src": "../media/clinic/tidewell/web-phone/library/01-notes.png",
+       "label": "notes"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/library/02-notes-dark.png",
+       "label": "notes dark"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/library/03-note-dark.png",
+       "label": "note dark"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/library/04-confirm-delete.png",
+       "label": "confirm delete"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/library/05-deleted.png",
+       "label": "deleted"
+      }
+     ],
+     "video": "../media/clinic/tidewell/web-phone/library/library.mp4"
+    },
+    "onboarding": {
+     "shots": [
+      {
+       "src": "../media/clinic/tidewell/web-phone/onboarding/01-welcome.png",
+       "label": "welcome"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/onboarding/02-downloading-models.png",
+       "label": "downloading models"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/onboarding/03-ready.png",
+       "label": "ready"
+      }
+     ],
+     "video": "../media/clinic/tidewell/web-phone/onboarding/onboarding.mp4"
+    },
+    "record": {
+     "shots": [
+      {
+       "src": "../media/clinic/tidewell/web-phone/record/01-new-note-sheet.png",
+       "label": "new note sheet"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/record/02-reference-and-template.png",
+       "label": "reference and template"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/record/03-recording-started.png",
+       "label": "recording started"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/record/04-jottings-while-recording.png",
+       "label": "jottings while recording"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/record/05-saved-and-queued.png",
+       "label": "saved and queued"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/record/06-transcribing.png",
+       "label": "transcribing"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/record/07-writing-draft.png",
+       "label": "writing draft"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/record/08-draft-ready.png",
+       "label": "draft ready"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/record/09-transcript.png",
+       "label": "transcript"
+      }
+     ],
+     "video": "../media/clinic/tidewell/web-phone/record/record.mp4"
+    },
+    "review": {
+     "shots": [
+      {
+       "src": "../media/clinic/tidewell/web-phone/review/01-ai-draft.png",
+       "label": "ai draft"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/review/02-editor.png",
+       "label": "editor"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/review/03-edit-saved.png",
+       "label": "edit saved"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/review/04-edited-note.png",
+       "label": "edited note"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/review/05-reviewed.png",
+       "label": "reviewed"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/review/06-copied.png",
+       "label": "copied"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/review/07-confirm-replace-edits.png",
+       "label": "confirm replace edits"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/review/08-writing-again.png",
+       "label": "writing again"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/review/09-fresh-draft.png",
+       "label": "fresh draft"
+      }
+     ],
+     "video": "../media/clinic/tidewell/web-phone/review/review.mp4"
+    },
+    "settings": {
+     "shots": [
+      {
+       "src": "../media/clinic/tidewell/web-phone/settings/01-settings.png",
+       "label": "settings"
+      },
+      {
+       "src": "../media/clinic/tidewell/web-phone/settings/02-lite-picked.png",
+       "label": "lite picked"
+      }
+     ],
+     "video": "../media/clinic/tidewell/web-phone/settings/settings.mp4"
+    }
    }
+  }
+ },
+ "tenants": {
+  "default": {
+   "name": "Clinic Notes",
+   "tagline": "Visit notes, drafted on this device.",
+   "bundleId": "app.clinicnotes.default",
+   "person": {
+    "singular": "patient",
+    "plural": "patients"
+   },
+   "disclaimer": "Check every line against the consultation before you use it.",
+   "colors": {
+    "accent": {
+     "light": "#1f6f6b",
+     "dark": "#2f8a84"
+    },
+    "page": {
+     "light": "#f3f5f5",
+     "dark": "#121716"
+    },
+    "card": {
+     "light": "#e6ebea",
+     "dark": "#1c2322"
+    },
+    "raised": {
+     "light": "#fbfcfc",
+     "dark": "#232b2a"
+    },
+    "line": {
+     "light": "#d3dbda",
+     "dark": "#2d3736"
+    },
+    "text": {
+     "light": "#17201f",
+     "dark": "#e3e9e8"
+    },
+    "muted": {
+     "light": "#4f5d5b",
+     "dark": "#a0aead"
+    },
+    "progressSoft": {
+     "light": "#d9ebe8",
+     "dark": "#1d3331"
+    },
+    "progressInk": {
+     "light": "#1a5753",
+     "dark": "#9fd3cc"
+    },
+    "attentionSoft": {
+     "light": "#f5e0dc",
+     "dark": "#3a2522"
+    },
+    "attentionInk": {
+     "light": "#8c3426",
+     "dark": "#eba597"
+    },
+    "noticeSoft": {
+     "light": "#efe7d2",
+     "dark": "#332e20"
+    },
+    "noticeInk": {
+     "light": "#6e5512",
+     "dark": "#dcc37f"
+    }
+   },
+   "templates": [
+    {
+     "name": "SOAP",
+     "description": "Subjective, objective, assessment and plan.",
+     "sections": [
+      "Subjective",
+      "Objective",
+      "Assessment",
+      "Plan"
+     ]
+    },
+    {
+     "name": "General consultation",
+     "description": "Reason for visit through to follow-up.",
+     "sections": [
+      "Reason for visit",
+      "History",
+      "Examination",
+      "Assessment",
+      "Plan",
+      "Follow-up"
+     ]
+    },
+    {
+     "name": "Dictated note",
+     "description": "You dictate after the visit; the app tidies it into a note.",
+     "sections": [
+      "Summary",
+      "Findings",
+      "Plan"
+     ]
+    },
+    {
+     "name": "Referral letter",
+     "description": "A letter to another clinician, from what was said in the visit.",
+     "sections": [
+      "Reason for referral",
+      "History",
+      "Findings",
+      "Current treatment",
+      "Request"
+     ]
+    },
+    {
+     "name": "Visit summary for the patient",
+     "description": "Plain-language instructions the patient can take home.",
+     "sections": [
+      "What we talked about",
+      "What to do now",
+      "When to get help",
+      "Next appointment"
+     ]
+    }
+   ]
+  },
+  "quillmoor-pilot": {
+   "name": "Quillmoor Notes",
+   "tagline": "Pilot build for Quillmoor Physio. Treatment notes from your sessions.",
+   "bundleId": "test.quillmoor.notes",
+   "person": {
+    "singular": "patient",
+    "plural": "patients"
+   },
+   "disclaimer": "This is a pilot build. Review and correct the draft before you copy it into the patient record.",
+   "colors": {
+    "accent": {
+     "light": "#5b3fa0",
+     "dark": "#8a6fd4"
+    },
+    "page": {
+     "light": "#f6f4fb",
+     "dark": "#141220"
+    },
+    "card": {
+     "light": "#ebe7f5",
+     "dark": "#1e1b2d"
+    },
+    "raised": {
+     "light": "#fdfcff",
+     "dark": "#262238"
+    },
+    "line": {
+     "light": "#d9d3ea",
+     "dark": "#332e48"
+    },
+    "text": {
+     "light": "#1d1830",
+     "dark": "#e9e6f3"
+    },
+    "muted": {
+     "light": "#585170",
+     "dark": "#aca6c2"
+    },
+    "progressSoft": {
+     "light": "#e4ddf5",
+     "dark": "#2a2342"
+    },
+    "progressInk": {
+     "light": "#46307f",
+     "dark": "#c4b5ef"
+    },
+    "attentionSoft": {
+     "light": "#f7dfe4",
+     "dark": "#3b1f27"
+    },
+    "attentionInk": {
+     "light": "#8e2440",
+     "dark": "#f0a2b5"
+    },
+    "noticeSoft": {
+     "light": "#f3e9d0",
+     "dark": "#352d1c"
+    },
+    "noticeInk": {
+     "light": "#6a4f0c",
+     "dark": "#e0c482"
+    }
+   },
+   "templates": [
+    {
+     "name": "Initial assessment",
+     "description": "First session: history, findings and a treatment plan.",
+     "sections": [
+      "Presenting complaint",
+      "History",
+      "Findings",
+      "Impression",
+      "Treatment plan"
+     ]
+    },
+    {
+     "name": "Follow-up session",
+     "description": "Progress since last time and what changes now.",
+     "sections": [
+      "Progress",
+      "Treatment today",
+      "Plan"
+     ]
+    }
+   ]
+  },
+  "tidewell": {
+   "name": "Tidewell Session Notes",
+   "tagline": "Session notes for counsellors, kept on your device.",
+   "bundleId": "app.tidewell.sessionnotes",
+   "person": {
+    "singular": "client",
+    "plural": "clients"
+   },
+   "disclaimer": "Draft written by an on-device model. Read it in full and correct it before it becomes your note.",
+   "colors": {
+    "accent": {
+     "light": "#9a4a12",
+     "dark": "#b8611f"
+    },
+    "page": {
+     "light": "#faf6f1",
+     "dark": "#1a1511"
+    },
+    "card": {
+     "light": "#f1e9df",
+     "dark": "#261f19"
+    },
+    "raised": {
+     "light": "#fffdfa",
+     "dark": "#2e2620"
+    },
+    "line": {
+     "light": "#e3d7c8",
+     "dark": "#3a3028"
+    },
+    "text": {
+     "light": "#2a1d14",
+     "dark": "#f0e8df"
+    },
+    "muted": {
+     "light": "#66564a",
+     "dark": "#b8aa9c"
+    },
+    "progressSoft": {
+     "light": "#f5e3d2",
+     "dark": "#3a2a1c"
+    },
+    "progressInk": {
+     "light": "#7a3a0c",
+     "dark": "#f0bf92"
+    },
+    "attentionSoft": {
+     "light": "#f6dedd",
+     "dark": "#3d2121"
+    },
+    "attentionInk": {
+     "light": "#8f2d2a",
+     "dark": "#f0a6a2"
+    },
+    "noticeSoft": {
+     "light": "#e8ecd8",
+     "dark": "#2a2f1e"
+    },
+    "noticeInk": {
+     "light": "#4c5a17",
+     "dark": "#c9d68f"
+    }
+   },
+   "templates": [
+    {
+     "name": "Session note",
+     "description": "Themes, interventions, risk and next steps.",
+     "sections": [
+      "Presenting themes",
+      "Interventions",
+      "Risk",
+      "Next steps"
+     ]
+    },
+    {
+     "name": "DAP",
+     "description": "Data, assessment and plan.",
+     "sections": [
+      "Data",
+      "Assessment",
+      "Plan"
+     ]
+    }
+   ]
   }
  }
 };

@@ -46,7 +46,7 @@ describe('each rule the validator adds to the types', () => {
 
   test('a default template no template has', () => {
     const t = variant((t) => ({ ...t, defaults: { ...t.defaults, template: 'missing' } }));
-    expect(problems(t)).toEqual([{ field: 'defaults.template', message: '"missing" is not a template id. Use one of: soap, consultation.' }]);
+    expect(problems(t)).toEqual([{ field: 'defaults.template', message: '"missing" is not a template id. Use one of: soap, consultation, dictation, referral, visit-summary.' }]);
   });
 
   test('muted text too faint on its card, in the dark scheme only', () => {

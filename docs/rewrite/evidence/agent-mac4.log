@@ -1,0 +1,15 @@
+clock 0 ms · settled · epoch 3
+tapped #19 "Untitled meeting" · delivery platform · epoch 4 · clock 0 ms
+clock 0 ms · settled · epoch 5
+tapped #48 "pane-transcript" · delivery host-activation · epoch 6 · clock 0 ms · native="segmented-control"
+tapped #55 "retranscribe" · delivery platform · epoch 7 · clock 0 ms
+clock 0 ms · settled · epoch 10
+clock 25000 ms · epoch 20 · real=25017
+clock 25000 ms · settled · epoch 20
+"done"
+""
+"Untitled meeting"
+[{"id":"0","at":"0:00","text":"Thanks for joining everyone. Today we need to decide the launch date for the mobile app and review the open bugs. The Android build is stable. We fixed the crash on the settings screen yesterday, and battery usage is down by 20%. Good. What about the login issue on older phones? That one is still open. I need two more days to finish the fix and test it."},{"id":"1","at":"0:20","text":"From the design side, the onboarding screens of final, I will send the updated icons to the team by Thursday. Then let us agree on the plan. We launch on the 15th of March, as long as the login fix lands by Friday. Agreed, I will also prepare the release notes and the store screen shots. I will own the login fix, and I will run the full regression suite on Friday morning. Great."},{"id":"2","at":"0:42","text":"To summarize, the launch date is March 15, Daniel owns the login fix, and Karen owns the icons, the release notes, and the screenshots, thanks everyone."}]
+"# a short title for the meeting, on one line\n\n## Summary\n- The Android build is stable.\n- We fixed the crash on the settings screen yesterday.\n- Battery usage is down by 20%.\n- One open bug (login issue on older phones) requires two more days to resolve and test.\n- Daniel owns the login fix; Karen owns the icons, release notes, and screenshots.\n\n## Key points\n- The launch date is set for March 15th.\n- The login fix must land by Friday.\n- I will prepare release notes and store screen shots.\n- I will own the login fix and run a full regression suite on Friday morning.\n\n## Decisions\n- None recorded.\n\n## Action items\n- [ ] Daniel: Owns the login fix; runs full regression suite on Friday morning.\n- [ ] Karen: Owns icons, release notes, and screenshots.\n- [ ] Team: Agree on the launch plan by Thursday.\n- [ ] I: Prepare release notes and store screen shots.\n\n## Open questions\n- None recorded."
+tapped #44 "pane-ai" · delivery host-activation · epoch 21 · clock 25000 ms · native="segmented-control"
+screenshot <scratchpad>/shots/mac-real-notes.png · 420×900 · epoch 21 · clock 25000 ms · window=true · scale=1

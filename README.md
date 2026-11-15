@@ -28,6 +28,7 @@ Windows and Linux use an Electron shell (`desktop/`) around Alona's web build, b
 
 ## Read next
 
+- **Clinical guide:** open `docs/explainer/clinic.html` for how the clinical app looks under each brand, a visit step by step, and the workflows it covers.
 - **Field guide:** open `docs/explainer/index.html` in a browser. It covers the system design, each flow with screenshots and videos, the brand, measured results, and developer setup.
 - **Guidelines for contributors and agents:** `AGENTS.md`.
 - **Why the models were chosen:** `docs/research/local-models-2026-11.md`.
