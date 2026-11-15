@@ -1,14 +1,14 @@
 {
   "host": "macos",
   "tier": "lite",
-  "date": "2026-11-15T01:55:40.376Z",
+  "date": "2026-11-15T06:12:14.525Z",
   "method": {
     "audio": "tools/fixture/meeting-fixture.wav (53 s synthetic three-speaker meeting), copied over the recorded take",
     "wer": "lowercase, punctuation stripped, word-level edit distance, no number normalization",
     "timing": "wall time between agent replies polled once a second, so each figure is accurate to about one second",
     "memory": "physical footprint of the app process (proc_pid_rusage), sampled every 250 ms; idle is the lowest sample in the 3 s that end a cycle, about a minute after the notes finish"
   },
-  "downloadSeconds": 11,
+  "downloadSeconds": 9,
   "wer": {
     "errors": 7,
     "words": 168,
@@ -20,29 +20,29 @@
   "runs": [
     {
       "cycle": 1,
-      "transcribeSeconds": 4.473,
-      "notesSeconds": 7.53,
-      "totalSeconds": 12.003,
-      "peakMB": 536,
-      "idleMB": 93,
+      "transcribeSeconds": 4.249,
+      "notesSeconds": 2.074,
+      "totalSeconds": 6.323,
+      "peakMB": 537,
+      "idleMB": 95,
       "finished": true
     },
     {
       "cycle": 2,
-      "transcribeSeconds": 4.273,
-      "notesSeconds": 2.083,
-      "totalSeconds": 6.356,
-      "peakMB": 626,
-      "idleMB": 88,
+      "transcribeSeconds": 4.253,
+      "notesSeconds": 2.047,
+      "totalSeconds": 6.3,
+      "peakMB": 631,
+      "idleMB": 92,
       "finished": true
     },
     {
       "cycle": 3,
-      "transcribeSeconds": 4.277,
-      "notesSeconds": 2.07,
-      "totalSeconds": 6.347,
+      "transcribeSeconds": 4.257,
+      "notesSeconds": 2.045,
+      "totalSeconds": 6.302,
       "peakMB": 532,
-      "idleMB": 89,
+      "idleMB": 91,
       "finished": true
     }
   ],
