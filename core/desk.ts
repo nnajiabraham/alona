@@ -10,6 +10,8 @@ export interface DeskView {
   folderReachable: boolean;
   waiting: number;
   legacyFolder: string;
+  /** Whether the folder was read. It is read only once the person asks, because macOS asks them first for ~/Documents. */
+  legacyLooked: boolean;
   legacyCount: number;
   legacyNew: number;
   detectionSupported: boolean;
@@ -50,16 +52,19 @@ export function desk(system: System, lib: Library, resolve: (chosen: string) => 
   };
 
   return {
-    async view(utcOffset: number): Promise<DeskView> {
+    /** `look`: the person asked to look for the Swift app's recordings. */
+    async view(utcOffset: number, look: boolean): Promise<DeskView> {
       const facts = await system.facts();
       const folder = await lib.view();
-      const { folder: lf, found } = facts.folders ? await legacy(utcOffset) : { folder: '', found: [] };
+      const looked = facts.folders && (look || picked !== '');
+      const { folder: lf, found } = looked ? await legacy(utcOffset) : { folder: facts.folders ? facts.legacyFolder : '', found: [] };
       return {
         foldersSupported: folder.supported,
         folder: folder.folder,
         folderReachable: folder.reachable,
         waiting: folder.waiting,
         legacyFolder: lf,
+        legacyLooked: looked,
         legacyCount: found.length,
         legacyNew: found.filter((r) => !r.imported).length,
         detectionSupported: facts.detection,
@@ -101,10 +106,10 @@ export function desk(system: System, lib: Library, resolve: (chosen: string) => 
       }
     },
 
+    /** Off also tells the module to stop listening. */
     async detection(enabled: boolean): Promise<DetectionView> {
-      if (!enabled) return NONE;
-      const d: Detected | null = await system.detected(true);
-      return d ? { found: true, ...d } : NONE;
+      const d: Detected | null = await system.detected(enabled);
+      return enabled && d ? { found: true, ...d } : NONE;
     },
 
     async startCapture(id: string, on: boolean): Promise<Reply> {

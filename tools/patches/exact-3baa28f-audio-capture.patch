@@ -1,0 +1,20 @@
+diff --git a/runner/src/device.rs b/runner/src/device.rs
+index 2dd554b7..f143f817 100644
+--- a/runner/src/device.rs
++++ b/runner/src/device.rs
+@@ -183,6 +183,15 @@ pub const DEVICES: &[Device] = &[
+     // camera app (`takePhotoWithCameraApp`), which iOS's usage key, the
+     // line's, asks for. Its Android features are declared not required where
+     // the permission is (app/build.gradle.kts).
++    // Recording what the Mac plays (a Core Audio process tap, macOS 14.2+).
++    // macOS asks the person under System Audio Recording; no other platform
++    // has the capture, and the sandbox needs no entitlement for it.
++    Device {
++        name: "audio-capture",
++        macos: &["NSAudioCaptureUsageDescription"],
++        tvos: false,
++        ..ROW
++    },
+     Device {
+         name: "camera",
+         ios: &["NSCameraUsageDescription"],

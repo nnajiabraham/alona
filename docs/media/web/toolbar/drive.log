@@ -1,0 +1,90 @@
+clock data
+  {"clock":0,"settled":true}
+tap continue
+  {"at":[550,674],"tapped":28,"target":"continue","delivery":"platform","carrier":"web","mode":"agent","clock":0,"epoch":18,"incarnation":1}
+clock data
+  {"clock":0,"settled":true}
+clock +6000
+  {"clock":6000}
+clock data
+  {"clock":6000,"settled":true}
+tap start-recording
+  {"at":[550,198.59375],"tapped":64,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6000,"epoch":39,"incarnation":1}
+clock data
+  {"clock":6000,"settled":true}
+clock settle
+  {"clock":6400,"settled":true}
+type record-notes Agenda
+  {"at":[550,551],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":46,"incarnation":1}
+clock +5000
+  {"clock":11400}
+clock data
+  {"clock":11400,"settled":true}
+tap rec-stamp
+  {"at":[308.6640625,417],"tapped":95,"target":"rec-stamp","delivery":"platform","carrier":"web","mode":"agent","clock":11400,"epoch":54,"incarnation":1}
+clock data
+  {"clock":11400,"settled":true}
+state recNotes
+  "Agenda[0:05] "
+tap rec-bullet
+  {"at":[353.328125,417],"tapped":97,"target":"rec-bullet","delivery":"platform","carrier":"web","mode":"agent","clock":11400,"epoch":56,"incarnation":1}
+clock data
+  {"clock":11400,"settled":true}
+state recNotes
+  "- Agenda[0:05] "
+screenshot docs/media/web/toolbar/01-stamp-and-bullet.png
+  {"clock":11400,"epoch":56,"incarnation":1,"screenshot":"docs/media/web/toolbar/01-stamp-and-bullet.png","w":1100,"h":760}
+type record-notes Fix login
+  {"at":[550,551],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":11400,"epoch":59,"incarnation":1}
+tap rec-task
+  {"at":[393.328125,417],"tapped":99,"target":"rec-task","delivery":"platform","carrier":"web","mode":"agent","clock":11400,"epoch":61,"incarnation":1}
+clock data
+  {"clock":11400,"settled":true}
+state recNotes
+  "- [ ] Fix login"
+tap rec-heading
+  {"at":[438.21875,417],"tapped":101,"target":"rec-heading","delivery":"platform","carrier":"web","mode":"agent","clock":11400,"epoch":63,"incarnation":1}
+clock data
+  {"clock":11400,"settled":true}
+state recNotes
+  "## Fix login"
+screenshot docs/media/web/toolbar/02-task-and-heading.png
+  {"clock":11400,"epoch":63,"incarnation":1,"screenshot":"docs/media/web/toolbar/02-task-and-heading.png","w":1100,"h":760}
+tap stop-recording
+  {"at":[550,252],"tapped":87,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":11400,"epoch":78,"incarnation":1}
+clock data
+  {"clock":11400,"settled":true}
+clock settle
+  {"clock":11800,"settled":true}
+clock +12000
+  {"clock":23800}
+clock data
+  {"clock":23800,"settled":true}
+state detail.status
+  "done"
+tap pane-mine
+  {"at":[542.6484375,247],"tapped":129,"target":"pane-mine","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":117,"incarnation":1}
+clock settle
+  {"clock":23800,"settled":true}
+type my-notes Decisions
+  {"at":[550,453],"typed":140,"target":"my-notes","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":118,"incarnation":1}
+tap mine-heading
+  {"at":[358.21875,299],"tapped":149,"target":"mine-heading","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":120,"incarnation":1}
+clock data
+  {"clock":23800,"settled":true}
+state noteDraft
+  "## Decisions"
+tap mine-task
+  {"at":[313.328125,299],"tapped":147,"target":"mine-task","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":122,"incarnation":1}
+clock data
+  {"clock":23800,"settled":true}
+state noteDraft
+  "- [ ] Decisions"
+screenshot docs/media/web/toolbar/03-toolbar-on-my-notes.png
+  {"clock":23800,"epoch":122,"incarnation":1,"screenshot":"docs/media/web/toolbar/03-toolbar-on-my-notes.png","w":1100,"h":760}
+clock +1500
+  {"clock":25300}
+clock data
+  {"clock":25300,"settled":true}
+state detail.userNotes
+  "- [ ] Decisions"

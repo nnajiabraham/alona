@@ -1,0 +1,56 @@
+clock data
+  {"clock":0,"settled":true,"incarnation":1,"epoch":4}
+tap continue
+  {"at":[210,832],"delivery":"platform","tapped":28,"target":"continue","carrier":"macos","mode":"agent","epoch":5,"incarnation":1,"clock":0}
+clock data
+  {"clock":0,"epoch":5,"settled":true,"incarnation":1}
+clock +6000
+  {"incarnation":1,"epoch":10,"clock":6000}
+clock data
+  {"incarnation":1,"epoch":10,"clock":6000,"settled":true}
+tap start-recording
+  {"at":[210,174],"delivery":"platform","tapped":69,"target":"start-recording","carrier":"macos","mode":"agent","epoch":11,"incarnation":1,"clock":6000}
+clock data
+  {"settled":true,"clock":6000,"epoch":15,"incarnation":1}
+clock settle
+  {"epoch":15,"incarnation":1,"clock":6000,"settled":true}
+type record-title Launch sync
+  {"value":"Launch sync","typed":109,"target":"record-title","delivery":"platform","carrier":"macos","mode":"agent","epoch":16,"incarnation":1,"clock":6000}
+type record-notes - Ask about the login fix
+  {"typed":122,"value":"- Ask about the login fix","target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":17,"incarnation":1,"clock":6000}
+clock +5000
+  {"epoch":19,"incarnation":1,"clock":11000}
+tap stop-recording
+  {"tapped":106,"delivery":"platform","at":[210,208],"target":"stop-recording","carrier":"macos","mode":"agent","epoch":20,"incarnation":1,"clock":11000}
+clock data
+  {"clock":11000,"settled":true,"incarnation":1,"epoch":25}
+clock settle
+  {"settled":true,"incarnation":1,"clock":11000,"epoch":25}
+clock +12000
+  {"incarnation":1,"clock":23000,"epoch":40}
+clock data
+  {"clock":23000,"incarnation":1,"settled":true,"epoch":40}
+state detail.status
+  "done"
+back
+  {"back":"route","delivery":"platform","carrier":"macos","epoch":41,"incarnation":1,"clock":23000}
+clock data
+  {"incarnation":1,"clock":23000,"epoch":41,"settled":true}
+clock settle
+  {"settled":true,"incarnation":1,"epoch":41,"clock":23000}
+state lib.length
+  1
+screenshot docs/media/macos/folder-missing/01-meetings-still-listed.png
+  {"h":900,"epoch":41,"w":420,"screenshot":"docs/media/macos/folder-missing/01-meetings-still-listed.png","clock":23000,"incarnation":1,"scale":1}
+tap open-settings
+  {"delivery":"platform","tapped":57,"at":[384,21],"target":"open-settings","carrier":"macos","mode":"agent","epoch":42,"incarnation":1,"clock":23000}
+clock data
+  {"incarnation":1,"epoch":43,"settled":true,"clock":23000}
+clock settle
+  {"incarnation":1,"settled":true,"clock":23000,"epoch":43}
+state desk.folderReachable
+  false
+state desk.waiting
+  1
+screenshot docs/media/macos/folder-missing/02-folder-missing.png
+  {"w":420,"incarnation":1,"screenshot":"docs/media/macos/folder-missing/02-folder-missing.png","clock":23000,"epoch":43,"h":900,"scale":1}

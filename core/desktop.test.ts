@@ -4,7 +4,7 @@ import { memoryFiles } from './fixtures/memory-files';
 import { legacyId, legacyTime, legacyTitle } from './legacy';
 import { library } from './library';
 import { meetingStore, type Files } from './store';
-import { NO_SYSTEM, type System } from './system';
+import { nativeSystem, NO_SYSTEM, type System } from './system';
 
 const text = (s: string) => new TextEncoder().encode(s);
 const read = async (files: Files, path: string) => new TextDecoder().decode(await files.readFile(path));
@@ -14,7 +14,11 @@ function disk() {
   const files = memoryFiles();
   let unplugged = '';
   const dirs = new Set<string>();
-  const gone = (path: string) => unplugged !== '' && path.startsWith(unplugged);
+  let documentsReads = 0;
+  const gone = (path: string) => {
+    if (path.startsWith('/Users/me/Documents')) documentsReads += 1;
+    return unplugged !== '' && path.startsWith(unplugged);
+  };
   const enoent = () => Object.assign(new Error('gone'), { code: 'ENOENT' });
   const guarded: Files = {
     readFile: async (p) => (gone(p) ? Promise.reject(enoent()) : files.readFile(p)),
@@ -49,7 +53,7 @@ function disk() {
     audioInfo: async () => ({ seconds: 61, createdMs: 0 }),
   };
   for (const folder of ['/Users/me/Meetings', '/Volumes/USB/Meetings']) dirs.add(folder);
-  return { files, system, unplug: (path: string) => void (unplugged = path), plug: () => void (unplugged = '') };
+  return { files, system, documentsReads: () => documentsReads, unplug: (path: string) => void (unplugged = path), plug: () => void (unplugged = '') };
 }
 
 const meeting = (id: string, createdAt: number) => ({
@@ -183,9 +187,11 @@ describe('Swift app migration', () => {
     const lib = library(d.files, d.system, true);
     const tools = desk(d.system, lib, async (p) => p);
 
-    expect(await tools.view(0)).toMatchObject({ legacyCount: 2, legacyNew: 2, legacyFolder: SWIFT });
+    expect(await tools.view(0, false)).toMatchObject({ legacyLooked: false, legacyCount: 0, legacyFolder: SWIFT });
+    expect(d.documentsReads()).toBe(0);
+    expect(await tools.view(0, true)).toMatchObject({ legacyLooked: true, legacyCount: 2, legacyNew: 2, legacyFolder: SWIFT });
     expect(await tools.importAll(0)).toEqual({ ok: true, error: '' });
-    expect(await tools.view(0)).toMatchObject({ legacyCount: 2, legacyNew: 0 });
+    expect(await tools.view(0, true)).toMatchObject({ legacyCount: 2, legacyNew: 0 });
     expect(await tools.importAll(0)).toEqual({ ok: true, error: '' });
 
     const listed = await lib.store.list();
@@ -216,7 +222,7 @@ describe('Swift app migration', () => {
   test('a host with no folder access finds nothing to import', async () => {
     const d = disk();
     const lib = library(d.files, NO_SYSTEM, false);
-    expect(await desk(NO_SYSTEM, lib, async (p) => p).view(0)).toMatchObject({ legacyCount: 0, foldersSupported: false, detectionSupported: false });
+    expect(await desk(NO_SYSTEM, lib, async (p) => p).view(0, true)).toMatchObject({ legacyCount: 0, foldersSupported: false, detectionSupported: false });
   });
 });
 
@@ -239,7 +245,7 @@ describe('system audio', () => {
     await tools.startCapture('m1', true);
     expect(await tools.finish('m1', 'app:/data/meetings/m1/audio.m4a')).toBe('app:/data/meetings/m1/audio-mixed.m4a');
     expect(calls).toEqual([['app:/data/meetings/m1/audio.m4a', 'app:/data/meetings/m1/system.m4a', 40, 'app:/data/meetings/m1/audio-mixed.m4a']]);
-    expect((await tools.view(0)).captureHealth).toBe('heard');
+    expect((await tools.view(0, true)).captureHealth).toBe('heard');
   });
 
   test('a failed mix, or capture switched off, keeps the microphone recording', async () => {
@@ -249,5 +255,35 @@ describe('system audio', () => {
     const off = capturing(async () => {});
     await off.startCapture('m1', false);
     expect(await off.finish('m1', 'mic.m4a')).toBe('mic.m4a');
+  });
+});
+
+describe('meeting detection', () => {
+  const answering = (reply: Record<string, unknown>) => {
+    const watched: string[] = [];
+    const native = { available: true, later: async () => reply, watch: (topic: string) => void watched.push(topic) };
+    return { system: nativeSystem(native), watched };
+  };
+
+  test('a call the module names is offered, keyed by app and title', async () => {
+    const { system, watched } = answering({ app: 'zoom', title: 'Zoom meeting' });
+    const tools = desk(system, library(memoryFiles(), system, true), async (p) => p);
+    expect(await tools.detection(true)).toEqual({ found: true, app: 'zoom', title: 'Zoom meeting', key: 'zoom|Zoom meeting' });
+    expect(watched).toEqual(['meeting']);
+  });
+
+  test('a browser with the microphone is offered without knowing the page', async () => {
+    const { system } = answering({ app: 'browser', title: 'A call in Arc' });
+    expect(await desk(system, library(memoryFiles(), system, true), async (p) => p).detection(true)).toMatchObject({ found: true, app: 'browser' });
+  });
+
+  test('nothing is offered for an unknown app, a failed module or detection turned off', async () => {
+    for (const reply of [{ app: 'skype' }, {}]) {
+      const { system } = answering(reply);
+      expect((await desk(system, library(memoryFiles(), system, true), async (p) => p).detection(true)).found).toBe(false);
+    }
+    const { system, watched } = answering({ app: 'zoom' });
+    expect((await desk(system, library(memoryFiles(), system, true), async (p) => p).detection(false)).found).toBe(false);
+    expect(watched).toEqual([]);
   });
 });

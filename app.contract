@@ -83,6 +83,7 @@ shape DeskView
   folderReachable: bool
   waiting: number
   legacyFolder: string
+  legacyLooked: bool
   legacyCount: number
   legacyNew: number
   detectionSupported: bool
@@ -128,6 +129,7 @@ component Alona
   state aimed = ""
   state heardAt = 0
   state detectOn = true persist
+  state legacyLook = false persist
   state captureOn = false persist
   state dismissedKey = ""
   state noticedKey = ""
@@ -139,7 +141,7 @@ component Alona
   resource rec = mediaRecorderState(recorder=recorderId, interval=250) as shape MediaRecorderInfo else empty()
   derive selected = match stack(nav).filter(e => e.name == "meeting").at(-1) { case some(e) => e.params.id, case none => "" }
   resource detail = loadMeeting(selected) when selected != "" as shape MeetingDetail else empty()
-  resource desk = loadDesk(time.utcOffset) as shape DeskView else empty()
+  resource desk = loadDesk(time.utcOffset, legacyLook) as shape DeskView else empty()
   resource meet = loadDetection(detectOn) when setup.host == "macos" as shape DetectionView else empty()
   resource notices = notificationStatus() as shape NotificationStatus else empty(available=false, state="unknown", badge=false)
 
@@ -210,6 +212,7 @@ component Alona
     noteDirty = false
     nav = back(nav)
   action openSettings
+    refresh desk
     nav = push(nav, "/settings")
   action openSystemSettings
     openURL("app-settings:")
@@ -263,7 +266,10 @@ component Alona
     send folderSet = chooseMeetingsFolder(value)
   action useAppStorage
     send folderSet = chooseMeetingsFolder("")
+  action findLegacy
+    legacyLook = true
   action pickLegacy
+    legacyLook = true
     showDirectoryPicker("legacy-picker")
   action legacyChosen(value: string)
     send legacyPicked = pickLegacyFolder(value)
@@ -588,12 +594,16 @@ component Alona
                   header
                     text "Recordings from the earlier Alona app"
                   row
-                    text (desk.legacyCount == 0 ? "None found." : `${desk.legacyCount} found, ${desk.legacyNew} not imported yet.`) flex=1 testId="legacy-count"
+                    text (not desk.legacyLooked ? "Not looked for yet." : desk.legacyCount == 0 ? "None found." : `${desk.legacyCount} found, ${desk.legacyNew} not imported yet.`) flex=1 testId="legacy-count"
                   if desk.legacyFolder != ""
                     row
                       text desk.legacyFolder font="-exact-footnote" color="-exact-secondary-label" flex=1 min-width=0 testId="legacy-folder"
-                  button press=importOld disabled=(desk.legacyNew == 0 or pending(imported)) testId="import-legacy"
-                    text (pending(imported) ? "Importing…" : "Import")
+                  if desk.legacyLooked
+                    button press=importOld disabled=(desk.legacyNew == 0 or pending(imported)) testId="import-legacy"
+                      text (pending(imported) ? "Importing…" : "Import")
+                  else
+                    button press=findLegacy testId="find-legacy"
+                      text "Find recordings"
                   button press=pickLegacy testId="pick-legacy"
                     text "Look in another folder…"
                   footer

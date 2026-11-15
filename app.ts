@@ -9,6 +9,8 @@ const DIR = 'app:/data';
 export const grants = [
   'device.microphone purpose.microphone',
   'device.notifications purpose.notifications',
+  // Needs tools/patches/exact-3baa28f-audio-capture.patch until Exact has the row.
+  'device.audio-capture purpose.audioCapture',
   `fs.read ${DIR}`,
   `fs.write ${DIR}`,
   'fs.read doc:/',
@@ -51,7 +53,7 @@ const sources: Sources = {
   retryMeeting: async ([id], _store, storage, native) => (await svc(storage, native)).retry(id),
   regenerateNotes: async ([id], _store, storage, native) => (await svc(storage, native)).regenerate(id),
   retranscribeMeeting: async ([id], _store, storage, native) => (await svc(storage, native)).retranscribe(id),
-  loadDesk: async ([utcOffset], _store, storage, native) => (await dsk(storage, native)).view(utcOffset),
+  loadDesk: async ([utcOffset, look], _store, storage, native) => (await dsk(storage, native)).view(utcOffset, look),
   chooseMeetingsFolder: async ([chosen], _store, storage, native) => (await dsk(storage, native)).chooseFolder(chosen),
   pickLegacyFolder: async ([chosen], _store, storage, native) => (await dsk(storage, native)).pickLegacy(chosen),
   importLegacy: async ([utcOffset], _store, storage, native) => (await dsk(storage, native)).importAll(utcOffset),

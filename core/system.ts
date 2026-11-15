@@ -8,9 +8,10 @@ import type { Files } from './store';
  * every other host gets `NO_SYSTEM`. An engine never has to answer an op it cannot.
  */
 
-export type MeetingApp = 'zoom' | 'meet' | 'teams';
+/** `browser`: a browser has the microphone and Accessibility is off, so the page that has it is unknown. */
+export type MeetingApp = 'zoom' | 'meet' | 'teams' | 'browser';
 
-export const MEETING_APPS: Record<MeetingApp, string> = { zoom: 'Zoom', meet: 'Google Meet', teams: 'Microsoft Teams' };
+export const MEETING_APPS: Record<MeetingApp, string> = { zoom: 'Zoom', meet: 'Google Meet', teams: 'Microsoft Teams', browser: 'A browser call' };
 
 /** A call the module believes is happening now. `key` changes when the call does. */
 export interface Detected {
@@ -85,7 +86,7 @@ export interface SystemNative {
 }
 
 const str = (v: unknown): string => (typeof v === 'string' ? v : '');
-const isApp = (v: unknown): v is MeetingApp => v === 'zoom' || v === 'meet' || v === 'teams';
+const isApp = (v: unknown): v is MeetingApp => typeof v === 'string' && Object.hasOwn(MEETING_APPS, v);
 
 /** A reply's `error` is a file system code such as `ENOENT`, raised as the store expects one. */
 async function ask(native: SystemNative, request: Record<string, unknown>): Promise<Record<string, unknown>> {
@@ -128,7 +129,7 @@ export function nativeSystem(native: SystemNative): System {
       return { seconds: n(r.seconds), createdMs: n(r.createdMs) };
     },
     async detected(enabled) {
-      native.watch?.('meeting');
+      if (enabled) native.watch?.('meeting');
       const r = await native.later({ op: 'sys.detect', enabled }).catch(() => null);
       if (!r || !isApp(r.app)) return null;
       const title = str(r.title) || MEETING_APPS[r.app];
