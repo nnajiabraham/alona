@@ -28,8 +28,10 @@ if not source.exists():
 sdk = pathlib.Path(os.environ.get('ANDROID_HOME', pathlib.Path.home() / 'Library/Android/sdk'))
 cmake = sorted((sdk / 'cmake').glob('*/bin/cmake'))[-1]
 build = work / 'build'
-subprocess.run([str(cmake), '-S', str(root / 'packages/alona-engine/native'), '-B', str(build), '-G', 'Ninja', '-DCMAKE_MAKE_PROGRAM='+str(cmake.parent/'ninja'), '-DCMAKE_TOOLCHAIN_FILE='+str(sdk/'ndk/27.1.12297006/build/cmake/android.toolchain.cmake'), '-DANDROID_ABI=arm64-v8a', '-DANDROID_PLATFORM=android-31', '-DANDROID_STL=c++_static', '-DCMAKE_BUILD_TYPE=Release', '-DCMAKE_C_FLAGS=-ffile-prefix-map='+str(root)+'=.', '-DCMAKE_CXX_FLAGS=-ffile-prefix-map='+str(root)+'=.', '-DLLAMA_SOURCE='+str(source)], check=True)
-subprocess.run([str(cmake), '--build', str(build), '--target', 'alona_llama', '-j', '6'], check=True)
+# The source archive has no .git: do not embed the enclosing application's HEAD.
+runtime_env = {**os.environ, 'GIT_CEILING_DIRECTORIES': str(work)}
+subprocess.run([str(cmake), '-S', str(root / 'packages/alona-engine/native'), '-B', str(build), '-G', 'Ninja', '-DCMAKE_MAKE_PROGRAM='+str(cmake.parent/'ninja'), '-DCMAKE_TOOLCHAIN_FILE='+str(sdk/'ndk/27.1.12297006/build/cmake/android.toolchain.cmake'), '-DANDROID_ABI=arm64-v8a', '-DANDROID_PLATFORM=android-31', '-DANDROID_STL=c++_static', '-DCMAKE_BUILD_TYPE=Release', '-DCMAKE_C_FLAGS=-ffile-prefix-map='+str(root)+'=.', '-DCMAKE_CXX_FLAGS=-ffile-prefix-map='+str(root)+'=.', '-DLLAMA_SOURCE='+str(source)], check=True, env=runtime_env)
+subprocess.run([str(cmake), '--build', str(build), '--target', 'alona_llama', '-j', '6'], check=True, env=runtime_env)
 aar = work / 'llama.aar'
 with zipfile.ZipFile(aar, 'w', zipfile.ZIP_DEFLATED) as z:
     z.writestr(zipfile.ZipInfo('AndroidManifest.xml', (1980, 1, 1, 0, 0, 0)), '<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.alona.llama"/>')
