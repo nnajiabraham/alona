@@ -1,0 +1,63 @@
+--- a/host/android/app/src/main/AndroidManifest.xml
++++ b/host/android/app/src/main/AndroidManifest.xml
+@@ -28,7 +28,7 @@
+          launch theme its `background_color` where it names one (LLP 1115.001 D3.6). -->
+     <application android:label="${appName}" android:theme="${appTheme}" android:hardwareAccelerated="true"
+         android:icon="${appIcon}" android:roundIcon="${appIcon}" android:banner="${appBanner}"
+-        android:enableOnBackInvokedCallback="true"
++        android:enableOnBackInvokedCallback="true" android:allowBackup="false"
+         android:fullBackupContent="@xml/exact_backup" android:dataExtractionRules="@xml/exact_data_extraction">
+         <meta-data android:name="dev.exact.audioSession" android:value="${audioSession}" />
+         <profileable android:shell="true" />
+--- a/host/android/canvas/src/main/res/xml/exact_backup.xml
++++ b/host/android/canvas/src/main/res/xml/exact_backup.xml
+@@ -1,6 +1,13 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<!-- Auto Backup up to Android 11 (`fullBackupContent`): everything but the locked secrets' files (LLP 1133.010 D6),
+-     which a restore could never open, since their Keystore keys stay on the device that made them. -->
++<!-- Alona meeting files must stay on this device. -->
+ <full-backup-content>
+-    <exclude domain="file" path="exact-presence/" />
++    <exclude domain="root" path="." />
++    <exclude domain="file" path="." />
++    <exclude domain="database" path="." />
++    <exclude domain="sharedpref" path="." />
++    <exclude domain="external" path="." />
++    <exclude domain="device_root" path="." />
++    <exclude domain="device_file" path="." />
++    <exclude domain="device_database" path="." />
++    <exclude domain="device_sharedpref" path="." />
+ </full-backup-content>
+--- a/host/android/canvas/src/main/res/xml/exact_data_extraction.xml
++++ b/host/android/canvas/src/main/res/xml/exact_data_extraction.xml
+@@ -1,11 +1,26 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<!-- Android 12 and later (`dataExtractionRules`): the locked secrets' files go neither to the cloud nor to another
+-     device (LLP 1133.010 D6). -->
++<!-- Explicit rules cover device transfers on OEMs that ignore allowBackup. -->
+ <data-extraction-rules>
+     <cloud-backup>
+-        <exclude domain="file" path="exact-presence/" />
++        <exclude domain="root" path="." />
++        <exclude domain="file" path="." />
++        <exclude domain="database" path="." />
++        <exclude domain="sharedpref" path="." />
++        <exclude domain="external" path="." />
++        <exclude domain="device_root" path="." />
++        <exclude domain="device_file" path="." />
++        <exclude domain="device_database" path="." />
++        <exclude domain="device_sharedpref" path="." />
+     </cloud-backup>
+     <device-transfer>
+-        <exclude domain="file" path="exact-presence/" />
++        <exclude domain="root" path="." />
++        <exclude domain="file" path="." />
++        <exclude domain="database" path="." />
++        <exclude domain="sharedpref" path="." />
++        <exclude domain="external" path="." />
++        <exclude domain="device_root" path="." />
++        <exclude domain="device_file" path="." />
++        <exclude domain="device_database" path="." />
++        <exclude domain="device_sharedpref" path="." />
+     </device-transfer>
+ </data-extraction-rules>
