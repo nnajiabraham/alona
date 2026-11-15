@@ -12,8 +12,9 @@
 // Results go to docs/media/android-real/e2e-<tier>.json. Exit code 0 means every
 // check held.
 import { spawn, spawnSync } from 'node:child_process';
-import { mkdirSync, readFileSync, writeFileSync, rmSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync, mkdtempSync, rmSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
+import { tmpdir } from 'node:os';
 
 const ROOT = resolve(dirname(new URL(import.meta.url).pathname), '..');
 const APP_ID = 'com.alona.app';
@@ -65,10 +66,16 @@ const value = (reply) => {
 
 // PSS apportions shared pages among processes. It includes Java, native heaps and mapped models;
 // it is not the amount of physical RAM exclusively owned by the app.
-function appFootprintMB() {
+function appMemory() {
   const result = spawnSync('adb', ['shell', 'dumpsys', 'meminfo', APP_ID], { encoding: 'utf8' });
   const match = result.stdout.match(/TOTAL PSS:\s*(\d+)/) ?? result.stdout.match(/^\s*TOTAL\s+(\d+)/m);
-  return match ? Number(match[1]) / 1024 : 0;
+  const heap = (name) => {
+    const line = result.stdout.split('\n').find((line) => line.trimStart().startsWith(name + ' '));
+    const values = line?.trim().split(/\s+/).slice(2).map(Number) ?? [];
+    return { pss: Number.isFinite(values[0]) ? values[0] / 1024 : null, allocated: Number.isFinite(values[6]) ? values[6] / 1024 : null };
+  };
+  const native = heap('Native Heap'), java = heap('Dalvik Heap');
+  return { mb: match ? Number(match[1]) / 1024 : 0, nativeAllocatedMB: native.allocated, javaAllocatedMB: java.allocated, nativePssMB: native.pss, javaPssMB: java.pss };
 }
 
 const words = (text) => text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter((w) => w !== '');
@@ -99,11 +106,11 @@ if (root.stdout.includes('cannot run as root')) throw new Error('Use a google_ap
 spawnSync('adb', ['wait-for-device']);
 console.log(`e2e android ${tier}: preparing models`);
 // The welcome screen offers "Not now" only while the recommended tier is not on this machine yet.
-const welcome = await drive(['clock data', 'state setup.activeInstalled'], { fresh: true });
-await drive(['clock data', value(welcome[1]) === true ? 'tap continue' : 'tap skip-download', 'clock data',
-  'tap open-settings', 'clock data', `tap pick-${tier}`, 'clock data']);
+const welcome = await drive(['clock data', 'clock until state setup.ready == true within 120000', 'state setup.activeInstalled'], { fresh: true });
+const selected = await drive(['clock data', value(welcome.at(-1)) === true ? 'tap continue' : 'tap skip-download', 'clock data',
+  'tap open-settings', 'clock data', `tap pick-${tier}`, 'clock data', `clock until state setup.active == "${tier}" within 120000`, 'state setup.activeInstalled']);
 const downloadStarted = Date.now();
-let installed = value(welcome[1]) === true;
+let installed = value(selected.at(-1)) === true;
 if (!installed) {
   const downloaded = await drive(['clock data', 'tap open-settings', 'clock data', `tap pick-${tier}`, 'clock data',
     `tap download-${tier}`, 'clock data', 'clock +1000 real', 'clock data', 'state setup.activeProgress',
@@ -124,11 +131,13 @@ need(value(recorded.at(-3)) === 'done', `the tone recording ended as ${recorded.
 const search = spawnSync('adb', ['shell', 'find', `/data/user/0/${APP_ID}`, '-path', `*/${storage}/data`], { encoding: 'utf8' });
 const actualData = search.stdout.trim().split('\n').find((p) => p.endsWith(`/${storage}/data`));
 if (!actualData) throw new Error('Cannot locate private agent data; use an emulator with adb root.');
-const aac = '/tmp/alona-android-meeting-fixture.m4a';
-const encoded = spawnSync('ffmpeg', ['-y', '-i', FIXTURE, '-c:a', 'aac', '-b:a', '96k', aac], { encoding: 'utf8' });
+const fixtureDir = mkdtempSync(join(tmpdir(), 'alona-android-fixture-'));
+const aac = join(fixtureDir, 'meeting-fixture.m4a');
+const encoded = spawnSync('ffmpeg', ['-y', '-i', FIXTURE, '-ar', '48000', '-ac', '2', '-c:a', 'aac', '-b:a', '96k', aac], { encoding: 'utf8' });
 if (encoded.error) throw encoded.error;
 if (encoded.status !== 0) throw new Error(encoded.stderr || 'ffmpeg could not encode the fixture.');
 const pushed = spawnSync('adb', ['push', aac, `${actualData}/${String(audio).replace('app:/data/', '')}`], { encoding: 'utf8' });
+rmSync(fixtureDir, { recursive: true, force: true });
 if (pushed.status !== 0) throw new Error(pushed.stderr);
 // adb root writes as root; restore the app's UID before it opens the fixture.
 const owner = spawnSync('adb', ['shell', 'stat', '-c', '%u:%g', actualData], { encoding: 'utf8' }).stdout.trim();
@@ -136,57 +145,63 @@ spawnSync('adb', ['shell', 'chown', owner, `${actualData}/${String(audio).replac
 
 console.log(`running the pipeline ${cycles} times on the fixture`);
 const POLLS = 600;
-const ops = ['clock data', `tap "${firstTitle}"`, 'clock data', 'tap pane-transcript'];
-const marks = [];
-for (let c = 0; c < cycles; c++) {
-  const signal = join(out, `.cycle-${c + 1}-done`);
-  rmSync(signal, { force: true });
-  marks.push({ cycle: c + 1, start: ops.length, signal });
-  ops.push('tap retranscribe', 'clock data');
-  for (let p = 0; p < POLLS; p++) ops.push(`clock +1000 real until ${signal}`, 'state detail.status');
-  marks.at(-1).end = ops.length;
-  ops.push('clock +30000 real');
-  marks.at(-1).idle = ops.length;
+const exactRoot = process.env.EXACT ?? '/Users/manlikeabro/Documents/repos/exact';
+const { open } = await import(join(exactRoot, 'scripts/agent-session.mjs'));
+const { stateOp } = await import(join(exactRoot, 'scripts/agent-inspect.mjs'));
+const session = await open({ host: 'android', app: ROOT, reader: true, bind: 'engine', storage });
+const read = (path) => stateOp(session, [path]);
+const samples = [], runs = [];
+let sampler;
+let segments, notes, title;
+try {
+  await session.clock('data');
+  await session.tap(firstTitle);
+  await session.clock('data');
+  await session.tap('pane-transcript');
+  sampler = setInterval(() => samples.push({ at: Date.now(), ...appMemory() }), 1000);
+  for (let c = 0; c < cycles; c++) {
+    const started = Date.now();
+    let summarizing, done, observedWork = false;
+    await session.tap('retranscribe');
+    for (let p = 0; p < POLLS; p++) {
+      await session.clock('+1000 real');
+      const status = await read('detail.status');
+      if (['recorded', 'transcribing', 'summarizing'].includes(status)) observedWork = true;
+      if (status === 'summarizing' && !summarizing) summarizing = Date.now();
+      if (status === 'failed') throw new Error(`cycle ${c + 1}: ${await read('detail.error')}`);
+      if (status === 'done' && observedWork) { done = Date.now(); break; }
+    }
+    if (!done) throw new Error(`cycle ${c + 1} timed out`);
+    await session.clock('+30000 real');
+    const idleTo = Date.now();
+    const active = samples.filter((s) => s.at >= started && s.at <= done && s.mb > 0);
+    const idle = samples.filter((s) => s.at >= idleTo - 10000 && s.at <= idleTo && s.mb > 0).sort((a, b) => a.mb - b.mb)[0];
+    const run = {
+      cycle: c + 1,
+      transcribeSeconds: summarizing ? (summarizing - started) / 1000 : null,
+      notesSeconds: summarizing ? (done - summarizing) / 1000 : null,
+      totalSeconds: (done - started) / 1000,
+      peakMB: Math.round(Math.max(0, ...active.map((s) => s.mb))),
+      idleMB: idle ? Math.round(idle.mb) : null,
+      idleNativeAllocatedMB: idle?.nativeAllocatedMB ?? null,
+      idleJavaAllocatedMB: idle?.javaAllocatedMB ?? null,
+      finished: true,
+    };
+    runs.push(run);
+    console.log(`completed cycle ${run.cycle}: peak ${run.peakMB} MiB, idle ${run.idleMB} MiB, native allocated ${run.idleNativeAllocatedMB?.toFixed(1)} MiB`);
+  }
+  segments = await read('detail.segments');
+  notes = String(await read('detail.aiNotes'));
+  title = String(await read('detail.title'));
+  await session.tap('pane-ai');
+  await session.clock('settle');
+  await session.screenshot(join(out, `notes-${tier}.png`));
+} finally {
+  clearInterval(sampler);
+  await session.close();
 }
-const tail = ops.length;
-ops.push('state detail.segments', 'state detail.aiNotes', 'state detail.title');
-
-mkdirSync(out, { recursive: true });
-const samples = [];
-const sampler = setInterval(() => samples.push({ at: Date.now(), mb: appFootprintMB() }), 1000);
-let replies;
-try { replies = await drive(ops, { onReply: (count, reply) => {
-  const mark = marks.find((m) => count > m.start && count <= m.end);
-  if (mark && value(reply) === 'done') writeFileSync(mark.signal, 'done');
-} }); } finally { clearInterval(sampler); }
-
-clearInterval(sampler);
-for (const mark of marks) rmSync(mark.signal, { force: true });
-
-const segments = value(replies[tail]);
-const notes = String(value(replies[tail + 1]));
-const title = String(value(replies[tail + 2]));
 const transcript = Array.isArray(segments) ? segments.map((s) => s.text).join(' ') : '';
 const wer = wordErrorRate(readFileSync(REFERENCE, 'utf8'), transcript);
-
-const between = (from, to) => samples.filter((s) => s.at >= from && s.at <= to && s.mb > 0).map((s) => s.mb);
-const runs = marks.map((m) => {
-  const started = replies[m.start].at;
-  const statuses = [];
-  for (let i = m.start + 3; i < m.end; i += 2) statuses.push({ at: replies[i].at, status: value(replies[i]) });
-  const first = (status) => statuses.find((s) => s.status === status)?.at;
-  const done = first('done'), summarizing = first('summarizing');
-  const idleFrom = replies[m.end - 1].at, idleTo = replies[m.idle - 1].at;
-  return {
-    cycle: m.cycle,
-    transcribeSeconds: summarizing ? (summarizing - started) / 1000 : null,
-    notesSeconds: done && summarizing ? (done - summarizing) / 1000 : null,
-    totalSeconds: done ? (done - started) / 1000 : null,
-    peakMB: Math.round(Math.max(0, ...between(started, done ?? idleTo))),
-    idleMB: Math.round(Math.min(...between(idleFrom, idleTo), Infinity)),
-    finished: Boolean(done),
-  };
-});
 
 for (const run of runs) need(run.peakMB > 0 && Number.isFinite(run.idleMB) && run.idleMB > 0, `cycle ${run.cycle} has no valid PSS samples`);
 for (const run of runs) need(run.finished, `cycle ${run.cycle} did not reach done within ${POLLS} s`);
@@ -201,21 +216,17 @@ if (idle.length >= 2) {
 const result = {
   host: 'android', tier, date: new Date().toISOString(),
   method: {
-    audio: 'tools/fixture/meeting-fixture.wav (53 s synthetic three-speaker meeting), transcoded locally to AAC/M4A with ffmpeg, then copied over the recorded take',
+    audio: 'tools/fixture/meeting-fixture.wav (53 s synthetic three-speaker meeting), transcoded locally to 48 kHz stereo AAC/M4A with ffmpeg, then copied over the recorded take',
     wer: 'lowercase, punctuation stripped, word-level edit distance, no number normalization',
     timing: 'wall time between agent replies polled once a second, so each figure is accurate to about one second',
-    memory: 'dumpsys meminfo app-process PSS in MiB, sampled every 1000 ms; idle is the lowest sample in the 30 s that end a cycle, about a minute after the notes finish',
+    memory: 'dumpsys meminfo app-process PSS in MiB, sampled every 1000 ms; idle is the lowest sample in the last 10 s of a 30 s idle window; adaptive polling stops at done, all cycles use one process; heap allocation columns are diagnostic, not PSS',
   },
-  modelsPreviouslyInstalled: value(welcome[1]) === true,
+  modelsPreviouslyInstalled: value(selected.at(-1)) === true,
   downloadSeconds: Math.round(downloadSeconds),
   wer: { ...wer, rate: Number(wer.rate.toFixed(4)) },
-  title, transcript, notes, runs, failures,
+  title, transcript, notes, runs, samples, failures,
 };
 
-
-// Best effort: a sleeping display or a locked screen gives no picture, and that must not cost the measurements.
-await drive(['clock data', `tap "${title}"`, 'clock data', 'clock settle', `screenshot ${join(out, `notes-${tier}.png`)}`])
-  .catch((e) => console.log(`no screenshot: ${e.message.split(':').slice(0, 2).join(':')}`));
 
 writeFileSync(join(out, `e2e-${tier}.json`), `${JSON.stringify(result, null, 2)}\n`);
 
