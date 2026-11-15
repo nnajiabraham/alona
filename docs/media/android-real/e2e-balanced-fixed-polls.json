@@ -1,0 +1,51 @@
+{
+  "host": "android",
+  "tier": "balanced",
+  "date": "2026-11-15T02:06:28.053Z",
+  "method": {
+    "audio": "tools/fixture/meeting-fixture.wav (53 s synthetic three-speaker meeting), transcoded locally to AAC/M4A with ffmpeg, then copied over the recorded take",
+    "wer": "lowercase, punctuation stripped, word-level edit distance, no number normalization",
+    "timing": "wall time between agent replies polled once a second, so each figure is accurate to about one second",
+    "memory": "dumpsys meminfo app-process PSS in MiB, sampled every 1000 ms; idle is the lowest sample in the 30 s that end a cycle, about a minute after the notes finish"
+  },
+  "modelsPreviouslyInstalled": false,
+  "downloadSeconds": 182,
+  "wer": {
+    "errors": 6,
+    "words": 168,
+    "rate": 0.0357
+  },
+  "title": "Mobile App Launch Plan",
+  "transcript": "Thanks for joining everyone. Today we need to decide the launch date for the mobile app and review the open bugs. The Android build is stable. We fixed the crash on the settings screen yesterday, and battery usage is down by 20%. Good. What about the login issue on older phones? That one is still open. I need two more days to finish the fix and test it. From the design side. The onboarding screens are final. I will send the updated icons to the team by Thursday. Then let us agree on the plan. We launch on the 15th of March. As long as the login fix lands by Friday. Agreed. I will also prepare the release notes and the store screenshots. I will own the login fix, and I will run the full regression suite on Friday morning. Great. To summarize, the launch date is March 15, Daniel own the login fix, and Karen own the icons, the release notes, and the screenshots. Thanks everyone.",
+  "notes": "## Summary\nThe team finalized the March 15th launch date for the mobile app after agreeing to fix login issues on older phones. Daniel and Karen were assigned specific ownership for the login fix, icons, release notes, and screenshots. The Android build remains stable with a recent fix for the settings screen crash.\n## Key points\n*   Android build is stable with a recent fix for the settings screen crash and 20% battery improvement.\n*   Login issues on older phones require two more days to resolve before the launch.\n*   Onboarding screens are complete; updated icons will be sent to the team by Thursday.\n*   The official launch date is confirmed as March 15th, contingent on the login fix completion by Friday.\n*   Daniel will own the login fix, and Karen will own the icons, release notes, and screenshots.\n## Decisions\n*   Launch date is set for March 15th, pending the login fix to land by Friday.\n*   Android build is confirmed as stable with the recent settings screen fix applied.\n*   Onboarding screens are considered final, and design icons will be provided to the team by Thursday.\n## Action items\n*   - [ ] Daniel: Complete login fix for older phones and test by Friday.\n*   - [ ] Karen: Prepare release notes and store screenshots by Thursday.\n*   - [ ] Design team: Review and send updated icons to the team by Thursday.\n## Open questions\n*   - None recorded.",
+  "runs": [
+    {
+      "cycle": 1,
+      "transcribeSeconds": 29.175,
+      "notesSeconds": 40.894,
+      "totalSeconds": 70.069,
+      "peakMB": 1474,
+      "idleMB": 99,
+      "finished": true
+    },
+    {
+      "cycle": 2,
+      "transcribeSeconds": 9.282,
+      "notesSeconds": 40.874,
+      "totalSeconds": 50.156,
+      "peakMB": 1459,
+      "idleMB": 105,
+      "finished": true
+    },
+    {
+      "cycle": 3,
+      "transcribeSeconds": 9.2,
+      "notesSeconds": 40.909,
+      "totalSeconds": 50.109,
+      "peakMB": 1459,
+      "idleMB": 109,
+      "finished": true
+    }
+  ],
+  "failures": []
+}

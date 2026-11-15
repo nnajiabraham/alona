@@ -106,7 +106,7 @@ if (root.stdout.includes('cannot run as root')) throw new Error('Use a google_ap
 spawnSync('adb', ['wait-for-device']);
 console.log(`e2e android ${tier}: preparing models`);
 // The welcome screen offers "Not now" only while the recommended tier is not on this machine yet.
-const welcome = await drive(['clock data', 'clock until state setup.ready == true within 120000', 'state setup.activeInstalled'], { fresh: true });
+const welcome = await drive(['clock data', 'clock until state setup.demo == false within 120000', 'state setup.activeInstalled'], { fresh: true });
 const selected = await drive(['clock data', value(welcome.at(-1)) === true ? 'tap continue' : 'tap skip-download', 'clock data',
   'tap open-settings', 'clock data', `tap pick-${tier}`, 'clock data', `clock until state setup.active == "${tier}" within 120000`, 'state setup.activeInstalled']);
 const downloadStarted = Date.now();

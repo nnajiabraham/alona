@@ -1,0 +1,99 @@
+bun test v1.4.2 (744846f84)
+
+clinic/clinic.test.ts:
+(pass) a template as a notes profile > the prompt asks for the template's sections in order, and no title [0.14ms]
+(pass) a template as a notes profile > the model is told never to add what was not said, to write "Not discussed." and to keep clinical wording
+(pass) a template as a notes profile > the tenant's noun for the person is used [0.01ms]
+(pass) a template as a notes profile > a recording with no speech still shows every section [0.01ms]
+(pass) a template as a notes profile > an unknown template id falls back to the default template
+(pass) clinic notes > a new note is drafted with its own template's sections and listed newest first [4.03ms]
+(pass) clinic notes > the clinician's edits are kept apart from the draft, and the pipeline never overwrites them [1.10ms]
+(pass) clinic notes > writing again replaces the edits with a fresh draft [0.86ms]
+(pass) clinic notes > an edit that restores the draft exactly is not kept as an edit [0.48ms]
+(pass) clinic notes > marking reviewed records when, and an edit afterwards makes it a draft again [0.53ms]
+(pass) clinic notes > deleting a note removes its recording, transcript, draft, edits and review [0.48ms]
+(pass) clinic notes > before the clinician picks a model tier, the tenant's default is used [0.08ms]
+(pass) the demo engine > its draft has exactly the requested sections, so every template looks right in a demo build [0.07ms]
+
+core/core.test.ts:
+(pass) tier selection > a 96 GB Apple silicon Mac is recommended Quality and can run every tier [0.03ms]
+(pass) tier selection > a 4 GB phone gets Lite, and larger tiers say why they cannot run [0.04ms]
+(pass) tier selection > a 12 GB phone stops at Balanced [0.02ms]
+(pass) tier selection > an 8 GB Mac is told how much memory Quality needs [0.02ms]
+(pass) tier selection > a browser without WebGPU gets Lite and is told why [0.01ms]
+(pass) tier selection > a browser on iPhone gets Lite even with WebGPU
+(pass) tier selection > a desktop browser with WebGPU, memory and storage gets Balanced, never Quality
+(pass) tier selection > a browser that hides its memory is treated as unknown, not low
+(pass) tier selection > only tiers the host ships are offered [0.01ms]
+(pass) tier selection > a pick the device cannot run falls back to the recommended tier [0.02ms]
+(pass) notes planning > a short meeting is summarized in one request that carries the transcript and the person's notes [0.03ms]
+(pass) notes planning > an hour-long meeting on Lite is read in parts, then merged [0.79ms]
+(pass) notes planning > each part repeats the last line of the part before it [0.62ms]
+(pass) notes planning > the same hour fits one request on Quality [0.28ms]
+(pass) notes planning > a recording with no speech needs no model
+(pass) Alona's notes profile > every request Alona sends is the same as before profiles [0.41ms]
+(pass) Alona's notes profile > every reply is finished into the same notes as before profiles [0.12ms]
+(pass) another notes profile > the prompt lists its own sections, in order, with no title line [0.03ms]
+(pass) another notes profile > long recordings are read for its own headings [1.19ms]
+(pass) another notes profile > a missing section, even one with brackets in its heading, is added with its own empty text [0.06ms]
+(pass) finishing notes > the title line becomes the title and leaves the notes [0.02ms]
+(pass) finishing notes > a section the model left out is added and says nothing was recorded [0.02ms]
+(pass) finishing notes > sections the model wrote are never duplicated
+(pass) finishing notes > reasoning blocks and code fences are removed [0.01ms]
+(pass) finishing notes > a first-level heading is taken as the title when no title line is given
+(pass) finishing notes > a title that only repeats the instruction is dropped, so the meeting keeps its own name [0.01ms]
+(pass) finishing notes > a reply cut off inside its reasoning yields the no-speech notes, not the reasoning
+(pass) the meeting pipeline > a recorded meeting ends done with a transcript, AI notes and a title [0.25ms]
+(pass) the meeting pipeline > a title the person typed is kept [0.07ms]
+(pass) the meeting pipeline > a meeting whose engine restarted mid-transcription still finishes [0.10ms]
+(pass) the meeting pipeline > a meeting whose engine restarted mid-summary still finishes [0.07ms]
+(pass) the meeting pipeline > a failed transcription is reported with the engine's reason, and a retry finishes [0.08ms]
+(pass) the meeting pipeline > a failed summary keeps the transcript, and a retry only redoes the summary [0.07ms]
+(pass) the meeting pipeline > a finished or failed meeting is left alone [0.02ms]
+(pass) engine replies > a job reply is read into a view with progress clamped to 0..1 [0.07ms]
+(pass) engine replies > a reply with no known state is refused [0.06ms]
+(pass) model downloads > a tier is not installed until its download finishes, then stays installed [0.14ms]
+(pass) model downloads > a removed tier reads as not installed and can be downloaded again [0.20ms]
+(pass) model downloads > a pick this device cannot run falls back to the recommended tier [0.04ms]
+(pass) model downloads > a recorded meeting waits while its tier's models are missing, then runs once they arrive [0.26ms]
+(pass) model downloads > the model is released when the last queued meeting finishes, not between meetings [0.28ms]
+(pass) model downloads > a download that failed can be started again [0.09ms]
+(pass) model downloads > notes for a meeting that does not exist are refused and leave the library readable [0.08ms]
+(pass) model downloads > a recording left without a meeting record is recovered at launch [0.09ms]
+(pass) model downloads > a recording that starts after launch is not adopted while it is in progress [0.04ms]
+(pass) model downloads > deleting a meeting removes it from the library [0.08ms]
+(pass) a plan that changes mid-summary > notes edited during a long summary restart it, so one part is never taken for the whole [1.81ms]
+(pass) running a meeting again > transcribing again replaces the transcript and the notes [0.10ms]
+(pass) running a meeting again > a meeting still being processed is not restarted
+(pass) a service with its own note format > each meeting is written in the format the app picks for it, and the engine is given that format [0.45ms]
+(pass) a service with its own note format > an app's own files sit beside a meeting's, and the store's own names are refused [0.06ms]
+(pass) choosing the engine at launch > without a native module, the demo engine answers and says why [0.20ms]
+(pass) choosing the engine at launch > Android's recording-only module fails the probe, so the demo engine runs as a phone [0.12ms]
+(pass) choosing the engine at launch > a native engine that answers its probe is used, with no demo note [0.28ms]
+(pass) Android extension transport > serializes requests and unwraps protocol replies [0.04ms]
+(pass) Android extension transport > rejects missing, malformed, and failed replies [0.07ms]
+(pass) Android extension transport > a failed job is a valid protocol reply [0.03ms]
+
+tenants/tenants.test.ts:
+(pass) the shipped tenants > there are at least three, and every one passes every rule [0.94ms]
+(pass) each rule the validator adds to the types > contrast is measured as WCAG 2 defines it [0.01ms]
+(pass) each rule the validator adds to the types > a slug that differs from the file name [0.06ms]
+(pass) each rule the validator adds to the types > a malformed slug is refused when the tenant is defined [0.01ms]
+(pass) each rule the validator adds to the types > two templates with one id [0.15ms]
+(pass) each rule the validator adds to the types > a default template no template has [0.08ms]
+(pass) each rule the validator adds to the types > muted text too faint on its card, in the dark scheme only [0.11ms]
+(pass) each rule the validator adds to the types > an accent too pale for a white button label [0.08ms]
+(pass) each rule the validator adds to the types > an accent too dim to read as link text in a dark settings list [0.09ms]
+(pass) each rule the validator adds to the types > a welcome title with a word too long for a phone at the largest text size [0.11ms]
+(pass) each rule the validator adds to the types > a colour that is not six hex digits [0.06ms]
+(pass) each rule the validator adds to the types > a bundle id that is not reverse DNS [0.15ms]
+(pass) each rule the validator adds to the types > an icon file that does not exist, or is not a PNG [0.10ms]
+(pass) each rule the validator adds to the types > a privacy statement that claims a regulation [0.06ms]
+(pass) each rule the validator adds to the types > a repeated heading, a heading with Markdown, and empty guidance [0.06ms]
+(pass) each rule the validator adds to the types > a short name too long for a home screen, and a capitalized noun [0.05ms]
+(pass) each rule the validator adds to the types > support details in the wrong form [0.06ms]
+
+ 87 pass
+ 0 fail
+ 206 expect() calls
+Ran 87 tests across 3 files. [199.00ms]

@@ -1,0 +1,15 @@
+verify web: about 173 s, as its last run took; one report when it ends
+web: alona served at http://127.0.0.1:20455/ (--port <n> or EXACT_PORT picks the port)
+built web (4.9 s)
+compiler: 1 note, not counted (the platform's own look stands there; LLP 1121 D9)
+  app.contract:259:60 warning [tamber-unreachable] accent-color on iOS, macOS and the web: the platform's look stands on iOS disabled prominent buttons (iOS draws a disabled prominent glass button grey; style a pressable instead (LLP 1121 D8)); macOS progress bars and spinners (NSProgressIndicator takes no tint); the web's disabled prominent buttons (the neutral look draws a disabled button grey; style a pressable instead (LLP 1121 D8)) (the first at line 312; LLP 1121 D9). The app ships ios (app.json `host.ios`, app.json `deploy.store.ios`) and macos (app.json `host.macos`, app.json `deploy.store.macos`); not shipping one? delete its keys
+tests: 3 passed, 0 failed
+check first screen, 3 test ends, relaunch · 390x844, 1280x900 · light, dark: no findings
+tree --ax first screen, 3 test ends, relaunch: no findings
+reload 3 test ends: the same screen after each
+largest text size (root font size 53 px at 390x844, iOS's body at its largest), 7 screens: nothing spills
+relaunch on "not now skips the download, and the hom…"'s store (0.3 s of real time): the first screen shows what it stored: "Ready when your meeting…", "Record a meeting", "No meetings yet"
+screenshots (.exact/verify): web-390x844-light.png web-390x844-dark.png web-1280x900-light.png web-1280x900-dark.png
+  test ends: web-t1-first-launch-checks-the.png web-t2-continue-downloads-the.png web-t3-not-now-skips-the-download.png; relaunch: web-relaunch.png
+open it: bun exact.mjs web (serves what verify checked)
+verify: clean in 18.5 s; contract verify: done; 0 findings; properties: 0 held, 0 false, 0 counted only, 0 not exercised; 10 suggested properties (observed, not proved: keep the ones the app means); report and receipt: .exact/verify/properties.txt
