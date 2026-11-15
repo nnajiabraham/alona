@@ -1,0 +1,2099 @@
+{
+  "host": "android",
+  "tier": "balanced",
+  "date": "2026-11-15T03:18:43.112Z",
+  "method": {
+    "audio": "tools/fixture/meeting-fixture.wav (53 s synthetic three-speaker meeting), transcoded locally to 48 kHz stereo AAC/M4A with ffmpeg, then copied over the recorded take",
+    "wer": "lowercase, punctuation stripped, word-level edit distance, no number normalization",
+    "timing": "wall time between agent replies polled once a second, so each figure is accurate to about one second",
+    "memory": "dumpsys meminfo app-process PSS in MiB, sampled every 1000 ms; idle is the lowest sample in the last 10 s of a 30 s idle window; adaptive polling stops at done, all cycles use one process; heap allocation columns are diagnostic, not PSS"
+  },
+  "modelsPreviouslyInstalled": true,
+  "downloadSeconds": 0,
+  "wer": {
+    "errors": 8,
+    "words": 168,
+    "rate": 0.0476
+  },
+  "title": "App Launch Date and Bug Fix",
+  "transcript": "Thanks everyone. Today we need to decide the launch date for the mobile app and review the open bugs. The Android build is stable. We fixed the crash on the settings screen yesterday, and battery usage is down by 20%. Good. What about the login issue on older phones? That one is still open. I need two more days to finish the fix and test it. From the design side, the onboarding screens are final. I will send the updated icons to the team by Thursday. Then let us agree on the plan. We launch on the 15th of March, as long as the login fix lands by Friday. Agreed. I will also prepare the release notes and the store screenshots. I will own the login fix, and I will run the full regression suite on Friday morning. Great. To summarize, the launch date is March 15, Daniel own the login fix, and Karen own the icons, the release notes, and the screenshots. Thanks everyone.",
+  "notes": "## Summary\nThe team determined the mobile app launch date and reviewed progress on open bugs. Key milestones include the Android build being stable and a login fix requiring two additional days. The design team confirmed onboarding screens are final and icons will be sent by Thursday.\n## Key points\n- Android build is stable with a 20% reduction in battery usage.\n- The login issue on older phones is open and requires two more days to fix.\n- The launch date is set for March 15th.\n- The login fix must be completed by Friday.\n- Design icons will be sent to the team by Thursday.\n## Decisions\n- The launch date is March 15th, contingent on the login fix being resolved by Friday.\n- The design onboarding screens are considered final.\n- The release notes and store screenshots will be prepared.\n## Action items\n- [ ] Daniel: Complete the login fix and run the regression suite by Friday morning.\n- [ ] Karen: Prepare the release notes and send the updated icons to the team by Thursday.\n- [ ] Design team: Review and approve the onboarding screen plan.\n## Open questions\n- None recorded.",
+  "runs": [
+    {
+      "cycle": 1,
+      "transcribeSeconds": 31.404,
+      "notesSeconds": 36.943,
+      "totalSeconds": 68.347,
+      "peakMB": 1455,
+      "idleMB": 99,
+      "idleNativeAllocatedMB": 27.5478515625,
+      "idleJavaAllocatedMB": 3.3125,
+      "finished": true
+    },
+    {
+      "cycle": 2,
+      "transcribeSeconds": 11.225,
+      "notesSeconds": 37.804,
+      "totalSeconds": 49.029,
+      "peakMB": 1474,
+      "idleMB": 107,
+      "idleNativeAllocatedMB": 27.5703125,
+      "idleJavaAllocatedMB": 3.31640625,
+      "finished": true
+    },
+    {
+      "cycle": 3,
+      "transcribeSeconds": 11.245,
+      "notesSeconds": 36.779,
+      "totalSeconds": 48.024,
+      "peakMB": 1475,
+      "idleMB": 110,
+      "idleNativeAllocatedMB": 27.5673828125,
+      "idleJavaAllocatedMB": 3.3203125,
+      "finished": true
+    }
+  ],
+  "samples": [
+    {
+      "at": 1794712467809,
+      "mb": 49.8583984375,
+      "nativeAllocatedMB": 18.46875,
+      "javaAllocatedMB": 3.26171875,
+      "nativePssMB": 10.7138671875,
+      "javaPssMB": 2.876953125
+    },
+    {
+      "at": 1794712468811,
+      "mb": 49.5283203125,
+      "nativeAllocatedMB": 17.76953125,
+      "javaAllocatedMB": 3.23046875,
+      "nativePssMB": 10.3701171875,
+      "javaPssMB": 2.798828125
+    },
+    {
+      "at": 1794712469813,
+      "mb": 48.6845703125,
+      "nativeAllocatedMB": 17.7314453125,
+      "javaAllocatedMB": 3.23046875,
+      "nativePssMB": 10.2607421875,
+      "javaPssMB": 2.068359375
+    },
+    {
+      "at": 1794712470816,
+      "mb": 48.6845703125,
+      "nativeAllocatedMB": 17.7314453125,
+      "javaAllocatedMB": 3.23046875,
+      "nativePssMB": 10.2607421875,
+      "javaPssMB": 2.068359375
+    },
+    {
+      "at": 1794712471818,
+      "mb": 48.6845703125,
+      "nativeAllocatedMB": 17.7314453125,
+      "javaAllocatedMB": 3.23046875,
+      "nativePssMB": 10.2607421875,
+      "javaPssMB": 2.068359375
+    },
+    {
+      "at": 1794712472820,
+      "mb": 48.6845703125,
+      "nativeAllocatedMB": 17.7314453125,
+      "javaAllocatedMB": 3.23046875,
+      "nativePssMB": 10.2607421875,
+      "javaPssMB": 2.068359375
+    },
+    {
+      "at": 1794712473825,
+      "mb": 48.6845703125,
+      "nativeAllocatedMB": 17.7314453125,
+      "javaAllocatedMB": 3.23046875,
+      "nativePssMB": 10.2607421875,
+      "javaPssMB": 2.068359375
+    },
+    {
+      "at": 1794712474828,
+      "mb": 48.6845703125,
+      "nativeAllocatedMB": 17.7314453125,
+      "javaAllocatedMB": 3.23046875,
+      "nativePssMB": 10.2607421875,
+      "javaPssMB": 2.068359375
+    },
+    {
+      "at": 1794712475830,
+      "mb": 48.6845703125,
+      "nativeAllocatedMB": 17.7314453125,
+      "javaAllocatedMB": 3.23046875,
+      "nativePssMB": 10.2607421875,
+      "javaPssMB": 2.068359375
+    },
+    {
+      "at": 1794712476833,
+      "mb": 48.6845703125,
+      "nativeAllocatedMB": 17.732421875,
+      "javaAllocatedMB": 3.23046875,
+      "nativePssMB": 10.2607421875,
+      "javaPssMB": 2.068359375
+    },
+    {
+      "at": 1794712477835,
+      "mb": 48.6845703125,
+      "nativeAllocatedMB": 17.7314453125,
+      "javaAllocatedMB": 3.23046875,
+      "nativePssMB": 10.2607421875,
+      "javaPssMB": 2.068359375
+    },
+    {
+      "at": 1794712478838,
+      "mb": 48.6845703125,
+      "nativeAllocatedMB": 17.732421875,
+      "javaAllocatedMB": 3.23046875,
+      "nativePssMB": 10.2607421875,
+      "javaPssMB": 2.068359375
+    },
+    {
+      "at": 1794712479839,
+      "mb": 48.6845703125,
+      "nativeAllocatedMB": 17.732421875,
+      "javaAllocatedMB": 3.23046875,
+      "nativePssMB": 10.2607421875,
+      "javaPssMB": 2.068359375
+    },
+    {
+      "at": 1794712480840,
+      "mb": 48.6845703125,
+      "nativeAllocatedMB": 17.732421875,
+      "javaAllocatedMB": 3.23046875,
+      "nativePssMB": 10.2607421875,
+      "javaPssMB": 2.068359375
+    },
+    {
+      "at": 1794712481842,
+      "mb": 48.6845703125,
+      "nativeAllocatedMB": 17.732421875,
+      "javaAllocatedMB": 3.23046875,
+      "nativePssMB": 10.2607421875,
+      "javaPssMB": 2.068359375
+    },
+    {
+      "at": 1794712482845,
+      "mb": 48.6845703125,
+      "nativeAllocatedMB": 17.7314453125,
+      "javaAllocatedMB": 3.23046875,
+      "nativePssMB": 10.2607421875,
+      "javaPssMB": 2.068359375
+    },
+    {
+      "at": 1794712483846,
+      "mb": 48.6845703125,
+      "nativeAllocatedMB": 17.732421875,
+      "javaAllocatedMB": 3.23046875,
+      "nativePssMB": 10.2607421875,
+      "javaPssMB": 2.068359375
+    },
+    {
+      "at": 1794712484849,
+      "mb": 48.6845703125,
+      "nativeAllocatedMB": 17.732421875,
+      "javaAllocatedMB": 3.23046875,
+      "nativePssMB": 10.2607421875,
+      "javaPssMB": 2.068359375
+    },
+    {
+      "at": 1794712485852,
+      "mb": 48.6845703125,
+      "nativeAllocatedMB": 17.732421875,
+      "javaAllocatedMB": 3.23046875,
+      "nativePssMB": 10.2607421875,
+      "javaPssMB": 2.068359375
+    },
+    {
+      "at": 1794712486854,
+      "mb": 48.6845703125,
+      "nativeAllocatedMB": 17.732421875,
+      "javaAllocatedMB": 3.23046875,
+      "nativePssMB": 10.2607421875,
+      "javaPssMB": 2.068359375
+    },
+    {
+      "at": 1794712487855,
+      "mb": 48.6845703125,
+      "nativeAllocatedMB": 17.7314453125,
+      "javaAllocatedMB": 3.23046875,
+      "nativePssMB": 10.2607421875,
+      "javaPssMB": 2.068359375
+    },
+    {
+      "at": 1794712488857,
+      "mb": 728.216796875,
+      "nativeAllocatedMB": 669.64453125,
+      "javaAllocatedMB": 3.265625,
+      "nativePssMB": 672.0302734375,
+      "javaPssMB": 2.126953125
+    },
+    {
+      "at": 1794712489859,
+      "mb": 765.826171875,
+      "nativeAllocatedMB": 700.78125,
+      "javaAllocatedMB": 3.30078125,
+      "nativePssMB": 707.3232421875,
+      "javaPssMB": 2.251953125
+    },
+    {
+      "at": 1794712490861,
+      "mb": 800.1806640625,
+      "nativeAllocatedMB": 701.857421875,
+      "javaAllocatedMB": 3.3046875,
+      "nativePssMB": 740.060546875,
+      "javaPssMB": 3.732421875
+    },
+    {
+      "at": 1794712491866,
+      "mb": 987.2900390625,
+      "nativeAllocatedMB": 1242.349609375,
+      "javaAllocatedMB": 4.54296875,
+      "nativePssMB": 926.076171875,
+      "javaPssMB": 4.162109375
+    },
+    {
+      "at": 1794712492868,
+      "mb": 990.0283203125,
+      "nativeAllocatedMB": 1239.8984375,
+      "javaAllocatedMB": 3.30078125,
+      "nativePssMB": 925.333984375,
+      "javaPssMB": 7.423828125
+    },
+    {
+      "at": 1794712493870,
+      "mb": 1023.3603515625,
+      "nativeAllocatedMB": 1244.2763671875,
+      "javaAllocatedMB": 4.6015625,
+      "nativePssMB": 962.033203125,
+      "javaPssMB": 3.970703125
+    },
+    {
+      "at": 1794712494872,
+      "mb": 995.8251953125,
+      "nativeAllocatedMB": 1239.919921875,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 933.705078125,
+      "javaPssMB": 4.740234375
+    },
+    {
+      "at": 1794712495873,
+      "mb": 1031.9580078125,
+      "nativeAllocatedMB": 1235.6015625,
+      "javaAllocatedMB": 3.90234375,
+      "nativePssMB": 971.658203125,
+      "javaPssMB": 3.044921875
+    },
+    {
+      "at": 1794712496875,
+      "mb": 124.3681640625,
+      "nativeAllocatedMB": 24.857421875,
+      "javaAllocatedMB": 3.28125,
+      "nativePssMB": 63.646484375,
+      "javaPssMB": 3.556640625
+    },
+    {
+      "at": 1794712497877,
+      "mb": 1452.00390625,
+      "nativeAllocatedMB": 504.8427734375,
+      "javaAllocatedMB": 3.27734375,
+      "nativePssMB": 175.904296875,
+      "javaPssMB": 2.119140625
+    },
+    {
+      "at": 1794712498878,
+      "mb": 1453.109375,
+      "nativeAllocatedMB": 505.2490234375,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 176.080078125,
+      "javaPssMB": 3.009765625
+    },
+    {
+      "at": 1794712499879,
+      "mb": 1452.890625,
+      "nativeAllocatedMB": 505.2734375,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 175.857421875,
+      "javaPssMB": 3.005859375
+    },
+    {
+      "at": 1794712500882,
+      "mb": 1453.02734375,
+      "nativeAllocatedMB": 505.26171875,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 175.873046875,
+      "javaPssMB": 3.076171875
+    },
+    {
+      "at": 1794712501885,
+      "mb": 1453,
+      "nativeAllocatedMB": 505.2705078125,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 175.845703125,
+      "javaPssMB": 3.052734375
+    },
+    {
+      "at": 1794712502886,
+      "mb": 1453.078125,
+      "nativeAllocatedMB": 505.2919921875,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 175.857421875,
+      "javaPssMB": 3.083984375
+    },
+    {
+      "at": 1794712503888,
+      "mb": 1453.08984375,
+      "nativeAllocatedMB": 505.2763671875,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 175.869140625,
+      "javaPssMB": 3.072265625
+    },
+    {
+      "at": 1794712504890,
+      "mb": 1453.09765625,
+      "nativeAllocatedMB": 505.275390625,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 175.857421875,
+      "javaPssMB": 3.076171875
+    },
+    {
+      "at": 1794712505892,
+      "mb": 1453.08984375,
+      "nativeAllocatedMB": 505.267578125,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 175.849609375,
+      "javaPssMB": 3.064453125
+    },
+    {
+      "at": 1794712506894,
+      "mb": 1453.09765625,
+      "nativeAllocatedMB": 505.3037109375,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 175.861328125,
+      "javaPssMB": 3.056640625
+    },
+    {
+      "at": 1794712507894,
+      "mb": 1453.12109375,
+      "nativeAllocatedMB": 505.2958984375,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 175.931640625,
+      "javaPssMB": 3.001953125
+    },
+    {
+      "at": 1794712508896,
+      "mb": 1453.0859375,
+      "nativeAllocatedMB": 505.306640625,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 175.935546875,
+      "javaPssMB": 2.958984375
+    },
+    {
+      "at": 1794712509899,
+      "mb": 1453.15625,
+      "nativeAllocatedMB": 505.306640625,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 175.939453125,
+      "javaPssMB": 3.021484375
+    },
+    {
+      "at": 1794712510899,
+      "mb": 1453.18359375,
+      "nativeAllocatedMB": 505.322265625,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 175.978515625,
+      "javaPssMB": 3.017578125
+    },
+    {
+      "at": 1794712511900,
+      "mb": 1453.29296875,
+      "nativeAllocatedMB": 505.369140625,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 175.986328125,
+      "javaPssMB": 3.111328125
+    },
+    {
+      "at": 1794712512902,
+      "mb": 1454.28515625,
+      "nativeAllocatedMB": 505.40234375,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 176.978515625,
+      "javaPssMB": 3.087890625
+    },
+    {
+      "at": 1794712513904,
+      "mb": 1454.26171875,
+      "nativeAllocatedMB": 505.4248046875,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 177.001953125,
+      "javaPssMB": 3.033203125
+    },
+    {
+      "at": 1794712514906,
+      "mb": 1454.3046875,
+      "nativeAllocatedMB": 505.44921875,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 176.986328125,
+      "javaPssMB": 3.087890625
+    },
+    {
+      "at": 1794712515908,
+      "mb": 1454.9140625,
+      "nativeAllocatedMB": 508.1357421875,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 177.517578125,
+      "javaPssMB": 3.044921875
+    },
+    {
+      "at": 1794712516909,
+      "mb": 1454.87890625,
+      "nativeAllocatedMB": 508.15625,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 177.525390625,
+      "javaPssMB": 2.986328125
+    },
+    {
+      "at": 1794712517909,
+      "mb": 1455,
+      "nativeAllocatedMB": 508.2294921875,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 177.513671875,
+      "javaPssMB": 3.103515625
+    },
+    {
+      "at": 1794712518911,
+      "mb": 1454.9921875,
+      "nativeAllocatedMB": 508.142578125,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 177.513671875,
+      "javaPssMB": 3.091796875
+    },
+    {
+      "at": 1794712519913,
+      "mb": 1454.9609375,
+      "nativeAllocatedMB": 508.1884765625,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 177.533203125,
+      "javaPssMB": 3.013671875
+    },
+    {
+      "at": 1794712520916,
+      "mb": 1455.09765625,
+      "nativeAllocatedMB": 508.17578125,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 177.525390625,
+      "javaPssMB": 3.150390625
+    },
+    {
+      "at": 1794712521917,
+      "mb": 1454.9765625,
+      "nativeAllocatedMB": 508.1669921875,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 177.513671875,
+      "javaPssMB": 3.033203125
+    },
+    {
+      "at": 1794712522919,
+      "mb": 1455.09765625,
+      "nativeAllocatedMB": 508.2275390625,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 177.505859375,
+      "javaPssMB": 3.138671875
+    },
+    {
+      "at": 1794712523921,
+      "mb": 1455.046875,
+      "nativeAllocatedMB": 508.1748046875,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 177.521484375,
+      "javaPssMB": 3.048828125
+    },
+    {
+      "at": 1794712524923,
+      "mb": 1454.96484375,
+      "nativeAllocatedMB": 508.017578125,
+      "javaAllocatedMB": 3.28515625,
+      "nativePssMB": 177.486328125,
+      "javaPssMB": 2.998046875
+    },
+    {
+      "at": 1794712525925,
+      "mb": 1454.9609375,
+      "nativeAllocatedMB": 508.201171875,
+      "javaAllocatedMB": 3.29296875,
+      "nativePssMB": 177.560546875,
+      "javaPssMB": 2.904296875
+    },
+    {
+      "at": 1794712526925,
+      "mb": 1454.8828125,
+      "nativeAllocatedMB": 508.2021484375,
+      "javaAllocatedMB": 3.29296875,
+      "nativePssMB": 177.560546875,
+      "javaPssMB": 2.830078125
+    },
+    {
+      "at": 1794712527926,
+      "mb": 1454.5234375,
+      "nativeAllocatedMB": 508.166015625,
+      "javaAllocatedMB": 3.2890625,
+      "nativePssMB": 177.505859375,
+      "javaPssMB": 2.501953125
+    },
+    {
+      "at": 1794712528926,
+      "mb": 1455.2109375,
+      "nativeAllocatedMB": 508.1904296875,
+      "javaAllocatedMB": 3.29296875,
+      "nativePssMB": 177.537109375,
+      "javaPssMB": 3.142578125
+    },
+    {
+      "at": 1794712529928,
+      "mb": 1455.04296875,
+      "nativeAllocatedMB": 508.18359375,
+      "javaAllocatedMB": 3.32421875,
+      "nativePssMB": 177.541015625,
+      "javaPssMB": 2.962890625
+    },
+    {
+      "at": 1794712530929,
+      "mb": 1455.23046875,
+      "nativeAllocatedMB": 508.2099609375,
+      "javaAllocatedMB": 3.29296875,
+      "nativePssMB": 177.560546875,
+      "javaPssMB": 3.123046875
+    },
+    {
+      "at": 1794712531936,
+      "mb": 1455.3203125,
+      "nativeAllocatedMB": 508.1865234375,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 177.533203125,
+      "javaPssMB": 3.220703125
+    },
+    {
+      "at": 1794712532938,
+      "mb": 1455.171875,
+      "nativeAllocatedMB": 508.203125,
+      "javaAllocatedMB": 3.29296875,
+      "nativePssMB": 177.568359375,
+      "javaPssMB": 3.029296875
+    },
+    {
+      "at": 1794712533940,
+      "mb": 138.14453125,
+      "nativeAllocatedMB": 27.498046875,
+      "javaAllocatedMB": 3.28515625,
+      "nativePssMB": 71.541015625,
+      "javaPssMB": 3.087890625
+    },
+    {
+      "at": 1794712534942,
+      "mb": 121.6318359375,
+      "nativeAllocatedMB": 27.7294921875,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 54.849609375,
+      "javaPssMB": 3.189453125
+    },
+    {
+      "at": 1794712535944,
+      "mb": 99.1318359375,
+      "nativeAllocatedMB": 27.5693359375,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.923828125,
+      "javaPssMB": 2.615234375
+    },
+    {
+      "at": 1794712536945,
+      "mb": 98.8271484375,
+      "nativeAllocatedMB": 27.5400390625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.896484375,
+      "javaPssMB": 2.341796875
+    },
+    {
+      "at": 1794712537950,
+      "mb": 98.7880859375,
+      "nativeAllocatedMB": 27.5478515625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.857421875,
+      "javaPssMB": 2.341796875
+    },
+    {
+      "at": 1794712538952,
+      "mb": 98.8193359375,
+      "nativeAllocatedMB": 27.5478515625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.888671875,
+      "javaPssMB": 2.341796875
+    },
+    {
+      "at": 1794712539954,
+      "mb": 98.8310546875,
+      "nativeAllocatedMB": 27.6025390625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.884765625,
+      "javaPssMB": 2.357421875
+    },
+    {
+      "at": 1794712540954,
+      "mb": 98.8193359375,
+      "nativeAllocatedMB": 27.5869140625,
+      "javaAllocatedMB": 3.34375,
+      "nativePssMB": 32.888671875,
+      "javaPssMB": 2.341796875
+    },
+    {
+      "at": 1794712541955,
+      "mb": 98.7802734375,
+      "nativeAllocatedMB": 27.5322265625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.857421875,
+      "javaPssMB": 2.333984375
+    },
+    {
+      "at": 1794712542957,
+      "mb": 98.8193359375,
+      "nativeAllocatedMB": 27.5478515625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.884765625,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712543959,
+      "mb": 98.8271484375,
+      "nativeAllocatedMB": 27.5478515625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.896484375,
+      "javaPssMB": 2.341796875
+    },
+    {
+      "at": 1794712544961,
+      "mb": 98.8271484375,
+      "nativeAllocatedMB": 27.5400390625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.892578125,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712545963,
+      "mb": 98.8701171875,
+      "nativeAllocatedMB": 27.564453125,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.919921875,
+      "javaPssMB": 2.349609375
+    },
+    {
+      "at": 1794712546964,
+      "mb": 98.8388671875,
+      "nativeAllocatedMB": 27.556640625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.892578125,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712547964,
+      "mb": 98.8505859375,
+      "nativeAllocatedMB": 27.5478515625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.908203125,
+      "javaPssMB": 2.341796875
+    },
+    {
+      "at": 1794712548965,
+      "mb": 98.8388671875,
+      "nativeAllocatedMB": 27.556640625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.896484375,
+      "javaPssMB": 2.341796875
+    },
+    {
+      "at": 1794712549967,
+      "mb": 98.8427734375,
+      "nativeAllocatedMB": 27.5478515625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.900390625,
+      "javaPssMB": 2.341796875
+    },
+    {
+      "at": 1794712550969,
+      "mb": 98.8505859375,
+      "nativeAllocatedMB": 27.556640625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.904296875,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712551970,
+      "mb": 98.8544921875,
+      "nativeAllocatedMB": 27.5478515625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.912109375,
+      "javaPssMB": 2.341796875
+    },
+    {
+      "at": 1794712552971,
+      "mb": 98.8662109375,
+      "nativeAllocatedMB": 27.6025390625,
+      "javaAllocatedMB": 3.34375,
+      "nativePssMB": 32.908203125,
+      "javaPssMB": 2.357421875
+    },
+    {
+      "at": 1794712553972,
+      "mb": 98.8271484375,
+      "nativeAllocatedMB": 27.548828125,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.884765625,
+      "javaPssMB": 2.341796875
+    },
+    {
+      "at": 1794712554974,
+      "mb": 98.8388671875,
+      "nativeAllocatedMB": 27.5478515625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.896484375,
+      "javaPssMB": 2.341796875
+    },
+    {
+      "at": 1794712555976,
+      "mb": 98.8388671875,
+      "nativeAllocatedMB": 27.5478515625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.892578125,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712556978,
+      "mb": 98.8310546875,
+      "nativeAllocatedMB": 27.5478515625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.888671875,
+      "javaPssMB": 2.341796875
+    },
+    {
+      "at": 1794712557980,
+      "mb": 98.8232421875,
+      "nativeAllocatedMB": 27.5478515625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.880859375,
+      "javaPssMB": 2.341796875
+    },
+    {
+      "at": 1794712558983,
+      "mb": 98.8310546875,
+      "nativeAllocatedMB": 27.5400390625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.888671875,
+      "javaPssMB": 2.341796875
+    },
+    {
+      "at": 1794712559985,
+      "mb": 98.8427734375,
+      "nativeAllocatedMB": 27.5478515625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.900390625,
+      "javaPssMB": 2.341796875
+    },
+    {
+      "at": 1794712560986,
+      "mb": 98.8193359375,
+      "nativeAllocatedMB": 27.556640625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.873046875,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712561988,
+      "mb": 98.8115234375,
+      "nativeAllocatedMB": 27.5478515625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.869140625,
+      "javaPssMB": 2.341796875
+    },
+    {
+      "at": 1794712562988,
+      "mb": 98.8310546875,
+      "nativeAllocatedMB": 27.5478515625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.892578125,
+      "javaPssMB": 2.337890625
+    },
+    {
+      "at": 1794712563989,
+      "mb": 98.8505859375,
+      "nativeAllocatedMB": 27.6025390625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.892578125,
+      "javaPssMB": 2.357421875
+    },
+    {
+      "at": 1794712564990,
+      "mb": 98.8388671875,
+      "nativeAllocatedMB": 27.5400390625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 32.896484375,
+      "javaPssMB": 2.341796875
+    },
+    {
+      "at": 1794712565991,
+      "mb": 99.0654296875,
+      "nativeAllocatedMB": 27.607421875,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 32.935546875,
+      "javaPssMB": 2.525390625
+    },
+    {
+      "at": 1794712566993,
+      "mb": 745.0654296875,
+      "nativeAllocatedMB": 672.4375,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 679.314453125,
+      "javaPssMB": 2.107421875
+    },
+    {
+      "at": 1794712567995,
+      "mb": 778.763671875,
+      "nativeAllocatedMB": 703.587890625,
+      "javaAllocatedMB": 3.3125,
+      "nativePssMB": 713.041015625,
+      "javaPssMB": 2.193359375
+    },
+    {
+      "at": 1794712568995,
+      "mb": 789.28515625,
+      "nativeAllocatedMB": 704.5126953125,
+      "javaAllocatedMB": 3.34765625,
+      "nativePssMB": 722.474609375,
+      "javaPssMB": 2.970703125
+    },
+    {
+      "at": 1794712569997,
+      "mb": 997.853515625,
+      "nativeAllocatedMB": 1244.681640625,
+      "javaAllocatedMB": 4.57421875,
+      "nativePssMB": 930.458984375,
+      "javaPssMB": 3.373046875
+    },
+    {
+      "at": 1794712570998,
+      "mb": 1000.150390625,
+      "nativeAllocatedMB": 1243.337890625,
+      "javaAllocatedMB": 3.359375,
+      "nativePssMB": 930.634765625,
+      "javaPssMB": 5.357421875
+    },
+    {
+      "at": 1794712572001,
+      "mb": 1022.869140625,
+      "nativeAllocatedMB": 1244.283203125,
+      "javaAllocatedMB": 3.34765625,
+      "nativePssMB": 955.607421875,
+      "javaPssMB": 2.814453125
+    },
+    {
+      "at": 1794712573003,
+      "mb": 1034.509765625,
+      "nativeAllocatedMB": 1247.236328125,
+      "javaAllocatedMB": 4.64453125,
+      "nativePssMB": 966.478515625,
+      "javaPssMB": 3.478515625
+    },
+    {
+      "at": 1794712574005,
+      "mb": 1013.751953125,
+      "nativeAllocatedMB": 1242.953125,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 943.220703125,
+      "javaPssMB": 5.287109375
+    },
+    {
+      "at": 1794712575007,
+      "mb": 1045.8857421875,
+      "nativeAllocatedMB": 1238.859375,
+      "javaAllocatedMB": 3.95703125,
+      "nativePssMB": 976.533203125,
+      "javaPssMB": 4.779296875
+    },
+    {
+      "at": 1794712576007,
+      "mb": 1473.1865234375,
+      "nativeAllocatedMB": 505.0166015625,
+      "javaAllocatedMB": 3.34375,
+      "nativePssMB": 195.529296875,
+      "javaPssMB": 2.119140625
+    },
+    {
+      "at": 1794712577009,
+      "mb": 1473.302734375,
+      "nativeAllocatedMB": 505.548828125,
+      "javaAllocatedMB": 3.359375,
+      "nativePssMB": 195.041015625,
+      "javaPssMB": 2.697265625
+    },
+    {
+      "at": 1794712578011,
+      "mb": 1473.119140625,
+      "nativeAllocatedMB": 505.541015625,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 194.841796875,
+      "javaPssMB": 2.708984375
+    },
+    {
+      "at": 1794712579011,
+      "mb": 1473.154296875,
+      "nativeAllocatedMB": 505.556640625,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 194.857421875,
+      "javaPssMB": 2.724609375
+    },
+    {
+      "at": 1794712580014,
+      "mb": 1473.072265625,
+      "nativeAllocatedMB": 505.5244140625,
+      "javaAllocatedMB": 3.359375,
+      "nativePssMB": 194.806640625,
+      "javaPssMB": 2.693359375
+    },
+    {
+      "at": 1794712581014,
+      "mb": 1473.076171875,
+      "nativeAllocatedMB": 505.5537109375,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 194.791015625,
+      "javaPssMB": 2.712890625
+    },
+    {
+      "at": 1794712582020,
+      "mb": 1473.095703125,
+      "nativeAllocatedMB": 505.544921875,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 194.802734375,
+      "javaPssMB": 2.708984375
+    },
+    {
+      "at": 1794712583021,
+      "mb": 1473.076171875,
+      "nativeAllocatedMB": 505.5537109375,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 194.779296875,
+      "javaPssMB": 2.708984375
+    },
+    {
+      "at": 1794712584023,
+      "mb": 1473.052734375,
+      "nativeAllocatedMB": 505.51953125,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 194.763671875,
+      "javaPssMB": 2.697265625
+    },
+    {
+      "at": 1794712585025,
+      "mb": 1473.056640625,
+      "nativeAllocatedMB": 505.5361328125,
+      "javaAllocatedMB": 3.359375,
+      "nativePssMB": 194.748046875,
+      "javaPssMB": 2.712890625
+    },
+    {
+      "at": 1794712586028,
+      "mb": 1473.087890625,
+      "nativeAllocatedMB": 505.56640625,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 194.779296875,
+      "javaPssMB": 2.712890625
+    },
+    {
+      "at": 1794712587028,
+      "mb": 1473.095703125,
+      "nativeAllocatedMB": 505.546875,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 194.783203125,
+      "javaPssMB": 2.712890625
+    },
+    {
+      "at": 1794712588030,
+      "mb": 1473.123046875,
+      "nativeAllocatedMB": 505.5654296875,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 194.802734375,
+      "javaPssMB": 2.712890625
+    },
+    {
+      "at": 1794712589035,
+      "mb": 1473.134765625,
+      "nativeAllocatedMB": 505.5732421875,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 194.806640625,
+      "javaPssMB": 2.720703125
+    },
+    {
+      "at": 1794712590037,
+      "mb": 1473.138671875,
+      "nativeAllocatedMB": 505.5556640625,
+      "javaAllocatedMB": 3.359375,
+      "nativePssMB": 194.806640625,
+      "javaPssMB": 2.716796875
+    },
+    {
+      "at": 1794712591038,
+      "mb": 1474.146484375,
+      "nativeAllocatedMB": 505.6982421875,
+      "javaAllocatedMB": 3.359375,
+      "nativePssMB": 195.814453125,
+      "javaPssMB": 2.720703125
+    },
+    {
+      "at": 1794712592040,
+      "mb": 1474.126953125,
+      "nativeAllocatedMB": 505.681640625,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 195.798828125,
+      "javaPssMB": 2.708984375
+    },
+    {
+      "at": 1794712593042,
+      "mb": 1474.142578125,
+      "nativeAllocatedMB": 505.6806640625,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 195.802734375,
+      "javaPssMB": 2.712890625
+    },
+    {
+      "at": 1794712594043,
+      "mb": 1474.087890625,
+      "nativeAllocatedMB": 508.4326171875,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 195.736328125,
+      "javaPssMB": 2.720703125
+    },
+    {
+      "at": 1794712595044,
+      "mb": 1474.123046875,
+      "nativeAllocatedMB": 508.4033203125,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 195.767578125,
+      "javaPssMB": 2.716796875
+    },
+    {
+      "at": 1794712596046,
+      "mb": 1474.119140625,
+      "nativeAllocatedMB": 508.4375,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 195.767578125,
+      "javaPssMB": 2.712890625
+    },
+    {
+      "at": 1794712597048,
+      "mb": 1474.099609375,
+      "nativeAllocatedMB": 508.3916015625,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 195.748046875,
+      "javaPssMB": 2.708984375
+    },
+    {
+      "at": 1794712598049,
+      "mb": 1474.130859375,
+      "nativeAllocatedMB": 508.4326171875,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 195.755859375,
+      "javaPssMB": 2.728515625
+    },
+    {
+      "at": 1794712599051,
+      "mb": 1474.064453125,
+      "nativeAllocatedMB": 508.361328125,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 195.712890625,
+      "javaPssMB": 2.701171875
+    },
+    {
+      "at": 1794712600053,
+      "mb": 1474.115234375,
+      "nativeAllocatedMB": 508.435546875,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 195.724609375,
+      "javaPssMB": 2.732421875
+    },
+    {
+      "at": 1794712601055,
+      "mb": 1474.146484375,
+      "nativeAllocatedMB": 508.4326171875,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 195.748046875,
+      "javaPssMB": 2.740234375
+    },
+    {
+      "at": 1794712602056,
+      "mb": 1474.169921875,
+      "nativeAllocatedMB": 508.4248046875,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 195.763671875,
+      "javaPssMB": 2.740234375
+    },
+    {
+      "at": 1794712603057,
+      "mb": 1474.208984375,
+      "nativeAllocatedMB": 508.4541015625,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 195.794921875,
+      "javaPssMB": 2.740234375
+    },
+    {
+      "at": 1794712604057,
+      "mb": 1474.380859375,
+      "nativeAllocatedMB": 508.4404296875,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 195.806640625,
+      "javaPssMB": 2.736328125
+    },
+    {
+      "at": 1794712605057,
+      "mb": 1474.365234375,
+      "nativeAllocatedMB": 508.400390625,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 195.787109375,
+      "javaPssMB": 2.732421875
+    },
+    {
+      "at": 1794712606059,
+      "mb": 1474.388671875,
+      "nativeAllocatedMB": 508.435546875,
+      "javaAllocatedMB": 3.359375,
+      "nativePssMB": 195.798828125,
+      "javaPssMB": 2.748046875
+    },
+    {
+      "at": 1794712607061,
+      "mb": 1459.126953125,
+      "nativeAllocatedMB": 508.4287109375,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 180.533203125,
+      "javaPssMB": 2.751953125
+    },
+    {
+      "at": 1794712608063,
+      "mb": 1459.134765625,
+      "nativeAllocatedMB": 508.447265625,
+      "javaAllocatedMB": 3.359375,
+      "nativePssMB": 180.537109375,
+      "javaPssMB": 2.755859375
+    },
+    {
+      "at": 1794712609063,
+      "mb": 1459.130859375,
+      "nativeAllocatedMB": 508.4423828125,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 180.529296875,
+      "javaPssMB": 2.755859375
+    },
+    {
+      "at": 1794712610064,
+      "mb": 1459.142578125,
+      "nativeAllocatedMB": 508.4501953125,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 180.529296875,
+      "javaPssMB": 2.759765625
+    },
+    {
+      "at": 1794712611069,
+      "mb": 1458.716796875,
+      "nativeAllocatedMB": 508.2666015625,
+      "javaAllocatedMB": 3.3515625,
+      "nativePssMB": 180.482421875,
+      "javaPssMB": 2.384765625
+    },
+    {
+      "at": 1794712612075,
+      "mb": 1459.138671875,
+      "nativeAllocatedMB": 508.4296875,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 180.537109375,
+      "javaPssMB": 2.748046875
+    },
+    {
+      "at": 1794712613077,
+      "mb": 146.423828125,
+      "nativeAllocatedMB": 27.7490234375,
+      "javaAllocatedMB": 3.32421875,
+      "nativePssMB": 78.865234375,
+      "javaPssMB": 2.763671875
+    },
+    {
+      "at": 1794712614079,
+      "mb": 146.384765625,
+      "nativeAllocatedMB": 27.7451171875,
+      "javaAllocatedMB": 3.32421875,
+      "nativePssMB": 78.861328125,
+      "javaPssMB": 2.728515625
+    },
+    {
+      "at": 1794712615083,
+      "mb": 107.697265625,
+      "nativeAllocatedMB": 27.607421875,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.271484375,
+      "javaPssMB": 2.626953125
+    },
+    {
+      "at": 1794712616088,
+      "mb": 107.373046875,
+      "nativeAllocatedMB": 27.5791015625,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.232421875,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712617090,
+      "mb": 107.388671875,
+      "nativeAllocatedMB": 27.587890625,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.248046875,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712618091,
+      "mb": 107.349609375,
+      "nativeAllocatedMB": 27.5712890625,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.208984375,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712619093,
+      "mb": 107.392578125,
+      "nativeAllocatedMB": 27.5703125,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.251953125,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712620094,
+      "mb": 107.373046875,
+      "nativeAllocatedMB": 27.5703125,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.232421875,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712621096,
+      "mb": 107.392578125,
+      "nativeAllocatedMB": 27.580078125,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.251953125,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712622098,
+      "mb": 107.404296875,
+      "nativeAllocatedMB": 27.5791015625,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.259765625,
+      "javaPssMB": 2.349609375
+    },
+    {
+      "at": 1794712623101,
+      "mb": 107.412109375,
+      "nativeAllocatedMB": 27.5791015625,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.271484375,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712624102,
+      "mb": 107.228515625,
+      "nativeAllocatedMB": 27.5703125,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.232421875,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712625103,
+      "mb": 107.279296875,
+      "nativeAllocatedMB": 27.6328125,
+      "javaAllocatedMB": 3.34765625,
+      "nativePssMB": 40.279296875,
+      "javaPssMB": 2.357421875
+    },
+    {
+      "at": 1794712626104,
+      "mb": 107.224609375,
+      "nativeAllocatedMB": 27.5458984375,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.248046875,
+      "javaPssMB": 2.333984375
+    },
+    {
+      "at": 1794712627106,
+      "mb": 107.267578125,
+      "nativeAllocatedMB": 27.5791015625,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.279296875,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712628108,
+      "mb": 107.255859375,
+      "nativeAllocatedMB": 27.5703125,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.267578125,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712629110,
+      "mb": 107.263671875,
+      "nativeAllocatedMB": 27.5703125,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.275390625,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712630111,
+      "mb": 107.267578125,
+      "nativeAllocatedMB": 27.6083984375,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.263671875,
+      "javaPssMB": 2.361328125
+    },
+    {
+      "at": 1794712631111,
+      "mb": 107.248046875,
+      "nativeAllocatedMB": 27.5712890625,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.259765625,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712632112,
+      "mb": 107.220703125,
+      "nativeAllocatedMB": 27.5458984375,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.244140625,
+      "javaPssMB": 2.333984375
+    },
+    {
+      "at": 1794712633115,
+      "mb": 107.240234375,
+      "nativeAllocatedMB": 27.578125,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.251953125,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712634117,
+      "mb": 107.263671875,
+      "nativeAllocatedMB": 27.5703125,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.275390625,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712635120,
+      "mb": 107.263671875,
+      "nativeAllocatedMB": 27.578125,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.271484375,
+      "javaPssMB": 2.349609375
+    },
+    {
+      "at": 1794712636122,
+      "mb": 107.244140625,
+      "nativeAllocatedMB": 27.5703125,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.251953125,
+      "javaPssMB": 2.349609375
+    },
+    {
+      "at": 1794712637122,
+      "mb": 107.244140625,
+      "nativeAllocatedMB": 27.6328125,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.248046875,
+      "javaPssMB": 2.353515625
+    },
+    {
+      "at": 1794712638124,
+      "mb": 107.232421875,
+      "nativeAllocatedMB": 27.5546875,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.244140625,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712639125,
+      "mb": 107.224609375,
+      "nativeAllocatedMB": 27.5703125,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.236328125,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712640127,
+      "mb": 107.228515625,
+      "nativeAllocatedMB": 27.5703125,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.240234375,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712641129,
+      "mb": 107.244140625,
+      "nativeAllocatedMB": 27.5703125,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.255859375,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712642131,
+      "mb": 107.240234375,
+      "nativeAllocatedMB": 27.578125,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.251953125,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712643133,
+      "mb": 107.251953125,
+      "nativeAllocatedMB": 27.5703125,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.263671875,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712644135,
+      "mb": 107.232421875,
+      "nativeAllocatedMB": 27.578125,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 40.244140625,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712645137,
+      "mb": 107.431640625,
+      "nativeAllocatedMB": 27.63671875,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 40.255859375,
+      "javaPssMB": 2.517578125
+    },
+    {
+      "at": 1794712646139,
+      "mb": 746.732421875,
+      "nativeAllocatedMB": 672.599609375,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 679.595703125,
+      "javaPssMB": 2.126953125
+    },
+    {
+      "at": 1794712647139,
+      "mb": 779.3486328125,
+      "nativeAllocatedMB": 703.6806640625,
+      "javaAllocatedMB": 3.31640625,
+      "nativePssMB": 712.095703125,
+      "javaPssMB": 2.392578125
+    },
+    {
+      "at": 1794712648140,
+      "mb": 807.5126953125,
+      "nativeAllocatedMB": 704.595703125,
+      "javaAllocatedMB": 3.3515625,
+      "nativePssMB": 739.349609375,
+      "javaPssMB": 3.177734375
+    },
+    {
+      "at": 1794712649143,
+      "mb": 999.0166015625,
+      "nativeAllocatedMB": 1244.7294921875,
+      "javaAllocatedMB": 4.578125,
+      "nativePssMB": 930.537109375,
+      "javaPssMB": 3.384765625
+    },
+    {
+      "at": 1794712650145,
+      "mb": 1004.4853515625,
+      "nativeAllocatedMB": 1243.1015625,
+      "javaAllocatedMB": 3.36328125,
+      "nativePssMB": 933.642578125,
+      "javaPssMB": 5.685546875
+    },
+    {
+      "at": 1794712651145,
+      "mb": 1017.7431640625,
+      "nativeAllocatedMB": 1243.38671875,
+      "javaAllocatedMB": 3.3515625,
+      "nativePssMB": 949.412109375,
+      "javaPssMB": 3.056640625
+    },
+    {
+      "at": 1794712652147,
+      "mb": 1036.6689453125,
+      "nativeAllocatedMB": 1247.7958984375,
+      "javaAllocatedMB": 4.66015625,
+      "nativePssMB": 966.736328125,
+      "javaPssMB": 4.619140625
+    },
+    {
+      "at": 1794712653147,
+      "mb": 1020.5087890625,
+      "nativeAllocatedMB": 1243.16796875,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 949.115234375,
+      "javaPssMB": 6.013671875
+    },
+    {
+      "at": 1794712654149,
+      "mb": 135.490234375,
+      "nativeAllocatedMB": 27.70703125,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 66.287109375,
+      "javaPssMB": 4.126953125
+    },
+    {
+      "at": 1794712655151,
+      "mb": 1474.611328125,
+      "nativeAllocatedMB": 505.0595703125,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 196.333984375,
+      "javaPssMB": 2.134765625
+    },
+    {
+      "at": 1794712656153,
+      "mb": 1474.345703125,
+      "nativeAllocatedMB": 505.587890625,
+      "javaAllocatedMB": 3.36328125,
+      "nativePssMB": 195.466796875,
+      "javaPssMB": 2.712890625
+    },
+    {
+      "at": 1794712657155,
+      "mb": 1474.166015625,
+      "nativeAllocatedMB": 505.515625,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 195.275390625,
+      "javaPssMB": 2.724609375
+    },
+    {
+      "at": 1794712658155,
+      "mb": 1474.158203125,
+      "nativeAllocatedMB": 505.5341796875,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 195.259765625,
+      "javaPssMB": 2.724609375
+    },
+    {
+      "at": 1794712659157,
+      "mb": 1474.107421875,
+      "nativeAllocatedMB": 505.541015625,
+      "javaAllocatedMB": 3.36328125,
+      "nativePssMB": 195.212890625,
+      "javaPssMB": 2.720703125
+    },
+    {
+      "at": 1794712660159,
+      "mb": 1474.126953125,
+      "nativeAllocatedMB": 505.5537109375,
+      "javaAllocatedMB": 3.36328125,
+      "nativePssMB": 195.212890625,
+      "javaPssMB": 2.724609375
+    },
+    {
+      "at": 1794712661161,
+      "mb": 1474.166015625,
+      "nativeAllocatedMB": 505.552734375,
+      "javaAllocatedMB": 3.36328125,
+      "nativePssMB": 195.232421875,
+      "javaPssMB": 2.728515625
+    },
+    {
+      "at": 1794712662164,
+      "mb": 1474.107421875,
+      "nativeAllocatedMB": 505.5361328125,
+      "javaAllocatedMB": 3.36328125,
+      "nativePssMB": 195.185546875,
+      "javaPssMB": 2.716796875
+    },
+    {
+      "at": 1794712663165,
+      "mb": 1474.095703125,
+      "nativeAllocatedMB": 505.5283203125,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 195.177734375,
+      "javaPssMB": 2.705078125
+    },
+    {
+      "at": 1794712664165,
+      "mb": 1474.099609375,
+      "nativeAllocatedMB": 505.5419921875,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 195.173828125,
+      "javaPssMB": 2.712890625
+    },
+    {
+      "at": 1794712665170,
+      "mb": 1474.154296875,
+      "nativeAllocatedMB": 505.57421875,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 195.224609375,
+      "javaPssMB": 2.716796875
+    },
+    {
+      "at": 1794712666171,
+      "mb": 1474.220703125,
+      "nativeAllocatedMB": 505.5654296875,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 195.271484375,
+      "javaPssMB": 2.728515625
+    },
+    {
+      "at": 1794712667172,
+      "mb": 1474.220703125,
+      "nativeAllocatedMB": 505.5576171875,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 195.283203125,
+      "javaPssMB": 2.716796875
+    },
+    {
+      "at": 1794712668174,
+      "mb": 1474.208984375,
+      "nativeAllocatedMB": 505.548828125,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 195.267578125,
+      "javaPssMB": 2.716796875
+    },
+    {
+      "at": 1794712669176,
+      "mb": 1474.197265625,
+      "nativeAllocatedMB": 505.5712890625,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 195.259765625,
+      "javaPssMB": 2.708984375
+    },
+    {
+      "at": 1794712670178,
+      "mb": 1475.166015625,
+      "nativeAllocatedMB": 505.6982421875,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 196.224609375,
+      "javaPssMB": 2.716796875
+    },
+    {
+      "at": 1794712671179,
+      "mb": 1475.181640625,
+      "nativeAllocatedMB": 505.736328125,
+      "javaAllocatedMB": 3.36328125,
+      "nativePssMB": 196.232421875,
+      "javaPssMB": 2.716796875
+    },
+    {
+      "at": 1794712672181,
+      "mb": 1475.123046875,
+      "nativeAllocatedMB": 505.666015625,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 196.177734375,
+      "javaPssMB": 2.712890625
+    },
+    {
+      "at": 1794712673186,
+      "mb": 1475.478515625,
+      "nativeAllocatedMB": 508.3984375,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 196.521484375,
+      "javaPssMB": 2.720703125
+    },
+    {
+      "at": 1794712674188,
+      "mb": 1475.470703125,
+      "nativeAllocatedMB": 508.3916015625,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 196.517578125,
+      "javaPssMB": 2.708984375
+    },
+    {
+      "at": 1794712675189,
+      "mb": 1475.490234375,
+      "nativeAllocatedMB": 508.40625,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 196.521484375,
+      "javaPssMB": 2.724609375
+    },
+    {
+      "at": 1794712676191,
+      "mb": 1475.330078125,
+      "nativeAllocatedMB": 508.412109375,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 196.349609375,
+      "javaPssMB": 2.732421875
+    },
+    {
+      "at": 1794712677192,
+      "mb": 1475.330078125,
+      "nativeAllocatedMB": 508.392578125,
+      "javaAllocatedMB": 3.36328125,
+      "nativePssMB": 196.353515625,
+      "javaPssMB": 2.720703125
+    },
+    {
+      "at": 1794712678194,
+      "mb": 1475.326171875,
+      "nativeAllocatedMB": 508.38671875,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 196.349609375,
+      "javaPssMB": 2.720703125
+    },
+    {
+      "at": 1794712679196,
+      "mb": 1475.361328125,
+      "nativeAllocatedMB": 508.431640625,
+      "javaAllocatedMB": 3.36328125,
+      "nativePssMB": 196.365234375,
+      "javaPssMB": 2.740234375
+    },
+    {
+      "at": 1794712680196,
+      "mb": 1475.439453125,
+      "nativeAllocatedMB": 508.4326171875,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 196.376953125,
+      "javaPssMB": 2.802734375
+    },
+    {
+      "at": 1794712681205,
+      "mb": 1475.345703125,
+      "nativeAllocatedMB": 508.4560546875,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 196.353515625,
+      "javaPssMB": 2.732421875
+    },
+    {
+      "at": 1794712682207,
+      "mb": 1475.330078125,
+      "nativeAllocatedMB": 508.4208984375,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 196.337890625,
+      "javaPssMB": 2.732421875
+    },
+    {
+      "at": 1794712683209,
+      "mb": 1475.373046875,
+      "nativeAllocatedMB": 508.4140625,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 196.369140625,
+      "javaPssMB": 2.744140625
+    },
+    {
+      "at": 1794712684209,
+      "mb": 1475.412109375,
+      "nativeAllocatedMB": 508.4482421875,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 196.392578125,
+      "javaPssMB": 2.759765625
+    },
+    {
+      "at": 1794712685211,
+      "mb": 1475.353515625,
+      "nativeAllocatedMB": 508.3837890625,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 196.341796875,
+      "javaPssMB": 2.751953125
+    },
+    {
+      "at": 1794712686212,
+      "mb": 1475.392578125,
+      "nativeAllocatedMB": 508.4248046875,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 196.384765625,
+      "javaPssMB": 2.748046875
+    },
+    {
+      "at": 1794712687214,
+      "mb": 1475.361328125,
+      "nativeAllocatedMB": 508.4208984375,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 196.349609375,
+      "javaPssMB": 2.751953125
+    },
+    {
+      "at": 1794712688216,
+      "mb": 1475.423828125,
+      "nativeAllocatedMB": 508.4638671875,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 196.396484375,
+      "javaPssMB": 2.767578125
+    },
+    {
+      "at": 1794712689218,
+      "mb": 1475.435546875,
+      "nativeAllocatedMB": 508.4736328125,
+      "javaAllocatedMB": 3.42578125,
+      "nativePssMB": 196.416015625,
+      "javaPssMB": 2.759765625
+    },
+    {
+      "at": 1794712690223,
+      "mb": 1475.419921875,
+      "nativeAllocatedMB": 508.44140625,
+      "javaAllocatedMB": 3.33203125,
+      "nativePssMB": 196.392578125,
+      "javaPssMB": 2.767578125
+    },
+    {
+      "at": 1794712691225,
+      "mb": 149.416015625,
+      "nativeAllocatedMB": 27.7490234375,
+      "javaAllocatedMB": 3.328125,
+      "nativePssMB": 81.439453125,
+      "javaPssMB": 2.771484375
+    },
+    {
+      "at": 1794712692225,
+      "mb": 149.267578125,
+      "nativeAllocatedMB": 27.60546875,
+      "javaAllocatedMB": 3.3515625,
+      "nativePssMB": 81.439453125,
+      "javaPssMB": 2.623046875
+    },
+    {
+      "at": 1794712693227,
+      "mb": 110.181640625,
+      "nativeAllocatedMB": 27.5517578125,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.638671875,
+      "javaPssMB": 2.341796875
+    },
+    {
+      "at": 1794712694229,
+      "mb": 110.232421875,
+      "nativeAllocatedMB": 27.5751953125,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.681640625,
+      "javaPssMB": 2.349609375
+    },
+    {
+      "at": 1794712695233,
+      "mb": 110.228515625,
+      "nativeAllocatedMB": 27.5673828125,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.677734375,
+      "javaPssMB": 2.349609375
+    },
+    {
+      "at": 1794712696235,
+      "mb": 110.244140625,
+      "nativeAllocatedMB": 27.5751953125,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.693359375,
+      "javaPssMB": 2.349609375
+    },
+    {
+      "at": 1794712697235,
+      "mb": 110.302734375,
+      "nativeAllocatedMB": 27.638671875,
+      "javaAllocatedMB": 3.3515625,
+      "nativePssMB": 42.736328125,
+      "javaPssMB": 2.365234375
+    },
+    {
+      "at": 1794712698236,
+      "mb": 110.275390625,
+      "nativeAllocatedMB": 27.5517578125,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.732421875,
+      "javaPssMB": 2.341796875
+    },
+    {
+      "at": 1794712699238,
+      "mb": 110.255859375,
+      "nativeAllocatedMB": 27.5751953125,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.701171875,
+      "javaPssMB": 2.353515625
+    },
+    {
+      "at": 1794712700240,
+      "mb": 110.181640625,
+      "nativeAllocatedMB": 27.576171875,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.630859375,
+      "javaPssMB": 2.349609375
+    },
+    {
+      "at": 1794712701242,
+      "mb": 110.029296875,
+      "nativeAllocatedMB": 27.5751953125,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.642578125,
+      "javaPssMB": 2.349609375
+    },
+    {
+      "at": 1794712702242,
+      "mb": 109.962890625,
+      "nativeAllocatedMB": 27.5751953125,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.587890625,
+      "javaPssMB": 2.353515625
+    },
+    {
+      "at": 1794712703243,
+      "mb": 110.033203125,
+      "nativeAllocatedMB": 27.6005859375,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.646484375,
+      "javaPssMB": 2.365234375
+    },
+    {
+      "at": 1794712704244,
+      "mb": 109.974609375,
+      "nativeAllocatedMB": 27.568359375,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.603515625,
+      "javaPssMB": 2.349609375
+    },
+    {
+      "at": 1794712705245,
+      "mb": 109.990234375,
+      "nativeAllocatedMB": 27.5673828125,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.619140625,
+      "javaPssMB": 2.349609375
+    },
+    {
+      "at": 1794712706247,
+      "mb": 110.001953125,
+      "nativeAllocatedMB": 27.5751953125,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.630859375,
+      "javaPssMB": 2.349609375
+    },
+    {
+      "at": 1794712707249,
+      "mb": 110.021484375,
+      "nativeAllocatedMB": 27.583984375,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.646484375,
+      "javaPssMB": 2.353515625
+    },
+    {
+      "at": 1794712708251,
+      "mb": 109.994140625,
+      "nativeAllocatedMB": 27.5673828125,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.623046875,
+      "javaPssMB": 2.349609375
+    },
+    {
+      "at": 1794712709253,
+      "mb": 110.005859375,
+      "nativeAllocatedMB": 27.5673828125,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.626953125,
+      "javaPssMB": 2.357421875
+    },
+    {
+      "at": 1794712710253,
+      "mb": 110.037109375,
+      "nativeAllocatedMB": 27.6083984375,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.650390625,
+      "javaPssMB": 2.365234375
+    },
+    {
+      "at": 1794712711255,
+      "mb": 109.759765625,
+      "nativeAllocatedMB": 27.5517578125,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.552734375,
+      "javaPssMB": 2.341796875
+    },
+    {
+      "at": 1794712712257,
+      "mb": 109.818359375,
+      "nativeAllocatedMB": 27.5751953125,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.603515625,
+      "javaPssMB": 2.349609375
+    },
+    {
+      "at": 1794712713257,
+      "mb": 109.833984375,
+      "nativeAllocatedMB": 27.6005859375,
+      "javaAllocatedMB": 3.3515625,
+      "nativePssMB": 42.607421875,
+      "javaPssMB": 2.361328125
+    },
+    {
+      "at": 1794712714258,
+      "mb": 109.755859375,
+      "nativeAllocatedMB": 27.576171875,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.607421875,
+      "javaPssMB": 2.341796875
+    },
+    {
+      "at": 1794712715259,
+      "mb": 109.744140625,
+      "nativeAllocatedMB": 27.568359375,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.595703125,
+      "javaPssMB": 2.341796875
+    },
+    {
+      "at": 1794712716261,
+      "mb": 109.728515625,
+      "nativeAllocatedMB": 27.5673828125,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.580078125,
+      "javaPssMB": 2.341796875
+    },
+    {
+      "at": 1794712717262,
+      "mb": 109.748046875,
+      "nativeAllocatedMB": 27.6005859375,
+      "javaAllocatedMB": 3.3515625,
+      "nativePssMB": 42.591796875,
+      "javaPssMB": 2.349609375
+    },
+    {
+      "at": 1794712718262,
+      "mb": 109.763671875,
+      "nativeAllocatedMB": 27.54296875,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.626953125,
+      "javaPssMB": 2.330078125
+    },
+    {
+      "at": 1794712719264,
+      "mb": 109.783203125,
+      "nativeAllocatedMB": 27.5673828125,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.630859375,
+      "javaPssMB": 2.345703125
+    },
+    {
+      "at": 1794712720266,
+      "mb": 109.775390625,
+      "nativeAllocatedMB": 27.5673828125,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.626953125,
+      "javaPssMB": 2.341796875
+    },
+    {
+      "at": 1794712721266,
+      "mb": 109.806640625,
+      "nativeAllocatedMB": 27.591796875,
+      "javaAllocatedMB": 3.3203125,
+      "nativePssMB": 42.650390625,
+      "javaPssMB": 2.349609375
+    },
+    {
+      "at": 1794712722267,
+      "mb": 110.865234375,
+      "nativeAllocatedMB": 27.6787109375,
+      "javaAllocatedMB": 3.33984375,
+      "nativePssMB": 42.619140625,
+      "javaPssMB": 2.892578125
+    }
+  ],
+  "failures": []
+}

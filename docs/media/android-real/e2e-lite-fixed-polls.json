@@ -1,0 +1,51 @@
+{
+  "host": "android",
+  "tier": "lite",
+  "date": "2026-11-15T01:52:48.603Z",
+  "method": {
+    "audio": "tools/fixture/meeting-fixture.wav (53 s synthetic three-speaker meeting), transcoded locally to AAC/M4A with ffmpeg, then copied over the recorded take",
+    "wer": "lowercase, punctuation stripped, word-level edit distance, no number normalization",
+    "timing": "wall time between agent replies polled once a second, so each figure is accurate to about one second",
+    "memory": "dumpsys meminfo app-process PSS in MiB, sampled every 1000 ms; idle is the lowest sample in the 30 s that end a cycle, about a minute after the notes finish"
+  },
+  "modelsPreviouslyInstalled": true,
+  "downloadSeconds": 0,
+  "wer": {
+    "errors": 5,
+    "words": 168,
+    "rate": 0.0298
+  },
+  "title": "Launch Plan and Bug Fixes for Mobile App",
+  "transcript": "Thanks for joining everyone. Today we need to decide the launch date for the mobile app and review the open bugs. The Android build is stable. We fixed the crash on the settings screen yesterday, and battery usage is down by 20%. Good. What about the login issue on older phones? That one is still open. I need two more days to finish the fix and test it. From the design side, The onboarding screens of final, I will send the updated icons to the team by Thursday, then let us agree on the plan, we launch on the 15th of March, as long as the login fix lands by Friday. Agreed, I will also prepare the release notes and the store screenshots. I will own the login fix, and I will run the full regression suite on Friday morning. Great. To summarize, the launch date is March 15, Daniel owns the login fix, and Karen owns the icons, the release notes, and the screenshots, thanks everyone.",
+  "notes": "Summary: We will launch the app on March 15th with Daniel responsible for the login fix and Karen handling the design assets.\n## Key points:\n- Android build is stable.\n- Crash fixed on settings screen yesterday, battery usage reduced by 20%.\n- Login issue on older phones still open; requires two more days to complete.\n- Onboarding screens will use final icons by Thursday.\n- Launch date is agreed as 15th of March.\n## Decisions:\n- Launch scheduled for March 15th.\n- Login fix will be completed by Friday.\n- Release notes and store screenshots will be prepared by Karen.\n- Daniel will own the login fix.\n## Action items:\n- Daniel: Run full regression suite on Friday morning.\n- Karen: Prepare release notes and screenshots.\n## Open questions:\n- What is the specific issue regarding the login fix for older phones?\n- Does the team agree on the exact date for the final icon updates?\n\n## Summary\n- None recorded.\n\n## Key points\n- None recorded.\n\n## Decisions\n- None recorded.\n\n## Action items\n- None recorded.\n\n## Open questions\n- None recorded.",
+  "runs": [
+    {
+      "cycle": 1,
+      "transcribeSeconds": 8.278,
+      "notesSeconds": 19.583,
+      "totalSeconds": 27.861,
+      "peakMB": 735,
+      "idleMB": 95,
+      "finished": true
+    },
+    {
+      "cycle": 2,
+      "transcribeSeconds": 8.248,
+      "notesSeconds": 19.533,
+      "totalSeconds": 27.781,
+      "peakMB": 738,
+      "idleMB": 104,
+      "finished": true
+    },
+    {
+      "cycle": 3,
+      "transcribeSeconds": 8.313,
+      "notesSeconds": 19.601,
+      "totalSeconds": 27.914,
+      "peakMB": 745,
+      "idleMB": 101,
+      "finished": true
+    }
+  ],
+  "failures": []
+}

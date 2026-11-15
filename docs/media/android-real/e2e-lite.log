@@ -1,0 +1,12 @@
+e2e android lite: preparing models
+recording a take and swapping in the spoken fixture
+running the pipeline 3 times on the fixture
+completed cycle 1: peak 742 MiB, idle 96 MiB, native allocated 27.5 MiB
+completed cycle 2: peak 747 MiB, idle 101 MiB, native allocated 27.6 MiB
+completed cycle 3: peak 742 MiB, idle 106 MiB, native allocated 27.5 MiB
+word error rate (synthetic speech, easier than a real room): 4.2% (7 of 168)
+title: Launch Plan and Bug Resolution Meeting
+cycle 1: transcribe 29.282 s, notes 13.297 s, total 42.579 s, peak 742 MB, idle after 96 MB
+cycle 2: transcribe 9.212 s, notes 13.246 s, total 22.458 s, peak 747 MB, idle after 101 MB
+cycle 3: transcribe 10.38 s, notes 13.245 s, total 23.625 s, peak 742 MB, idle after 106 MB
+e2e: ok

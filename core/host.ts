@@ -1,3 +1,4 @@
+import { request as engineRequest } from '@alona/engine';
 import { engineOver, parseDeviceFacts, type DeviceFacts, type EngineRequest } from './engine';
 import { service, type Service, type ServiceOptions } from './service';
 import { SIM_DEVICE, simEngine, type SimOptions } from './sim-engine';
@@ -44,9 +45,12 @@ export async function hostService(files: Files, native: Native | null | undefine
   const demo = (why: string, device: DeviceFacts = SIM_DEVICE): Service =>
     service(simEngine({ polls: 3, shelf: demoShelf(files), device, ...options.demo }), store, `${why} ${sample}`, options);
   if (native?.available !== true) return { service: demo('This build has no on-device models.'), store };
-  // Android's native module serves recording only, so a probe there fails. It is the only host
-  // that reports a native module and has no engine.
-  const probe = await native.later({ op: 'probe' }).catch(() => null);
+  let later = (request: EngineRequest) => native.later({ ...request });
+  let probe = await later({ op: 'probe' }).catch(() => null);
+  if (probe === null || typeof probe.host !== 'string') {
+    later = androidTransport((json) => engineRequest({ json }));
+    probe = await later({ op: 'probe' }).catch(() => null);
+  }
   if (probe === null || typeof probe.host !== 'string') {
     return { service: demo('The Android app has no on-device models.', { ...SIM_DEVICE, host: 'android', formFactor: 'phone' }), store };
   }
@@ -55,5 +59,17 @@ export async function hostService(files: Files, native: Native | null | undefine
     const why = typeof probe.demoReason === 'string' && probe.demoReason !== '' ? probe.demoReason : 'Models cannot run here.';
     return { service: demo(why, { ...SIM_DEVICE, host: real.host, formFactor: real.formFactor, appleSilicon: real.appleSilicon }), store };
   }
-  return { service: service(engineOver((request: EngineRequest) => native.later({ ...request })), store, '', options), store };
+  return { service: service(engineOver(later), store, '', options), store };
+}
+
+/** Kotlin packages share Exact's extension slot with the recorder. */
+export function androidTransport(send: (json: string) => Promise<unknown>): (request: EngineRequest) => Promise<Record<string, unknown>> {
+  return async (request) => {
+    const reply = await send(JSON.stringify(request));
+    if (typeof reply !== 'object' || reply === null || !('json' in reply) || typeof reply.json !== 'string') throw new Error('Android engine returned no JSON reply.');
+    const parsed: unknown = JSON.parse(reply.json);
+    if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) throw new Error('Android engine reply is not an object.');
+    if ('error' in parsed && typeof parsed.error === 'string' && !('state' in parsed)) throw new Error(parsed.error);
+    return parsed as Record<string, unknown>;
+  };
 }

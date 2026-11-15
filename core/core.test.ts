@@ -12,7 +12,7 @@ import golden from './fixtures/alona-notes.golden.json';
 import { planCases, rawReplies } from './fixtures/golden-inputs';
 import type { NotesProfile } from './notes';
 import { memoryFiles } from './fixtures/memory-files';
-import { hostService } from './host';
+import { androidTransport, hostService } from './host';
 
 const ALL = ['lite', 'balanced', 'quality'] as const;
 const device = (over: Partial<DeviceFacts>): DeviceFacts => ({ ...SIM_DEVICE, ...over });
@@ -615,5 +615,23 @@ describe('choosing the engine at launch', () => {
     const native = { available: true, later: async (r: Record<string, unknown>) => replies[String(r.op)] ?? {} };
     const setup = await (await hostService(memoryFiles(), native)).service.setup('auto');
     expect([setup.demo, setup.demoNote]).toEqual([false, '']);
+  });
+});
+
+describe('Android extension transport', () => {
+  test('serializes requests and unwraps protocol replies', async () => {
+    const calls: string[] = [];
+    const send = async (json: string) => { calls.push(json); return { json: '{"id":"a","state":"running","text":"partial"}' }; };
+    expect(await androidTransport(send)({ op: 'job', job: 'a' })).toEqual({ id: 'a', state: 'running', text: 'partial' });
+    expect(calls).toEqual(['{"op":"job","job":"a"}']);
+  });
+  test('rejects missing, malformed, and failed replies', async () => {
+    for (const reply of [null, {}, { json: '[]' }, { json: '{' }, { json: '{"error":"bad pin"}' }]) {
+      await expect(androidTransport(async () => reply)({ op: 'probe' })).rejects.toThrow();
+    }
+  });
+  test('a failed job is a valid protocol reply', async () => {
+    const reply = { id: 'a', state: 'failed', error: 'Cancelled.' };
+    expect(await androidTransport(async () => ({ json: JSON.stringify(reply) }))({ op: 'job', job: 'a' })).toEqual(reply);
   });
 });

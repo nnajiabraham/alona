@@ -1,0 +1,11 @@
+--- /Users/manlikeabro/Documents/repos/exact/host/android/settings.gradle.kts	2026-11-14 10:01:07
++++ /tmp/alona-android-exact/host/android/settings.gradle.kts	2026-11-14 18:15:42
+@@ -4,7 +4,7 @@
+ dependencyResolutionManagement {
+     // CI init scripts may add project repositories. Keep this list authoritative (LLP 1030.003 D8).
+     repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+-    repositories { google(); mavenCentral() }
++    repositories { maven { url = uri(System.getenv("ALONA_ANDROID_MAVEN") ?: error("ALONA_ANDROID_MAVEN must name the generated local runtime repository")) }; google(); mavenCentral() }
+ }
+ rootProject.name = "exact-android"
+ // The reader (a library), and the shell that packages one app with it: `-Papp=<name>` names the app (app/build.gradle.kts).

@@ -1,0 +1,2 @@
+default: ok · Clinic Notes · 2 templates · app.clinicnotes.default
+the web engine is not built: run `bun tools/build-web-engine.mjs`

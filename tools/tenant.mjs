@@ -160,7 +160,7 @@ function manifest(tenant, app) {
     start_url: '/',
     display: 'standalone',
     app: { id: tenant.app.bundleId, name: tenant.app.name },
-    host: { web: {}, android: {}, ios: { minimumOS: '17.0', deviceFamily: ['iphone', 'ipad'], link: ['-lc++'] } },
+    host: { web: {}, android: { maven: ['com.alona.local:sherpa:2.0.1', 'com.alona.local:llama:b12383'] }, ios: { minimumOS: '17.0', deviceFamily: ['iphone', 'ipad'], link: ['-lc++'] } },
     icons: [{ src: 'assets/icon.png', sizes: '1024x1024', type: 'image/png', purpose: 'any' }],
     typescript: { sources },
     theme_color: tenant.colors.page.light,
