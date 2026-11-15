@@ -253,9 +253,22 @@ Build with the patch (`EXACT=<patched copy> bun exact.mjs mac`) and open `target
 
 Filled from runs on this Mac (Apple Silicon, 8 GB, macOS 26). Commands ran from the worktree with Bun 1.4.2. `EXACT` points at the patched copy for the macOS runs, and is unset (shared checkout) for the web runs.
 
-ACCEPTANCE_RESULTS
+| Check | Verdict | Command | Output tail |
+|---|---|---|---|
+| Unit tests | VERIFIED | `bun test` | `101 pass · 0 fail` (core 71, incl. 30 new in `core/desktop.test.ts`) |
+| Web verify | VERIFIED | `bun exact.mjs verify web` | `verify: clean in 15.7 s; contract verify: done; 0 findings` |
+| Web flows | VERIFIED | `bun tools/flows.mjs web` | `7 passed, 0 failed` (6 old + toolbar) |
+| macOS flows | VERIFIED | `EXACT=<patched> bun tools/flows.mjs macos` | `13 passed, 0 failed` (6 old + toolbar, menubar, folder, folder-missing, migration, detection, system-audio) |
+| Real models | VERIFIED | `EXACT=<patched> bun tools/e2e-native.mjs lite` | `word error rate: 4.2% (7 of 168)`; idle after cycles 93, 88, 89 MB; five headings; `e2e: ok` |
+| System audio in the recording | VERIFIED up to the permission; real tap NOT VERIFIED | `system-audio` flow | mix has the 440 Hz mic band (−12.3 dB) and the 1500 Hz system band (−30.9 dB vs −81.3 dB in the mic file) |
+| Memory over 10 minutes | VERIFIED for recording; see note | `EXACT=<patched> bun tools/e2e-native.mjs --long 10` | footprint by minute (MB): `46, 48, 50, 51, 53, 54, 55, 57, 58, 62, 63`; mix 600.5 s; `long recording: ok` |
+| Clinic | VERIFIED | `bun tools/tenant.mjs verify default web` | `verify: clean in 26.8 s` (after deleting a stale `.exact/tenants/default/app/target/web-dist`) |
+
+**Memory note.** While recording, the footprint rises about 1.7 MB a minute (46 → 63 MB over 10 minutes). The figures come from `docs/media/macos-real/long-recording-10min.json`. Under the agent this is Exact's recorder and the app; the real tap is not running. From Stop until the meeting is done, the footprint peaks at about 1.2 GB. The peak is not the mix. Two 2-minute runs: system audio on, 1148 MB; microphone only, 1240 MB (`--long 2 --mic-only`). The source of the peak is somewhere in the stop path that predates this branch, and it is not identified. It is listed as an open risk.
 
 ## Open risks
+
+- About 1.2 GB peak footprint between Stop and done, with or without system audio (see the memory note). It predates this branch, and its source is not identified.
 
 - The real Core Audio tap, the real detector, and notifications have not run on this Mac. Each is listed above for a computer-use run.
 - If a release build of the Mac app is ever sandboxed, the meetings folder and the import need security-scoped bookmarks instead of absolute paths.

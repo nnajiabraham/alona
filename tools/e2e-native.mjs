@@ -112,9 +112,9 @@ if (longMinutes) {
   // Core Audio tap itself is not running; the recorder, the stand-in's chunked writer and the mixer are.
   mkdirSync(dataDir, { recursive: true });
   writeFileSync(join(dataDir, 'demo-engine'), '');
-  console.log(`e2e macos: recording for ${longMinutes} minutes with system audio on`);
+  console.log(`e2e macos: recording for ${longMinutes} minutes, system audio ${args.includes('--mic-only') ? 'off' : 'on'}`);
   const ops = ['clock data', 'tap continue', 'clock data', 'clock +6000', 'clock data',
-    'tap open-settings', 'clock data', 'clock settle', 'tap capture-switch', 'clock data', 'state captureOn', 'back', 'clock data',
+    'tap open-settings', 'clock data', 'clock settle', ...(args.includes('--mic-only') ? ['clock data'] : ['tap capture-switch']), 'clock data', 'state captureOn', 'back', 'clock data',
     'tap start-recording', 'clock data', 'clock settle', 'state rec.state'];
   const startAt = ops.length;
   for (let m = 0; m < longMinutes; m++) ops.push('clock +60000 real', 'state rec.state');
@@ -136,8 +136,9 @@ if (longMinutes) {
   const file = join(dataDir, audio.replace('app:/data/', ''));
   const probe = spawnSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', file], { encoding: 'utf8' });
   const seconds = Number(probe.stdout.trim());
-  need(value(replies[10]) === true, 'system audio did not turn on');
-  need(audio.endsWith('audio-mixed.m4a'), `the meeting kept ${audio}, not the mix`);
+  const micOnly = args.includes('--mic-only');
+  need(value(replies[10]) === !micOnly, `system audio is ${value(replies[10])}`);
+  need(micOnly || audio.endsWith('audio-mixed.m4a'), `the meeting kept ${audio}, not the mix`);
   need(Math.abs(seconds - longMinutes * 60) < 30, `the mix lasts ${seconds} s`);
   need(statuses.includes('done'), `the meeting ended as ${statuses.at(-1)}`);
   need(minutes.at(-1) <= minutes[1] + 50, `memory grew from ${minutes[1]} MB at minute 1 to ${minutes.at(-1)} MB at minute ${longMinutes}`);
@@ -147,7 +148,7 @@ if (longMinutes) {
     footprintMBPerMinute: minutes, peakAfterStopMB: Math.round(Math.max(0, ...after)), mixSeconds: seconds, audio, failures,
   };
   mkdirSync(out, { recursive: true });
-  writeFileSync(join(out, `long-recording-${longMinutes}min.json`), `${JSON.stringify(result, null, 2)}\n`);
+  writeFileSync(join(out, `long-recording-${longMinutes}min${args.includes('--mic-only') ? '-mic-only' : ''}.json`), `${JSON.stringify(result, null, 2)}\n`);
   console.log(`footprint by minute (MB): ${minutes.join(', ')}`);
   console.log(`peak from Stop to done: ${result.peakAfterStopMB} MB; mix ${seconds} s at ${audio}`);
   for (const f of failures) console.log(`FAIL ${f}`);
