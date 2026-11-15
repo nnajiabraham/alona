@@ -28,6 +28,8 @@ component NotesPad
   state linkOpen = false
   state linkUrl = ""
   derive heading = ` ${formats} `.includes(" heading2 ") ? 2 : (` ${formats} `.includes(" heading3 ") ? 3 : 0)
+  // The list or quote the caret's line is in, or "".
+  derive block = ` ${formats} `.includes(" task ") ? "task" : (` ${formats} `.includes(" bullet ") ? "bullet" : (` ${formats} `.includes(" ordered ") ? "ordered" : (` ${formats} `.includes(" quote ") ? "quote" : "")))
   action selected(s: MarkdownSelection)
     formats = s.formats
     unavailable = s.unavailable
@@ -36,10 +38,13 @@ component NotesPad
     format(editor, command)
   action level(n: number)
     format(editor, "heading", `${n}`)
-  // A heading command on a line already at that level takes the heading off.
+  // Plain text is a line with no heading, list or quote. Each of those commands, repeated on a
+  // line that already has it, takes it off.
   action plain
     if heading != 0
       format(editor, "heading", `${heading}`)
+    if block != ""
+      format(editor, block)
   action insertStamp
     setRangeText(editor, stamp)
   action openLink
@@ -71,7 +76,7 @@ component NotesPad
           view width=1 flex-shrink=0 margin="8px 2px" background-color="line.soft"
           LevelButton(label="Title", hint="Title", on=(heading == 2), off=` ${unavailable} `.includes(" heading "), press=level(2), testId=`${prefix}-title`)
           LevelButton(label="Subtitle", hint="Subtitle", on=(heading == 3), off=` ${unavailable} `.includes(" heading "), press=level(3), testId=`${prefix}-subtitle`)
-          LevelButton(label="Text", hint="Plain text", on=(heading == 0), off=` ${unavailable} `.includes(" heading "), press=plain, testId=`${prefix}-plain`)
+          LevelButton(label="Text", hint="Plain text", on=(heading == 0 and block == ""), off=` ${unavailable} `.includes(" heading "), press=plain, testId=`${prefix}-plain`)
           view width=1 flex-shrink=0 margin="8px 2px" background-color="line.soft"
           BlockButton(name="bullet", label="Bullets", hint="Bulleted list", symbol="symbol:list", mark="", formats=formats, unavailable=unavailable, apply=apply, prefix=prefix)
           BlockButton(name="ordered", label="Numbers", hint="Numbered list", symbol="", mark="1.", formats=formats, unavailable=unavailable, apply=apply, prefix=prefix)

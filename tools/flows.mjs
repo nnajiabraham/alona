@@ -14,7 +14,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readdirSync, readFileSync, realpathSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { homedir, tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
-import { check, formatSteps, padClean, padOp, pressed, shot, withKeys } from './pad-steps.mjs';
+import { check, formatSteps, forHost, padClean, padOp, pressed, shot, withKeys } from './pad-steps.mjs';
 
 const ROOT = resolve(dirname(new URL(import.meta.url).pathname), '..');
 const BUN = process.execPath;
@@ -291,11 +291,12 @@ function run(targetName, flowName) {
   const ops = [];
   const checks = [];
   let shots = 0;
-  for (const step of flow.steps) {
+  for (const step of forHost(flow.steps, target.host)) {
     if (typeof step === 'string') ops.push(withKeys(target.host, fill(step)));
     else if ('shot' in step) ops.push(`screenshot ${join(dir, `${String(++shots).padStart(2, '0')}-${step.shot}.png`)}`);
-    else if (padOp(step)) {
-      const { op, check: c } = padOp(step);
+    else if (padOp(step, target.host)) {
+      const { op, check: c, skip } = padOp(step, target.host);
+      if (skip) { console.log(`  skipped: ${skip}`); continue; }
       checks.push({ at: ops.length, ...c });
       ops.push(op);
     } else {

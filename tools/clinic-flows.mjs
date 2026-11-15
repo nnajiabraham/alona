@@ -14,7 +14,7 @@
 import { spawnSync } from 'node:child_process';
 import { mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
-import { formatSteps, padClean, padOp, pressed, withKeys } from './pad-steps.mjs';
+import { formatSteps, forHost, padClean, padOp, pressed, withKeys } from './pad-steps.mjs';
 
 const ROOT = resolve(dirname(new URL(import.meta.url).pathname), '..');
 const BUN = process.execPath;
@@ -170,11 +170,12 @@ function run(slug, app, targetName, flowName, steps) {
   const ops = [];
   const checks = [];
   let shots = 0;
-  for (const step of steps) {
+  for (const step of forHost(steps, target.host)) {
     if (typeof step === 'string') ops.push(withKeys(target.host, step));
     else if ('shot' in step) ops.push(`screenshot ${join(dir, `${String(++shots).padStart(2, '0')}-${step.shot}.png`)}`);
-    else if (padOp(step)) {
-      const { op, check: c } = padOp(step);
+    else if (padOp(step, target.host)) {
+      const { op, check: c, skip } = padOp(step, target.host);
+      if (skip) { console.log(`  skipped: ${skip}`); continue; }
       checks.push({ at: ops.length, ...c });
       ops.push(op);
     } else {
