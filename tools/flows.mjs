@@ -100,9 +100,13 @@ const FLOWS = {
     ...READY, 'prefer root-font-size 53px', ...START, 'clock data', 'clock settle',
     'type record-notes - Agenda', 'tap rec-bold', 'clock settle', padClean('rec', 'record-notes'), shot('record-pad-large'),
     'prefer prefers-color-scheme dark', 'clock settle', shot('record-pad-large-dark'), 'prefer prefers-color-scheme light',
+    // The buttons still work at this size, each scrolled into view first.
+    'type record-notes Agenda', 'tap rec-quote', 'clock data', check('recNotes', '> Agenda'), pressed('rec-quote', true),
+    'tap rec-plain', 'clock data', check('recNotes', 'Agenda'), pressed('rec-plain', true),
     'tap stop-recording', 'clock data', 'clock settle', 'clock +12000', 'clock data',
     'tap pane-mine', 'clock settle', 'tap mine-link', 'clock settle', padClean('mine', 'my-notes'), shot('my-notes-large'),
     'prefer prefers-color-scheme dark', 'clock settle', shot('my-notes-large-dark'),
+    'tap mine-link-cancel', 'type my-notes Decisions', 'tap mine-title', 'clock data', check('noteDraft', '## Decisions'), pressed('mine-title', true),
   ],
   toolbar: [
     ...READY,

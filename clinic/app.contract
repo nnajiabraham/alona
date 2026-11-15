@@ -4,7 +4,7 @@
 // brand comes from the tenant (loadBrand); every colour from app.tamber,
 // which tools/tenant.mjs writes from the tenant file.
 use EmptyState, Badge from "exact:content"
-use NotesPad from "./ui/notes-pad.contract"
+use NotesPad, PadEdit, PadFormats from "./ui/notes-pad.contract"
 use getUserMedia, stopTrack, microphoneStatus, MediaStream, MediaStreamTrack, MicrophoneStatus from "@exact/media-capture"
 use startMediaRecorder, stopMediaRecorder, mediaRecorderState, MediaRecorderInfo, RecordedMedia from "@exact/recording"
 
@@ -144,6 +144,11 @@ component Clinic
   state recRef = ""
   state recTemplate = ""
   state recJottings = ""
+  // The notes pad that last reported its selection, and that selection, where the pad edits the
+  // Markdown itself (ui/notes-pad.contract, `ownFormat`).
+  state padField = ""
+  state padStart = 0
+  state padEnd = 0
   // The note screen: its pane, the edit in progress and the jottings being typed.
   state pane = "note"
   state editing = false
@@ -187,6 +192,8 @@ component Clinic
   mutation deleted as shape Reply refreshes lib
   mutation rerun as shape Reply refreshes lib, detail
   mutation rewritten as shape Reply refreshes lib then openRewritten
+  resource padHere = markdownFormats(padSource, padStart, padEnd) when padOwn and padField != "" as shape PadFormats else empty()
+  mutation padEdit as shape PadEdit then padLanded
 
   derive choice = picked != "" ? picked : brand.defaultTier
   derive recording = recorderId != ""
@@ -196,6 +203,9 @@ component Clinic
   derive busy = anyWorking or setup.activeDownloading or not setup.ready
   derive shownNote = editDirty and editFor == selected ? editDraft : detail.note
   derive shownJottings = jotDirty and jotFor == selected ? jotDraft : detail.jottings
+  // Android's editor runs no `format`, so its pads edit the Markdown themselves.
+  derive padOwn = setup.host == "android"
+  derive padSource = padField == "note-editor-field" ? shownNote : (padField == "jottings-editor" ? shownJottings : recJottings)
   derive today = time.epochAtZero + now
   derive done = detail.status == "done"
 
@@ -291,6 +301,27 @@ component Clinic
     recId = ""
   action editRecJottings(v: string)
     recJottings = v
+  action padMoved(editor: string, start: number, end: number)
+    padField = editor
+    padStart = start
+    padEnd = end
+  action padAsk(editor: string, value: string, command: string, argument: string)
+    padField = editor
+    send padEdit = formatMarkdown(value, padStart, padEnd, command, argument)
+  action padLanded
+    match padEdit
+      case some(r)
+        if padField == "note-editor-field"
+          editNote(r.value)
+        else if padField == "jottings-editor"
+          editJottings(r.value)
+        else
+          editRecJottings(r.value)
+        padStart = r.start
+        padEnd = r.end
+        setSelectionRange(padField, r.start, r.end)
+      case none
+        padField = padField
   action stopRecording
     if recording and not pending(saved)
       send saved = stopMediaRecorder(recorder=recorderId)
@@ -495,7 +526,7 @@ component Clinic
                     text "Your jottings" font="-exact-headline"
                     text "The draft uses these too. Avoid full names and dates of birth." font="-exact-footnote" color="text.muted"
                     NotesPad(editor="record-jottings-editor", value=recJottings, edit=editRecJottings, label="Your jottings",
-                      placeholder="BP, findings, follow-ups", rows=8, minHeight=180, prefix="rec", field="record-jottings", ground="-exact-background", stamp="")
+                      placeholder="BP, findings, follow-ups", rows=8, minHeight=180, prefix="rec", field="record-jottings", ground="-exact-background", stamp="", ownFormat=padOwn, active=padField, here=padHere, report=padMoved, ask=padAsk)
         if e.name == "note"
           column navigationKey=`${e.id}` navigationScroll="note-scroll" position="absolute" inset=0
             display="flex" flex-direction="column"
@@ -550,7 +581,7 @@ component Clinic
                       if editing
                         column gap=6
                           NotesPad(editor="note-editor-field", value=shownNote, edit=editNote, label="Note",
-                            placeholder="", rows=16, minHeight=320, prefix="draft", field="note-editor", ground="surface.page", stamp="")
+                            placeholder="", rows=16, minHeight=320, prefix="draft", field="note-editor", ground="surface.page", stamp="", ownFormat=padOwn, active=padField, here=padHere, report=padMoved, ask=padAsk)
                           row gap=8 align-items="center"
                             text (editDirty ? "Saving…" : "Saved on this device") font="-exact-footnote" color="text.muted" flex=1 testId="edit-state"
                             button press=stopEditing buttonStyle="bordered" testId="done-editing"
@@ -601,7 +632,7 @@ component Clinic
                   if pane == "jottings"
                     column gap=6
                       NotesPad(editor="jottings-editor", value=shownJottings, edit=editJottings, label="Your jottings",
-                        placeholder="Write your jottings", rows=10, minHeight=220, prefix="jot", field="jottings", ground="surface.page", stamp="")
+                        placeholder="Write your jottings", rows=10, minHeight=220, prefix="jot", field="jottings", ground="surface.page", stamp="", ownFormat=padOwn, active=padField, here=padHere, report=padMoved, ask=padAsk)
                       text (jotDirty ? "Saving…" : "Saved on this device. Write again to use them in the draft.") font="-exact-footnote" color="text.muted" testId="jottings-state"
             else if not pending(detail)
               EmptyState(symbol="symbol:alert", title="No such note", message="It may have been deleted.")

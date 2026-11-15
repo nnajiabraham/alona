@@ -1,0 +1,264 @@
+clock data
+  {"clock":0,"settled":false,"reason":"requests","epoch":3,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
+tap continue
+  {"tapped":28,"at":[205.71,760.33],"target":"continue","delivery":"platform","carrier":"android","mode":"agent","epoch":4,"incarnation":1,"clock":0}
+clock data
+  {"clock":0,"settled":true,"epoch":4,"incarnation":1}
+clock +6000
+  {"clock":6000,"epoch":9,"incarnation":1}
+clock data
+  {"clock":6000,"settled":true,"epoch":9,"incarnation":1}
+tap start-recording
+  {"tapped":67,"at":[205.71,223],"target":"start-recording","delivery":"platform","carrier":"android","mode":"agent","epoch":10,"incarnation":1,"clock":6000}
+clock until state rec.state == "recording" within 15000
+  {"clock":6000,"real":145,"until":"met","value":"recording"}
+clock data
+  {"clock":6000,"settled":true,"epoch":14,"incarnation":1}
+clock settle
+  {"clock":6350,"settled":false,"reason":"requests","epoch":14,"incarnation":1,"diagnostic":"clock settle gave up on requests still in flight at its bound (20 s native); state shows them under pending, and logs a `request N` with no `fulfil N`"}
+screenshot docs/media/android/toolbar/01-empty-pad.png
+  {"screenshot":"docs/media/android/toolbar/01-empty-pad.png","device":true,"epoch":14,"incarnation":1,"clock":6350}
+type record-notes Agenda
+  {"typed":145,"value":"Agenda","target":"record-notes","delivery":"platform","carrier":"android","mode":"agent","epoch":15,"incarnation":1,"clock":6350}
+type record-notes key Shift+Home
+  {"typed":145,"delivery":"recognized","target":"record-notes","carrier":"android","mode":"agent","epoch":15,"incarnation":1,"clock":6350}
+tap rec-bold
+  {"tapped":116,"at":[112,473],"target":"rec-bold","delivery":"platform","carrier":"android","mode":"agent","epoch":16,"incarnation":1,"clock":6350}
+clock data
+  {"clock":6350,"settled":true,"epoch":16,"incarnation":1}
+state recNotes
+  "**Agenda**"
+tree rec-bold
+  {"clock":6350,"epoch":16,"incarnation":1,"nodes":[{"children":[117],"depth":8,"focused":false,"handlers":["press"],"id":116,"parent":113,"props":{"accessibilityLabel":"Bold","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-bold"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":117,"parent":116,"props":{"accessibilityElementsHidden":true,"text":"B"},"type":"Text"}],"pending":[],"roots":[116]}
+screenshot docs/media/android/toolbar/02-rec-bold.png
+  {"screenshot":"docs/media/android/toolbar/02-rec-bold.png","device":true,"epoch":16,"incarnation":1,"clock":6350}
+type record-notes Agenda
+  {"typed":145,"value":"Agenda","target":"record-notes","delivery":"platform","carrier":"android","mode":"agent","epoch":17,"incarnation":1,"clock":6350}
+type record-notes key Shift+Home
+  {"typed":145,"delivery":"recognized","target":"record-notes","carrier":"android","mode":"agent","epoch":17,"incarnation":1,"clock":6350}
+tap rec-italic
+  {"tapped":118,"at":[180,281],"target":"rec-italic","delivery":"platform","carrier":"android","mode":"agent","epoch":18,"incarnation":1,"clock":6350}
+clock data
+  {"clock":6350,"settled":true,"epoch":18,"incarnation":1}
+state recNotes
+  "*Agenda*"
+tree rec-italic
+  {"clock":6350,"epoch":18,"incarnation":1,"nodes":[{"children":[119],"depth":8,"focused":false,"handlers":["press"],"id":118,"parent":113,"props":{"accessibilityLabel":"Italic","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-italic"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":119,"parent":118,"props":{"accessibilityElementsHidden":true,"text":"I"},"type":"Text"}],"pending":[],"roots":[118]}
+type record-notes Agenda
+  {"typed":145,"value":"Agenda","target":"record-notes","delivery":"platform","carrier":"android","mode":"agent","epoch":19,"incarnation":1,"clock":6350}
+type record-notes key Shift+Home
+  {"typed":145,"delivery":"recognized","target":"record-notes","carrier":"android","mode":"agent","epoch":19,"incarnation":1,"clock":6350}
+tap rec-strike
+  {"tapped":120,"at":[248,281],"target":"rec-strike","delivery":"platform","carrier":"android","mode":"agent","epoch":20,"incarnation":1,"clock":6350}
+clock data
+  {"clock":6350,"settled":true,"epoch":20,"incarnation":1}
+state recNotes
+  "~~Agenda~~"
+tree rec-strike
+  {"clock":6350,"epoch":20,"incarnation":1,"nodes":[{"children":[121],"depth":8,"focused":false,"handlers":["press"],"id":120,"parent":113,"props":{"accessibilityLabel":"Strikethrough","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-strike"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":121,"parent":120,"props":{"accessibilityElementsHidden":true,"text":"S"},"type":"Text"}],"pending":[],"roots":[120]}
+screenshot docs/media/android/toolbar/03-rec-strike.png
+  {"screenshot":"docs/media/android/toolbar/03-rec-strike.png","device":true,"epoch":20,"incarnation":1,"clock":6350}
+type record-notes Agenda
+  {"typed":145,"value":"Agenda","target":"record-notes","delivery":"platform","carrier":"android","mode":"agent","epoch":21,"incarnation":1,"clock":6350}
+tap rec-title
+  {"tapped":123,"at":[319.5,281],"target":"rec-title","delivery":"platform","carrier":"android","mode":"agent","epoch":22,"incarnation":1,"clock":6350}
+clock data
+  {"clock":6350,"settled":true,"epoch":22,"incarnation":1}
+state recNotes
+  "## Agenda"
+tree rec-title
+  {"clock":6350,"epoch":22,"incarnation":1,"nodes":[{"children":[124],"depth":8,"focused":false,"handlers":["press"],"id":123,"parent":113,"props":{"accessibilityLabel":"Title","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-title"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":124,"parent":123,"props":{"text":"Title"},"type":"Text"}],"pending":[],"roots":[123]}
+tree rec-plain
+  {"clock":6350,"epoch":22,"incarnation":1,"nodes":[{"children":[128],"depth":8,"focused":false,"handlers":["press"],"id":127,"parent":113,"props":{"accessibilityLabel":"Plain text","accessibilityPressed":"false","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-plain"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":128,"parent":127,"props":{"text":"Text"},"type":"Text"}],"pending":[],"roots":[127]}
+screenshot docs/media/android/toolbar/04-rec-title.png
+  {"screenshot":"docs/media/android/toolbar/04-rec-title.png","device":true,"epoch":22,"incarnation":1,"clock":6350}
+tap rec-subtitle
+  {"tapped":125,"at":[388,281],"target":"rec-subtitle","delivery":"platform","carrier":"android","mode":"agent","epoch":23,"incarnation":1,"clock":6350}
+clock data
+  {"clock":6350,"settled":true,"epoch":23,"incarnation":1}
+state recNotes
+  "### Agenda"
+tree rec-subtitle
+  {"clock":6350,"epoch":23,"incarnation":1,"nodes":[{"children":[126],"depth":8,"focused":false,"handlers":["press"],"id":125,"parent":113,"props":{"accessibilityLabel":"Subtitle","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-subtitle"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":126,"parent":125,"props":{"text":"Subtitle"},"type":"Text"}],"pending":[],"roots":[125]}
+tree rec-title
+  {"clock":6350,"epoch":23,"incarnation":1,"nodes":[{"children":[124],"depth":8,"focused":false,"handlers":["press"],"id":123,"parent":113,"props":{"accessibilityLabel":"Title","accessibilityPressed":"false","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-title"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":124,"parent":123,"props":{"text":"Title"},"type":"Text"}],"pending":[],"roots":[123]}
+tap rec-plain
+  {"tapped":127,"at":[369.93,281],"target":"rec-plain","scrolled":{"from":[455.5,281],"to":[455.5,281]},"delivery":"platform","carrier":"android","mode":"agent","epoch":24,"incarnation":1,"clock":6350}
+clock data
+  {"clock":6350,"settled":true,"epoch":24,"incarnation":1}
+state recNotes
+  "Agenda"
+tree rec-plain
+  {"clock":6350,"epoch":24,"incarnation":1,"nodes":[{"children":[128],"depth":8,"focused":false,"handlers":["press"],"id":127,"parent":113,"props":{"accessibilityLabel":"Plain text","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-plain"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":128,"parent":127,"props":{"text":"Text"},"type":"Text"}],"pending":[],"roots":[127]}
+tree rec-subtitle
+  {"clock":6350,"epoch":24,"incarnation":1,"nodes":[{"children":[126],"depth":8,"focused":false,"handlers":["press"],"id":125,"parent":113,"props":{"accessibilityLabel":"Subtitle","accessibilityPressed":"false","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-subtitle"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":126,"parent":125,"props":{"text":"Subtitle"},"type":"Text"}],"pending":[],"roots":[125]}
+type record-notes Agenda
+  {"typed":145,"value":"Agenda","target":"record-notes","delivery":"platform","carrier":"android","mode":"agent","epoch":24,"incarnation":1,"clock":6350}
+tap rec-bullet
+  {"tapped":130,"at":[350.93,281],"target":"rec-bullet","scrolled":{"from":[452.93,281],"to":[452.93,281]},"delivery":"platform","carrier":"android","mode":"agent","epoch":25,"incarnation":1,"clock":6350}
+clock data
+  {"clock":6350,"settled":true,"epoch":25,"incarnation":1}
+state recNotes
+  "- Agenda"
+tree rec-bullet
+  {"clock":6350,"epoch":25,"incarnation":1,"nodes":[{"children":[131,132],"depth":8,"focused":false,"handlers":["press"],"id":130,"parent":113,"props":{"accessibilityLabel":"Bulleted list","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-bullet"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":131,"parent":130,"props":{"accessibilityElementsHidden":true,"imageSource":"symbol:list"},"type":"Image"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":132,"parent":130,"props":{"text":"Bullets"},"type":"Text"}],"pending":[],"roots":[130]}
+screenshot docs/media/android/toolbar/05-rec-bullet.png
+  {"screenshot":"docs/media/android/toolbar/05-rec-bullet.png","device":true,"epoch":25,"incarnation":1,"clock":6350}
+tree rec-plain
+  {"clock":6350,"epoch":25,"incarnation":1,"nodes":[{"children":[128],"depth":8,"focused":false,"handlers":["press"],"id":127,"parent":113,"props":{"accessibilityLabel":"Plain text","accessibilityPressed":"false","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-plain"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":128,"parent":127,"props":{"text":"Text"},"type":"Text"}],"pending":[],"roots":[127]}
+tap rec-plain
+  {"tapped":127,"at":[267.93,281],"target":"rec-plain","delivery":"platform","carrier":"android","mode":"agent","epoch":26,"incarnation":1,"clock":6350}
+clock data
+  {"clock":6350,"settled":true,"epoch":26,"incarnation":1}
+state recNotes
+  "Agenda"
+tree rec-plain
+  {"clock":6350,"epoch":26,"incarnation":1,"nodes":[{"children":[128],"depth":8,"focused":false,"handlers":["press"],"id":127,"parent":113,"props":{"accessibilityLabel":"Plain text","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-plain"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":128,"parent":127,"props":{"text":"Text"},"type":"Text"}],"pending":[],"roots":[127]}
+tree rec-bullet
+  {"clock":6350,"epoch":26,"incarnation":1,"nodes":[{"children":[131,132],"depth":8,"focused":false,"handlers":["press"],"id":130,"parent":113,"props":{"accessibilityLabel":"Bulleted list","accessibilityPressed":"false","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-bullet"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":131,"parent":130,"props":{"accessibilityElementsHidden":true,"imageSource":"symbol:list"},"type":"Image"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":132,"parent":130,"props":{"text":"Bullets"},"type":"Text"}],"pending":[],"roots":[130]}
+type record-notes Agenda
+  {"typed":145,"value":"Agenda","target":"record-notes","delivery":"platform","carrier":"android","mode":"agent","epoch":26,"incarnation":1,"clock":6350}
+tap rec-ordered
+  {"tapped":133,"at":[343.43,281],"target":"rec-ordered","scrolled":{"from":[451.43,281],"to":[451.43,281]},"delivery":"platform","carrier":"android","mode":"agent","epoch":27,"incarnation":1,"clock":6350}
+clock data
+  {"clock":6350,"settled":true,"epoch":27,"incarnation":1}
+state recNotes
+  "1. Agenda"
+tree rec-ordered
+  {"clock":6350,"epoch":27,"incarnation":1,"nodes":[{"children":[134,135],"depth":8,"focused":false,"handlers":["press"],"id":133,"parent":113,"props":{"accessibilityLabel":"Numbered list","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-ordered"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":134,"parent":133,"props":{"accessibilityElementsHidden":true,"text":"1."},"type":"Text"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":135,"parent":133,"props":{"text":"Numbers"},"type":"Text"}],"pending":[],"roots":[133]}
+tree rec-bullet
+  {"clock":6350,"epoch":27,"incarnation":1,"nodes":[{"children":[131,132],"depth":8,"focused":false,"handlers":["press"],"id":130,"parent":113,"props":{"accessibilityLabel":"Bulleted list","accessibilityPressed":"false","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-bullet"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":131,"parent":130,"props":{"accessibilityElementsHidden":true,"imageSource":"symbol:list"},"type":"Image"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":132,"parent":130,"props":{"text":"Bullets"},"type":"Text"}],"pending":[],"roots":[130]}
+type record-notes Agenda
+  {"typed":145,"value":"Agenda","target":"record-notes","delivery":"platform","carrier":"android","mode":"agent","epoch":28,"incarnation":1,"clock":6350}
+tap rec-task
+  {"tapped":136,"at":[354.93,281],"target":"rec-task","scrolled":{"from":[439.93,281],"to":[439.93,281]},"delivery":"platform","carrier":"android","mode":"agent","epoch":29,"incarnation":1,"clock":6350}
+clock data
+  {"clock":6350,"settled":true,"epoch":29,"incarnation":1}
+state recNotes
+  "- [ ] Agenda"
+tree rec-task
+  {"clock":6350,"epoch":29,"incarnation":1,"nodes":[{"children":[137,138],"depth":8,"focused":false,"handlers":["press"],"id":136,"parent":113,"props":{"accessibilityLabel":"Checklist","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-task"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":137,"parent":136,"props":{"accessibilityElementsHidden":true,"imageSource":"symbol:checkmark"},"type":"Image"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":138,"parent":136,"props":{"text":"To-do"},"type":"Text"}],"pending":[],"roots":[136]}
+screenshot docs/media/android/toolbar/06-rec-checklist.png
+  {"screenshot":"docs/media/android/toolbar/06-rec-checklist.png","device":true,"epoch":29,"incarnation":1,"clock":6350}
+type record-notes Agenda
+  {"typed":145,"value":"Agenda","target":"record-notes","delivery":"platform","carrier":"android","mode":"agent","epoch":30,"incarnation":1,"clock":6350}
+tap rec-quote
+  {"tapped":139,"at":[353.93,281],"target":"rec-quote","scrolled":{"from":[440.93,281],"to":[440.93,281]},"delivery":"platform","carrier":"android","mode":"agent","epoch":31,"incarnation":1,"clock":6350}
+clock data
+  {"clock":6350,"settled":true,"epoch":31,"incarnation":1}
+state recNotes
+  "> Agenda"
+tree rec-quote
+  {"clock":6350,"epoch":31,"incarnation":1,"nodes":[{"children":[140,141],"depth":8,"focused":false,"handlers":["press"],"id":139,"parent":113,"props":{"accessibilityLabel":"Quote","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-quote"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":140,"parent":139,"props":{"accessibilityElementsHidden":true,"imageSource":"symbol:quote"},"type":"Image"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":141,"parent":139,"props":{"text":"Quote"},"type":"Text"}],"pending":[],"roots":[139]}
+screenshot docs/media/android/toolbar/07-rec-quote.png
+  {"screenshot":"docs/media/android/toolbar/07-rec-quote.png","device":true,"epoch":31,"incarnation":1,"clock":6350}
+type record-notes Alona site
+  {"typed":145,"value":"Alona site","target":"record-notes","delivery":"platform","carrier":"android","mode":"agent","epoch":32,"incarnation":1,"clock":6350}
+type record-notes key Shift+Home
+  {"typed":145,"delivery":"recognized","target":"record-notes","carrier":"android","mode":"agent","epoch":32,"incarnation":1,"clock":6350}
+tap rec-link
+  {"tapped":142,"at":[360.43,281],"target":"rec-link","scrolled":{"from":[434.43,281],"to":[434.43,281]},"delivery":"platform","carrier":"android","mode":"agent","epoch":33,"incarnation":1,"clock":6350}
+clock settle
+  {"clock":6350,"settled":true,"epoch":33,"incarnation":1}
+type rec-link-url https://example.com
+  {"typed":150,"value":"https://example.com","target":"rec-link-url","delivery":"platform","carrier":"android","mode":"agent","epoch":34,"incarnation":1,"clock":6350}
+tap rec-link-apply
+  {"tapped":151,"at":[272.43,533],"target":"rec-link-apply","delivery":"platform","carrier":"android","mode":"agent","epoch":36,"incarnation":1,"clock":6350}
+clock data
+  {"clock":6350,"settled":true,"epoch":36,"incarnation":1}
+state recNotes
+  "[Alona site](https://example.com)"
+tree rec-link
+  {"clock":6350,"epoch":36,"incarnation":1,"nodes":[{"children":[143,144],"depth":8,"focused":false,"handlers":["press"],"id":142,"parent":113,"props":{"accessibilityLabel":"Link","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-link"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":143,"parent":142,"props":{"accessibilityElementsHidden":true,"imageSource":"symbol:link"},"type":"Image"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":144,"parent":142,"props":{"text":"Link"},"type":"Text"}],"pending":[],"roots":[142]}
+screenshot docs/media/android/toolbar/08-rec-link.png
+  {"screenshot":"docs/media/android/toolbar/08-rec-link.png","device":true,"epoch":36,"incarnation":1,"clock":6350}
+type record-notes Plain **bold**
+  {"typed":145,"value":"Plain **bold**","target":"record-notes","delivery":"platform","carrier":"android","mode":"agent","epoch":37,"incarnation":1,"clock":6350}
+type record-notes key Home
+  {"typed":145,"delivery":"recognized","target":"record-notes","carrier":"android","mode":"agent","epoch":38,"incarnation":1,"clock":6350}
+clock data
+  {"clock":6350,"settled":true,"epoch":38,"incarnation":1}
+tree rec-bold
+  {"clock":6350,"epoch":38,"incarnation":1,"nodes":[{"children":[117],"depth":8,"focused":false,"handlers":["press"],"id":116,"parent":113,"props":{"accessibilityLabel":"Bold","accessibilityPressed":"false","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-bold"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":117,"parent":116,"props":{"accessibilityElementsHidden":true,"text":"B"},"type":"Text"}],"pending":[],"roots":[116]}
+screenshot docs/media/android/toolbar/09-rec-caret-in-plain.png
+  {"screenshot":"docs/media/android/toolbar/09-rec-caret-in-plain.png","device":true,"epoch":38,"incarnation":1,"clock":6350}
+type record-notes key End
+  {"typed":145,"delivery":"recognized","target":"record-notes","carrier":"android","mode":"agent","epoch":39,"incarnation":1,"clock":6350}
+clock data
+  {"clock":6350,"settled":true,"epoch":39,"incarnation":1}
+tree rec-bold
+  {"clock":6350,"epoch":39,"incarnation":1,"nodes":[{"children":[117],"depth":8,"focused":false,"handlers":["press"],"id":116,"parent":113,"props":{"accessibilityLabel":"Bold","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"rec-bold"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":117,"parent":116,"props":{"accessibilityElementsHidden":true,"text":"B"},"type":"Text"}],"pending":[],"roots":[116]}
+screenshot docs/media/android/toolbar/10-rec-caret-in-bold.png
+  {"screenshot":"docs/media/android/toolbar/10-rec-caret-in-bold.png","device":true,"epoch":39,"incarnation":1,"clock":6350}
+type record-notes Agenda
+  {"typed":145,"value":"Agenda","target":"record-notes","delivery":"platform","carrier":"android","mode":"agent","epoch":41,"incarnation":1,"clock":6350}
+type record-notes key Shift+Home
+  {"typed":145,"delivery":"recognized","target":"record-notes","carrier":"android","mode":"agent","epoch":41,"incarnation":1,"clock":6350}
+tap rec-bold
+  {"tapped":116,"at":[48,281],"target":"rec-bold","scrolled":{"from":[-429.57,281],"to":[-429.57,281]},"delivery":"platform","carrier":"android","mode":"agent","epoch":42,"incarnation":1,"clock":6350}
+clock data
+  {"clock":6350,"settled":true,"epoch":42,"incarnation":1}
+state recNotes
+  "**Agenda**"
+type record-notes Agenda
+  {"typed":145,"value":"Agenda","target":"record-notes","delivery":"platform","carrier":"android","mode":"agent","epoch":43,"incarnation":1,"clock":6350}
+clock +5000
+  {"clock":11350,"inflight":1,"epoch":44,"incarnation":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+clock data
+  {"clock":11350,"settled":true,"epoch":45,"incarnation":1}
+tap rec-stamp
+  {"tapped":114,"at":[46,281],"target":"rec-stamp","scrolled":{"from":[-18,281],"to":[-18,281]},"delivery":"platform","carrier":"android","mode":"agent","epoch":46,"incarnation":1,"clock":11350}
+clock data
+  {"clock":11350,"settled":true,"epoch":46,"incarnation":1}
+state recNotes
+  "Agenda[0:05] "
+screenshot docs/media/android/toolbar/11-timestamp.png
+  {"screenshot":"docs/media/android/toolbar/11-timestamp.png","device":true,"epoch":46,"incarnation":1,"clock":11350}
+tap stop-recording
+  {"tapped":104,"at":[205.71,277],"target":"stop-recording","scrolled":{"from":[205.71,85],"to":[205.71,85]},"delivery":"platform","carrier":"android","mode":"agent","epoch":47,"incarnation":1,"clock":11350}
+clock data
+  {"clock":11350,"settled":false,"reason":"requests","epoch":47,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
+clock settle
+  {"clock":11350,"settled":false,"reason":"requests","epoch":52,"incarnation":1,"diagnostic":"clock settle gave up on requests still in flight at its bound (20 s native); state shows them under pending, and logs a `request N` with no `fulfil N`"}
+clock +12000
+  {"clock":23350,"epoch":67,"incarnation":1}
+clock data
+  {"clock":23350,"settled":true,"epoch":67,"incarnation":1}
+state detail.status
+  "done"
+tap pane-mine
+  {"tapped":192,"at":[205.71,274.38],"target":"pane-mine","delivery":"platform","carrier":"android","mode":"agent","epoch":68,"incarnation":1,"clock":23350}
+clock settle
+  {"clock":23350,"settled":true,"epoch":68,"incarnation":1}
+type my-notes Decisions
+  {"typed":240,"value":"Decisions","target":"my-notes","delivery":"platform","carrier":"android","mode":"agent","epoch":69,"incarnation":1,"clock":23350}
+tap mine-title
+  {"tapped":218,"at":[319.5,336.38],"target":"mine-title","delivery":"platform","carrier":"android","mode":"agent","epoch":70,"incarnation":1,"clock":23350}
+clock data
+  {"clock":23350,"settled":true,"epoch":70,"incarnation":1}
+state noteDraft
+  "## Decisions"
+tree mine-title
+  {"clock":23350,"epoch":70,"incarnation":1,"nodes":[{"children":[219],"depth":8,"focused":false,"handlers":["press"],"id":218,"parent":208,"props":{"accessibilityLabel":"Title","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"mine-title"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":219,"parent":218,"props":{"text":"Title"},"type":"Text"}],"pending":[],"roots":[218]}
+tap mine-plain
+  {"tapped":222,"at":[369.93,336.38],"target":"mine-plain","scrolled":{"from":[455.5,336.38],"to":[455.5,336.38]},"delivery":"platform","carrier":"android","mode":"agent","epoch":71,"incarnation":1,"clock":23350}
+clock data
+  {"clock":23350,"settled":true,"epoch":71,"incarnation":1}
+state noteDraft
+  "Decisions"
+tap mine-ordered
+  {"tapped":228,"at":[343.43,336.38],"target":"mine-ordered","scrolled":{"from":[553.43,336.38],"to":[553.43,336.38]},"delivery":"platform","carrier":"android","mode":"agent","epoch":72,"incarnation":1,"clock":23350}
+clock data
+  {"clock":23350,"settled":true,"epoch":72,"incarnation":1}
+state noteDraft
+  "1. Decisions"
+tree mine-ordered
+  {"clock":23350,"epoch":72,"incarnation":1,"nodes":[{"children":[229,230],"depth":8,"focused":false,"handlers":["press"],"id":228,"parent":208,"props":{"accessibilityLabel":"Numbered list","accessibilityPressed":"true","accessibilityRole":"button","disabled":false,"disabledStyled":true,"retainFocus":true,"testId":"mine-ordered"},"type":"Pressable"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":229,"parent":228,"props":{"accessibilityElementsHidden":true,"text":"1."},"type":"Text"},{"children":[],"depth":9,"focused":false,"handlers":[],"id":230,"parent":228,"props":{"text":"Numbers"},"type":"Text"}],"pending":[],"roots":[228]}
+screenshot docs/media/android/toolbar/12-my-notes-numbered.png
+  {"screenshot":"docs/media/android/toolbar/12-my-notes-numbered.png","device":true,"epoch":72,"incarnation":1,"clock":23350}
+clock +1500
+  {"clock":24850,"epoch":73,"incarnation":1}
+clock data
+  {"clock":24850,"settled":true,"epoch":73,"incarnation":1}
+state detail.userNotes
+  "1. Decisions"

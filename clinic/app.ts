@@ -4,6 +4,7 @@ import { demoDraft, DEMO_CONSULTATION } from './clinic/lib/demo';
 import { brandView, clinicService, profileFor, type ClinicService } from './clinic/lib/service';
 import { TENANT } from './tenant';
 import { meetingStore } from './core/store';
+import { applyFormat, formatsAt } from './core/markdown';
 
 const DIR = 'app:/data';
 export const grants = `device.microphone purpose.microphone\nfs.read ${DIR}\nfs.write ${DIR}`;
@@ -25,6 +26,8 @@ const app = (storage: Storage, native: NativeModule | null | undefined): Promise
   (current ??= build(storage, native));
 
 const sources: Sources = {
+  formatMarkdown: async ([source, start, end, command, argument]) => applyFormat(source, start, end, command, argument),
+  markdownFormats: async ([source, start, end]) => formatsAt(source, start, end),
   loadBrand: async () => brandView(TENANT),
   loadSetup: async ([picked], _store, storage, native) => (await app(storage, native)).setup(picked),
   downloadTier: async ([tier], _store, storage, native) => (await app(storage, native)).downloadTier(tier),

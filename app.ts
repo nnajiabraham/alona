@@ -2,6 +2,7 @@ import type { Answer, NativeModule, Sources, Storage } from './app.contract.d.ts
 import { desk, type Desk } from './core/desk';
 import { hostService } from './core/host';
 import { library } from './core/library';
+import { applyFormat, formatsAt } from './core/markdown';
 import type { Service } from './core/service';
 import { nativeSystem, NO_SYSTEM } from './core/system';
 
@@ -40,6 +41,8 @@ const svc = async (storage: Storage, native: NativeModule | null | undefined): P
 const dsk = async (storage: Storage, native: NativeModule | null | undefined): Promise<Desk> => (await app(storage, native)).desk;
 
 const sources: Sources = {
+  formatMarkdown: async ([source, start, end, command, argument]) => applyFormat(source, start, end, command, argument),
+  markdownFormats: async ([source, start, end]) => formatsAt(source, start, end),
   loadSetup: async ([picked], _store, storage, native) => (await svc(storage, native)).setup(picked),
   downloadTier: async ([tier], _store, storage, native) => (await svc(storage, native)).downloadTier(tier),
   removeTierModels: async ([tier], _store, storage, native) => (await svc(storage, native)).removeTier(tier),
