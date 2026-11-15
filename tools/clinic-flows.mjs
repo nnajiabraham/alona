@@ -214,7 +214,7 @@ function run(slug, app, targetName, flowName, steps) {
     } else if ('contains' in c) {
       if (typeof actual !== 'string' || !actual.includes(c.contains)) failures.push(`${c.check}: expected to contain ${JSON.stringify(c.contains)}, got ${(raw ?? '(no reply)').slice(0, 300)}`);
     } else if (JSON.stringify(actual) !== JSON.stringify(c.equals)) {
-      failures.push(`${c.check}: expected ${JSON.stringify(c.equals)}, got ${c.read ? JSON.stringify(actual).slice(0, 300) : (raw ?? '(no reply)').slice(0, 300)}`);
+      failures.push(`${c.check}: expected ${JSON.stringify(c.equals)}, got ${c.read ? String(JSON.stringify(actual)).slice(0, 300) : (raw ?? '(no reply)').slice(0, 300)}`);
     }
   }
 
