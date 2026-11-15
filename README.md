@@ -40,6 +40,8 @@ Windows and Linux use an Electron shell (`desktop/`) around Alona's web build, b
 
 ## Releases
 
+Test builds are on the [0.1.0 release page](https://github.com/nnajiabraham/alona/releases/tag/v0.1.0): the macOS app, the Android package, the web build, the Windows installer, two Linux packages, and the clinical app for each example tenant. iOS is not there yet.
+
 `bun tools/release.mjs build` builds every platform's package into `release/`, and `bun tools/release.mjs publish` creates a GitHub release with notes and checksums. Every package is unsigned or ad-hoc signed.
 
 ## Quick start
@@ -55,5 +57,12 @@ bun exact.mjs web
 ```
 
 The field guide lists the extra steps for macOS, Android, and the web engine.
+
+To try a built web app, serve it from `target/` (a site inside the source tree is refused):
+
+```sh
+bun exact.mjs web-build --out target/try/alona-web
+bun exact.mjs serve target/try/alona-web --port 4310
+```
 
 The original Swift app is in `legacy/macos-swift/`.
