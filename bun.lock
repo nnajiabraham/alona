@@ -6,6 +6,7 @@
       "name": "alona",
       "dependencies": {
         "@exact/media-capture": "file:../exact/packages/media-capture",
+        "@exact/notifications": "file:../exact/packages/notifications",
         "@exact/recording": "file:../exact/packages/recording",
       },
       "devDependencies": {
@@ -15,6 +16,8 @@
   },
   "packages": {
     "@exact/media-capture": ["@exact/media-capture@file:../exact/packages/media-capture", {}],
+
+    "@exact/notifications": ["@exact/notifications@file:../exact/packages/notifications", {}],
 
     "@exact/recording": ["@exact/recording@file:../exact/packages/recording", { "peerDependencies": { "@exact/media-capture": "1.0.0" }, "optionalPeers": ["@exact/media-capture"] }],
 
