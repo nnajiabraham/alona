@@ -1,31 +1,33 @@
 clock data
-  {"settled":true,"clock":0,"incarnation":1,"epoch":5}
+  {"settled":true,"epoch":5,"clock":0,"incarnation":1}
 tap continue
-  {"at":[210,832],"delivery":"platform","tapped":28,"target":"continue","carrier":"macos","mode":"agent","epoch":6,"incarnation":1,"clock":0}
+  {"delivery":"platform","at":[210,832],"tapped":28,"target":"continue","carrier":"macos","mode":"agent","epoch":6,"incarnation":1,"clock":0}
 clock data
-  {"settled":true,"clock":0,"incarnation":1,"epoch":6}
+  {"clock":0,"settled":true,"epoch":6,"incarnation":1}
 clock +6000
-  {"clock":6000,"epoch":11,"incarnation":1}
+  {"incarnation":1,"clock":6000,"epoch":11}
 clock data
-  {"settled":true,"incarnation":1,"epoch":11,"clock":6000}
+  {"incarnation":1,"settled":true,"epoch":11,"clock":6000}
 tap start-recording
-  {"delivery":"platform","tapped":69,"at":[210,174],"target":"start-recording","carrier":"macos","mode":"agent","epoch":12,"incarnation":1,"clock":6000}
+  {"at":[210,174],"tapped":69,"delivery":"platform","target":"start-recording","carrier":"macos","mode":"agent","epoch":12,"incarnation":1,"clock":6000}
+clock until state rec.state == "recording" within 15000
+  {"clock":6000,"real":186,"until":"met","value":"recording"}
 clock data
-  {"incarnation":1,"settled":true,"epoch":16,"clock":6000}
+  {"settled":true,"incarnation":1,"clock":6000,"epoch":16}
 clock settle
-  {"epoch":16,"clock":6000,"settled":true,"incarnation":1}
+  {"clock":6000,"settled":true,"incarnation":1,"epoch":16}
 clock +3000
-  {"epoch":18,"incarnation":1,"clock":9000}
+  {"clock":9000,"incarnation":1,"epoch":18}
 state rec.state
   "recording"
 screenshot docs/media/macos/leaving/01-recording.png
-  {"epoch":18,"incarnation":1,"h":900,"screenshot":"docs/media/macos/leaving/01-recording.png","w":420,"clock":9000,"scale":1}
+  {"incarnation":1,"epoch":18,"clock":9000,"screenshot":"docs/media/macos/leaving/01-recording.png","w":420,"h":900,"scale":1}
 back
-  {"delivery":"platform","back":"sheet","carrier":"macos","epoch":19,"incarnation":1,"clock":9000}
+  {"back":"sheet","delivery":"platform","carrier":"macos","epoch":19,"incarnation":1,"clock":9000}
 clock data
-  {"clock":9000,"epoch":24,"settled":true,"incarnation":1}
+  {"clock":9000,"incarnation":1,"settled":true,"epoch":24}
 clock settle
-  {"settled":true,"clock":9000,"incarnation":1,"epoch":24}
+  {"incarnation":1,"settled":true,"epoch":24,"clock":9000}
 state recorderId
   ""
 state trackId
@@ -33,38 +35,38 @@ state trackId
 state lib.length
   1
 screenshot docs/media/macos/leaving/02-back-stopped-and-saved.png
-  {"w":420,"screenshot":"docs/media/macos/leaving/02-back-stopped-and-saved.png","h":900,"epoch":24,"clock":9000,"incarnation":1,"scale":1}
+  {"h":900,"screenshot":"docs/media/macos/leaving/02-back-stopped-and-saved.png","w":420,"epoch":24,"incarnation":1,"clock":9000,"scale":1}
 clock +12000
-  {"epoch":39,"incarnation":1,"clock":21000}
+  {"clock":21000,"incarnation":1,"epoch":39}
 clock data
-  {"epoch":39,"incarnation":1,"settled":true,"clock":21000}
+  {"settled":true,"epoch":39,"clock":21000,"incarnation":1}
 state detail.status
   "done"
 tap pane-mine
-  {"tapped":189,"delivery":"host-activation","native":"segmented-control","target":"pane-mine","carrier":"macos","mode":"agent","epoch":40,"incarnation":1,"clock":21000}
+  {"tapped":189,"native":"segmented-control","delivery":"host-activation","target":"pane-mine","carrier":"macos","mode":"agent","epoch":40,"incarnation":1,"clock":21000}
 type my-notes ## Typed just before Back
   {"typed":237,"value":"## Typed just before Back","target":"my-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":42,"incarnation":1,"clock":21000}
 back
-  {"back":"route","delivery":"platform","carrier":"macos","epoch":43,"incarnation":1,"clock":21000}
+  {"delivery":"platform","back":"route","carrier":"macos","epoch":43,"incarnation":1,"clock":21000}
 clock data
-  {"settled":true,"epoch":43,"clock":21000,"incarnation":1}
+  {"incarnation":1,"clock":21000,"epoch":43,"settled":true}
 clock +1500
-  {"epoch":43,"incarnation":1,"clock":22500}
+  {"clock":22500,"incarnation":1,"epoch":43}
 clock data
   {"incarnation":1,"clock":22500,"settled":true,"epoch":43}
 state lib.length
   1
 screenshot docs/media/macos/leaving/03-library-after-back.png
-  {"h":900,"epoch":43,"clock":22500,"incarnation":1,"screenshot":"docs/media/macos/leaving/03-library-after-back.png","w":420,"scale":1}
+  {"w":420,"screenshot":"docs/media/macos/leaving/03-library-after-back.png","incarnation":1,"clock":22500,"h":900,"epoch":43,"scale":1}
 tap "Sample notes"
-  {"tapped":171,"at":[165.5,269],"delivery":"platform","target":"Sample notes","carrier":"macos","mode":"agent","epoch":44,"incarnation":1,"clock":22500}
+  {"delivery":"platform","tapped":171,"at":[165.5,269],"target":"Sample notes","carrier":"macos","mode":"agent","epoch":44,"incarnation":1,"clock":22500}
 clock data
-  {"epoch":44,"clock":22500,"settled":true,"incarnation":1}
+  {"settled":true,"incarnation":1,"clock":22500,"epoch":44}
 clock settle
-  {"epoch":44,"clock":22500,"settled":true,"incarnation":1}
+  {"epoch":44,"settled":true,"clock":22500,"incarnation":1}
 state detail.userNotes
   "## Typed just before Back"
 tap pane-mine
-  {"tapped":255,"native":"segmented-control","delivery":"host-activation","target":"pane-mine","carrier":"macos","mode":"agent","epoch":45,"incarnation":1,"clock":22500}
+  {"native":"segmented-control","delivery":"host-activation","tapped":255,"target":"pane-mine","carrier":"macos","mode":"agent","epoch":45,"incarnation":1,"clock":22500}
 screenshot docs/media/macos/leaving/04-notes-kept.png
-  {"w":420,"clock":22500,"screenshot":"docs/media/macos/leaving/04-notes-kept.png","epoch":45,"incarnation":1,"h":900,"scale":1}
+  {"incarnation":1,"clock":22500,"epoch":45,"h":900,"screenshot":"docs/media/macos/leaving/04-notes-kept.png","w":420,"scale":1}

@@ -205,11 +205,11 @@ bun tools/tenant.mjs flows riverbend web     # every flow below, with captures</
   <table>
     <thead><tr><th>Check</th><th>Result</th><th>Detail</th></tr></thead>
     <tbody>
-      <tr><td>Web, all three tenants</td><td><span class="pill ok">6 of 6 flows</span></td><td>At desktop and phone size, on the demo engine. Exact's own screen checks are clean for each tenant.</td></tr>
+      <tr><td>Web, all three tenants</td><td><span class="pill ok">All flows pass</span></td><td>Six flows for each tenant at desktop and phone size, plus the second-note and toolbar flows for the default tenant, on the demo engine. Exact's own screen checks are clean for each tenant.</td></tr>
       <tr><td>Real models, web</td><td><span class="pill ok">Ran for one tenant</span></td><td id="real-detail">A synthetic consultation played as the microphone.</td></tr>
       <tr><td>Draft quality on the Lite tier</td><td><span class="pill part">Weak</span></td><td>The draft had the right headings and added nothing unsaid, but it copied guidance sentences and repeated the history under the impression. Larger tiers are not measured for clinical notes.</td></tr>
-      <tr><td>Android</td><td><span class="pill part">Flaky, samples only</span></td><td>Onboarding, settings, and the Back flow pass. The flows that record are unreliable on the emulator, and Android has no on-device models yet.</td></tr>
-      <tr><td>iOS</td><td><span class="pill part">Not built</span></td><td>Needs Xcode 27.1 set up on the build machine.</td></tr>
+      <tr><td>Android</td><td><span class="pill ok">Builds, toolbar flow passes</span></td><td>The default tenant builds and installs on an emulator, and its formatting-toolbar flow passes there (72 checks). The other clinical flows were last run on Android before the recording fix in the flow runner and have not been rerun. Alona's own Android build runs real models; the clinical build has not been measured on them.</td></tr>
+      <tr><td>iOS</td><td><span class="pill part">Not built</span></td><td>Xcode 27.1 is installed on the build machine but its license is not accepted yet.</td></tr>
       <tr><td>Real consultations</td><td><span class="pill part">Not run</span></td><td>Every figure comes from synthetic speech, which is far cleaner than a real room.</td></tr>
     </tbody>
   </table>

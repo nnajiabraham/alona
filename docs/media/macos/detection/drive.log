@@ -1,68 +1,68 @@
 clock data
-  {"incarnation":1,"epoch":5,"settled":true,"clock":0}
+  {"settled":true,"epoch":5,"clock":0,"incarnation":1}
 tap continue
-  {"tapped":28,"at":[210,832],"delivery":"platform","target":"continue","carrier":"macos","mode":"agent","epoch":6,"incarnation":1,"clock":0}
+  {"at":[210,832],"tapped":28,"delivery":"platform","target":"continue","carrier":"macos","mode":"agent","epoch":6,"incarnation":1,"clock":0}
 clock data
-  {"incarnation":1,"clock":0,"epoch":6,"settled":true}
+  {"epoch":6,"incarnation":1,"settled":true,"clock":0}
 clock +6000
-  {"incarnation":1,"epoch":11,"clock":6000}
+  {"clock":6000,"incarnation":1,"epoch":11}
 clock data
-  {"epoch":11,"settled":true,"incarnation":1,"clock":6000}
+  {"clock":6000,"settled":true,"epoch":11,"incarnation":1}
 state meet.found
   true
 state offerMeeting
   true
 screenshot docs/media/macos/detection/01-call-detected.png
-  {"epoch":11,"w":420,"h":900,"screenshot":"docs/media/macos/detection/01-call-detected.png","clock":6000,"incarnation":1,"scale":1}
+  {"epoch":11,"h":900,"w":420,"incarnation":1,"clock":6000,"screenshot":"docs/media/macos/detection/01-call-detected.png","scale":1}
 tap detected-record
-  {"tapped":71,"delivery":"platform","at":[261.5,140.5],"target":"detected-record","carrier":"macos","mode":"agent","epoch":14,"incarnation":1,"clock":6000}
+  {"at":[261.5,140.5],"tapped":71,"delivery":"platform","target":"detected-record","carrier":"macos","mode":"agent","epoch":12,"incarnation":1,"clock":6000}
 clock data
-  {"settled":true,"epoch":16,"incarnation":1,"clock":6000}
+  {"clock":6000,"incarnation":1,"settled":true,"epoch":16}
 clock settle
-  {"epoch":16,"clock":6000,"incarnation":1,"settled":true}
+  {"incarnation":1,"epoch":16,"settled":true,"clock":6000}
 state rec.state
   "recording"
 state recTitle
   "Weekly design review"
 screenshot docs/media/macos/detection/02-recording-the-call.png
-  {"h":900,"screenshot":"docs/media/macos/detection/02-recording-the-call.png","epoch":16,"clock":6000,"w":420,"incarnation":1,"scale":1}
+  {"incarnation":1,"h":900,"screenshot":"docs/media/macos/detection/02-recording-the-call.png","w":420,"epoch":16,"clock":6000,"scale":1}
 clock +4000
-  {"clock":10000,"epoch":18,"incarnation":1}
+  {"epoch":18,"clock":10000,"incarnation":1}
 tap stop-recording
-  {"delivery":"platform","at":[210,208],"tapped":115,"target":"stop-recording","carrier":"macos","mode":"agent","epoch":19,"incarnation":1,"clock":10000}
+  {"at":[210,208],"tapped":115,"delivery":"platform","target":"stop-recording","carrier":"macos","mode":"agent","epoch":19,"incarnation":1,"clock":10000}
 clock data
-  {"incarnation":1,"epoch":24,"clock":10000,"settled":true}
+  {"clock":10000,"settled":true,"incarnation":1,"epoch":24}
 clock settle
-  {"clock":10000,"settled":true,"epoch":24,"incarnation":1}
+  {"incarnation":1,"settled":true,"epoch":24,"clock":10000}
 back
-  {"delivery":"platform","back":"route","carrier":"macos","epoch":25,"incarnation":1,"clock":10000}
+  {"back":"route","delivery":"platform","carrier":"macos","epoch":25,"incarnation":1,"clock":10000}
 clock data
-  {"epoch":25,"settled":true,"clock":10000,"incarnation":1}
+  {"settled":true,"incarnation":1,"epoch":25,"clock":10000}
 clock settle
-  {"settled":true,"epoch":25,"clock":10000,"incarnation":1}
+  {"clock":10000,"settled":true,"incarnation":1,"epoch":25}
 state offerMeeting
   false
 screenshot docs/media/macos/detection/03-offer-gone.png
-  {"clock":10000,"incarnation":1,"h":900,"epoch":25,"screenshot":"docs/media/macos/detection/03-offer-gone.png","w":420,"scale":1}
+  {"incarnation":1,"screenshot":"docs/media/macos/detection/03-offer-gone.png","epoch":25,"h":900,"w":420,"clock":10000,"scale":1}
 tap open-settings
-  {"at":[384,21],"tapped":57,"delivery":"platform","target":"open-settings","carrier":"macos","mode":"agent","epoch":26,"incarnation":1,"clock":10000}
+  {"tapped":57,"delivery":"platform","at":[384,21],"target":"open-settings","carrier":"macos","mode":"agent","epoch":26,"incarnation":1,"clock":10000}
 clock data
-  {"epoch":26,"incarnation":1,"settled":true,"clock":10000}
+  {"settled":true,"incarnation":1,"clock":10000,"epoch":26}
 clock settle
-  {"settled":true,"incarnation":1,"epoch":26,"clock":10000}
+  {"epoch":26,"settled":true,"incarnation":1,"clock":10000}
 state desk.detectionSupported
   true
 screenshot docs/media/macos/detection/04-detection-settings.png
-  {"clock":10000,"screenshot":"docs/media/macos/detection/04-detection-settings.png","incarnation":1,"w":420,"epoch":26,"h":900,"scale":1}
+  {"w":420,"incarnation":1,"clock":10000,"epoch":26,"h":900,"screenshot":"docs/media/macos/detection/04-detection-settings.png","scale":1}
 tap detect-switch
-  {"delivery":"host-activation","native":"control","tapped":261,"target":"detect-switch","scrolled":{"from":[372,1066],"to":[372,513]},"carrier":"macos","mode":"agent","epoch":27,"incarnation":1,"clock":10000}
+  {"tapped":261,"delivery":"host-activation","native":"control","target":"detect-switch","scrolled":{"from":[372,1066],"to":[372,513]},"carrier":"macos","mode":"agent","epoch":27,"incarnation":1,"clock":10000}
 clock data
-  {"clock":10000,"epoch":27,"settled":true,"incarnation":1}
-clock settle
   {"settled":true,"incarnation":1,"epoch":27,"clock":10000}
+clock settle
+  {"clock":10000,"epoch":27,"incarnation":1,"settled":true}
 state detectOn
   false
 state meet.found
   false
 screenshot docs/media/macos/detection/05-detection-off.png
-  {"h":900,"w":420,"epoch":27,"incarnation":1,"screenshot":"docs/media/macos/detection/05-detection-off.png","clock":10000,"scale":1}
+  {"w":420,"incarnation":1,"clock":10000,"epoch":27,"h":900,"screenshot":"docs/media/macos/detection/05-detection-off.png","scale":1}

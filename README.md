@@ -8,12 +8,16 @@ One [Exact](https://github.com/expo/exact) app builds the web, macOS, iOS, and A
 
 | Platform | Screens and flows (demo engine) | Real models |
 |---|---|---|
-| macOS | 6 of 6 flows pass | All three tiers run: sherpa-onnx and llama.cpp in a Swift module |
-| Web | 6 of 6 flows pass | Lite tier runs in Chrome on WebGPU, recording from Chrome's fake microphone |
-| Android | 6 of 6 flows pass on an emulator, with an intermittent recording failure | Demo engine only; the native bridge is not built |
+| macOS | 14 of 14 flows pass | All three tiers run: sherpa-onnx and llama.cpp in a Swift module |
+| Web | 8 of 8 flows pass | Lite tier runs in Chrome on WebGPU, recording from Chrome's fake microphone |
+| Android | 8 of 8 flows pass on an emulator | Lite and Balanced run on an 8 GB emulator: sherpa-onnx and llama.cpp in a Kotlin package. Not run on a physical phone |
 | Linux (`.deb`) | Flows pass in a container | Demo engine there (no GPU); real models are not verified |
 | Windows | Built, never run | Not verified |
-| iOS | Not built | Needs Xcode 27.1 on the build machine |
+| iOS | Not built | Xcode 27.1 is installed on the build machine but not licensed yet |
+
+On macOS the app also records other apps' audio, detects Zoom and Meet, lives in the menu bar, saves to a folder you choose, and imports the Swift app's recordings. Those pass their flows with stand-ins for the parts behind a permission prompt. The real capture, live detection, and notifications have not been seen working yet.
+
+The notes pad has a formatting toolbar on every platform, for people who do not know Markdown.
 
 No hardware microphone and no real meeting has been run on any platform. Accuracy figures come from synthetic voices.
 
@@ -33,6 +37,10 @@ Windows and Linux use an Electron shell (`desktop/`) around Alona's web build, b
 - **Guidelines for contributors and agents:** `AGENTS.md`.
 - **Why the models were chosen:** `docs/research/local-models-2026-11.md`.
 - **How decisions were made:** `docs/rewrite/decisions.tsv`.
+
+## Releases
+
+`bun tools/release.mjs build` builds every platform's package into `release/`, and `bun tools/release.mjs publish` creates a GitHub release with notes and checksums. Every package is unsigned or ad-hoc signed.
 
 ## Quick start
 

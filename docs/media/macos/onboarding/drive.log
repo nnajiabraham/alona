@@ -1,26 +1,26 @@
 clock data
-  {"epoch":5,"clock":0,"settled":true,"incarnation":1}
+  {"incarnation":1,"epoch":5,"settled":true,"clock":0}
 state setup.ready
   true
 state welcomed
   false
 screenshot docs/media/macos/onboarding/01-device-check.png
-  {"screenshot":"docs/media/macos/onboarding/01-device-check.png","clock":0,"incarnation":1,"epoch":5,"w":420,"h":900,"scale":1}
+  {"epoch":5,"clock":0,"w":420,"incarnation":1,"screenshot":"docs/media/macos/onboarding/01-device-check.png","h":900,"scale":1}
 tap continue
-  {"at":[210,832],"delivery":"platform","tapped":28,"target":"continue","carrier":"macos","mode":"agent","epoch":6,"incarnation":1,"clock":0}
+  {"delivery":"platform","tapped":28,"at":[210,832],"target":"continue","carrier":"macos","mode":"agent","epoch":6,"incarnation":1,"clock":0}
 clock data
-  {"settled":true,"epoch":6,"clock":0,"incarnation":1}
+  {"clock":0,"incarnation":1,"settled":true,"epoch":6}
 state welcomed
   true
 state setup.activeDownloading
   true
 screenshot docs/media/macos/onboarding/02-downloading-models.png
-  {"screenshot":"docs/media/macos/onboarding/02-downloading-models.png","clock":0,"epoch":6,"incarnation":1,"h":900,"w":420,"scale":1}
+  {"clock":0,"incarnation":1,"epoch":6,"screenshot":"docs/media/macos/onboarding/02-downloading-models.png","w":420,"h":900,"scale":1}
 clock +6000
-  {"clock":6000,"epoch":11,"incarnation":1}
+  {"incarnation":1,"clock":6000,"epoch":11}
 clock data
-  {"settled":true,"epoch":11,"clock":6000,"incarnation":1}
+  {"clock":6000,"settled":true,"epoch":11,"incarnation":1}
 state setup.activeInstalled
   true
 screenshot docs/media/macos/onboarding/03-ready-to-record.png
-  {"clock":6000,"screenshot":"docs/media/macos/onboarding/03-ready-to-record.png","h":900,"epoch":11,"w":420,"incarnation":1,"scale":1}
+  {"w":420,"screenshot":"docs/media/macos/onboarding/03-ready-to-record.png","h":900,"clock":6000,"incarnation":1,"epoch":11,"scale":1}

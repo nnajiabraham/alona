@@ -142,6 +142,80 @@ window.ALONA = {
      }
     ],
     "video": "../media/android/settings/settings.mp4"
+   },
+   "toolbar": {
+    "shots": [
+     {
+      "src": "../media/android/toolbar/01-empty-pad.png",
+      "label": "empty pad"
+     },
+     {
+      "src": "../media/android/toolbar/02-rec-bold.png",
+      "label": "rec bold"
+     },
+     {
+      "src": "../media/android/toolbar/03-rec-strike.png",
+      "label": "rec strike"
+     },
+     {
+      "src": "../media/android/toolbar/04-rec-title.png",
+      "label": "rec title"
+     },
+     {
+      "src": "../media/android/toolbar/05-rec-bullet.png",
+      "label": "rec bullet"
+     },
+     {
+      "src": "../media/android/toolbar/06-rec-checklist.png",
+      "label": "rec checklist"
+     },
+     {
+      "src": "../media/android/toolbar/07-rec-quote.png",
+      "label": "rec quote"
+     },
+     {
+      "src": "../media/android/toolbar/08-rec-link.png",
+      "label": "rec link"
+     },
+     {
+      "src": "../media/android/toolbar/09-rec-caret-in-plain.png",
+      "label": "rec caret in plain"
+     },
+     {
+      "src": "../media/android/toolbar/10-rec-caret-in-bold.png",
+      "label": "rec caret in bold"
+     },
+     {
+      "src": "../media/android/toolbar/11-timestamp.png",
+      "label": "timestamp"
+     },
+     {
+      "src": "../media/android/toolbar/12-my-notes-numbered.png",
+      "label": "my notes numbered"
+     }
+    ],
+    "video": "../media/android/toolbar/toolbar.mp4"
+   },
+   "toolbar-large": {
+    "shots": [
+     {
+      "src": "../media/android/toolbar-large/01-record-pad-large.png",
+      "label": "record pad large"
+     },
+     {
+      "src": "../media/android/toolbar-large/02-record-pad-large-dark.png",
+      "label": "record pad large dark"
+     },
+     {
+      "src": "../media/android/toolbar-large/03-my-notes-large.png",
+      "label": "my notes large"
+     },
+     {
+      "src": "../media/android/toolbar-large/04-my-notes-large-dark.png",
+      "label": "my notes large dark"
+     }
+    ],
+    "video": "../media/android/toolbar-large/toolbar-large.mp4"
    }
   },
   "android-real": {
