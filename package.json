@@ -6,8 +6,9 @@
     "start": "bun exact.mjs serve dist"
   },
   "dependencies": {
-    "@exact/media-capture": "file:../exact/packages/media-capture",
-    "@exact/recording": "file:../exact/packages/recording"
+    "@exact/media-capture": "file:/Users/manlikeabro/Documents/repos/exact/packages/media-capture",
+    "@exact/recording": "file:/Users/manlikeabro/Documents/repos/exact/packages/recording",
+    "@alona/engine": "file:packages/alona-engine"
   },
   "devDependencies": {
     "typescript": "5.9.3"

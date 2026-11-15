@@ -23,7 +23,12 @@
         "-lc++"
       ]
     },
-    "android": {},
+    "android": {
+      "maven": [
+        "com.alona.local:sherpa:2.0.1",
+        "com.alona.local:llama:b12383"
+      ]
+    },
     "ios": {
       "minimumOS": "17.0",
       "deviceFamily": [
