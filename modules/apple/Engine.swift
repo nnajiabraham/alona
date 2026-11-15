@@ -26,9 +26,12 @@ final class Engine: ExactModule {
     private var jobs: [String: Job] = [:], order: [String] = []
     private var loaded: Loaded?
     private static let keptJobs = 24
+    private lazy var system = SystemOps(data: context.data, agent: context.agent) { [weak self] topic in self?.context.changed(topic) }
 
     override func later(_ request: [String: Any], reply: ExactReply) {
-        switch request["op"] as? String ?? "" {
+        let op = request["op"] as? String ?? ""
+        if system.handle(op, request, reply) { return }
+        switch op {
         case "probe":
             reply.send(probe())
         case "installed":
@@ -87,6 +90,7 @@ final class Engine: ExactModule {
     override func destroy() {
         lock.lock(); jobs.values.forEach { $0.cancelled = true }; lock.unlock()
         work.sync { loaded = nil }
+        system.end()
     }
 
     /// Starts `body` as the job the request names, unless that job is running or done: starting is
@@ -145,12 +149,9 @@ final class Engine: ExactModule {
         return writer
     }
 
-    /// An `app:/data/…` path as a file URL in this session's data directory.
-    private func file(_ path: String?) -> URL? {
-        let prefix = "app:/data/"
-        guard let path, path.hasPrefix(prefix), !path.contains("..") else { return nil }
-        return context.data.appendingPathComponent(String(path.dropFirst(prefix.count)))
-    }
+    /// An `app:/data/…` path in this session's data directory, or on macOS an absolute path: a
+    /// meeting kept in the person's folder, or an imported one.
+    private func file(_ path: String?) -> URL? { system.url(path) }
 
     private func probe() -> [String: Any] {
         let free = (try? URL(fileURLWithPath: NSHomeDirectory())

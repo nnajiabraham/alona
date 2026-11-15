@@ -1,6 +1,7 @@
 use EmptyState, Badge from "exact:content"
 use getUserMedia, stopTrack, microphoneStatus, MediaStream, MediaStreamTrack, MicrophoneStatus from "@exact/media-capture"
 use startMediaRecorder, stopMediaRecorder, mediaRecorderState, MediaRecorderInfo, RecordedMedia from "@exact/recording"
+use showNotification, closeNotification, notificationStatus, requestNotificationPermission, notificationclick, NotificationStatus, NotificationEvent, NotificationAction from "@exact/notifications"
 
 routes nav
   home "/"
@@ -75,6 +76,27 @@ shape Reply
   ok: bool
   error: string
 
+shape DeskView
+  mac: bool
+  foldersSupported: bool
+  folder: string
+  folderReachable: bool
+  waiting: number
+  legacyFolder: string
+  legacyLooked: bool
+  legacyCount: number
+  legacyNew: number
+  detectionSupported: bool
+  captureSupported: bool
+  captureHealth: string
+  accessibility: bool
+
+shape DetectionView
+  found: bool
+  app: string
+  title: string
+  key: string
+
 shape Tick
   working: bool
 
@@ -105,6 +127,12 @@ component Alona
   state noteFor = ""
   state titleDraft = ""
   state aimed = ""
+  state heardAt = 0
+  state detectOn = true persist
+  state legacyLook = false persist
+  state captureOn = false persist
+  state dismissedKey = ""
+  state noticedKey = ""
 
   resource time = exactTime() as shape Time
   resource setup = loadSetup(picked) as shape Setup else empty()
@@ -113,6 +141,9 @@ component Alona
   resource rec = mediaRecorderState(recorder=recorderId, interval=250) as shape MediaRecorderInfo else empty()
   derive selected = match stack(nav).filter(e => e.name == "meeting").at(-1) { case some(e) => e.params.id, case none => "" }
   resource detail = loadMeeting(selected) when selected != "" as shape MeetingDetail else empty()
+  resource desk = loadDesk(time.utcOffset, legacyLook) as shape DeskView else empty()
+  resource meet = loadDetection(detectOn) when desk.detectionSupported as shape DetectionView else empty()
+  resource notices = notificationStatus() as shape NotificationStatus else empty(available=false, state="unknown", badge=false)
 
   mutation ticked as shape Tick refreshes lib, setup, detail
   mutation downloading as shape Reply refreshes setup
@@ -126,6 +157,11 @@ component Alona
   mutation renamed as shape Reply refreshes lib, detail
   mutation deleted as shape Reply refreshes lib
   mutation retried as shape Reply refreshes lib, detail
+  mutation folderSet as shape Reply refreshes desk, lib, detail
+  mutation legacyPicked as shape Reply refreshes desk
+  mutation imported as shape Reply refreshes desk, lib
+  mutation captureStarted as shape Reply
+  mutation noticesAsked as shape NotificationStatus refreshes notices
 
   derive recording = recorderId != ""
   derive micDenied = mic.state == "denied"
@@ -134,6 +170,12 @@ component Alona
   derive busy = anyWorking or setup.activeDownloading or not setup.ready
   derive shownNotes = noteDirty and noteFor == selected ? noteDraft : detail.userNotes
   derive today = time.epochAtZero + now
+  derive offerMeeting = meet.found and not recording and meet.key != dismissedKey
+  derive folderLine = desk.folder == "" ? "In Alona’s storage on this Mac" : desk.folder
+  derive folderBusy = pending(folderSet)
+  derive importError = match imported { case some(r) => r.error, case none => "" }
+  derive importFailed = failed(imported) or importError != ""
+  derive statusLine = recording ? `Recording · ${clock(rec.duration / 1000)}` : anyWorking ? "Writing notes…" : "Ready to record"
 
   task pump when busy
     every(1000, tick)
@@ -170,14 +212,69 @@ component Alona
     noteDirty = false
     nav = back(nav)
   action openSettings
+    refresh desk
     nav = push(nav, "/settings")
   action openSystemSettings
     openURL("app-settings:")
+  action showWindow
+    focus()
+  action quit
+    close()
 
   action startRecording
     recTitle = ""
     recNotes = ""
     send opened = getUserMedia(audio=true)
+  action recordDetected
+    dismissedKey = meet.key
+    recTitle = meet.title
+    recNotes = ""
+    closeNotification(tag="meeting")
+    send opened = getUserMedia(audio=true)
+  action dismissDetected
+    dismissedKey = meet.key
+    closeNotification(tag="meeting")
+
+  task notice when offerMeeting and detectOn key=meet.key
+    change(noticeMeeting)
+  action noticeMeeting
+    if meet.key != noticedKey and notices.state == "granted"
+      noticedKey = meet.key
+      showNotification(title=`${meet.title} is on`, body="Record it with Alona? Notes stay on this Mac.", tag="meeting", silent=true,
+        actions=[NotificationAction(action="record", title="Record", foreground=true, destructive=false, authenticationRequired=false, placeholder=none)])
+  action noticeTapped(tag: string, e: NotificationEvent)
+    if tag == "meeting" and not recording and meet.found
+      focus()
+      dismissedKey = meet.key
+      recTitle = meet.title
+      recNotes = ""
+      send opened = getUserMedia(audio=true)
+  action askNotices
+    send noticesAsked = requestNotificationPermission()
+  action setDetect(on: bool)
+    detectOn = on
+  action setCapture(on: bool)
+    captureOn = on
+  action openAudioPrivacy
+    openURL("x-apple.systempreferences:com.apple.preference.security?Privacy_AudioCapture")
+  action openAccessibilityPrivacy
+    openURL("x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")
+
+  action pickFolder
+    showDirectoryPicker("folder-picker")
+  action folderPicked(value: string)
+    send folderSet = chooseMeetingsFolder(value)
+  action useAppStorage
+    send folderSet = chooseMeetingsFolder("")
+  action findLegacy
+    legacyLook = true
+  action pickLegacy
+    legacyLook = true
+    showDirectoryPicker("legacy-picker")
+  action legacyChosen(value: string)
+    send legacyPicked = pickLegacyFolder(value)
+  action importOld
+    send imported = importLegacy(time.utcOffset)
   action arm
     match opened
       case some(s)
@@ -192,6 +289,7 @@ component Alona
     match started
       case some(r)
         recorderId = r.id
+        send captureStarted = startSystemAudio(recId, captureOn)
         nav = push(nav, "/record")
       case none
         recorderId = ""
@@ -224,6 +322,14 @@ component Alona
 
   action showPane(p: string)
     pane = p
+  action heard(seconds: number)
+    heardAt = seconds
+  action stamp(editor: string, seconds: number)
+    setRangeText(editor, `[${clock(seconds)}] `)
+  action mark(editor: string, command: string)
+    format(editor, command)
+  action heading(editor: string)
+    format(editor, "heading", "2")
   action editNote(v: string)
     noteDraft = v
     noteDirty = true
@@ -255,7 +361,7 @@ component Alona
       nav = back(nav)
 
   view
-    main navigationKey=`${top(nav).id}` navigationBack="back" navigate=follow testId="app" width="100%" height="100%"
+    main navigationKey=`${top(nav).id}` navigationBack="back" navigate=follow notificationclick=noticeTapped testId="app" width="100%" height="100%"
       background-color="surface.page" color="text.primary" accent-color="moss.fill"
       for e in stack(nav) key=e.id
         if e.name == "home"
@@ -269,6 +375,16 @@ component Alona
               scroll id="home-scroll" flex=1 min-height=0
                 column gap=16 padding=16 max-width="45rem" width="100%" margin="0 auto" box-sizing="border-box"
                   ModelBanner(setup=setup, download=download(setup.active), openSettings=openSettings)
+                  if offerMeeting
+                    row gap=12 padding=14 border-radius=14 background-color="ochre.soft" align-items="center" flex-wrap="wrap" testId="detected-card"
+                      column flex=1 min-width=0 gap=2
+                        text `${meet.title} is on` font="-exact-headline" color="ochre.ink" testId="detected-title"
+                        text "Record it to get notes when it ends." font="-exact-footnote" color="ochre.ink"
+                      button press=recordDetected buttonStyle="filled" disabled=(pending(opened) or pending(started) or micDenied) testId="detected-record"
+                        image "symbol:microphone"
+                        text "Record"
+                      button press=dismissDetected testId="detected-dismiss"
+                        text "Not now"
                   RecordCard(recording=recording, opening=(pending(opened) or pending(started)), denied=micDenied,
                     available=mic.available, failure=startFailure, start=startRecording, openSystemSettings=openSystemSettings)
                   if failed(lib)
@@ -345,7 +461,8 @@ component Alona
                 column gap=6
                   text "Your notes" font="-exact-headline"
                   text "Markdown works here. Alona covers what you write first." font="-exact-footnote" color="text.muted"
-                  textarea value=recNotes input=editRecNotes markup="markdown" placeholder="- Topics, decisions, follow-ups"
+                  NotesToolbar(editor="record-notes-editor", at=(rec.duration / 1000), prefix="rec", stamp=stamp, mark=mark, heading=heading)
+                  textarea id="record-notes-editor" value=recNotes input=editRecNotes markup="markdown" placeholder="- Topics, decisions, follow-ups"
                     aria-label="Your notes" rows=10 testId="record-notes" min-height=220
         if e.name == "meeting"
           column navigationKey=`${e.id}` navigationScroll="meeting-scroll" position="absolute" inset=0
@@ -363,7 +480,7 @@ component Alona
                     text `${formatDate(detail.createdAt, time.utcOffset, "medium")} · ${formatTime(detail.createdAt, time.utcOffset, "short")} · ${lasted(detail.durationS)}`
                       font="-exact-footnote" color="text.muted" testId="detail-meta"
                   if detail.audio != ""
-                    audio src=detail.audio controls=true preload="metadata" width="100%" testId="player"
+                    audio src=detail.audio controls=true preload="metadata" timeupdate=heard width="100%" testId="player"
                   if setup.demo
                     text setup.demoNote font="-exact-footnote" color="ochre.ink" testId="detail-demo-note"
                   if working(detail.status)
@@ -393,9 +510,14 @@ component Alona
                     else
                       text (working(detail.status) ? "Notes appear here when the transcript is ready." : "No AI notes for this meeting.")
                         color="text.muted" testId="ai-empty"
+                      if not working(detail.status) and detail.segments.length > 0
+                        button press=regenerate buttonStyle="bordered" disabled=pending(retried) testId="write-notes"
+                          image "symbol:sparkles"
+                          text "Write notes"
                   if pane == "mine"
                     column gap=6
-                      textarea value=shownNotes input=editNote markup="markdown" placeholder="Write in Markdown"
+                      NotesToolbar(editor="my-notes-editor", at=heardAt, prefix="mine", stamp=stamp, mark=mark, heading=heading)
+                      textarea id="my-notes-editor" value=shownNotes input=editNote markup="markdown" placeholder="Write in Markdown"
                         aria-label="My notes" rows=12 min-height=260 testId="my-notes"
                       text (noteDirty ? "Saving…" : "Saved on this device") font="-exact-footnote" color="text.muted" testId="notes-state"
                   if pane == "transcript"
@@ -450,11 +572,101 @@ component Alona
                     TierDownload(tier=t, download=download(t.id), remove=removeTier(t.id))
                 footer
                   text "A lighter model uses less memory and battery. A larger one writes better notes."
+              if desk.foldersSupported
+                section
+                  header
+                    text "Meetings folder"
+                  row
+                    text folderLine flex=1 min-width=0 testId="folder-line"
+                  if not desk.folderReachable
+                    row
+                      text "The folder isn’t available. New meetings stay in Alona’s storage and move there when it’s back."
+                        color="clay.ink" font="-exact-footnote" flex=1 testId="folder-missing"
+                  button press=pickFolder disabled=folderBusy testId="choose-folder"
+                    text (folderBusy ? "Moving meetings…" : "Choose folder…")
+                  if desk.folder != ""
+                    button press=useAppStorage disabled=folderBusy testId="use-app-storage"
+                      text "Keep meetings in Alona’s storage"
+                  footer
+                    text (desk.waiting > 0 and desk.folder != "" ? `${desk.waiting} ${desk.waiting == 1 ? "meeting moves" : "meetings move"} there once processed.` : "Existing meetings move with your choice. Each meeting is a folder of plain files.")
+                      testId="folder-footer"
+                section
+                  header
+                    text "Recordings from the earlier Alona app"
+                  row
+                    text (not desk.legacyLooked ? "Not looked for yet." : desk.legacyCount == 0 ? "None found." : `${desk.legacyCount} found, ${desk.legacyNew} not imported yet.`) flex=1 testId="legacy-count"
+                  if desk.legacyFolder != ""
+                    row
+                      text desk.legacyFolder font="-exact-footnote" color="-exact-secondary-label" flex=1 min-width=0 testId="legacy-folder"
+                  if desk.legacyLooked
+                    button press=importOld disabled=(desk.legacyNew == 0 or pending(imported)) testId="import-legacy"
+                      text (pending(imported) ? "Importing…" : "Import")
+                  else
+                    button press=findLegacy testId="find-legacy"
+                      text "Find recordings"
+                  button press=pickLegacy testId="pick-legacy"
+                    text "Look in another folder…"
+                  footer
+                    text (importFailed ? `The import stopped (${importError}). Recordings already imported are kept.` : "Alona copies the audio, your notes, the transcript and the title. The original files are not changed.")
+                      testId="legacy-footer"
+              if desk.detectionSupported
+                section
+                  header
+                    text "Meeting detection"
+                  row
+                    text "Offer to record Zoom, Google Meet and Teams calls" flex=1
+                    input type="checkbox" role="switch" checked=detectOn change=setDetect aria-label="Meeting detection" testId="detect-switch"
+                  if detectOn and notices.available and notices.state != "granted"
+                    button press=askNotices disabled=(notices.state == "denied") testId="allow-notices"
+                      text (notices.state == "denied" ? "Notifications are off for Alona in System Settings" : "Also notify me")
+                  if detectOn and not desk.accessibility
+                    button press=openAccessibilityPrivacy testId="accessibility-settings"
+                      text "Find muted Zoom calls and Meet tab titles (Accessibility)…"
+                  footer
+                    text "Alona notices a meeting app using the microphone. Nothing about the call leaves this Mac."
+              if desk.captureSupported
+                section
+                  header
+                    text "System audio"
+                  row
+                    text "Record other people in the call" flex=1
+                    input type="checkbox" role="switch" checked=captureOn change=setCapture aria-label="Record system audio" testId="capture-switch"
+                  if desk.captureHealth == "silent"
+                    row
+                      text "The last recording heard no system audio. macOS may have System Audio Recording off for Alona."
+                        color="clay.ink" font="-exact-footnote" flex=1 testId="capture-silent"
+                    button press=openAudioPrivacy testId="capture-settings"
+                      text "Open Privacy settings…"
+                  footer
+                    text "Alona mixes what your Mac plays with your microphone. macOS asks once. Without it, Alona records your microphone only."
               section
                 header
                   text "Privacy"
                 footer
                   text "Recordings, transcripts and notes are stored and processed on this device. Alona only goes online to download models."
+      // Only macOS presents this as a menu bar item. Elsewhere it would be an ordinary button in the window.
+      if desk.mac
+        button -exact-menu="status" aria-label=(recording ? `Alona, recording ${clock(rec.duration / 1000)}` : "Alona")
+          popovertarget="status-menu" testId="status-item"
+          image (recording ? "symbol:stop-fill" : "symbol:waveform")
+          if recording
+            text clock(rec.duration / 1000) font-variant-numeric="tabular-nums"
+      column id="status-menu" popover="auto" role="menu" aria-label="Alona"
+        button disabled=true testId="status-line"
+          text statusLine
+        if recording
+          button press=stopRecording disabled=pending(saved) testId="status-stop"
+            text "Stop recording"
+        else
+          button press=startRecording disabled=(pending(opened) or pending(started) or micDenied or not mic.available) testId="status-start"
+            text "Start recording"
+        button press=showWindow testId="status-open"
+          text "Open Alona"
+        hr
+        button press=quit testId="status-quit"
+          text "Quit Alona"
+      input id="folder-picker" display="none" change=folderPicked
+      input id="legacy-picker" display="none" change=legacyChosen
       dialog id="delete-meeting" role="alertdialog" aria-label="Delete this meeting?"
         text "Its recording, transcript and notes are removed from this device."
         button press=remove(aimed) destructive=true commandfor="delete-meeting" command="close" testId="delete-confirm"
@@ -522,6 +734,27 @@ component RecordCard
         text "Recording is not available on this device." font="-exact-footnote" color="text.muted" text-align="center" testId="mic-unavailable"
       else if failure != "" and not opening
         text `Recording didn’t start (${failure}).` font="-exact-footnote" color="clay.ink" text-align="center" testId="start-failed"
+
+// Each button edits the pad at its selection through the Markdown editor's own commands, so a
+// bullet or a task is list syntax the editor continues on Return. A timestamp has no command.
+component NotesToolbar
+  props
+    editor: string
+    at: number
+    prefix: string
+    stamp: action
+    mark: action
+    heading: action
+  view
+    row role="group" aria-label="Notes formatting" gap=4 flex-wrap="wrap" testId=`${prefix}-toolbar`
+      button press=stamp(editor, at) retainFocus=true aria-label=`Insert timestamp ${clock(at)}` testId=`${prefix}-stamp`
+        text `[${clock(at)}]` font-variant-numeric="tabular-nums"
+      button press=mark(editor, "bullet") retainFocus=true aria-label="Bullet" testId=`${prefix}-bullet`
+        image "symbol:list"
+      button press=mark(editor, "task") retainFocus=true aria-label="Action item" testId=`${prefix}-task`
+        image "symbol:checkmark"
+      button press=heading(editor) retainFocus=true aria-label="Heading" testId=`${prefix}-heading`
+        text "H"
 
 component StatusChip
   props

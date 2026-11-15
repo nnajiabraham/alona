@@ -8,7 +8,8 @@
   },
   "dependencies": {
     "@exact/media-capture": "file:../exact/packages/media-capture",
-    "@exact/recording": "file:../exact/packages/recording"
+    "@exact/recording": "file:../exact/packages/recording",
+    "@exact/notifications": "file:../exact/packages/notifications"
   },
   "devDependencies": {
     "typescript": "5.9.3"

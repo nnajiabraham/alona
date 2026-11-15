@@ -1,0 +1,82 @@
+clock data
+  {"epoch":5,"settled":true,"incarnation":1,"clock":0}
+tap continue
+  {"delivery":"platform","tapped":28,"at":[210,832],"target":"continue","carrier":"macos","mode":"agent","epoch":6,"incarnation":1,"clock":0}
+clock data
+  {"clock":0,"incarnation":1,"epoch":6,"settled":true}
+clock +6000
+  {"clock":6000,"epoch":11,"incarnation":1}
+clock data
+  {"settled":true,"incarnation":1,"clock":6000,"epoch":11}
+state statusItems.0.testId
+  "status-item"
+state statusItems.0.menu.0.label
+  "Ready to record"
+screenshot docs/media/macos/menubar/01-ready.png
+  {"h":900,"w":420,"clock":6000,"incarnation":1,"epoch":11,"screenshot":"docs/media/macos/menubar/01-ready.png","scale":1}
+close
+  {"native":"NSWindow.performClose","clock":6000,"incarnation":1,"epoch":11,"closed":true,"delivery":"platform-window","carrier":"macos"}
+clock data
+  {"clock":6000,"incarnation":1,"epoch":11,"settled":true}
+state statusItems.0.menu.1.label
+  "Start recording"
+tap status-item
+  {"menu":["Alona","Ready to record","Start recording","Open Alona","—","Quit Alona"],"delivery":"host-activation","native":"NSStatusItem","tapped":52,"target":"status-item","carrier":"macos","mode":"agent","epoch":11,"incarnation":1,"clock":6000}
+clock settle
+  {"clock":6000,"epoch":11,"incarnation":1,"settled":true}
+tap status-start
+  {"tapped":35,"delivery":"host-activation","native":"NSMenuItem","target":"status-start","carrier":"macos","mode":"agent","epoch":12,"incarnation":1,"clock":6000}
+clock data
+  {"clock":6000,"settled":true,"incarnation":1,"epoch":16}
+clock settle
+  {"settled":true,"incarnation":1,"clock":6000,"epoch":16}
+clock +4000
+  {"clock":10000,"epoch":18,"incarnation":1}
+clock data
+  {"epoch":18,"clock":10000,"settled":true,"incarnation":1}
+state rec.state
+  "recording"
+state statusLine
+  "Recording · 0:04"
+state statusItems.0.menu.1.label
+  "Stop recording"
+tap status-item
+  {"delivery":"host-activation","tapped":52,"menu":["Alona","Recording · 0:04","Stop recording","Open Alona","—","Quit Alona"],"native":"NSStatusItem","target":"status-item","carrier":"macos","mode":"agent","epoch":18,"incarnation":1,"clock":10000}
+clock settle
+  {"settled":true,"incarnation":1,"clock":10000,"epoch":18}
+tap status-stop
+  {"tapped":124,"native":"NSMenuItem","delivery":"host-activation","target":"status-stop","carrier":"macos","mode":"agent","epoch":19,"incarnation":1,"clock":10000}
+clock data
+  {"epoch":24,"clock":10000,"settled":true,"incarnation":1}
+clock settle
+  {"epoch":24,"clock":10000,"settled":true,"incarnation":1}
+clock +3000
+  {"incarnation":1,"inflight":1,"clock":13000,"background":1,"epoch":29,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+clock data
+  {"incarnation":1,"settled":true,"clock":13000,"epoch":31}
+state lib.length
+  1
+state statusLine
+  "Writing notes…"
+tap status-item
+  {"native":"NSStatusItem","delivery":"host-activation","menu":["Alona","Writing notes…","Start recording","Open Alona","—","Quit Alona"],"tapped":52,"target":"status-item","carrier":"macos","mode":"agent","epoch":31,"incarnation":1,"clock":13000}
+clock settle
+  {"clock":13000,"settled":true,"epoch":31,"incarnation":1}
+tap status-open
+  {"tapped":37,"native":"NSMenuItem","delivery":"host-activation","target":"status-open","carrier":"macos","mode":"agent","epoch":31,"incarnation":1,"clock":13000}
+clock data
+  {"incarnation":1,"epoch":31,"clock":13000,"settled":true}
+clock settle
+  {"incarnation":1,"epoch":31,"clock":13000,"settled":true}
+screenshot docs/media/macos/menubar/02-opened-from-menu-bar.png
+  {"clock":13000,"w":420,"epoch":31,"screenshot":"docs/media/macos/menubar/02-opened-from-menu-bar.png","h":900,"incarnation":1,"scale":1}
+clock +12000
+  {"incarnation":1,"clock":25000,"epoch":39}
+clock data
+  {"clock":25000,"settled":true,"epoch":39,"incarnation":1}
+state statusLine
+  "Ready to record"
+state lib.0.status
+  "done"
+screenshot docs/media/macos/menubar/03-done-while-hidden.png
+  {"h":900,"w":420,"screenshot":"docs/media/macos/menubar/03-done-while-hidden.png","clock":25000,"epoch":39,"incarnation":1,"scale":1}

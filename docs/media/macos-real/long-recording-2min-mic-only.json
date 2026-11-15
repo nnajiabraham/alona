@@ -1,0 +1,15 @@
+{
+  "host": "macos",
+  "date": "2026-11-15T02:14:45.822Z",
+  "minutes": 2,
+  "method": "physical footprint of the app process (proc_pid_rusage), sampled every 500 ms; one figure per minute of recording, and the peak from Stop until the meeting is done (the mix runs then)",
+  "footprintMBPerMinute": [
+    47,
+    48,
+    59
+  ],
+  "peakAfterStopMB": 1240,
+  "mixSeconds": 120,
+  "audio": "app:/data/meetings/m1767225606000/audio.wav",
+  "failures": []
+}
