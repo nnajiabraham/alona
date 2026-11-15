@@ -41,6 +41,7 @@ Alona is a private meeting assistant. It records a meeting, transcribes it with 
 | `modules/apple/` | The Swift inference engine for macOS and iOS |
 | `modules/web/`, `engine/web/` | The web engine's seam and its Worker source |
 | `clinic/`, `tenants/` | The clinical app's view and logic, and one typed config file per tenant (`tenants/README.md`) |
+| `ui/` | View components both apps share, such as the notes pad with its formatting toolbar |
 | `desktop/` | The Electron shell for the Windows and Linux packages |
 | `tools/` | Flow runner, real-model checks, model pinning, framework fetch, tenant and desktop builds, the Exact patch |
 | `docs/` | Field guide, captured media, research, spike reports, decision trail |

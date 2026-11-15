@@ -229,35 +229,35 @@ clock data
 state detail.status
   "done"
 tap pane-mine
-  {"at":[187.6484375,262],"tapped":161,"target":"pane-mine","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":192,"incarnation":1}
+  {"at":[187.6484375,262],"tapped":161,"target":"pane-mine","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":193,"incarnation":1}
 clock settle
   {"clock":23800,"settled":true}
 type my-notes Decisions
-  {"at":[195,484],"typed":172,"target":"my-notes","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":193,"incarnation":1}
+  {"at":[195,484],"typed":172,"target":"my-notes","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":194,"incarnation":1}
 tap mine-title
-  {"at":[325.515625,322],"tapped":186,"target":"mine-title","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":196,"incarnation":1}
+  {"at":[325.515625,322],"tapped":186,"target":"mine-title","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":197,"incarnation":1}
 clock data
   {"clock":23800,"settled":true}
 state noteDraft
   "## Decisions"
 tree mine-title
-  {"nodes":[{"id":186,"type":"Pressable","depth":8,"props":{"testId":"mine-title","accessibilityRole":"button","accessibilityLabel":"Title","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[187]},{"id":187,"type":"Text","depth":9,"props":{"text":"Title"},"children":[]}],"roots":[186],"clock":23800,"epoch":196,"incarnation":1}
+  {"nodes":[{"id":186,"type":"Pressable","depth":8,"props":{"testId":"mine-title","accessibilityRole":"button","accessibilityLabel":"Title","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[187]},{"id":187,"type":"Text","depth":9,"props":{"text":"Title"},"children":[]}],"roots":[186],"clock":23800,"epoch":197,"incarnation":1}
 tap mine-plain
-  {"at":[349.0234375,322],"tapped":190,"target":"mine-plain","scrolled":{"from":[465.0234375,322],"to":[349.0234375,322]},"delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":199,"incarnation":1}
+  {"at":[349.0234375,322],"tapped":190,"target":"mine-plain","scrolled":{"from":[465.0234375,322],"to":[349.0234375,322]},"delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":200,"incarnation":1}
 clock data
   {"clock":23800,"settled":true}
 state noteDraft
   "Decisions"
 tap mine-ordered
-  {"at":[321.5625,322],"tapped":196,"target":"mine-ordered","scrolled":{"from":[535.5625,322],"to":[321.5625,322]},"delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":202,"incarnation":1}
+  {"at":[321.5625,322],"tapped":196,"target":"mine-ordered","scrolled":{"from":[535.5625,322],"to":[321.5625,322]},"delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":203,"incarnation":1}
 clock data
   {"clock":23800,"settled":true}
 state noteDraft
   "1. Decisions"
 tree mine-ordered
-  {"nodes":[{"id":196,"type":"Pressable","depth":8,"props":{"testId":"mine-ordered","accessibilityRole":"button","accessibilityLabel":"Numbered list","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[197,198]},{"id":197,"type":"Text","depth":9,"props":{"text":"1.","accessibilityElementsHidden":true},"children":[]},{"id":198,"type":"Text","depth":9,"props":{"text":"Numbers"},"children":[]}],"roots":[196],"clock":23800,"epoch":202,"incarnation":1}
+  {"nodes":[{"id":196,"type":"Pressable","depth":8,"props":{"testId":"mine-ordered","accessibilityRole":"button","accessibilityLabel":"Numbered list","accessibilityPressed":"true","type":"button"},"handlers":["press"],"children":[197,198]},{"id":197,"type":"Text","depth":9,"props":{"text":"1.","accessibilityElementsHidden":true},"children":[]},{"id":198,"type":"Text","depth":9,"props":{"text":"Numbers"},"children":[]}],"roots":[196],"clock":23800,"epoch":203,"incarnation":1}
 screenshot docs/media/web-phone/toolbar/13-my-notes-numbered.png
-  {"clock":23800,"epoch":202,"incarnation":1,"screenshot":"docs/media/web-phone/toolbar/13-my-notes-numbered.png","w":390,"h":844}
+  {"clock":23800,"epoch":203,"incarnation":1,"screenshot":"docs/media/web-phone/toolbar/13-my-notes-numbered.png","w":390,"h":844}
 clock +1500
   {"clock":25300}
 clock data

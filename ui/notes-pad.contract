@@ -62,7 +62,8 @@ component NotesPad
     focus(editor)
   view
     column gap=6 testId=`${prefix}-pad`
-      // Sticky, so the buttons stay on screen above the caret while a phone's keyboard is up.
+      // Sticky, so the buttons stay on screen above the caret while a phone's keyboard is up. The row
+      // scrolls sideways and does not wrap: wrapped, it grows tall at large text sizes and covers the pad.
       scroll position="sticky" top=0 z-index=1 width="100%" overflow-x="auto" overflow-y="hidden" background-color=ground
         testId=`${prefix}-toolbar-scroll`
         row role="group" aria-label="Formatting" gap=4 padding="4px 0" flex-wrap="nowrap" align-items="stretch" testId=`${prefix}-toolbar`

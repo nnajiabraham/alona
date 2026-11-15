@@ -1,5 +1,5 @@
 use EmptyState, Badge from "exact:content"
-use NotesPad from "./clinic/lib/notes-pad.contract"
+use NotesPad from "./ui/notes-pad.contract"
 use getUserMedia, stopTrack, microphoneStatus, MediaStream, MediaStreamTrack, MicrophoneStatus from "@exact/media-capture"
 use startMediaRecorder, stopMediaRecorder, mediaRecorderState, MediaRecorderInfo, RecordedMedia from "@exact/recording"
 use showNotification, closeNotification, notificationStatus, requestNotificationPermission, notificationclick, NotificationStatus, NotificationEvent, NotificationAction from "@exact/notifications"

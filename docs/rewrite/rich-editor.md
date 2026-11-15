@@ -9,7 +9,7 @@ This change has two parts:
 
 ## 1. The formatting toolbar
 
-One component, `NotesPad` in `clinic/lib/notes-pad.contract`, draws the editor, the toolbar above it, and a hint line under it. Five pads use it:
+One component, `NotesPad` in `ui/notes-pad.contract`, draws the editor, the toolbar above it, and a hint line under it. Five pads use it:
 
 | App | Pad | Button testIds |
 |---|---|---|
@@ -19,7 +19,7 @@ One component, `NotesPad` in `clinic/lib/notes-pad.contract`, draws the editor, 
 | Clinic | Draft editor | `draft-*` |
 | Clinic | Jottings pane | `jot-*` |
 
-The file lives under `clinic/lib` because `tools/tenant.mjs` copies that folder into every tenant build at the same relative path. That way `use NotesPad from "./clinic/lib/notes-pad.contract"` resolves the same in both apps. A neutral folder such as `ui/` would read better, but it needs a one-line change in `tools/tenant.mjs`, which is outside this change's scope.
+The file lives in `ui/`, which `tools/tenant.mjs` copies into every tenant build, so both apps import it from the same relative path.
 
 ### Buttons and the commands behind them
 

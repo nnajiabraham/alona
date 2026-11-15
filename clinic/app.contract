@@ -4,7 +4,7 @@
 // brand comes from the tenant (loadBrand); every colour from app.tamber,
 // which tools/tenant.mjs writes from the tenant file.
 use EmptyState, Badge from "exact:content"
-use NotesPad from "./clinic/lib/notes-pad.contract"
+use NotesPad from "./ui/notes-pad.contract"
 use getUserMedia, stopTrack, microphoneStatus, MediaStream, MediaStreamTrack, MicrophoneStatus from "@exact/media-capture"
 use startMediaRecorder, stopMediaRecorder, mediaRecorderState, MediaRecorderInfo, RecordedMedia from "@exact/recording"
 

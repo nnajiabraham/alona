@@ -1,4 +1,4 @@
-// The notes pad's flow steps (clinic/lib/notes-pad.contract), shared by tools/flows.mjs and
+// The notes pad's flow steps (ui/notes-pad.contract), shared by tools/flows.mjs and
 // tools/clinic-flows.mjs: every formatting button on real text, the Markdown it stores, and
 // the active state the toolbar shows.
 
