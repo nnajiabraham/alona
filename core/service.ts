@@ -23,8 +23,6 @@ export interface TierView {
 
 export interface SetupView {
   ready: boolean;
-  /** The host the engine reports, `macos`, `ios`, `android` or `web`. */
-  host: string;
   demo: boolean;
   /** Why the demo engine is in use, shown wherever sample content appears. Empty with a real engine. */
   demoNote: string;
@@ -224,7 +222,6 @@ export function service(engine: Engine, store: MeetingStore, demoNote: string, o
       const current = tiers.find((t) => t.id === active);
       return {
         ready: true,
-        host: d.host,
         demo,
         demoNote,
         deviceLine: deviceLine(d),

@@ -1,33 +1,33 @@
 clock data
-  {"clock":0,"settled":true,"incarnation":1,"epoch":4}
+  {"settled":true,"clock":0,"incarnation":1,"epoch":5}
 tap continue
-  {"tapped":28,"at":[210,832],"delivery":"platform","target":"continue","carrier":"macos","mode":"agent","epoch":5,"incarnation":1,"clock":0}
+  {"tapped":28,"delivery":"platform","at":[210,832],"target":"continue","carrier":"macos","mode":"agent","epoch":6,"incarnation":1,"clock":0}
 clock data
-  {"incarnation":1,"epoch":5,"settled":true,"clock":0}
+  {"epoch":6,"incarnation":1,"clock":0,"settled":true}
 clock +6000
-  {"epoch":10,"incarnation":1,"clock":6000}
+  {"clock":6000,"epoch":11,"incarnation":1}
 clock data
-  {"clock":6000,"epoch":10,"settled":true,"incarnation":1}
+  {"incarnation":1,"epoch":11,"clock":6000,"settled":true}
 tap open-settings
-  {"tapped":57,"at":[384,21],"delivery":"platform","target":"open-settings","carrier":"macos","mode":"agent","epoch":11,"incarnation":1,"clock":6000}
+  {"delivery":"platform","tapped":57,"at":[384,21],"target":"open-settings","carrier":"macos","mode":"agent","epoch":12,"incarnation":1,"clock":6000}
 clock data
-  {"clock":6000,"settled":true,"epoch":11,"incarnation":1}
+  {"epoch":12,"clock":6000,"incarnation":1,"settled":true}
 clock settle
-  {"settled":true,"incarnation":1,"epoch":11,"clock":6000}
+  {"settled":true,"clock":6000,"epoch":12,"incarnation":1}
 state desk.legacyLooked
   false
 screenshot docs/media/macos/migration/01-not-looked-yet.png
-  {"w":420,"screenshot":"docs/media/macos/migration/01-not-looked-yet.png","incarnation":1,"clock":6000,"epoch":11,"h":900,"scale":1}
+  {"h":900,"screenshot":"docs/media/macos/migration/01-not-looked-yet.png","w":420,"clock":6000,"epoch":12,"incarnation":1,"scale":1}
 tap pick-legacy
-  {"at":[210,469],"delivery":"platform","tapped":160,"target":"pick-legacy","scrolled":{"from":[210,935],"to":[210,469]},"carrier":"macos","mode":"agent","epoch":11,"incarnation":1,"clock":6000}
+  {"tapped":160,"delivery":"platform","at":[210,469],"target":"pick-legacy","scrolled":{"from":[210,935],"to":[210,469]},"carrier":"macos","mode":"agent","epoch":12,"incarnation":1,"clock":6000}
 clock settle
-  {"tickets":[28],"clock":6000,"epoch":12,"incarnation":1,"settled":false,"reason":"device","diagnostic":"clock settle stops at held device requests (@28); state shows them under pending; answer with tap @N <choice> or type @N <value>"}
-type @legacy-picker /var/folders/h1/8vs1fjpx751cq7y7d5kcr9s80000gn/T/alona-flows/flow-migration-1794706861265/Swift Alona
-  {"node":43,"delivery":"substituted","ticket":28,"capability":"open-directory","answered":"value","epoch":12,"incarnation":1,"clock":6000}
+  {"tickets":[29],"reason":"device","incarnation":1,"settled":false,"epoch":13,"clock":6000,"diagnostic":"clock settle stops at held device requests (@29); state shows them under pending; answer with tap @N <choice> or type @N <value>"}
+type @legacy-picker /var/folders/h1/8vs1fjpx751cq7y7d5kcr9s80000gn/T/alona-flows/flow-migration-1794707364335/Swift Alona
+  {"capability":"open-directory","ticket":29,"answered":"value","node":43,"delivery":"substituted","epoch":13,"incarnation":1,"clock":6000}
 clock data
-  {"settled":true,"incarnation":1,"epoch":13,"clock":6000}
+  {"incarnation":1,"settled":true,"epoch":14,"clock":6000}
 clock settle
-  {"settled":true,"clock":6000,"incarnation":1,"epoch":13}
+  {"clock":6000,"settled":true,"incarnation":1,"epoch":14}
 state desk.legacyLooked
   true
 state desk.legacyCount
@@ -35,31 +35,31 @@ state desk.legacyCount
 state desk.legacyNew
   2
 screenshot docs/media/macos/migration/02-found.png
-  {"incarnation":1,"epoch":13,"h":900,"w":420,"clock":6000,"screenshot":"docs/media/macos/migration/02-found.png","scale":1}
+  {"screenshot":"docs/media/macos/migration/02-found.png","epoch":14,"incarnation":1,"h":900,"w":420,"clock":6000,"scale":1}
 tap import-legacy
-  {"tapped":192,"at":[210,442],"delivery":"platform","target":"import-legacy","carrier":"macos","mode":"agent","epoch":14,"incarnation":1,"clock":6000}
+  {"tapped":192,"delivery":"platform","at":[210,442],"target":"import-legacy","carrier":"macos","mode":"agent","epoch":15,"incarnation":1,"clock":6000}
 clock data
-  {"settled":true,"incarnation":1,"epoch":17,"clock":6000}
+  {"clock":6000,"settled":true,"incarnation":1,"epoch":18}
 clock settle
-  {"clock":6000,"incarnation":1,"epoch":17,"settled":true}
+  {"incarnation":1,"settled":true,"epoch":18,"clock":6000}
 clock +1000
-  {"incarnation":1,"epoch":17,"background":1,"inflight":1,"clock":7000,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+  {"inflight":1,"background":1,"clock":7000,"epoch":18,"incarnation":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
 clock data
-  {"settled":true,"incarnation":1,"epoch":18,"clock":7000}
+  {"clock":7000,"epoch":19,"settled":true,"incarnation":1}
 state desk.legacyNew
   0
 screenshot docs/media/macos/migration/03-imported.png
-  {"incarnation":1,"epoch":18,"h":900,"w":420,"screenshot":"docs/media/macos/migration/03-imported.png","clock":7000,"scale":1}
+  {"incarnation":1,"clock":7000,"epoch":19,"screenshot":"docs/media/macos/migration/03-imported.png","w":420,"h":900,"scale":1}
 back
-  {"delivery":"platform","back":"route","carrier":"macos","epoch":19,"incarnation":1,"clock":7000}
+  {"delivery":"platform","back":"route","carrier":"macos","epoch":20,"incarnation":1,"clock":7000}
 clock data
-  {"clock":7000,"settled":true,"epoch":19,"incarnation":1}
+  {"epoch":20,"incarnation":1,"settled":true,"clock":7000}
 clock settle
-  {"settled":true,"incarnation":1,"clock":7000,"epoch":19}
+  {"epoch":20,"incarnation":1,"settled":true,"clock":7000}
 clock +12000
-  {"incarnation":1,"epoch":25,"clock":19000}
+  {"clock":19000,"incarnation":1,"epoch":26}
 clock data
-  {"incarnation":1,"clock":19000,"epoch":25,"settled":true}
+  {"settled":true,"clock":19000,"incarnation":1,"epoch":26}
 state lib.length
   2
 state lib.0.title
@@ -67,36 +67,36 @@ state lib.0.title
 state lib.1.title
   "Product sync"
 screenshot docs/media/macos/migration/04-library.png
-  {"w":420,"incarnation":1,"epoch":25,"clock":19000,"screenshot":"docs/media/macos/migration/04-library.png","h":900,"scale":1}
+  {"h":900,"screenshot":"docs/media/macos/migration/04-library.png","clock":19000,"w":420,"incarnation":1,"epoch":26,"scale":1}
 tap "Product sync"
-  {"at":[165.5,336],"delivery":"platform","tapped":205,"target":"Product sync","carrier":"macos","mode":"agent","epoch":26,"incarnation":1,"clock":19000}
+  {"at":[165.5,336],"delivery":"platform","tapped":205,"target":"Product sync","carrier":"macos","mode":"agent","epoch":27,"incarnation":1,"clock":19000}
 clock data
-  {"clock":19000,"epoch":27,"incarnation":1,"settled":true}
+  {"clock":19000,"epoch":28,"settled":true,"incarnation":1}
 clock settle
-  {"incarnation":1,"epoch":27,"clock":19000,"settled":true}
+  {"clock":19000,"epoch":28,"settled":true,"incarnation":1}
 state detail.status
   "done"
 state detail.userNotes
   "- Ask about pricing"
 tap pane-transcript
-  {"native":"segmented-control","delivery":"host-activation","tapped":230,"target":"pane-transcript","carrier":"macos","mode":"agent","epoch":28,"incarnation":1,"clock":19000}
+  {"native":"segmented-control","delivery":"host-activation","tapped":230,"target":"pane-transcript","carrier":"macos","mode":"agent","epoch":29,"incarnation":1,"clock":19000}
 clock settle
-  {"settled":true,"incarnation":1,"epoch":28,"clock":19000}
+  {"incarnation":1,"clock":19000,"epoch":29,"settled":true}
 screenshot docs/media/macos/migration/05-transcript.png
-  {"h":900,"epoch":28,"w":420,"clock":19000,"incarnation":1,"screenshot":"docs/media/macos/migration/05-transcript.png","scale":1}
+  {"screenshot":"docs/media/macos/migration/05-transcript.png","clock":19000,"h":900,"w":420,"incarnation":1,"epoch":29,"scale":1}
 tap pane-ai
-  {"delivery":"host-activation","tapped":226,"native":"segmented-control","target":"pane-ai","carrier":"macos","mode":"agent","epoch":29,"incarnation":1,"clock":19000}
+  {"native":"segmented-control","tapped":226,"delivery":"host-activation","target":"pane-ai","carrier":"macos","mode":"agent","epoch":30,"incarnation":1,"clock":19000}
 clock settle
-  {"epoch":29,"incarnation":1,"settled":true,"clock":19000}
+  {"incarnation":1,"settled":true,"epoch":30,"clock":19000}
 tap write-notes
-  {"delivery":"platform","tapped":244,"at":[210,293],"target":"write-notes","carrier":"macos","mode":"agent","epoch":31,"incarnation":1,"clock":19000}
+  {"delivery":"platform","at":[210,293],"tapped":244,"target":"write-notes","carrier":"macos","mode":"agent","epoch":31,"incarnation":1,"clock":19000}
 clock data
-  {"settled":true,"incarnation":1,"epoch":33,"clock":19000}
+  {"clock":19000,"incarnation":1,"epoch":34,"settled":true}
 clock +6000
-  {"clock":25000,"epoch":41,"incarnation":1}
+  {"clock":25000,"epoch":42,"incarnation":1}
 clock data
-  {"clock":25000,"settled":true,"epoch":41,"incarnation":1}
+  {"incarnation":1,"clock":25000,"epoch":42,"settled":true}
 state detail.status
   "done"
 screenshot docs/media/macos/migration/06-notes-written.png
-  {"screenshot":"docs/media/macos/migration/06-notes-written.png","h":900,"incarnation":1,"clock":25000,"epoch":41,"w":420,"scale":1}
+  {"incarnation":1,"epoch":42,"clock":25000,"screenshot":"docs/media/macos/migration/06-notes-written.png","w":420,"h":900,"scale":1}

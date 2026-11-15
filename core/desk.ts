@@ -5,6 +5,8 @@ import type { CaptureHealth, Detected, System } from './system';
 
 /** What Settings shows about the folder, the Swift app's recordings, detection and system audio. */
 export interface DeskView {
+  /** The macOS module answers: the menu bar item and detection are shown. */
+  mac: boolean;
   foldersSupported: boolean;
   folder: string;
   folderReachable: boolean;
@@ -59,6 +61,7 @@ export function desk(system: System, lib: Library, resolve: (chosen: string) => 
       const looked = facts.folders && (look || picked !== '');
       const { folder: lf, found } = looked ? await legacy(utcOffset) : { folder: facts.folders ? facts.legacyFolder : '', found: [] };
       return {
+        mac: facts.folders,
         foldersSupported: folder.supported,
         folder: folder.folder,
         folderReachable: folder.reachable,

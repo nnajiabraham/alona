@@ -5,9 +5,9 @@ state setup.ready
 state welcomed
   false
 screenshot docs/media/web/onboarding/01-device-check.png
-  {"clock":0,"epoch":14,"incarnation":1,"screenshot":"docs/media/web/onboarding/01-device-check.png","w":1100,"h":760}
+  {"clock":0,"epoch":15,"incarnation":1,"screenshot":"docs/media/web/onboarding/01-device-check.png","w":1100,"h":760}
 tap continue
-  {"at":[550,674],"tapped":28,"target":"continue","delivery":"platform","carrier":"web","mode":"agent","clock":0,"epoch":19,"incarnation":1}
+  {"at":[550,674],"tapped":28,"target":"continue","delivery":"platform","carrier":"web","mode":"agent","clock":0,"epoch":20,"incarnation":1}
 clock data
   {"clock":0,"settled":true}
 state welcomed
@@ -15,7 +15,7 @@ state welcomed
 state setup.activeDownloading
   true
 screenshot docs/media/web/onboarding/02-downloading-models.png
-  {"clock":0,"epoch":19,"incarnation":1,"screenshot":"docs/media/web/onboarding/02-downloading-models.png","w":1100,"h":760}
+  {"clock":0,"epoch":20,"incarnation":1,"screenshot":"docs/media/web/onboarding/02-downloading-models.png","w":1100,"h":760}
 clock +6000
   {"clock":6000}
 clock data
@@ -23,4 +23,4 @@ clock data
 state setup.activeInstalled
   true
 screenshot docs/media/web/onboarding/03-ready-to-record.png
-  {"clock":6000,"epoch":29,"incarnation":1,"screenshot":"docs/media/web/onboarding/03-ready-to-record.png","w":1100,"h":760}
+  {"clock":6000,"epoch":30,"incarnation":1,"screenshot":"docs/media/web/onboarding/03-ready-to-record.png","w":1100,"h":760}

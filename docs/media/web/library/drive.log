@@ -1,7 +1,7 @@
 clock data
   {"clock":0,"settled":true}
 tap continue
-  {"at":[550,674],"tapped":28,"target":"continue","delivery":"platform","carrier":"web","mode":"agent","clock":0,"epoch":17,"incarnation":1}
+  {"at":[550,674],"tapped":28,"target":"continue","delivery":"platform","carrier":"web","mode":"agent","clock":0,"epoch":18,"incarnation":1}
 clock data
   {"clock":0,"settled":true}
 clock +6000
@@ -9,19 +9,19 @@ clock +6000
 clock data
   {"clock":6000,"settled":true}
 tap start-recording
-  {"at":[550,198.59375],"tapped":52,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6000,"epoch":38,"incarnation":1}
+  {"at":[550,198.59375],"tapped":64,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6000,"epoch":39,"incarnation":1}
 clock data
   {"clock":6000,"settled":true}
 clock settle
   {"clock":6400,"settled":true}
 type record-title Launch sync
-  {"at":[550,341],"typed":78,"target":"record-title","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":44,"incarnation":1}
+  {"at":[550,320],"typed":90,"target":"record-title","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":46,"incarnation":1}
 type record-notes - Ask about the login fix
-  {"at":[550,530],"typed":62,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":45,"incarnation":1}
+  {"at":[550,551],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":47,"incarnation":1}
 clock +5000
   {"clock":11400}
 tap stop-recording
-  {"at":[550,273],"tapped":75,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":11400,"epoch":64,"incarnation":1}
+  {"at":[550,252],"tapped":87,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":11400,"epoch":66,"incarnation":1}
 clock data
   {"clock":11400,"settled":true}
 clock settle
@@ -31,7 +31,7 @@ clock +12000
 clock data
   {"clock":23800,"settled":true}
 back
-  {"history":-1,"delivery":"platform","back":"route","carrier":"web","clock":23800,"epoch":103,"incarnation":1}
+  {"history":-1,"delivery":"platform","back":"route","carrier":"web","clock":23800,"epoch":105,"incarnation":1}
 clock data
   {"clock":23800,"settled":true}
 clock settle
@@ -39,27 +39,27 @@ clock settle
 state lib.length
   1
 screenshot docs/media/web/library/01-meetings.png
-  {"clock":23800,"epoch":103,"incarnation":1,"screenshot":"docs/media/web/library/01-meetings.png","w":1100,"h":760}
+  {"clock":23800,"epoch":105,"incarnation":1,"screenshot":"docs/media/web/library/01-meetings.png","w":1100,"h":760}
 prefer prefers-color-scheme dark
-  {"media":{"display-mode":"browser","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","prefers-color-scheme":"dark","color-gamut":"srgb","dynamic-range":"standard","pointer":"fine","hover":"hover"},"clock":23800,"epoch":106,"incarnation":1}
+  {"media":{"display-mode":"browser","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","prefers-color-scheme":"dark","color-gamut":"srgb","dynamic-range":"standard","pointer":"fine","hover":"hover"},"clock":23800,"epoch":108,"incarnation":1}
 screenshot docs/media/web/library/02-meetings-dark.png
-  {"clock":23800,"epoch":106,"incarnation":1,"screenshot":"docs/media/web/library/02-meetings-dark.png","w":1100,"h":760}
+  {"clock":23800,"epoch":108,"incarnation":1,"screenshot":"docs/media/web/library/02-meetings-dark.png","w":1100,"h":760}
 prefer prefers-color-scheme light
-  {"media":{"display-mode":"browser","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","prefers-color-scheme":"light","color-gamut":"srgb","dynamic-range":"standard","pointer":"fine","hover":"hover"},"clock":23800,"epoch":109,"incarnation":1}
+  {"media":{"display-mode":"browser","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","prefers-color-scheme":"light","color-gamut":"srgb","dynamic-range":"standard","pointer":"fine","hover":"hover"},"clock":23800,"epoch":111,"incarnation":1}
 tap "Launch sync"
-  {"at":[502.8671875,302.59375],"tapped":88,"target":"Launch sync","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":111,"incarnation":1}
+  {"at":[502.8671875,302.59375],"tapped":111,"target":"Launch sync","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":113,"incarnation":1}
 clock data
   {"clock":23800,"settled":true}
 clock settle
   {"clock":23800,"settled":true}
 tap delete-meeting
-  {"at":[1066,26],"tapped":97,"target":"delete-meeting","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":112,"incarnation":1}
+  {"at":[1066,26],"tapped":122,"target":"delete-meeting","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":114,"incarnation":1}
 clock settle
   {"clock":23800,"settled":true}
 screenshot docs/media/web/library/03-confirm-delete.png
-  {"clock":23800,"epoch":112,"incarnation":1,"screenshot":"docs/media/web/library/03-confirm-delete.png","w":1100,"h":760}
+  {"clock":23800,"epoch":114,"incarnation":1,"screenshot":"docs/media/web/library/03-confirm-delete.png","w":1100,"h":760}
 tap delete-confirm
-  {"at":[455,424.5],"tapped":36,"target":"delete-confirm","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":117,"incarnation":1}
+  {"at":[455,424.5],"tapped":48,"target":"delete-confirm","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":119,"incarnation":1}
 clock data
   {"clock":23800,"settled":true}
 clock settle
@@ -67,4 +67,4 @@ clock settle
 state lib.length
   0
 screenshot docs/media/web/library/04-deleted.png
-  {"clock":23800,"epoch":117,"incarnation":1,"screenshot":"docs/media/web/library/04-deleted.png","w":1100,"h":760}
+  {"clock":23800,"epoch":119,"incarnation":1,"screenshot":"docs/media/web/library/04-deleted.png","w":1100,"h":760}

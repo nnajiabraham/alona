@@ -29,7 +29,6 @@ shape TierView
 
 shape Setup
   ready: bool
-  host: string
   demo: bool
   demoNote: string
   deviceLine: string
@@ -78,6 +77,7 @@ shape Reply
   error: string
 
 shape DeskView
+  mac: bool
   foldersSupported: bool
   folder: string
   folderReachable: bool
@@ -142,7 +142,7 @@ component Alona
   derive selected = match stack(nav).filter(e => e.name == "meeting").at(-1) { case some(e) => e.params.id, case none => "" }
   resource detail = loadMeeting(selected) when selected != "" as shape MeetingDetail else empty()
   resource desk = loadDesk(time.utcOffset, legacyLook) as shape DeskView else empty()
-  resource meet = loadDetection(detectOn) when setup.host == "macos" as shape DetectionView else empty()
+  resource meet = loadDetection(detectOn) when desk.detectionSupported as shape DetectionView else empty()
   resource notices = notificationStatus() as shape NotificationStatus else empty(available=false, state="unknown", badge=false)
 
   mutation ticked as shape Tick refreshes lib, setup, detail
@@ -588,7 +588,7 @@ component Alona
                     button press=useAppStorage disabled=folderBusy testId="use-app-storage"
                       text "Keep meetings in Alona’s storage"
                   footer
-                    text (desk.waiting > 0 and desk.folder != "" ? `${desk.waiting} meetings move there once they’re processed.` : "Existing meetings move with your choice. Each meeting is a folder of plain files.")
+                    text (desk.waiting > 0 and desk.folder != "" ? `${desk.waiting} ${desk.waiting == 1 ? "meeting moves" : "meetings move"} there once processed.` : "Existing meetings move with your choice. Each meeting is a folder of plain files.")
                       testId="folder-footer"
                 section
                   header
@@ -645,7 +645,7 @@ component Alona
                 footer
                   text "Recordings, transcripts and notes are stored and processed on this device. Alona only goes online to download models."
       // Only macOS presents this as a menu bar item. Elsewhere it would be an ordinary button in the window.
-      if setup.host == "macos"
+      if desk.mac
         button -exact-menu="status" aria-label=(recording ? `Alona, recording ${clock(rec.duration / 1000)}` : "Alona")
           popovertarget="status-menu" testId="status-item"
           image (recording ? "symbol:stop-fill" : "symbol:waveform")
@@ -746,7 +746,7 @@ component NotesToolbar
     mark: action
     heading: action
   view
-    row role="toolbar" aria-label="Notes formatting" gap=4 flex-wrap="wrap" testId=`${prefix}-toolbar`
+    row role="group" aria-label="Notes formatting" gap=4 flex-wrap="wrap" testId=`${prefix}-toolbar`
       button press=stamp(editor, at) retainFocus=true aria-label=`Insert timestamp ${clock(at)}` testId=`${prefix}-stamp`
         text `[${clock(at)}]` font-variant-numeric="tabular-nums"
       button press=mark(editor, "bullet") retainFocus=true aria-label="Bullet" testId=`${prefix}-bullet`
