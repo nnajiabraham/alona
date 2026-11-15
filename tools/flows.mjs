@@ -14,7 +14,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readdirSync, readFileSync, realpathSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { homedir, tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
-import { check, formatSteps, forHost, padClean, padOp, pressed, shot, withKeys } from './pad-steps.mjs';
+import { check, forHost, formatSteps, padClean, padOp, pressed, shot, START, withKeys } from './pad-steps.mjs';
 
 const ROOT = resolve(dirname(new URL(import.meta.url).pathname), '..');
 const BUN = process.execPath;
@@ -33,7 +33,7 @@ const TARGETS = {
 const READY = ['clock data', 'tap continue', 'clock data', 'clock +6000', 'clock data'];
 const RECORDED = [
   ...READY,
-  'tap start-recording', 'clock data', 'clock settle',
+  ...START, 'clock data', 'clock settle',
   'type record-title Launch sync', 'type record-notes - Ask about the login fix',
   'clock +5000', 'tap stop-recording', 'clock data', 'clock settle', 'clock +12000', 'clock data',
 ];
@@ -46,7 +46,7 @@ const FLOWS = {
   ],
   record: [
     ...READY,
-    'tap start-recording', 'clock data', 'clock settle', check('rec.state', 'recording'), shot('recording-started'),
+    ...START, 'clock data', 'clock settle', check('rec.state', 'recording'), shot('recording-started'),
     'type record-title Launch sync', 'type record-notes - Ask about the login fix',
     'clock +5000', shot('notes-while-recording'),
     'tap stop-recording', 'clock data', 'clock settle', check('lib.0.status', 'recorded'), shot('saved-and-queued'),
@@ -76,7 +76,7 @@ const FLOWS = {
   // Leaving a screen by the platform's Back runs no action of the app's, so these two paths need their own proof.
   leaving: [
     ...READY,
-    'tap start-recording', 'clock data', 'clock settle', 'clock +3000', check('rec.state', 'recording'), shot('recording'),
+    ...START, 'clock data', 'clock settle', 'clock +3000', check('rec.state', 'recording'), shot('recording'),
     'back', 'clock data', 'clock settle', check('recorderId', ''), check('trackId', ''), check('lib.length', 1), shot('back-stopped-and-saved'),
     'clock +12000', 'clock data', check('detail.status', 'done'),
     'tap pane-mine', 'type my-notes ## Typed just before Back', 'back', 'clock data', 'clock +1500', 'clock data',
@@ -97,7 +97,7 @@ const FLOWS = {
   // selects it where the command works on a selection, presses one button and reads the stored Markdown.
   // The pads at the largest text size iOS offers (a 53 px root at a phone's width), each scrolled into view.
   'toolbar-large': [
-    ...READY, 'prefer root-font-size 53px', 'tap start-recording', 'clock data', 'clock settle',
+    ...READY, 'prefer root-font-size 53px', ...START, 'clock data', 'clock settle',
     'type record-notes - Agenda', 'tap rec-bold', 'clock settle', padClean('rec', 'record-notes'), shot('record-pad-large'),
     'prefer prefers-color-scheme dark', 'clock settle', shot('record-pad-large-dark'), 'prefer prefers-color-scheme light',
     'tap stop-recording', 'clock data', 'clock settle', 'clock +12000', 'clock data',
@@ -106,7 +106,7 @@ const FLOWS = {
   ],
   toolbar: [
     ...READY,
-    'tap start-recording', 'clock data', 'clock settle', shot('empty-pad'),
+    ...START, 'clock data', 'clock settle', shot('empty-pad'),
     ...formatSteps('rec', 'record-notes', 'recNotes'),
     'type record-notes Agenda', 'clock +5000', 'clock data', 'tap rec-stamp', 'clock data', check('recNotes', 'Agenda[0:05] '), shot('timestamp'),
     'tap stop-recording', 'clock data', 'clock settle', 'clock +12000', 'clock data', check('detail.status', 'done'),
@@ -242,7 +242,7 @@ const MAC_FLOWS = {
     steps: [
       ...READY, 'tap open-settings', 'clock data', 'clock settle', check('desk.captureSupported', true), check('captureOn', false), shot('off'),
       'tap capture-switch', 'clock data', 'clock settle', check('captureOn', true), shot('on'), 'back', 'clock data', 'clock settle',
-      'tap start-recording', 'clock data', 'clock settle', check('rec.state', 'recording'), 'clock +6000', 'clock data',
+      ...START, 'clock data', 'clock settle', check('rec.state', 'recording'), 'clock +6000', 'clock data',
       'tap stop-recording', 'clock data', 'clock settle', 'clock +12000', 'clock data', check('detail.status', 'done'), shot('mixed-meeting'),
       'back', 'clock data', 'tap open-settings', 'clock data', 'clock settle', check('desk.captureHealth', 'heard'), shot('heard'),
     ],

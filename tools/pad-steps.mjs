@@ -85,3 +85,11 @@ export function formatSteps(p, field, value) {
     ...fresh('Agenda'), ...select, `type ${field} key {boldKey}`, 'clock data', check(value, '**Agenda**'), pressed(`${p}-bold`, true), shot(`${p}-shortcut-bold`),
   ];
 }
+
+/**
+ * Starting a recording. Exact's Android agent holds the app's main thread for the whole of
+ * `clock data`, so a `clock data` that lands between the microphone opening and the recorder
+ * starting waits out its 20 s bound with the recorder never started. Waiting on the state first
+ * polls instead, and the recorder starts.
+ */
+export const START = ['tap start-recording', 'clock until state rec.state == "recording" within 15000'];

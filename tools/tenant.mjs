@@ -231,7 +231,11 @@ async function materialize(slug) {
   rmSync(join(app, 'lib'), { recursive: true, force: true });
   mirror(join(CLINIC, 'lib'), join(app, 'clinic', 'lib'), (name) => name.endsWith('.test.ts'));
   mirror(join(ROOT, 'ui'), join(app, 'ui'), () => false);
-  if (!existsSync(join(ROOT, 'modules', 'web', 'worker.js'))) fail('the web engine is not built: run `bun tools/build-web-engine.mjs`');
+  // The web engine's worker is a build product. Every tenant build carries modules/web, so make it when it is missing.
+  if (!existsSync(join(ROOT, 'modules', 'web', 'worker.js'))) {
+    const built = spawnSync(BUN, [join(ROOT, 'tools', 'build-web-engine.mjs')], { cwd: ROOT, stdio: 'inherit' });
+    if (built.status !== 0) fail('the web engine did not build: run `bun tools/build-web-engine.mjs` and read its output');
+  }
   mirror(join(ROOT, 'modules'), join(app, 'modules'), (name) => name.endsWith('.xcframework'));
   for (const name of ['exact.mjs', 'bun.lock', 'gradle.lockfile', 'gradle-verification.xml']) {
     if (existsSync(join(ROOT, name))) put(join(app, name), readFileSync(join(ROOT, name)));

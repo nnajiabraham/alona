@@ -14,7 +14,7 @@
 import { spawnSync } from 'node:child_process';
 import { mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
-import { formatSteps, forHost, padClean, padOp, pressed, withKeys } from './pad-steps.mjs';
+import { forHost, formatSteps, padClean, padOp, pressed, START, withKeys } from './pad-steps.mjs';
 
 const ROOT = resolve(dirname(new URL(import.meta.url).pathname), '..');
 const BUN = process.execPath;
@@ -42,7 +42,7 @@ function flows(tenant) {
   const READY = ['clock data', 'tap continue', 'clock data', 'clock +6000', 'clock data'];
   const RECORDED = [
     ...READY,
-    'tap new-note-button', 'clock settle', 'type new-ref Bed 4', `tap template-${second.id}`, 'clock settle', 'tap start-recording',
+    'tap new-note-button', 'clock settle', 'type new-ref Bed 4', `tap template-${second.id}`, 'clock settle', ...START,
     'clock data', 'clock settle', 'type record-jottings - L knee, 2 weeks',
     'clock +5000', 'tap stop-recording', 'clock data', 'clock settle', 'clock +12000', 'clock data',
   ];
@@ -56,7 +56,7 @@ function flows(tenant) {
       ...READY,
       'tap new-note-button', 'clock settle', shot('new-note-sheet'),
       'type new-ref Bed 4', `tap template-${second.id}`, 'clock settle', shot('reference-and-template'),
-      'tap start-recording', 'clock data', 'clock settle', check('rec.state', 'recording'), check('recRef', 'Bed 4'),
+      ...START, 'clock data', 'clock settle', check('rec.state', 'recording'), check('recRef', 'Bed 4'),
       check('recTemplate', second.id), shot('recording-started'),
       'type record-jottings - L knee, 2 weeks', 'clock +5000', shot('jottings-while-recording'),
       'tap stop-recording', 'clock data', 'clock settle', check('lib.0.state', 'processing'), shot('saved-and-queued'),
@@ -93,7 +93,7 @@ function flows(tenant) {
     // Leaving a screen by the platform's Back runs no action of the app's, so these two paths need their own proof.
     leaving: [
       ...READY,
-      'tap new-note-button', 'clock settle', 'tap start-recording', 'clock data', 'clock settle', 'clock +3000',
+      'tap new-note-button', 'clock settle', ...START, 'clock data', 'clock settle', 'clock +3000',
       check('rec.state', 'recording'), shot('recording'),
       'back', 'clock data', 'clock settle', check('recorderId', ''), check('trackId', ''), check('lib.length', 1), shot('back-stopped-and-saved'),
       'clock +12000', 'clock data', check('detail.state', 'draft'),
@@ -105,7 +105,7 @@ function flows(tenant) {
     // Every formatting button on each pad: the jottings while recording, the draft, and the jottings on the note.
     toolbar: [
       ...READY,
-      'tap new-note-button', 'clock settle', 'type new-ref Bed 4', 'tap start-recording', 'clock data', 'clock settle', shot('jottings-pad'),
+      'tap new-note-button', 'clock settle', 'type new-ref Bed 4', ...START, 'clock data', 'clock settle', shot('jottings-pad'),
       ...(tenant.features.jottings ? formatSteps('rec', 'record-jottings', 'recJottings') : []),
       'clock +5000', 'tap stop-recording', 'clock data', 'clock settle', 'clock +12000', 'clock data', check('detail.state', 'draft'),
       'tap edit-note', 'clock settle', shot('draft-pad'),
@@ -120,7 +120,7 @@ function flows(tenant) {
     // The pads at the largest text size iOS offers (a 53 px root at a phone's width), light and dark.
     'toolbar-large': [
       ...READY, 'prefer root-font-size 53px',
-      'tap new-note-button', 'clock settle', 'tap start-recording', 'clock data', 'clock settle',
+      'tap new-note-button', 'clock settle', ...START, 'clock data', 'clock settle',
       ...(tenant.features.jottings
         ? ['type record-jottings - BP 120/80', 'tap rec-bold', 'clock settle', padClean('rec', 'record-jottings'), shot('jottings-large'),
           'prefer prefers-color-scheme dark', 'clock settle', shot('jottings-large-dark'), 'prefer prefers-color-scheme light']
@@ -132,7 +132,7 @@ function flows(tenant) {
     // A second document from one visit: the reviewed note stays as it was, the new one is an unreviewed draft in the other template.
     rewrite: [
       ...READY,
-      'tap new-note-button', 'clock settle', 'type new-ref Bed 4', `tap template-${first.id}`, 'clock settle', 'tap start-recording',
+      'tap new-note-button', 'clock settle', 'type new-ref Bed 4', `tap template-${first.id}`, 'clock settle', ...START,
       'clock data', 'clock settle', ...(tenant.features.jottings ? ['type record-jottings - L knee, 2 weeks'] : []),
       'clock +5000', 'tap stop-recording', 'clock data', 'clock settle', 'clock +12000', 'clock data',
       check('detail.state', 'draft'), check('detail.templateName', first.name),
