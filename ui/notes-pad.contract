@@ -1,11 +1,25 @@
 // The Markdown notes pad both apps use: a formatting toolbar over the editor, and a line
-// saying the buttons are optional. Every button is one of the editor's own commands, so the
-// value stays Markdown and each press is one undo step. The pad keeps the editor's selection
-// facts (`select`) to show which formats are on at the caret.
+// saying the buttons are optional. Where the host's editor runs `format` (the web, macOS, iOS),
+// every button is one of the editor's own commands, so the value stays Markdown and each press
+// is one undo step, and the pad keeps the editor's selection facts (`select`) to show which
+// formats are on at the caret. Where it does not (`ownFormat`: Android edits the source as plain
+// text), the pad reports the selection the field reports to the app's root, which holds it, asks
+// the data module (core/markdown.ts) for the formats there and for each command's edit, writes
+// the value back and restores the selection. A child owns no requests, so the root does.
 //
-// It lives under clinic/lib because tools/tenant.mjs copies that folder into every tenant
-// build at the same relative path, so `./clinic/lib/notes-pad.contract` names this file from
-// Alona's app.contract and from a tenant's.
+// It lives under ui/ because tools/tenant.mjs copies that folder into every tenant build at the
+// same relative path, so `./ui/notes-pad.contract` names this file from Alona's app.contract
+// and from a tenant's.
+
+shape PadEdit
+  value: string
+  start: number
+  end: number
+
+shape PadFormats
+  formats: string
+  link: string
+  unavailable: string
 
 component NotesPad
   props
@@ -22,31 +36,63 @@ component NotesPad
     ground: string
     // The text the timestamp button inserts, or "" for no timestamp button.
     stamp: string
-  state formats = ""
-  state unavailable = ""
-  state currentLink = ""
+    // True where the host's editor runs no `format`, so the app's root edits the Markdown source
+    // (core/markdown.ts) for the pad: the rest of these props are its side of that.
+    ownFormat: bool
+    // The editor whose selection the root holds, and the formats on there.
+    active: string
+    here: PadFormats
+    // report(editor, start, end): the selection the field reports, in UTF-16 offsets.
+    report: action
+    // ask(editor, value, command, argument): one toolbar command on the held selection.
+    ask: action
+  // The editor's own selection facts, where it runs `format`.
+  state seenFormats = ""
+  state seenUnavailable = ""
+  state seenLink = ""
+  derive mine = ownFormat and active == editor
+  derive formats = ownFormat ? (mine ? here.formats : "") : seenFormats
+  derive unavailable = ownFormat ? (mine ? here.unavailable : "") : seenUnavailable
+  derive currentLink = ownFormat ? (mine ? here.link : "") : seenLink
   state linkOpen = false
   state linkUrl = ""
   derive heading = ` ${formats} `.includes(" heading2 ") ? 2 : (` ${formats} `.includes(" heading3 ") ? 3 : 0)
   // The list or quote the caret's line is in, or "".
   derive block = ` ${formats} `.includes(" task ") ? "task" : (` ${formats} `.includes(" bullet ") ? "bullet" : (` ${formats} `.includes(" ordered ") ? "ordered" : (` ${formats} `.includes(" quote ") ? "quote" : "")))
   action selected(s: MarkdownSelection)
-    formats = s.formats
-    unavailable = s.unavailable
-    currentLink = s.link
+    seenFormats = s.formats
+    seenUnavailable = s.unavailable
+    seenLink = s.link
+  action typed(v: string, e: InputEvent)
+    edit(v)
+    report(editor, e.selectionStart, e.selectionEnd)
+  action moved(e: InputEvent)
+    report(editor, e.selectionStart, e.selectionEnd)
   action apply(command: string)
-    format(editor, command)
+    if ownFormat
+      ask(editor, value, command, "")
+    else
+      format(editor, command)
   action level(n: number)
-    format(editor, "heading", `${n}`)
+    if ownFormat
+      ask(editor, value, "heading", `${n}`)
+    else
+      format(editor, "heading", `${n}`)
   // Plain text is a line with no heading, list or quote. Each of those commands, repeated on a
   // line that already has it, takes it off.
   action plain
-    if heading != 0
-      format(editor, "heading", `${heading}`)
-    if block != ""
-      format(editor, block)
+    if ownFormat
+      ask(editor, value, "plain", "")
+    else
+      if heading != 0
+        format(editor, "heading", `${heading}`)
+      if block != ""
+        format(editor, block)
   action insertStamp
-    setRangeText(editor, stamp)
+    if ownFormat
+      ask(editor, value, "insert", stamp)
+    else
+      setRangeText(editor, stamp)
   action openLink
     linkOpen = true
     linkUrl = currentLink
@@ -54,7 +100,10 @@ component NotesPad
   action typeLink(v: string)
     linkUrl = v
   action applyLink
-    format(editor, "link", linkUrl.trim())
+    if ownFormat
+      ask(editor, value, "link", linkUrl.trim())
+    else
+      format(editor, "link", linkUrl.trim())
     linkOpen = false
     focus(editor)
   action cancelLink
@@ -98,7 +147,7 @@ component NotesPad
             text (currentLink == "" ? "Add link" : (linkUrl.trim() == "" ? "Remove link" : "Change link"))
           button press=cancelLink testId=`${prefix}-link-cancel`
             text "Cancel"
-      textarea id=editor value=value input=edit select=selected markup="markdown" placeholder=placeholder
+      textarea id=editor value=value input=typed selectionchange=moved select=selected markup="markdown" placeholder=placeholder
         aria-label=label rows=rows min-height=minHeight testId=field
       text "The buttons are optional. You can also type Markdown, such as **bold** or - for a list."
         font="-exact-footnote" color="text.muted" testId=`${prefix}-hint`

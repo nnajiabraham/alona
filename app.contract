@@ -1,5 +1,5 @@
 use EmptyState, Badge from "exact:content"
-use NotesPad from "./ui/notes-pad.contract"
+use NotesPad, PadEdit, PadFormats from "./ui/notes-pad.contract"
 use getUserMedia, stopTrack, microphoneStatus, MediaStream, MediaStreamTrack, MicrophoneStatus from "@exact/media-capture"
 use startMediaRecorder, stopMediaRecorder, mediaRecorderState, MediaRecorderInfo, RecordedMedia from "@exact/recording"
 use showNotification, closeNotification, notificationStatus, requestNotificationPermission, notificationclick, NotificationStatus, NotificationEvent, NotificationAction from "@exact/notifications"
@@ -134,6 +134,11 @@ component Alona
   state legacyLook = false persist
   state captureOn = false persist
   state dismissedKey = ""
+  // The notes pad that last reported its selection, and that selection, where the pad edits the
+  // Markdown itself (ui/notes-pad.contract, `ownFormat`).
+  state padField = ""
+  state padStart = 0
+  state padEnd = 0
   state noticedKey = ""
 
   resource time = exactTime() as shape Time
@@ -164,10 +169,15 @@ component Alona
   mutation imported as shape Reply refreshes desk, lib
   mutation captureStarted as shape Reply
   mutation noticesAsked as shape NotificationStatus refreshes notices
+  resource padHere = markdownFormats(padSource, padStart, padEnd) when padOwn and padField != "" as shape PadFormats else empty()
+  mutation padEdit as shape PadEdit then padLanded
 
   derive recording = recorderId != ""
-  // A timestamp is a setRangeText, which Exact's Android and Windows hosts do not run yet.
-  derive stamps = setup.host != "android" and setup.host != "windows"
+  // Android's editor runs no `format` or `setRangeText`, so its pads edit the Markdown themselves,
+  // timestamp included. Windows runs no setRangeText either, so it shows no timestamp.
+  derive padOwn = setup.host == "android"
+  derive stamps = setup.host != "windows"
+  derive padSource = padField == "my-notes-editor" ? shownNotes : recNotes
   derive micDenied = mic.state == "denied"
   derive startFailure = match failure(started) { case some(f) => f.code, case none => "" }
   derive anyWorking = lib.filter(m => working(m.status)).length > 0
@@ -309,6 +319,25 @@ component Alona
     recTitle = v
   action editRecNotes(v: string)
     recNotes = v
+  action padMoved(editor: string, start: number, end: number)
+    padField = editor
+    padStart = start
+    padEnd = end
+  action padAsk(editor: string, value: string, command: string, argument: string)
+    padField = editor
+    send padEdit = formatMarkdown(value, padStart, padEnd, command, argument)
+  action padLanded
+    match padEdit
+      case some(r)
+        if padField == "my-notes-editor"
+          editNote(r.value)
+        else
+          editRecNotes(r.value)
+        padStart = r.start
+        padEnd = r.end
+        setSelectionRange(padField, r.start, r.end)
+      case none
+        padField = padField
   action stopRecording
     if recording and not pending(saved)
       send saved = stopMediaRecorder(recorder=recorderId)
@@ -461,7 +490,8 @@ component Alona
                   text "Alona covers what you write first." font="-exact-footnote" color="text.muted"
                   NotesPad(editor="record-notes-editor", value=recNotes, edit=editRecNotes, label="Your notes",
                     placeholder="Topics, decisions, follow-ups", rows=10, minHeight=220, prefix="rec", field="record-notes", ground="-exact-background",
-                    stamp=(stamps ? `[${clock(rec.duration / 1000)}] ` : ""))
+                    stamp=(stamps ? `[${clock(rec.duration / 1000)}] ` : ""),
+                    ownFormat=padOwn, active=padField, here=padHere, report=padMoved, ask=padAsk)
         if e.name == "meeting"
           column navigationKey=`${e.id}` navigationScroll="meeting-scroll" position="absolute" inset=0
             display="flex" flex-direction="column"
@@ -516,7 +546,8 @@ component Alona
                     column gap=6
                       NotesPad(editor="my-notes-editor", value=shownNotes, edit=editNote, label="My notes",
                         placeholder="Write your notes", rows=12, minHeight=260, prefix="mine", field="my-notes", ground="surface.page",
-                        stamp=(stamps ? `[${clock(heardAt)}] ` : ""))
+                        stamp=(stamps ? `[${clock(heardAt)}] ` : ""),
+                        ownFormat=padOwn, active=padField, here=padHere, report=padMoved, ask=padAsk)
                       text (noteDirty ? "Saving…" : "Saved on this device") font="-exact-footnote" color="text.muted" testId="notes-state"
                   if pane == "transcript"
                     if not working(detail.status)

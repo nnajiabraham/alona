@@ -2,6 +2,7 @@ import { describe, expect, test } from 'bun:test';
 import { assess, effectiveTier } from './device';
 import type { Artifact, DeviceFacts } from './engine';
 import { parseJobView } from './engine';
+import { applyFormat, formatsAt } from './markdown';
 import { ALONA_NOTES, chatPrompt, finishNotes, planNotes, stepCount, stepRequest } from './notes';
 import { advance, isWorking, retranscribe, retry, type PipelineIO } from './pipeline';
 import { service } from './service';
@@ -633,5 +634,140 @@ describe('Android extension transport', () => {
   test('a failed job is a valid protocol reply', async () => {
     const reply = { id: 'a', state: 'failed', error: 'Cancelled.' };
     expect(await androidTransport(async () => ({ json: JSON.stringify(reply) }))({ op: 'job', job: 'a' })).toEqual(reply);
+  });
+});
+
+describe('the notes pad formatting the Markdown source itself', () => {
+  // `|` marks the selection: one for a caret, two around a range.
+  const at = (marked: string) => {
+    const a = marked.indexOf('|');
+    const b = marked.indexOf('|', a + 1);
+    const value = marked.replaceAll('|', '');
+    return { value, start: a, end: b < 0 ? a : b - 1 };
+  };
+  const show = (e: { value: string; start: number; end: number }) =>
+    e.start === e.end ? `${e.value.slice(0, e.start)}|${e.value.slice(e.start)}` : `${e.value.slice(0, e.start)}|${e.value.slice(e.start, e.end)}|${e.value.slice(e.end)}`;
+  const run = (marked: string, command: string, argument?: string) => {
+    const s = at(marked);
+    return show(applyFormat(s.value, s.start, s.end, command, argument));
+  };
+  const formats = (marked: string) => {
+    const s = at(marked);
+    return formatsAt(s.value, s.start, s.end).formats;
+  };
+
+  test('each button stores the Markdown the web editor stores', () => {
+    expect(run('|Agenda|', 'bold')).toBe('**|Agenda|**');
+    expect(run('|Agenda|', 'italic')).toBe('*|Agenda|*');
+    expect(run('|Agenda|', 'strike')).toBe('~~|Agenda|~~');
+    expect(run('Agenda|', 'heading', '2')).toBe('## Agenda|');
+    expect(run('Agenda|', 'heading', '3')).toBe('### Agenda|');
+    expect(run('Agenda|', 'bullet')).toBe('- Agenda|');
+    expect(run('Agenda|', 'ordered')).toBe('1. Agenda|');
+    expect(run('Agenda|', 'task')).toBe('- [ ] Agenda|');
+    expect(run('Agenda|', 'quote')).toBe('> Agenda|');
+    expect(run('|Alona site|', 'link', 'https://example.com')).toBe('[|Alona site|](https://example.com)');
+  });
+
+  test('pressing a button where its format is on takes it off', () => {
+    expect(run('**|Agenda|**', 'bold')).toBe('|Agenda|');
+    expect(run('**Age|nda**', 'bold')).toBe('Age|nda');
+    expect(run('*|Agenda|*', 'italic')).toBe('|Agenda|');
+    expect(run('~~|Agenda|~~', 'strike')).toBe('|Agenda|');
+    expect(run('## Agenda|', 'heading', '2')).toBe('Agenda|');
+    expect(run('- Agenda|', 'bullet')).toBe('Agenda|');
+    expect(run('1. Agenda|', 'ordered')).toBe('Agenda|');
+    expect(run('- [ ] Agenda|', 'task')).toBe('Agenda|');
+    expect(run('> Agenda|', 'quote')).toBe('Agenda|');
+    expect(run('[|Alona site|](https://example.com)', 'link', '')).toBe('|Alona site|');
+  });
+
+  test('one block format replaces another on the line', () => {
+    expect(run('## Agenda|', 'heading', '3')).toBe('### Agenda|');
+    expect(run('- Agenda|', 'ordered')).toBe('1. Agenda|');
+    expect(run('- [ ] Agenda|', 'bullet')).toBe('- Agenda|');
+    expect(run('## Agenda|', 'bullet')).toBe('- Agenda|');
+    expect(run('> Agenda|', 'heading', '2')).toBe('> ## Agenda|');
+  });
+
+  test('Text clears the heading, list and quote, and leaves inline formats', () => {
+    expect(run('### Agenda|', 'plain')).toBe('Agenda|');
+    expect(run('- **Agenda**|', 'plain')).toBe('**Agenda**|');
+    expect(run('> 1. Agenda|', 'plain')).toBe('Agenda|');
+    expect(run('Agenda|', 'plain')).toBe('Agenda|');
+  });
+
+  test('a block format applies to every line the selection touches', () => {
+    expect(run('|One\nTwo|', 'ordered')).toBe('1. |One\n2. Two|');
+    expect(run('|One\nTwo|', 'bullet')).toBe('- |One\n- Two|');
+    expect(run('- |One\n- Two|', 'bullet')).toBe('|One\nTwo|');
+    expect(run('Intro\nAge|nda\nEnd', 'heading', '2')).toBe('Intro\n## Age|nda\nEnd');
+  });
+
+  test('inline formats nest', () => {
+    expect(run('**|Agenda|**', 'italic')).toBe('***|Agenda|***');
+    expect(formats('***|Agenda|***')).toBe('bold italic');
+    expect(run('***|Agenda|***', 'bold')).toBe('*|Agenda|*');
+  });
+
+  test('a caret where nothing is selected gets an empty pair to type into', () => {
+    expect(run('Plain |', 'bold')).toBe('Plain **|**');
+  });
+
+  test('a link changes its address, and a caret link shows its address', () => {
+    expect(run('[Al|ona](https://a.example)', 'link', 'https://b.example')).toBe('[Al|ona](https://b.example)');
+    expect(run('See |', 'link', 'https://example.com')).toBe('See [|https://example.com|](https://example.com)');
+    expect(formatsAt('[Alona](https://example.com)', 3, 3).link).toBe('https://example.com');
+    expect(run('|Alona|', 'link', '')).toBe('|Alona|');
+  });
+
+  test('insert puts text in place of the selection, the caret after it', () => {
+    expect(run('Agenda|', 'insert', '[0:05] ')).toBe('Agenda[0:05] |');
+    expect(run('A|gend|a', 'insert', 'x')).toBe('Ax|a');
+  });
+
+  test('an unknown command or heading level changes nothing', () => {
+    expect(run('|Agenda|', 'undo')).toBe('|Agenda|');
+    expect(run('Agenda|', 'heading', '9')).toBe('Agenda|');
+  });
+
+  test('the formats on at the caret follow it', () => {
+    expect(formats('|Plain **bold**')).toBe('');
+    expect(formats('Plain **bold**|')).toBe('bold');
+    expect(formats('Plain **bo|ld**')).toBe('bold');
+    expect(formats('*it|*')).toBe('italic');
+    expect(formats('~~gone|~~')).toBe('strike');
+    expect(formats('## Agenda|')).toBe('heading2');
+    expect(formats('### Agenda|')).toBe('heading3');
+    expect(formats('- Agenda|')).toBe('bullet');
+    expect(formats('1. Agenda|')).toBe('ordered');
+    expect(formats('- [ ] Agenda|')).toBe('task');
+    expect(formats('- [x] Agenda|')).toBe('task');
+    expect(formats('> Agenda|')).toBe('quote');
+    expect(formats('> - **Ag|enda**')).toBe('bold bullet quote');
+    expect(formats('Agenda|')).toBe('');
+  });
+
+  test('a selection shows a format only when the whole of it has that format', () => {
+    expect(formats('|Plain **bold**|')).toBe('');
+    expect(formats('**|bold|**')).toBe('bold');
+    expect(formats('|- One\n- Two|')).toBe('bullet');
+    expect(formats('|- One\nTwo|')).toBe('');
+  });
+
+  test('stars inside a link address and a lone star are not emphasis', () => {
+    expect(formats('[a](https://x.example/*y*)|')).toBe('');
+    expect(formats('2 * 3 = 6|')).toBe('');
+    expect(formats('a ** b|')).toBe('');
+  });
+
+  test('offsets outside the source are held to it', () => {
+    expect(applyFormat('Agenda', 40, 99, 'heading', '2')).toEqual({ value: '## Agenda', start: 9, end: 9 });
+    expect(formatsAt('', 3, 1).formats).toBe('');
+  });
+
+  test('offsets count UTF-16 units, as the field reports them', () => {
+    const s = 'Café 😀 plan';
+    expect(applyFormat(s, 8, 12, 'bold')).toEqual({ value: 'Café 😀 **plan**', start: 10, end: 14 });
   });
 });
