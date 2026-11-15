@@ -770,4 +770,76 @@ describe('the notes pad formatting the Markdown source itself', () => {
     const s = 'Café 😀 plan';
     expect(applyFormat(s, 8, 12, 'bold')).toEqual({ value: 'Café 😀 **plan**', start: 10, end: 14 });
   });
+
+  test('italic inside bold, and bold inside italic, read and toggle as written', () => {
+    expect(run('**a|b|c**', 'italic')).toBe('**a*|b|*c**');
+    expect(formats('**a*|b|*c**')).toBe('bold italic');
+    expect(run('**|a*b*c|**', 'bold')).toBe('|a*b*c|');
+    expect(run('**a*|b|*c**', 'italic')).toBe('**a|b|c**');
+    expect(run('*a|b|c*', 'bold')).toBe('*a**|b|**c*');
+    expect(formats('*a**|b|**c*')).toBe('bold italic');
+    expect(run('*a**|b|**c*', 'bold')).toBe('*a|b|c*');
+  });
+
+  test('a format pressed at a bare caret is on there, and a second press takes it off', () => {
+    expect(run('|', 'bold')).toBe('**|**');
+    expect(formats('**|**')).toBe('bold');
+    expect(run('**|**', 'bold')).toBe('|');
+    expect(run('Agenda |', 'italic')).toBe('Agenda *|*');
+    expect(run('**|**', 'italic')).toBe('***|***');
+    expect(formats('***|***')).toBe('bold italic');
+    expect(run('***|***', 'bold')).toBe('*|*');
+    expect(run('~~|~~', 'strike')).toBe('|');
+    // After a word, what is typed next takes the format.
+    expect(run('Agenda|', 'bold')).toBe('Agenda**|**');
+    expect(formats('Agenda**|**')).toBe('bold');
+    expect(run('Agenda**|**', 'bold')).toBe('Agenda|');
+    // Inside a word, the word takes it.
+    expect(run('ab|cd', 'bold')).toBe('**ab|cd**');
+    expect(run('**ab|cd**', 'bold')).toBe('ab|cd');
+    // A caret inside a real marker is not an empty pair.
+    expect(formats('*|*abc**')).toBe('');
+  });
+
+  test('bold over text that is partly bold makes one bold span', () => {
+    expect(run('|**a** b|', 'bold')).toBe('**|a b|**');
+    expect(run('**a|b**cd|', 'bold')).toBe('**a|bcd|**');
+    expect(run('**a**|b|', 'bold')).toBe('**a|b|**');
+  });
+
+  test('a link whose address has parentheses is one link', () => {
+    const wiki = 'https://en.wikipedia.org/wiki/Foo_(bar)';
+    expect(formatsAt(`[w](${wiki})`, 1, 2).link).toBe(wiki);
+    expect(run(`[|w|](${wiki})`, 'link', '')).toBe('|w|');
+    expect(run(`[|w|](${wiki})`, 'link', 'https://x.com')).toBe('[|w|](https://x.com)');
+  });
+
+  test('a format over several lines wraps each line', () => {
+    expect(run('|a\nb|', 'bold')).toBe('**|a**\n**b|**');
+    expect(formats('**|a**\n**b|**')).toBe('bold');
+    expect(run('**|a**\n**b|**', 'bold')).toBe('|a\nb|');
+    expect(run('|- a\n- b|', 'bold')).toBe('|- **a**\n- **b|**');
+  });
+
+  test('a selection ending at the start of the next line leaves that line alone', () => {
+    expect(run('|a\n|b', 'bullet')).toBe('- |a\n|b');
+    expect(formats('|- a\n|b')).toBe('bullet');
+    expect(run('|a\n|b', 'heading', '2')).toBe('## |a\n|b');
+  });
+
+  test('two formats on one selection are both on, whatever spaces it took in', () => {
+    const bold = applyFormat('plan the', 0, 5, 'bold');
+    const both = applyFormat(bold.value, bold.start, bold.end, 'italic');
+    expect(both.value).toBe('***plan*** the');
+    expect(formatsAt(both.value, both.start, both.end).formats).toBe('bold italic');
+    const back = applyFormat(both.value, both.start, both.end, 'bold');
+    expect(back.value).toBe('*plan* the');
+  });
+
+  test('a format leaves the spaces around the selection outside it', () => {
+    expect(run('|word |', 'bold')).toBe('**|word** |');
+    expect(formats('**|word** |')).toBe('bold');
+    expect(run('**|word** |', 'bold')).toBe('|word |');
+    expect(run('| |', 'bold')).toBe('| |');
+  });
 });

@@ -139,6 +139,9 @@ component Alona
   state padField = ""
   state padStart = 0
   state padEnd = 0
+  // The note the held selection was reported in. A selection held for another note, or for another
+  // pad, says nothing about the one a button is pressed over.
+  state padFor = ""
   state noticedKey = ""
 
   resource time = exactTime() as shape Time
@@ -169,13 +172,14 @@ component Alona
   mutation imported as shape Reply refreshes desk, lib
   mutation captureStarted as shape Reply
   mutation noticesAsked as shape NotificationStatus refreshes notices
-  resource padHere = markdownFormats(padSource, padStart, padEnd) when padOwn and padField != "" as shape PadFormats else empty()
+  resource padHere = markdownFormats(padSource, padStart, padEnd) when padOwn and padField != "" and padFor == selected as shape PadFormats else empty()
   mutation padEdit as shape PadEdit then padLanded
 
   derive recording = recorderId != ""
   // Android's editor runs no `format` or `setRangeText`, so its pads edit the Markdown themselves,
   // timestamp included. Windows runs no setRangeText either, so it shows no timestamp.
   derive padOwn = setup.host == "android"
+  derive padActive = padFor == selected ? padField : ""
   derive stamps = setup.host != "windows"
   derive padSource = padField == "my-notes-editor" ? shownNotes : recNotes
   derive micDenied = mic.state == "denied"
@@ -238,6 +242,8 @@ component Alona
   action startRecording
     recTitle = ""
     recNotes = ""
+    // A new recording starts an empty pad: the last one's selection is not its selection.
+    padField = ""
     send opened = getUserMedia(audio=true)
   action recordDetected
     dismissedKey = meet.key
@@ -321,11 +327,14 @@ component Alona
     recNotes = v
   action padMoved(editor: string, start: number, end: number)
     padField = editor
+    padFor = selected
     padStart = start
     padEnd = end
   action padAsk(editor: string, value: string, command: string, argument: string)
+    // With no selection known for this pad on this note, the edit goes at the end of the text.
+    send padEdit = formatMarkdown(value, padField == editor and padFor == selected ? padStart : value.length, padField == editor and padFor == selected ? padEnd : value.length, command, argument)
     padField = editor
-    send padEdit = formatMarkdown(value, padStart, padEnd, command, argument)
+    padFor = selected
   action padLanded
     match padEdit
       case some(r)
@@ -491,7 +500,7 @@ component Alona
                   NotesPad(editor="record-notes-editor", value=recNotes, edit=editRecNotes, label="Your notes",
                     placeholder="Topics, decisions, follow-ups", rows=10, minHeight=220, prefix="rec", field="record-notes", ground="-exact-background",
                     stamp=(stamps ? `[${clock(rec.duration / 1000)}] ` : ""),
-                    ownFormat=padOwn, active=padField, here=padHere, report=padMoved, ask=padAsk)
+                    ownFormat=padOwn, active=padActive, here=padHere, report=padMoved, ask=padAsk)
         if e.name == "meeting"
           column navigationKey=`${e.id}` navigationScroll="meeting-scroll" position="absolute" inset=0
             display="flex" flex-direction="column"
@@ -547,7 +556,7 @@ component Alona
                       NotesPad(editor="my-notes-editor", value=shownNotes, edit=editNote, label="My notes",
                         placeholder="Write your notes", rows=12, minHeight=260, prefix="mine", field="my-notes", ground="surface.page",
                         stamp=(stamps ? `[${clock(heardAt)}] ` : ""),
-                        ownFormat=padOwn, active=padField, here=padHere, report=padMoved, ask=padAsk)
+                        ownFormat=padOwn, active=padActive, here=padHere, report=padMoved, ask=padAsk)
                       text (noteDirty ? "Saving…" : "Saved on this device") font="-exact-footnote" color="text.muted" testId="notes-state"
                   if pane == "transcript"
                     if not working(detail.status)

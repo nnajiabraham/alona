@@ -66,22 +66,60 @@ function lineAt(source: string, at: number): Line {
 
 /** Every line the selection touches, first to last. */
 function linesIn(source: string, start: number, end: number): Line[] {
+  // A range that ends just after a line break selects nothing on the line that follows.
+  const last = end > start && source[end - 1] === '\n' ? end - 1 : end;
   const lines = [lineAt(source, start)];
-  while (lines[lines.length - 1].end < end) lines.push(lineAt(source, lines[lines.length - 1].end + 1));
+  while (lines[lines.length - 1].end < last) lines.push(lineAt(source, lines[lines.length - 1].end + 1));
   return lines;
 }
 
+const MARK = { bold: '**', italic: '*', strike: '~~' } as const;
+
 /**
- * The emphasis, strikethrough and link spans of one line, by CommonMark's delimiter-run rule
- * (without its rule of three): a `*` run opens before non-space and closes after it, a closer
- * takes the nearest opener, and two of each run's markers make bold, one italic. A link's
- * destination holds no emphasis.
+ * The text an inline format applies to: on each selected line, the selection without the line's
+ * prefix, without the spaces at its ends, and without a span's markers at its ends. A marker
+ * next to a space is not emphasis, emphasis does not cross a line break, and a selection that
+ * takes in `**` with its word means the word.
+ */
+function portions(source: string, start: number, end: number): Array<[number, number]> {
+  const out: Array<[number, number]> = [];
+  for (const l of linesIn(source, start, end)) {
+    const spans = spansOf(source, l);
+    let a = Math.max(start, l.start + l.quote.length + l.marker.length);
+    let b = Math.min(end, l.end);
+    for (let moved = true; moved; ) {
+      moved = false;
+      while (a < b && /\s/.test(source[a])) a++;
+      while (b > a && /\s/.test(source[b - 1])) b--;
+      for (const s of spans) {
+        if (a >= s.open && a < s.from && s.from <= b) {
+          a = s.from;
+          moved = true;
+        }
+        if (b > s.to && b <= s.close && s.to >= a) {
+          b = s.to;
+          moved = true;
+        }
+      }
+    }
+    if (a < b) out.push([a, b]);
+  }
+  return out;
+}
+
+/**
+ * The emphasis, strikethrough and link spans of one line, by CommonMark's delimiter-run rule: a
+ * `*` run opens before non-space and closes after it, a closer takes the nearest opener it may
+ * pair with, and two of each run's markers make bold, one italic. By the rule of three, a run
+ * that could both open and close does not pair with one whose length makes their sum a multiple
+ * of three, which is what keeps the `*` inside `**a*b*c**` from closing the bold. A link's
+ * destination may hold one level of parentheses, and holds no emphasis.
  */
 function spansOf(source: string, line: { start: number; end: number }): Span[] {
   const spans: Span[] = [];
   const text = source.slice(line.start, line.end);
   const opaque: Array<[number, number]> = [];
-  for (const m of text.matchAll(/\[([^\]\n]*)\]\(([^)\s]*)\)/g)) {
+  for (const m of text.matchAll(/\[([^\]\n]*)\]\(((?:[^()\s]|\([^()\s]*\))*)\)/g)) {
     const at = line.start + (m.index ?? 0);
     const from = at + 1;
     const to = from + m[1].length;
@@ -97,10 +135,14 @@ function spansOf(source: string, line: { start: number; end: number }): Span[] {
     const after = pos + m[0].length < line.end ? source[pos + m[0].length] : ' ';
     runs.push({ char: m[0][0], pos, len: m[0].length, left: m[0].length, canOpen: !/\s/.test(after), canClose: !/\s/.test(before) });
   }
+  const both = (r: Run) => r.canOpen && r.canClose;
+  const pairs = (o: Run, c: Run) =>
+    o.char === c.char && o.left > 0 &&
+    !(c.char === '*' && (both(o) || both(c)) && (o.len + c.len) % 3 === 0 && !(o.len % 3 === 0 && c.len % 3 === 0));
   const openers: Run[] = [];
   for (const run of runs) {
     while (run.canClose && run.left > 0) {
-      const i = openers.findLastIndex((o) => o.char === run.char && o.left > 0);
+      const i = openers.findLastIndex((o) => pairs(o, run));
       if (i < 0) break;
       const opener = openers[i];
       const use = run.char === '~' ? 2 : opener.left >= 2 && run.left >= 2 ? 2 : 1;
@@ -132,9 +174,8 @@ export function formatsAt(source: string, start: number, end: number): PadFormat
   const a = clamp(Math.min(start, end), source.length);
   const b = clamp(Math.max(start, end), source.length);
   const words: string[] = [];
-  const spans = spansAt(source, a, b);
-  for (const kind of ['bold', 'italic', 'strike'] as const) if (spans.some((s) => s.kind === kind)) words.push(kind);
-  const link = spans.find((s) => s.kind === 'link')?.url ?? '';
+  for (const kind of ['bold', 'italic', 'strike'] as const) if (inlineOn(source, a, b, kind)) words.push(kind);
+  const link = spansAt(source, a, b).find((s) => s.kind === 'link')?.url ?? '';
   const lines = linesIn(source, a, b);
   const all = (f: (l: Line) => boolean) => lines.every(f);
   const heading = lines[0].heading;
@@ -157,15 +198,101 @@ function splice(e: PadEdit, from: number, to: number, text: string, after = fals
   return { value: e.value.slice(0, from) + text + e.value.slice(to), start: move(e.start), end: move(e.end) };
 }
 
-function toggleInline(e: PadEdit, kind: Inline): PadEdit {
-  const marker = kind === 'bold' ? '**' : kind === 'italic' ? '*' : '~~';
-  const span = spansAt(e.value, e.start, e.end).find((s) => s.kind === kind);
-  if (span) {
-    const unclosed = splice(e, span.to, span.close, '');
-    return splice(unclosed, span.open, span.from, '');
+/** An empty pair of markers around a caret: what a format pressed with nothing selected leaves, for the next typing. */
+interface Pair {
+  kind: Inline;
+  left: number;
+  right: number;
+}
+
+/** The empty pairs around a caret, innermost first. Markers a span already uses are not a pair. */
+function emptyPairs(source: string, caret: number): Pair[] {
+  const line = lineAt(source, caret);
+  const used = spansOf(source, line).flatMap((s) => [[s.open, s.from], [s.to, s.close]]);
+  const free = (from: number, to: number) => !used.some(([x, y]) => from < y && to > x);
+  const pairs: Pair[] = [];
+  let l = caret;
+  let r = caret;
+  for (;;) {
+    const kind = (['bold', 'strike', 'italic'] as const).find((k) => {
+      const n = MARK[k].length;
+      return l - n >= line.start && r + n <= line.end && source.slice(l - n, l) === MARK[k] && source.slice(r, r + n) === MARK[k];
+    });
+    if (!kind) return pairs;
+    const n = MARK[kind].length;
+    if (!free(l - n, l) || !free(r, r + n)) return pairs;
+    pairs.push({ kind, left: l - n, right: r });
+    l -= n;
+    r += n;
   }
-  const wrapped = splice(e, e.end, e.end, marker);
-  return { ...splice(wrapped, e.start, e.start, marker), start: e.start + marker.length, end: e.end + marker.length };
+}
+
+/** The word a caret is strictly inside, or null: at a word's edge the caret is before or after it. */
+function wordAround(source: string, caret: number): [number, number] | null {
+  const line = lineAt(source, caret);
+  for (const m of source.slice(line.start, line.end).matchAll(/[\p{L}\p{N}_'’]+/gu)) {
+    const from = line.start + (m.index ?? 0);
+    const to = from + m[0].length;
+    if (from < caret && caret < to) return [from, to];
+  }
+  return null;
+}
+
+const holding = (source: string, [from, to]: [number, number], kind: Inline) => spansAt(source, from, to).find((s) => s.kind === kind);
+
+/** Whether an inline format is on at the selection: at a caret, in a span or an empty pair; over a range, on every line's text. */
+function inlineOn(source: string, start: number, end: number, kind: Inline): boolean {
+  if (start === end) return holding(source, [start, end], kind) !== undefined || emptyPairs(source, start).some((p) => p.kind === kind);
+  const parts = portions(source, start, end);
+  return parts.length > 0 && parts.every((p) => holding(source, p, kind) !== undefined);
+}
+
+const unwrap = (e: PadEdit, span: Span) => splice(splice(e, span.to, span.close, ''), span.open, span.from, '');
+
+/**
+ * Wraps `[from, to)` of one line in a format. Spans of that format that the range overlaps or
+ * touches join it, so the result is one span: bolding all of `**a** b` gives `**a b**`.
+ */
+function wrap(e: PadEdit, from: number, to: number, kind: Inline): PadEdit {
+  const marker = MARK[kind];
+  const hits = spansOf(e.value, lineAt(e.value, from)).filter((s) => s.kind === kind && s.open <= to && s.close >= from);
+  const lo = Math.min(from, ...hits.map((s) => s.open));
+  const hi = Math.max(to, ...hits.map((s) => s.close));
+  const cuts = hits.flatMap((s) => [[s.open, s.from], [s.to, s.close]]).sort((x, y) => x[0] - y[0]);
+  let text = '';
+  let at = lo;
+  for (const [x, y] of cuts) {
+    text += e.value.slice(at, x);
+    at = y;
+  }
+  text += e.value.slice(at, hi);
+  const cutBefore = (n: number) => cuts.reduce((sum, [x, y]) => sum + Math.max(0, Math.min(n, y) - x), 0);
+  const move = (n: number) => (n < lo ? n : n > hi ? n + 2 * marker.length - cutBefore(hi) : lo + marker.length + (n - lo - cutBefore(n)));
+  return { value: e.value.slice(0, lo) + marker + text + marker + e.value.slice(hi), start: move(e.start), end: move(e.end) };
+}
+
+function toggleInline(e: PadEdit, kind: Inline): PadEdit {
+  const marker = MARK[kind];
+  if (e.start === e.end) {
+    const span = holding(e.value, [e.start, e.end], kind);
+    if (span) return unwrap(e, span);
+    const pair = emptyPairs(e.value, e.start).find((p) => p.kind === kind);
+    if (pair) return splice(splice(e, pair.right, pair.right + marker.length, ''), pair.left, pair.left + marker.length, '');
+    const word = wordAround(e.value, e.start);
+    if (word) return wrap(e, word[0], word[1], kind);
+    const caret = e.start + marker.length;
+    return { value: e.value.slice(0, e.start) + marker + marker + e.value.slice(e.start), start: caret, end: caret };
+  }
+  const parts = portions(e.value, e.start, e.end);
+  const on = parts.every((p) => holding(e.value, p, kind) !== undefined);
+  let out = e;
+  // Last line first, so an edit never moves a line still to come.
+  for (const p of [...parts].reverse()) {
+    const span = holding(out.value, p, kind);
+    if (on && span) out = unwrap(out, span);
+    if (!on && !span) out = wrap(out, p[0], p[1], kind);
+  }
+  return out;
 }
 
 function link(e: PadEdit, url: string): PadEdit {
