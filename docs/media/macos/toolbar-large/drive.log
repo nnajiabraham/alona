@@ -1,0 +1,60 @@
+clock data
+  {"settled":true,"incarnation":1,"epoch":5,"clock":0}
+tap continue
+  {"delivery":"platform","tapped":28,"at":[210,832],"target":"continue","carrier":"macos","mode":"agent","epoch":6,"incarnation":1,"clock":0}
+clock data
+  {"clock":0,"settled":true,"epoch":6,"incarnation":1}
+clock +6000
+  {"clock":6000,"incarnation":1,"epoch":11}
+clock data
+  {"clock":6000,"settled":true,"epoch":11,"incarnation":1}
+prefer root-font-size 53px
+  {"incarnation":1,"fold":{"device-posture":"continuous","horizontal-viewport-segments":1,"vertical-viewport-segments":1,"viewport-segments":[]},"epoch":12,"clock":6000,"page":{"visibility-state":"visible","can-open-files":true,"has-focus":true,"display-scale":2,"bold-text":false,"frozen":false,"online":true,"keyboard-navigation":false,"can-share-pictures":true,"gpu-tier":"high","can-share-files":true,"root-font-size":53,"can-share":true,"iframe-partition":true},"media":{"display-mode":"standalone","prefers-reduced-motion":"no-preference","dynamic-range":"standard","pointer":"fine","prefers-reduced-transparency":"no-preference","hover":"hover","color-gamut":"srgb","prefers-contrast":"no-preference","prefers-color-scheme":"light"}}
+tap start-recording
+  {"tapped":69,"at":[210,632.5],"delivery":"platform","target":"start-recording","carrier":"macos","mode":"agent","epoch":14,"incarnation":1,"clock":6000}
+clock data
+  {"clock":6000,"settled":true,"incarnation":1,"epoch":17}
+clock settle
+  {"epoch":17,"clock":6000,"incarnation":1,"settled":true}
+type record-notes - Agenda
+  {"typed":147,"value":"- Agenda","target":"record-notes","scrolled":{"from":[210,964],"to":[210,494.25]},"delivery":"platform","carrier":"macos","mode":"agent","epoch":19,"incarnation":1,"clock":6000}
+tap rec-bold
+  {"delivery":"platform","at":[215.5,141.25],"tapped":118,"target":"rec-bold","carrier":"macos","mode":"agent","epoch":20,"incarnation":1,"clock":6000}
+clock settle
+  {"clock":6000,"settled":true,"incarnation":1,"epoch":20}
+screenshot docs/media/macos/toolbar-large/01-record-pad-large.png
+  {"h":900,"clock":6000,"w":420,"incarnation":1,"screenshot":"docs/media/macos/toolbar-large/01-record-pad-large.png","epoch":20,"scale":1}
+prefer prefers-color-scheme dark
+  {"media":{"prefers-reduced-motion":"no-preference","prefers-contrast":"no-preference","prefers-reduced-transparency":"no-preference","display-mode":"standalone","hover":"hover","dynamic-range":"standard","prefers-color-scheme":"dark","color-gamut":"srgb","pointer":"fine"},"page":{"can-share-pictures":true,"can-share":true,"keyboard-navigation":false,"has-focus":true,"root-font-size":53,"iframe-partition":true,"display-scale":2,"bold-text":false,"can-share-files":true,"visibility-state":"visible","frozen":false,"online":true,"gpu-tier":"high","can-open-files":true},"fold":{"device-posture":"continuous","horizontal-viewport-segments":1,"vertical-viewport-segments":1,"viewport-segments":[]},"incarnation":1,"clock":6000,"epoch":20}
+clock settle
+  {"settled":true,"incarnation":1,"epoch":20,"clock":6000}
+screenshot docs/media/macos/toolbar-large/02-record-pad-large-dark.png
+  {"w":420,"clock":6000,"screenshot":"docs/media/macos/toolbar-large/02-record-pad-large-dark.png","epoch":20,"h":900,"incarnation":1,"scale":1}
+prefer prefers-color-scheme light
+  {"media":{"prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference","prefers-color-scheme":"light","prefers-contrast":"no-preference","dynamic-range":"standard","pointer":"fine","color-gamut":"srgb","hover":"hover","display-mode":"standalone"},"page":{"can-share-pictures":true,"can-share":true,"keyboard-navigation":false,"has-focus":true,"root-font-size":53,"iframe-partition":true,"display-scale":2,"bold-text":false,"can-share-files":true,"visibility-state":"visible","frozen":false,"online":true,"gpu-tier":"high","can-open-files":true},"clock":6000,"fold":{"vertical-viewport-segments":1,"viewport-segments":[],"device-posture":"continuous","horizontal-viewport-segments":1},"epoch":20,"incarnation":1}
+tap stop-recording
+  {"at":[210,298.5],"tapped":106,"delivery":"platform","target":"stop-recording","scrolled":{"from":[210,-171.25],"to":[210,298.5]},"carrier":"macos","mode":"agent","epoch":21,"incarnation":1,"clock":6000}
+clock data
+  {"clock":6000,"settled":true,"incarnation":1,"epoch":26}
+clock settle
+  {"epoch":26,"clock":6000,"settled":true,"incarnation":1}
+clock +12000
+  {"incarnation":1,"epoch":41,"clock":18000}
+clock data
+  {"clock":18000,"settled":true,"epoch":41,"incarnation":1}
+tap pane-mine
+  {"delivery":"host-activation","tapped":189,"native":"segmented-control","target":"pane-mine","carrier":"macos","mode":"agent","epoch":42,"incarnation":1,"clock":18000}
+clock settle
+  {"clock":18000,"settled":true,"incarnation":1,"epoch":42}
+tap mine-link
+  {"at":[311,703],"delivery":"platform","tapped":234,"target":"mine-link","scrolled":{"from":[1935,703],"to":[311,703]},"carrier":"macos","mode":"agent","epoch":43,"incarnation":1,"clock":18000}
+clock settle
+  {"clock":18000,"incarnation":1,"settled":true,"epoch":43}
+screenshot docs/media/macos/toolbar-large/03-my-notes-large.png
+  {"w":420,"clock":18000,"epoch":43,"incarnation":1,"screenshot":"docs/media/macos/toolbar-large/03-my-notes-large.png","h":900,"scale":1}
+prefer prefers-color-scheme dark
+  {"epoch":43,"clock":18000,"fold":{"horizontal-viewport-segments":1,"device-posture":"continuous","vertical-viewport-segments":1,"viewport-segments":[]},"media":{"prefers-color-scheme":"dark","dynamic-range":"standard","prefers-reduced-motion":"no-preference","pointer":"fine","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","hover":"hover","display-mode":"standalone","color-gamut":"srgb"},"incarnation":1,"page":{"has-focus":true,"online":true,"root-font-size":53,"visibility-state":"visible","gpu-tier":"high","keyboard-navigation":false,"can-share":true,"bold-text":false,"frozen":false,"can-share-files":true,"iframe-partition":true,"can-open-files":true,"display-scale":2,"can-share-pictures":true}}
+clock settle
+  {"clock":18000,"incarnation":1,"settled":true,"epoch":43}
+screenshot docs/media/macos/toolbar-large/04-my-notes-large-dark.png
+  {"screenshot":"docs/media/macos/toolbar-large/04-my-notes-large-dark.png","clock":18000,"incarnation":1,"w":420,"epoch":43,"h":900,"scale":1}

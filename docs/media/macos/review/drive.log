@@ -1,86 +1,86 @@
 clock data
-  {"incarnation":1,"clock":0,"epoch":5,"settled":true}
+  {"clock":0,"incarnation":1,"epoch":5,"settled":true}
 tap continue
-  {"tapped":28,"delivery":"platform","at":[210,832],"target":"continue","carrier":"macos","mode":"agent","epoch":6,"incarnation":1,"clock":0}
+  {"at":[210,832],"delivery":"platform","tapped":28,"target":"continue","carrier":"macos","mode":"agent","epoch":6,"incarnation":1,"clock":0}
 clock data
-  {"epoch":6,"clock":0,"settled":true,"incarnation":1}
+  {"incarnation":1,"settled":true,"clock":0,"epoch":6}
 clock +6000
-  {"incarnation":1,"epoch":11,"clock":6000}
+  {"clock":6000,"epoch":11,"incarnation":1}
 clock data
-  {"epoch":11,"clock":6000,"settled":true,"incarnation":1}
+  {"incarnation":1,"clock":6000,"settled":true,"epoch":11}
 tap start-recording
-  {"delivery":"platform","tapped":69,"at":[210,174],"target":"start-recording","carrier":"macos","mode":"agent","epoch":12,"incarnation":1,"clock":6000}
+  {"tapped":69,"delivery":"platform","at":[210,174],"target":"start-recording","carrier":"macos","mode":"agent","epoch":12,"incarnation":1,"clock":6000}
 clock data
-  {"incarnation":1,"settled":true,"epoch":16,"clock":6000}
+  {"settled":true,"clock":6000,"incarnation":1,"epoch":16}
 clock settle
-  {"epoch":16,"clock":6000,"incarnation":1,"settled":true}
+  {"clock":6000,"settled":true,"epoch":16,"incarnation":1}
 type record-title Launch sync
   {"value":"Launch sync","typed":109,"target":"record-title","delivery":"platform","carrier":"macos","mode":"agent","epoch":17,"incarnation":1,"clock":6000}
 type record-notes - Ask about the login fix
-  {"typed":122,"value":"- Ask about the login fix","target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":18,"incarnation":1,"clock":6000}
+  {"typed":147,"value":"- Ask about the login fix","target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":19,"incarnation":1,"clock":6000}
 clock +5000
-  {"clock":11000,"incarnation":1,"epoch":20}
+  {"epoch":21,"incarnation":1,"clock":11000}
 tap stop-recording
-  {"at":[210,208],"delivery":"platform","tapped":106,"target":"stop-recording","carrier":"macos","mode":"agent","epoch":21,"incarnation":1,"clock":11000}
+  {"delivery":"platform","tapped":106,"at":[210,208],"target":"stop-recording","carrier":"macos","mode":"agent","epoch":24,"incarnation":1,"clock":11000}
 clock data
-  {"settled":true,"epoch":26,"incarnation":1,"clock":11000}
+  {"settled":true,"incarnation":1,"epoch":27,"clock":11000}
 clock settle
-  {"settled":true,"epoch":26,"incarnation":1,"clock":11000}
+  {"clock":11000,"incarnation":1,"epoch":27,"settled":true}
 clock +12000
-  {"incarnation":1,"epoch":41,"clock":23000}
+  {"incarnation":1,"epoch":42,"clock":23000}
 clock data
-  {"incarnation":1,"clock":23000,"epoch":41,"settled":true}
+  {"clock":23000,"incarnation":1,"epoch":42,"settled":true}
 state detail.status
   "done"
 screenshot docs/media/macos/review/01-ai-notes.png
-  {"clock":23000,"screenshot":"docs/media/macos/review/01-ai-notes.png","w":420,"h":900,"epoch":41,"incarnation":1,"scale":1}
+  {"clock":23000,"epoch":42,"h":900,"w":420,"screenshot":"docs/media/macos/review/01-ai-notes.png","incarnation":1,"scale":1}
 tap pane-transcript
-  {"tapped":165,"native":"segmented-control","delivery":"host-activation","target":"pane-transcript","carrier":"macos","mode":"agent","epoch":42,"incarnation":1,"clock":23000}
+  {"tapped":191,"native":"segmented-control","delivery":"host-activation","target":"pane-transcript","carrier":"macos","mode":"agent","epoch":43,"incarnation":1,"clock":23000}
 state pane
   "transcript"
 screenshot docs/media/macos/review/02-transcript.png
-  {"h":900,"screenshot":"docs/media/macos/review/02-transcript.png","w":420,"epoch":42,"clock":23000,"incarnation":1,"scale":1}
+  {"screenshot":"docs/media/macos/review/02-transcript.png","incarnation":1,"h":900,"w":420,"clock":23000,"epoch":43,"scale":1}
 tap pane-mine
-  {"tapped":163,"delivery":"host-activation","native":"segmented-control","target":"pane-mine","carrier":"macos","mode":"agent","epoch":43,"incarnation":1,"clock":23000}
+  {"delivery":"host-activation","tapped":189,"native":"segmented-control","target":"pane-mine","carrier":"macos","mode":"agent","epoch":44,"incarnation":1,"clock":23000}
 type my-notes ## Follow up
-  {"value":"## Follow up","typed":205,"target":"my-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":44,"incarnation":1,"clock":23000}
+  {"typed":256,"value":"## Follow up","target":"my-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":47,"incarnation":1,"clock":23000}
 clock +1000
-  {"clock":24000,"epoch":44,"incarnation":1,"background":1,"inflight":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+  {"clock":24000,"incarnation":1,"epoch":47,"inflight":1,"background":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
 clock data
-  {"clock":24000,"epoch":45,"incarnation":1,"settled":true}
+  {"clock":24000,"settled":true,"epoch":48,"incarnation":1}
 state detail.userNotes
   "## Follow up"
 state noteDirty
   false
 screenshot docs/media/macos/review/03-my-notes-saved.png
-  {"epoch":45,"w":420,"h":900,"clock":24000,"screenshot":"docs/media/macos/review/03-my-notes-saved.png","incarnation":1,"scale":1}
+  {"epoch":48,"w":420,"screenshot":"docs/media/macos/review/03-my-notes-saved.png","clock":24000,"h":900,"incarnation":1,"scale":1}
 type title-field Q1 launch plan
-  {"typed":153,"value":"Q1 launch plan","target":"title-field","delivery":"platform","carrier":"macos","mode":"agent","epoch":45,"incarnation":1,"clock":24000}
+  {"value":"Q1 launch plan","typed":179,"target":"title-field","delivery":"platform","carrier":"macos","mode":"agent","epoch":48,"incarnation":1,"clock":24000}
 type title-field key Enter
-  {"value":"Q1 launch plan","typed":153,"key":"Enter","target":"title-field","delivery":"platform","carrier":"macos","mode":"agent","epoch":45,"incarnation":1,"clock":24000}
+  {"key":"Enter","value":"Q1 launch plan","typed":179,"target":"title-field","delivery":"platform","carrier":"macos","mode":"agent","epoch":48,"incarnation":1,"clock":24000}
 clock data
-  {"incarnation":1,"clock":24000,"settled":true,"epoch":47}
+  {"clock":24000,"settled":true,"epoch":50,"incarnation":1}
 state detail.title
   "Q1 launch plan"
 screenshot docs/media/macos/review/04-renamed.png
-  {"clock":24000,"w":420,"screenshot":"docs/media/macos/review/04-renamed.png","h":900,"epoch":47,"incarnation":1,"scale":1}
+  {"epoch":50,"incarnation":1,"screenshot":"docs/media/macos/review/04-renamed.png","h":900,"w":420,"clock":24000,"scale":1}
 tap pane-ai
-  {"native":"segmented-control","delivery":"host-activation","tapped":161,"target":"pane-ai","carrier":"macos","mode":"agent","epoch":48,"incarnation":1,"clock":24000}
+  {"native":"segmented-control","tapped":187,"delivery":"host-activation","target":"pane-ai","carrier":"macos","mode":"agent","epoch":51,"incarnation":1,"clock":24000}
 tap regenerate
-  {"tapped":209,"at":[210,765.5],"delivery":"platform","target":"regenerate","carrier":"macos","mode":"agent","epoch":49,"incarnation":1,"clock":24000}
+  {"tapped":261,"delivery":"platform","at":[210,765.5],"target":"regenerate","carrier":"macos","mode":"agent","epoch":52,"incarnation":1,"clock":24000}
 clock data
-  {"incarnation":1,"clock":24000,"settled":true,"epoch":52}
+  {"incarnation":1,"epoch":55,"clock":24000,"settled":true}
 clock +1000
-  {"incarnation":1,"clock":25000,"background":1,"inflight":1,"epoch":52,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+  {"clock":25000,"inflight":1,"incarnation":1,"background":1,"epoch":55,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
 clock data
-  {"epoch":54,"clock":25000,"settled":true,"incarnation":1}
+  {"clock":25000,"incarnation":1,"epoch":57,"settled":true}
 state detail.status
   "summarizing"
 screenshot docs/media/macos/review/05-writing-again.png
-  {"w":420,"h":900,"incarnation":1,"clock":25000,"epoch":54,"screenshot":"docs/media/macos/review/05-writing-again.png","scale":1}
+  {"epoch":57,"w":420,"screenshot":"docs/media/macos/review/05-writing-again.png","incarnation":1,"h":900,"clock":25000,"scale":1}
 clock +6000
-  {"clock":31000,"incarnation":1,"epoch":60}
+  {"clock":31000,"incarnation":1,"epoch":63}
 clock data
-  {"epoch":60,"clock":31000,"settled":true,"incarnation":1}
+  {"settled":true,"incarnation":1,"epoch":63,"clock":31000}
 state detail.status
   "done"

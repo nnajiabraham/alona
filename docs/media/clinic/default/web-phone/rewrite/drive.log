@@ -1,0 +1,156 @@
+clock data
+  {"clock":0,"settled":true}
+tap continue
+  {"at":[195,758],"tapped":28,"target":"continue","delivery":"platform","carrier":"web","mode":"agent","clock":0,"epoch":18,"incarnation":1}
+clock data
+  {"clock":0,"settled":true}
+clock +6000
+  {"clock":6000}
+clock data
+  {"clock":6000,"settled":true}
+tap new-note-button
+  {"at":[195,213.59375],"tapped":60,"target":"new-note-button","delivery":"platform","carrier":"web","mode":"agent","clock":6000,"epoch":27,"incarnation":1}
+clock settle
+  {"clock":6400,"settled":true}
+type new-ref Bed 4
+  {"at":[195,130],"typed":80,"target":"new-ref","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":28,"incarnation":1}
+tap template-consultation
+  {"at":[195,370.5],"tapped":93,"target":"template-consultation","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":29,"incarnation":1}
+clock settle
+  {"clock":6400,"settled":true}
+tap start-recording
+  {"at":[195,810],"tapped":116,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":42,"incarnation":1}
+clock data
+  {"clock":6400,"settled":true}
+clock settle
+  {"clock":6800,"settled":true}
+type record-jottings - L knee, 2 weeks
+  {"at":[195,524],"typed":121,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":50,"incarnation":1}
+clock +5000
+  {"clock":11800}
+tap stop-recording
+  {"at":[195,281],"tapped":135,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":11800,"epoch":69,"incarnation":1}
+clock data
+  {"clock":11800,"settled":true}
+clock settle
+  {"clock":12200,"settled":true}
+clock +12000
+  {"clock":24200}
+clock data
+  {"clock":24200,"settled":true}
+state detail.state
+  "draft"
+state detail.templateName
+  "General consultation"
+tap mark-reviewed
+  {"at":[216.34375,714],"tapped":211,"target":"mark-reviewed","scrolled":{"from":[216.34375,1106],"to":[216.34375,714]},"delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":111,"incarnation":1}
+clock data
+  {"clock":24200,"settled":true}
+state detail.state
+  "reviewed"
+state detail.note
+  "> This is a sample draft from the demo engine. No model ran, and it does not describe your recording.\n\n## Reason for visit\n- Left knee pain for about two weeks.\n\n## History\n- Left knee sore for about two weeks, since a long run.\n- Worse on stairs. Some evening swelling, no locking.\n- No medication taken.\n\n## Examination\n- Mild swelling over the left knee.\n- Full range of movement.\n\n## Assessment\n- Minor strain, as the clinician said.\n\n## Plan\n- Rest from running and ice in the evening.\n- Review in two weeks.\n\n## Follow-up\n- Review in two weeks."
+state detail.reviewedAt
+  1767225624200
+state detail.audio
+  "app:/data/meetings/m1767225606400/audio.wav"
+screenshot docs/media/clinic/default/web-phone/rewrite/01-reviewed-first.png
+  {"clock":24200,"epoch":111,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/rewrite/01-reviewed-first.png","w":390,"h":844}
+tap write-as
+  {"at":[128.65625,810.203125],"tapped":218,"target":"write-as","scrolled":{"from":[128.65625,854.203125],"to":[128.65625,810.203125]},"delivery":"platform","carrier":"web","mode":"agent","clock":24200,"epoch":114,"incarnation":1}
+clock settle
+  {"clock":24600,"settled":true}
+screenshot docs/media/clinic/default/web-phone/rewrite/02-write-as-sheet.png
+  {"clock":24600,"epoch":114,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/rewrite/02-write-as-sheet.png","w":390,"h":844}
+tap write-as-referral
+  {"at":[195,324],"tapped":254,"target":"write-as-referral","delivery":"platform","carrier":"web","mode":"agent","clock":24600,"epoch":117,"incarnation":1}
+clock settle
+  {"clock":24600,"settled":true}
+screenshot docs/media/clinic/default/web-phone/rewrite/03-template-picked.png
+  {"clock":24600,"epoch":117,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/rewrite/03-template-picked.png","w":390,"h":844}
+tap write-as-start
+  {"at":[195,810],"tapped":267,"target":"write-as-start","delivery":"platform","carrier":"web","mode":"agent","clock":24600,"epoch":123,"incarnation":1}
+clock data
+  {"clock":24600,"settled":true}
+clock settle
+  {"clock":25000,"settled":true}
+state detail.templateName
+  "Referral letter"
+state detail.patientRef
+  "Bed 4"
+state detail.writtenFrom
+  "General consultation"
+state detail.sharesRecording
+  true
+state detail.audio
+  "app:/data/meetings/m1767225606400/audio.wav"
+screenshot docs/media/clinic/default/web-phone/rewrite/04-second-writing.png
+  {"clock":25000,"epoch":124,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/rewrite/04-second-writing.png","w":390,"h":844}
+clock +12000
+  {"clock":37000}
+clock data
+  {"clock":37000,"settled":true}
+state detail.state
+  "draft"
+state detail.hasEdits
+  false
+state detail.reviewedAt
+  0
+state detail.note
+  "> This is a sample draft from the demo engine. No model ran, and it does not describe your recording.\n\n## Reason for referral\n- Left knee pain for about two weeks.\n\n## History\n- Left knee sore for about two weeks, since a long run.\n- Worse on stairs. Some evening swelling, no locking.\n- No medication taken.\n\n## Findings\n- Mild swelling over the left knee.\n- Full range of movement.\n\n## Current treatment\nNot discussed.\n\n## Request\nNot discussed."
+state detail.note
+  "> This is a sample draft from the demo engine. No model ran, and it does not describe your recording.\n\n## Reason for referral\n- Left knee pain for about two weeks.\n\n## History\n- Left knee sore for about two weeks, since a long run.\n- Worse on stairs. Some evening swelling, no locking.\n- No medication taken.\n\n## Findings\n- Mild swelling over the left knee.\n- Full range of movement.\n\n## Current treatment\nNot discussed.\n\n## Request\nNot discussed."
+state detail.note
+  "> This is a sample draft from the demo engine. No model ran, and it does not describe your recording.\n\n## Reason for referral\n- Left knee pain for about two weeks.\n\n## History\n- Left knee sore for about two weeks, since a long run.\n- Worse on stairs. Some evening swelling, no locking.\n- No medication taken.\n\n## Findings\n- Mild swelling over the left knee.\n- Full range of movement.\n\n## Current treatment\nNot discussed.\n\n## Request\nNot discussed."
+state detail.note
+  "> This is a sample draft from the demo engine. No model ran, and it does not describe your recording.\n\n## Reason for referral\n- Left knee pain for about two weeks.\n\n## History\n- Left knee sore for about two weeks, since a long run.\n- Worse on stairs. Some evening swelling, no locking.\n- No medication taken.\n\n## Findings\n- Mild swelling over the left knee.\n- Full range of movement.\n\n## Current treatment\nNot discussed.\n\n## Request\nNot discussed."
+state detail.note
+  "> This is a sample draft from the demo engine. No model ran, and it does not describe your recording.\n\n## Reason for referral\n- Left knee pain for about two weeks.\n\n## History\n- Left knee sore for about two weeks, since a long run.\n- Worse on stairs. Some evening swelling, no locking.\n- No medication taken.\n\n## Findings\n- Mild swelling over the left knee.\n- Full range of movement.\n\n## Current treatment\nNot discussed.\n\n## Request\nNot discussed."
+screenshot docs/media/clinic/default/web-phone/rewrite/05-second-draft.png
+  {"clock":37000,"epoch":146,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/rewrite/05-second-draft.png","w":390,"h":844}
+state lib.length
+  2
+state lib.0.patientRef
+  "Bed 4"
+state lib.1.patientRef
+  "Bed 4"
+tap delete-note
+  {"at":[356,26],"tapped":287,"target":"delete-note","delivery":"platform","carrier":"web","mode":"agent","clock":37000,"epoch":149,"incarnation":1}
+clock settle
+  {"clock":37000,"settled":true}
+screenshot docs/media/clinic/default/web-phone/rewrite/06-confirm-delete-keeps-recording.png
+  {"clock":37000,"epoch":149,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/rewrite/06-confirm-delete-keeps-recording.png","w":390,"h":844}
+tap delete-confirm
+  {"at":[116,484.5],"tapped":36,"target":"delete-confirm","delivery":"platform","carrier":"web","mode":"agent","clock":37000,"epoch":155,"incarnation":1}
+clock data
+  {"clock":37000,"settled":true}
+clock settle
+  {"clock":37000,"settled":true}
+state lib.length
+  1
+state lib.0.templateName
+  "General consultation"
+state detail.templateName
+  "General consultation"
+state detail.state
+  "reviewed"
+state detail.note
+  "> This is a sample draft from the demo engine. No model ran, and it does not describe your recording.\n\n## Reason for visit\n- Left knee pain for about two weeks.\n\n## History\n- Left knee sore for about two weeks, since a long run.\n- Worse on stairs. Some evening swelling, no locking.\n- No medication taken.\n\n## Examination\n- Mild swelling over the left knee.\n- Full range of movement.\n\n## Assessment\n- Minor strain, as the clinician said.\n\n## Plan\n- Rest from running and ice in the evening.\n- Review in two weeks.\n\n## Follow-up\n- Review in two weeks."
+state detail.reviewedAt
+  1767225624200
+state detail.audio
+  "app:/data/meetings/m1767225606400/audio.wav"
+state detail.sharesRecording
+  false
+tree player
+  {"nodes":[{"id":175,"type":"Video","depth":4,"props":{"testId":"player"},"children":[]}],"roots":[175],"clock":37000,"epoch":155,"incarnation":1}
+screenshot docs/media/clinic/default/web-phone/rewrite/07-first-untouched-after-delete.png
+  {"clock":37000,"epoch":155,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/rewrite/07-first-untouched-after-delete.png","w":390,"h":844}
+back
+  {"history":-1,"delivery":"platform","back":"route","carrier":"web","clock":37000,"epoch":158,"incarnation":1}
+clock data
+  {"clock":37000,"settled":true}
+clock settle
+  {"clock":37000,"settled":true}
+screenshot docs/media/clinic/default/web-phone/rewrite/08-one-note-left.png
+  {"clock":37000,"epoch":158,"incarnation":1,"screenshot":"docs/media/clinic/default/web-phone/rewrite/08-one-note-left.png","w":390,"h":844}

@@ -1,7 +1,7 @@
 clock data
   {"clock":0,"settled":true}
 tap continue
-  {"at":[195,758],"tapped":28,"target":"continue","delivery":"platform","carrier":"web","mode":"agent","clock":0,"epoch":17,"incarnation":1}
+  {"at":[195,758],"tapped":28,"target":"continue","delivery":"platform","carrier":"web","mode":"agent","clock":0,"epoch":18,"incarnation":1}
 clock data
   {"clock":0,"settled":true}
 clock +6000
@@ -9,19 +9,19 @@ clock +6000
 clock data
   {"clock":6000,"settled":true}
 tap start-recording
-  {"at":[195,213.59375],"tapped":52,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6000,"epoch":38,"incarnation":1}
+  {"at":[195,213.59375],"tapped":64,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6000,"epoch":39,"incarnation":1}
 clock data
   {"clock":6000,"settled":true}
 clock settle
   {"clock":6400,"settled":true}
 type record-title Launch sync
-  {"at":[195,310],"typed":76,"target":"record-title","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":44,"incarnation":1}
+  {"at":[195,321],"typed":90,"target":"record-title","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":47,"incarnation":1}
 type record-notes - Ask about the login fix
-  {"at":[195,499],"typed":62,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":45,"incarnation":1}
+  {"at":[195,568],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":49,"incarnation":1}
 clock +5000
   {"clock":11400}
 tap stop-recording
-  {"at":[195,242],"tapped":73,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":11400,"epoch":64,"incarnation":1}
+  {"at":[195,253],"tapped":87,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":11400,"epoch":68,"incarnation":1}
 clock data
   {"clock":11400,"settled":true}
 clock settle
@@ -31,31 +31,35 @@ clock +12000
 clock data
   {"clock":23800,"settled":true}
 back
-  {"history":-1,"delivery":"platform","back":"route","carrier":"web","clock":23800,"epoch":103,"incarnation":1}
+  {"history":-1,"delivery":"platform","back":"route","carrier":"web","clock":23800,"epoch":108,"incarnation":1}
 clock data
+  {"clock":23800,"settled":true}
+clock settle
   {"clock":23800,"settled":true}
 state lib.length
   1
 screenshot docs/media/web-phone/library/01-meetings.png
-  {"clock":23800,"epoch":103,"incarnation":1,"screenshot":"docs/media/web-phone/library/01-meetings.png","w":390,"h":844}
+  {"clock":23800,"epoch":108,"incarnation":1,"screenshot":"docs/media/web-phone/library/01-meetings.png","w":390,"h":844}
 prefer prefers-color-scheme dark
-  {"media":{"display-mode":"browser","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","prefers-color-scheme":"dark","color-gamut":"srgb","dynamic-range":"standard","pointer":"fine","hover":"hover"},"clock":23800,"epoch":106,"incarnation":1}
+  {"media":{"display-mode":"browser","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","prefers-color-scheme":"dark","color-gamut":"srgb","dynamic-range":"standard","pointer":"fine","hover":"hover"},"clock":23800,"epoch":111,"incarnation":1}
 screenshot docs/media/web-phone/library/02-meetings-dark.png
-  {"clock":23800,"epoch":106,"incarnation":1,"screenshot":"docs/media/web-phone/library/02-meetings-dark.png","w":390,"h":844}
+  {"clock":23800,"epoch":111,"incarnation":1,"screenshot":"docs/media/web-phone/library/02-meetings-dark.png","w":390,"h":844}
 prefer prefers-color-scheme light
-  {"media":{"display-mode":"browser","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","prefers-color-scheme":"light","color-gamut":"srgb","dynamic-range":"standard","pointer":"fine","hover":"hover"},"clock":23800,"epoch":109,"incarnation":1}
+  {"media":{"display-mode":"browser","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","prefers-color-scheme":"light","color-gamut":"srgb","dynamic-range":"standard","pointer":"fine","hover":"hover"},"clock":23800,"epoch":114,"incarnation":1}
 tap "Launch sync"
-  {"at":[147.8671875,317.59375],"tapped":86,"target":"Launch sync","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":111,"incarnation":1}
+  {"at":[147.8671875,317.59375],"tapped":137,"target":"Launch sync","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":116,"incarnation":1}
 clock data
   {"clock":23800,"settled":true}
+clock settle
+  {"clock":23800,"settled":true}
 tap delete-meeting
-  {"at":[356,26],"tapped":95,"target":"delete-meeting","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":112,"incarnation":1}
+  {"at":[356,26],"tapped":148,"target":"delete-meeting","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":117,"incarnation":1}
 clock settle
   {"clock":23800,"settled":true}
 screenshot docs/media/web-phone/library/03-confirm-delete.png
-  {"clock":23800,"epoch":112,"incarnation":1,"screenshot":"docs/media/web-phone/library/03-confirm-delete.png","w":390,"h":844}
+  {"clock":23800,"epoch":117,"incarnation":1,"screenshot":"docs/media/web-phone/library/03-confirm-delete.png","w":390,"h":844}
 tap delete-confirm
-  {"at":[116,466.5],"tapped":36,"target":"delete-confirm","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":117,"incarnation":1}
+  {"at":[116,466.5],"tapped":48,"target":"delete-confirm","delivery":"platform","carrier":"web","mode":"agent","clock":23800,"epoch":122,"incarnation":1}
 clock data
   {"clock":23800,"settled":true}
 clock settle
@@ -63,4 +67,4 @@ clock settle
 state lib.length
   0
 screenshot docs/media/web-phone/library/04-deleted.png
-  {"clock":23800,"epoch":117,"incarnation":1,"screenshot":"docs/media/web-phone/library/04-deleted.png","w":390,"h":844}
+  {"clock":23800,"epoch":122,"incarnation":1,"screenshot":"docs/media/web-phone/library/04-deleted.png","w":390,"h":844}

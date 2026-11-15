@@ -1,0 +1,68 @@
+clock data
+  {"clock":0,"settled":true}
+tap continue
+  {"at":[550,674],"tapped":28,"target":"continue","delivery":"platform","carrier":"web","mode":"agent","clock":0,"epoch":18,"incarnation":1}
+clock data
+  {"clock":0,"settled":true}
+clock +6000
+  {"clock":6000}
+clock data
+  {"clock":6000,"settled":true}
+prefer root-font-size 53px
+  {"media":{"display-mode":"browser","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","prefers-color-scheme":"light","color-gamut":"srgb","dynamic-range":"standard","pointer":"fine","hover":"hover"},"page":{"visibility-state":"visible","frozen":false,"online":true,"can-share":true,"can-share-files":true,"can-share-pictures":false,"can-open-files":true,"has-focus":true,"root-font-size":53,"gpu-tier":"high","iframe-partition":false,"navigation-type":"navigate","persisted":false,"restores":0,"display-scale":1},"fold":{"device-posture":"continuous","horizontal-viewport-segments":1,"vertical-viewport-segments":1,"viewport-segments":[]},"clock":6000,"epoch":27,"incarnation":1}
+tap new-note-button
+  {"at":[550,460.78125],"tapped":60,"target":"new-note-button","delivery":"platform","carrier":"web","mode":"agent","clock":6000,"epoch":28,"incarnation":1}
+clock settle
+  {"clock":6400,"settled":true}
+tap start-recording
+  {"at":[550,652.375],"tapped":116,"target":"start-recording","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":41,"incarnation":1}
+clock data
+  {"clock":6400,"settled":true}
+clock settle
+  {"clock":6800,"settled":true}
+type record-jottings - BP 120/80
+  {"at":[550,664.296875],"typed":120,"target":"record-jottings","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":49,"incarnation":1}
+tap rec-bold
+  {"at":[80,532.5],"tapped":143,"target":"rec-bold","delivery":"platform","carrier":"web","mode":"agent","clock":6800,"epoch":51,"incarnation":1}
+clock settle
+  {"clock":6800,"settled":true}
+check both
+  {"check":[{"scheme":"light","asked":"light","target":24,"viewport":{"w":1100,"h":760,"scrollW":1100},"findings":[{"line":"  covered  record-back [408,880 636×119]: its middle is past the bottom of the screen, and nothing scrolls to it; a column taller than the screen runs past it: let it scroll (`overflow-y: auto`), or give it `flex: 1` and `min-height: 0` under a header instead of `height: 100%`","kind":"covered","id":124,"box":[408,880,636,119],"detail":{"under":"the bottom of the screen","offscreen":true},"hint":"a column taller than the screen runs past it: let it scroll (`overflow-y: auto`), or give it `flex: 1` and `min-height: 0` under a header instead of `height: 100%`","node":"record-back"}],"accepted":[]},{"scheme":"dark","asked":"dark","target":24,"viewport":{"w":1100,"h":760,"scrollW":1100},"findings":[{"line":"  covered  record-back [408,880 636×119]: its middle is past the bottom of the screen, and nothing scrolls to it; a column taller than the screen runs past it: let it scroll (`overflow-y: auto`), or give it `flex: 1` and `min-height: 0` under a header instead of `height: 100%`","kind":"covered","id":124,"box":[408,880,636,119],"detail":{"under":"the bottom of the screen","offscreen":true},"hint":"a column taller than the screen runs past it: let it scroll (`overflow-y: auto`), or give it `flex: 1` and `min-height: 0` under a header instead of `height: 100%`","node":"record-back"}],"accepted":[]}],"text":"check web · light: 1 finding\n  covered  record-back [408,880 636×119]: its middle is past the bottom of the screen, and nothing scrolls to it; a column taller than the screen runs past it: let it scroll (`overflow-y: auto`), or give it `flex: 1` and `min-height: 0` under a header instead of `height: 100%`\ncheck web · dark: 1 finding\n  covered  record-back [408,880 636×119]: its middle is past the bottom of the screen, and nothing scrolls to it; a column taller than the screen runs past it: let it scroll (`overflow-y: auto`), or give it `flex: 1` and `min-height: 0` under a header instead of `height: 100%`","clock":6800,"epoch":57,"incarnation":1}
+screenshot docs/media/clinic/default/web/toolbar-large/01-jottings-large.png
+  {"clock":6800,"epoch":57,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar-large/01-jottings-large.png","w":1100,"h":760}
+prefer prefers-color-scheme dark
+  {"media":{"display-mode":"browser","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","prefers-color-scheme":"dark","color-gamut":"srgb","dynamic-range":"standard","pointer":"fine","hover":"hover"},"clock":6800,"epoch":60,"incarnation":1}
+clock settle
+  {"clock":7200,"settled":true}
+screenshot docs/media/clinic/default/web/toolbar-large/02-jottings-large-dark.png
+  {"clock":7200,"epoch":63,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar-large/02-jottings-large-dark.png","w":1100,"h":760}
+prefer prefers-color-scheme light
+  {"media":{"display-mode":"browser","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","prefers-color-scheme":"light","color-gamut":"srgb","dynamic-range":"standard","pointer":"fine","hover":"hover"},"clock":7200,"epoch":66,"incarnation":1}
+tap stop-recording
+  {"at":[549.9921875,239.078125],"tapped":134,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":7200,"epoch":79,"incarnation":1}
+clock data
+  {"clock":7200,"settled":true}
+clock settle
+  {"clock":7600,"settled":true}
+clock +12000
+  {"clock":19600}
+clock data
+  {"clock":19600,"settled":true}
+tap edit-note
+  {"at":[158.5,448.125],"tapped":207,"target":"edit-note","scrolled":{"from":[158.5,2529.125],"to":[158.5,448.125]},"delivery":"platform","carrier":"web","mode":"agent","clock":19600,"epoch":119,"incarnation":1}
+clock settle
+  {"clock":19600,"settled":true}
+tap draft-link
+  {"at":[993.34375,172.046875],"tapped":251,"target":"draft-link","scrolled":{"from":[1762.34375,172.046875],"to":[993.34375,172.046875]},"delivery":"platform","carrier":"web","mode":"agent","clock":19600,"epoch":120,"incarnation":1}
+clock settle
+  {"clock":19600,"settled":true}
+check both
+  {"check":[{"scheme":"light","asked":"light","target":24,"viewport":{"w":1100,"h":760,"scrollW":1100},"findings":[],"accepted":[]},{"scheme":"dark","asked":"dark","target":24,"viewport":{"w":1100,"h":760,"scrollW":1100},"findings":[],"accepted":[]}],"text":"check web · light: no findings (text fits, nothing covered or overlapping, targets ≥ 24, no horizontal overflow, contrast ≥ 4.5:1 or 3:1 large, cards show)\ncheck web · dark: no findings (text fits, nothing covered or overlapping, targets ≥ 24, no horizontal overflow, contrast ≥ 4.5:1 or 3:1 large, cards show)","clock":19600,"epoch":126,"incarnation":1}
+screenshot docs/media/clinic/default/web/toolbar-large/03-draft-large.png
+  {"clock":19600,"epoch":126,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar-large/03-draft-large.png","w":1100,"h":760}
+prefer prefers-color-scheme dark
+  {"media":{"display-mode":"browser","prefers-reduced-motion":"no-preference","prefers-reduced-transparency":"no-preference","prefers-contrast":"no-preference","prefers-color-scheme":"dark","color-gamut":"srgb","dynamic-range":"standard","pointer":"fine","hover":"hover"},"clock":19600,"epoch":129,"incarnation":1}
+clock settle
+  {"clock":19600,"settled":true}
+screenshot docs/media/clinic/default/web/toolbar-large/04-draft-large-dark.png
+  {"clock":19600,"epoch":129,"incarnation":1,"screenshot":"docs/media/clinic/default/web/toolbar-large/04-draft-large-dark.png","w":1100,"h":760}

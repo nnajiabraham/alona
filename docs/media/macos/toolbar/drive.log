@@ -1,90 +1,248 @@
 clock data
-  {"clock":0,"incarnation":1,"epoch":5,"settled":true}
+  {"epoch":5,"settled":true,"incarnation":1,"clock":0}
 tap continue
-  {"at":[210,832],"delivery":"platform","tapped":28,"target":"continue","carrier":"macos","mode":"agent","epoch":6,"incarnation":1,"clock":0}
+  {"at":[210,832],"tapped":28,"delivery":"platform","target":"continue","carrier":"macos","mode":"agent","epoch":6,"incarnation":1,"clock":0}
 clock data
-  {"epoch":6,"incarnation":1,"settled":true,"clock":0}
+  {"incarnation":1,"epoch":6,"settled":true,"clock":0}
 clock +6000
-  {"clock":6000,"epoch":11,"incarnation":1}
+  {"epoch":11,"clock":6000,"incarnation":1}
 clock data
-  {"incarnation":1,"settled":true,"clock":6000,"epoch":11}
+  {"epoch":11,"clock":6000,"settled":true,"incarnation":1}
 tap start-recording
-  {"delivery":"platform","tapped":69,"at":[210,174],"target":"start-recording","carrier":"macos","mode":"agent","epoch":13,"incarnation":1,"clock":6000}
+  {"tapped":69,"delivery":"platform","at":[210,174],"target":"start-recording","carrier":"macos","mode":"agent","epoch":13,"incarnation":1,"clock":6000}
 clock data
-  {"settled":true,"epoch":16,"incarnation":1,"clock":6000}
+  {"epoch":16,"settled":true,"incarnation":1,"clock":6000}
 clock settle
-  {"epoch":16,"clock":6000,"settled":true,"incarnation":1}
+  {"incarnation":1,"settled":true,"clock":6000,"epoch":16}
+screenshot docs/media/macos/toolbar/01-empty-pad.png
+  {"clock":6000,"incarnation":1,"epoch":16,"screenshot":"docs/media/macos/toolbar/01-empty-pad.png","w":420,"h":900,"scale":1}
 type record-notes Agenda
-  {"typed":122,"value":"Agenda","target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":17,"incarnation":1,"clock":6000}
+  {"typed":147,"value":"Agenda","target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":17,"incarnation":1,"clock":6000}
+type record-notes key Meta+a
+  {"key":"Meta+a","typed":147,"target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":17,"incarnation":1,"clock":6000}
+tap rec-bold
+  {"at":[110,359],"delivery":"platform","tapped":118,"target":"rec-bold","carrier":"macos","mode":"agent","epoch":19,"incarnation":1,"clock":6000}
+clock data
+  {"incarnation":1,"settled":true,"clock":6000,"epoch":19}
+state recNotes
+  "**Agenda**"
+tree rec-bold
+  {"pending":[],"epoch":19,"roots":[118],"incarnation":1,"clock":6000,"nodes":[{"id":118,"parent":115,"children":[119],"focused":false,"handlers":["press"],"depth":8,"type":"Pressable","props":{"testId":"rec-bold","accessibilityLabel":"Bold","accessibilityRole":"button","retainFocus":true,"accessibilityPressed":"true","disabled":false}},{"props":{"text":"B","accessibilityElementsHidden":true},"children":[],"handlers":[],"parent":118,"type":"Text","id":119,"focused":false,"depth":9}]}
+screenshot docs/media/macos/toolbar/02-rec-bold.png
+  {"clock":6000,"incarnation":1,"epoch":19,"w":420,"h":900,"screenshot":"docs/media/macos/toolbar/02-rec-bold.png","scale":1}
+type record-notes Agenda
+  {"typed":147,"value":"Agenda","target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":21,"incarnation":1,"clock":6000}
+type record-notes key Meta+a
+  {"key":"Meta+a","typed":147,"target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":21,"incarnation":1,"clock":6000}
+tap rec-italic
+  {"at":[178,359],"tapped":120,"delivery":"platform","target":"rec-italic","carrier":"macos","mode":"agent","epoch":23,"incarnation":1,"clock":6000}
+clock data
+  {"incarnation":1,"settled":true,"epoch":23,"clock":6000}
+state recNotes
+  "*Agenda*"
+tree rec-italic
+  {"roots":[120],"incarnation":1,"pending":[],"nodes":[{"children":[121],"focused":false,"props":{"testId":"rec-italic","accessibilityLabel":"Italic","accessibilityRole":"button","retainFocus":true,"accessibilityPressed":"true","disabled":false},"type":"Pressable","handlers":["press"],"depth":8,"id":120,"parent":115},{"focused":false,"children":[],"parent":120,"handlers":[],"id":121,"props":{"text":"I","accessibilityElementsHidden":true},"type":"Text","depth":9}],"clock":6000,"epoch":23}
+type record-notes Agenda
+  {"typed":147,"value":"Agenda","target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":25,"incarnation":1,"clock":6000}
+type record-notes key Meta+a
+  {"typed":147,"key":"Meta+a","target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":25,"incarnation":1,"clock":6000}
+tap rec-strike
+  {"tapped":122,"at":[246,359],"delivery":"platform","target":"rec-strike","carrier":"macos","mode":"agent","epoch":27,"incarnation":1,"clock":6000}
+clock data
+  {"epoch":27,"settled":true,"incarnation":1,"clock":6000}
+state recNotes
+  "~~Agenda~~"
+tree rec-strike
+  {"epoch":27,"pending":[],"incarnation":1,"nodes":[{"children":[123],"type":"Pressable","handlers":["press"],"focused":false,"id":122,"props":{"testId":"rec-strike","accessibilityLabel":"Strikethrough","accessibilityRole":"button","retainFocus":true,"accessibilityPressed":"true","disabled":false},"depth":8,"parent":115},{"parent":122,"depth":9,"id":123,"handlers":[],"focused":false,"children":[],"props":{"text":"S","accessibilityElementsHidden":true},"type":"Text"}],"clock":6000,"roots":[122]}
+screenshot docs/media/macos/toolbar/03-rec-strike.png
+  {"h":900,"epoch":27,"w":420,"incarnation":1,"clock":6000,"screenshot":"docs/media/macos/toolbar/03-rec-strike.png","scale":1}
+type record-notes Agenda
+  {"typed":147,"value":"Agenda","target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":29,"incarnation":1,"clock":6000}
+tap rec-title
+  {"at":[315.25,359],"delivery":"platform","tapped":125,"target":"rec-title","carrier":"macos","mode":"agent","epoch":31,"incarnation":1,"clock":6000}
+clock data
+  {"incarnation":1,"settled":true,"epoch":31,"clock":6000}
+state recNotes
+  "## Agenda"
+tree rec-title
+  {"roots":[125],"incarnation":1,"pending":[],"nodes":[{"handlers":["press"],"id":125,"depth":8,"parent":115,"focused":false,"props":{"testId":"rec-title","accessibilityLabel":"Title","accessibilityRole":"button","retainFocus":true,"accessibilityPressed":"true","disabled":false},"children":[126],"type":"Pressable"},{"depth":9,"props":{"text":"Title"},"id":126,"parent":125,"type":"Text","handlers":[],"children":[],"focused":false}],"clock":6000,"epoch":31}
+tree rec-plain
+  {"epoch":31,"incarnation":1,"nodes":[{"type":"Pressable","children":[130],"id":129,"focused":false,"handlers":["press"],"depth":8,"props":{"testId":"rec-plain","accessibilityLabel":"Plain text","accessibilityRole":"button","retainFocus":true,"accessibilityPressed":"false","disabled":false},"parent":115},{"children":[],"focused":false,"props":{"text":"Text"},"type":"Text","handlers":[],"depth":9,"id":130,"parent":129}],"pending":[],"clock":6000,"roots":[129]}
+screenshot docs/media/macos/toolbar/04-rec-title.png
+  {"epoch":31,"incarnation":1,"clock":6000,"w":420,"screenshot":"docs/media/macos/toolbar/04-rec-title.png","h":900,"scale":1}
+tap rec-subtitle
+  {"at":[378.25,359],"tapped":127,"delivery":"platform","target":"rec-subtitle","carrier":"macos","mode":"agent","epoch":33,"incarnation":1,"clock":6000}
+clock data
+  {"incarnation":1,"settled":true,"clock":6000,"epoch":33}
+state recNotes
+  "### Agenda"
+tree rec-subtitle
+  {"epoch":33,"incarnation":1,"nodes":[{"id":127,"parent":115,"children":[128],"focused":false,"handlers":["press"],"depth":8,"type":"Pressable","props":{"testId":"rec-subtitle","accessibilityLabel":"Subtitle","accessibilityRole":"button","retainFocus":true,"accessibilityPressed":"true","disabled":false}},{"props":{"text":"Subtitle"},"id":128,"depth":9,"type":"Text","handlers":[],"children":[],"focused":false,"parent":127}],"pending":[],"clock":6000,"roots":[127]}
+tree rec-title
+  {"roots":[125],"incarnation":1,"pending":[],"nodes":[{"type":"Pressable","parent":115,"depth":8,"id":125,"children":[126],"handlers":["press"],"focused":false,"props":{"testId":"rec-title","accessibilityLabel":"Title","accessibilityRole":"button","retainFocus":true,"accessibilityPressed":"false","disabled":false}},{"handlers":[],"parent":125,"depth":9,"type":"Text","focused":false,"id":126,"children":[],"props":{"text":"Title"}}],"clock":6000,"epoch":33}
+tap rec-plain
+  {"at":[381.25,359],"delivery":"platform","tapped":129,"target":"rec-plain","scrolled":{"from":[439.75,359],"to":[381.25,359]},"carrier":"macos","mode":"agent","epoch":35,"incarnation":1,"clock":6000}
+clock data
+  {"epoch":35,"settled":true,"incarnation":1,"clock":6000}
+state recNotes
+  "Agenda"
+tree rec-plain
+  {"epoch":35,"incarnation":1,"nodes":[{"props":{"testId":"rec-plain","accessibilityLabel":"Plain text","accessibilityRole":"button","retainFocus":true,"accessibilityPressed":"true","disabled":false},"id":129,"depth":8,"type":"Pressable","handlers":["press"],"children":[130],"focused":false,"parent":115},{"props":{"text":"Text"},"children":[],"handlers":[],"parent":129,"type":"Text","id":130,"focused":false,"depth":9}],"pending":[],"clock":6000,"roots":[129]}
+tree rec-subtitle
+  {"epoch":35,"pending":[],"incarnation":1,"nodes":[{"type":"Pressable","children":[128],"id":127,"focused":false,"handlers":["press"],"depth":8,"props":{"testId":"rec-subtitle","accessibilityLabel":"Subtitle","accessibilityRole":"button","retainFocus":true,"accessibilityPressed":"false","disabled":false},"parent":115},{"parent":127,"props":{"text":"Subtitle"},"id":128,"children":[],"type":"Text","focused":false,"handlers":[],"depth":9}],"clock":6000,"roots":[127]}
+type record-notes Agenda
+  {"typed":147,"value":"Agenda","target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":35,"incarnation":1,"clock":6000}
+tap rec-bullet
+  {"at":[363.5,359],"tapped":132,"delivery":"platform","target":"rec-bullet","scrolled":{"from":[457.5,359],"to":[363.5,359]},"carrier":"macos","mode":"agent","epoch":37,"incarnation":1,"clock":6000}
+clock data
+  {"epoch":37,"incarnation":1,"settled":true,"clock":6000}
+state recNotes
+  "- Agenda"
+tree rec-bullet
+  {"roots":[132],"incarnation":1,"pending":[],"nodes":[{"props":{"testId":"rec-bullet","accessibilityLabel":"Bulleted list","accessibilityRole":"button","retainFocus":true,"accessibilityPressed":"true","disabled":false},"id":132,"depth":8,"type":"Pressable","handlers":["press"],"children":[133,134],"focused":false,"parent":115},{"handlers":[],"parent":132,"depth":9,"type":"Image","focused":false,"id":133,"children":[],"props":{"accessibilityElementsHidden":true,"imageSource":"symbol:list"}},{"type":"Text","parent":132,"depth":9,"id":134,"children":[],"handlers":[],"focused":false,"props":{"text":"Bullets"}}],"clock":6000,"epoch":37}
+screenshot docs/media/macos/toolbar/05-rec-bullet.png
+  {"h":900,"epoch":37,"incarnation":1,"screenshot":"docs/media/macos/toolbar/05-rec-bullet.png","w":420,"clock":6000,"scale":1}
+tree rec-plain
+  {"epoch":37,"pending":[],"incarnation":1,"nodes":[{"handlers":["press"],"parent":115,"depth":8,"type":"Pressable","focused":false,"id":129,"children":[130],"props":{"testId":"rec-plain","accessibilityLabel":"Plain text","accessibilityRole":"button","retainFocus":true,"accessibilityPressed":"false","disabled":false}},{"type":"Text","children":[],"id":130,"focused":false,"handlers":[],"depth":9,"props":{"text":"Text"},"parent":129}],"clock":6000,"roots":[129]}
+tap rec-plain
+  {"at":[287.25,359],"delivery":"platform","tapped":129,"target":"rec-plain","carrier":"macos","mode":"agent","epoch":39,"incarnation":1,"clock":6000}
+clock data
+  {"incarnation":1,"settled":true,"epoch":39,"clock":6000}
+state recNotes
+  "Agenda"
+tree rec-plain
+  {"epoch":39,"incarnation":1,"nodes":[{"depth":8,"props":{"testId":"rec-plain","accessibilityLabel":"Plain text","accessibilityRole":"button","retainFocus":true,"accessibilityPressed":"true","disabled":false},"id":129,"parent":115,"type":"Pressable","handlers":["press"],"children":[130],"focused":false},{"parent":129,"depth":9,"id":130,"handlers":[],"focused":false,"children":[],"props":{"text":"Text"},"type":"Text"}],"pending":[],"clock":6000,"roots":[129]}
+tree rec-bullet
+  {"roots":[132],"incarnation":1,"pending":[],"nodes":[{"type":"Pressable","parent":115,"depth":8,"id":132,"children":[133,134],"handlers":["press"],"focused":false,"props":{"testId":"rec-bullet","accessibilityLabel":"Bulleted list","accessibilityRole":"button","retainFocus":true,"accessibilityPressed":"false","disabled":false}},{"id":133,"parent":132,"children":[],"focused":false,"handlers":[],"depth":9,"type":"Image","props":{"accessibilityElementsHidden":true,"imageSource":"symbol:list"}},{"parent":132,"depth":9,"id":134,"handlers":[],"focused":false,"children":[],"props":{"text":"Bullets"},"type":"Text"}],"clock":6000,"epoch":39}
+type record-notes Agenda
+  {"typed":147,"value":"Agenda","target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":39,"incarnation":1,"clock":6000}
+tap rec-ordered
+  {"at":[358.5,359],"tapped":135,"delivery":"platform","target":"rec-ordered","scrolled":{"from":[453.5,359],"to":[358.5,359]},"carrier":"macos","mode":"agent","epoch":41,"incarnation":1,"clock":6000}
+clock data
+  {"incarnation":1,"settled":true,"clock":6000,"epoch":41}
+state recNotes
+  "1. Agenda"
+tree rec-ordered
+  {"epoch":41,"pending":[],"incarnation":1,"nodes":[{"id":135,"parent":115,"children":[136,137],"focused":false,"handlers":["press"],"depth":8,"type":"Pressable","props":{"testId":"rec-ordered","accessibilityLabel":"Numbered list","accessibilityRole":"button","retainFocus":true,"accessibilityPressed":"true","disabled":false}},{"depth":9,"props":{"text":"1.","accessibilityElementsHidden":true},"id":136,"parent":135,"type":"Text","handlers":[],"children":[],"focused":false},{"parent":135,"depth":9,"id":137,"handlers":[],"focused":false,"children":[],"props":{"text":"Numbers"},"type":"Text"}],"clock":6000,"roots":[135]}
+tree rec-bullet
+  {"roots":[132],"incarnation":1,"pending":[],"nodes":[{"props":{"testId":"rec-bullet","accessibilityLabel":"Bulleted list","accessibilityRole":"button","retainFocus":true,"accessibilityPressed":"false","disabled":false},"children":[133,134],"handlers":["press"],"parent":115,"type":"Pressable","id":132,"focused":false,"depth":8},{"children":[],"type":"Image","handlers":[],"focused":false,"id":133,"props":{"accessibilityElementsHidden":true,"imageSource":"symbol:list"},"depth":9,"parent":132},{"focused":false,"children":[],"parent":132,"handlers":[],"id":134,"props":{"text":"Bullets"},"type":"Text","depth":9}],"clock":6000,"epoch":41}
+type record-notes Agenda
+  {"typed":147,"value":"Agenda","target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":43,"incarnation":1,"clock":6000}
+tap rec-task
+  {"at":[367,359],"tapped":138,"delivery":"platform","target":"rec-task","scrolled":{"from":[445,359],"to":[367,359]},"carrier":"macos","mode":"agent","epoch":45,"incarnation":1,"clock":6000}
+clock data
+  {"incarnation":1,"epoch":45,"clock":6000,"settled":true}
+state recNotes
+  "- [ ] Agenda"
+tree rec-task
+  {"roots":[138],"incarnation":1,"pending":[],"nodes":[{"depth":8,"props":{"testId":"rec-task","accessibilityLabel":"Checklist","accessibilityRole":"button","retainFocus":true,"accessibilityPressed":"true","disabled":false},"id":138,"parent":115,"type":"Pressable","handlers":["press"],"children":[139,140],"focused":false},{"id":139,"parent":138,"children":[],"focused":false,"handlers":[],"depth":9,"type":"Image","props":{"accessibilityElementsHidden":true,"imageSource":"symbol:checkmark"}},{"children":[],"type":"Text","handlers":[],"focused":false,"id":140,"props":{"text":"To-do"},"depth":9,"parent":138}],"clock":6000,"epoch":45}
+screenshot docs/media/macos/toolbar/06-rec-checklist.png
+  {"epoch":45,"incarnation":1,"w":420,"h":900,"clock":6000,"screenshot":"docs/media/macos/toolbar/06-rec-checklist.png","scale":1}
+type record-notes Agenda
+  {"typed":147,"value":"Agenda","target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":47,"incarnation":1,"clock":6000}
+tap rec-quote
+  {"at":[365,359],"tapped":141,"delivery":"platform","target":"rec-quote","scrolled":{"from":[447,359],"to":[365,359]},"carrier":"macos","mode":"agent","epoch":49,"incarnation":1,"clock":6000}
+clock data
+  {"epoch":49,"incarnation":1,"settled":true,"clock":6000}
+state recNotes
+  "> Agenda"
+tree rec-quote
+  {"roots":[141],"incarnation":1,"pending":[],"nodes":[{"id":141,"parent":115,"children":[142,143],"focused":false,"handlers":["press"],"depth":8,"type":"Pressable","props":{"testId":"rec-quote","accessibilityLabel":"Quote","accessibilityRole":"button","retainFocus":true,"accessibilityPressed":"true","disabled":false}},{"parent":141,"props":{"accessibilityElementsHidden":true,"imageSource":"symbol:quote"},"id":142,"children":[],"type":"Image","focused":false,"handlers":[],"depth":9},{"id":143,"props":{"text":"Quote"},"handlers":[],"children":[],"type":"Text","parent":141,"depth":9,"focused":false}],"clock":6000,"epoch":49}
+screenshot docs/media/macos/toolbar/07-rec-quote.png
+  {"h":900,"epoch":49,"incarnation":1,"screenshot":"docs/media/macos/toolbar/07-rec-quote.png","w":420,"clock":6000,"scale":1}
+type record-notes Alona site
+  {"typed":147,"value":"Alona site","target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":51,"incarnation":1,"clock":6000}
+type record-notes key Meta+a
+  {"typed":147,"key":"Meta+a","target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":51,"incarnation":1,"clock":6000}
+tap rec-link
+  {"delivery":"platform","tapped":144,"at":[371,359],"target":"rec-link","scrolled":{"from":[441,359],"to":[371,359]},"carrier":"macos","mode":"agent","epoch":52,"incarnation":1,"clock":6000}
+clock settle
+  {"epoch":52,"incarnation":1,"settled":true,"clock":6000}
+type rec-link-url https://example.com
+  {"typed":153,"value":"https://example.com","target":"rec-link-url","delivery":"platform","carrier":"macos","mode":"agent","epoch":53,"incarnation":1,"clock":6000}
+tap rec-link-apply
+  {"tapped":154,"at":[295.5,403],"delivery":"platform","target":"rec-link-apply","carrier":"macos","mode":"agent","epoch":56,"incarnation":1,"clock":6000}
+clock data
+  {"epoch":56,"settled":true,"incarnation":1,"clock":6000}
+state recNotes
+  "[Alona site](https://example.com)"
+tree rec-link
+  {"nodes":[{"children":[145,146],"props":{"testId":"rec-link","accessibilityLabel":"Link","accessibilityRole":"button","retainFocus":true,"accessibilityPressed":"true","disabled":false},"parent":115,"handlers":["press"],"id":144,"type":"Pressable","focused":false,"depth":8},{"focused":false,"id":145,"handlers":[],"depth":9,"parent":144,"props":{"accessibilityElementsHidden":true,"imageSource":"symbol:link"},"type":"Image","children":[]},{"type":"Text","children":[],"handlers":[],"focused":false,"parent":144,"depth":9,"id":146,"props":{"text":"Link"}}],"epoch":56,"roots":[144],"pending":[],"incarnation":1,"clock":6000}
+screenshot docs/media/macos/toolbar/08-rec-link.png
+  {"w":420,"clock":6000,"epoch":56,"incarnation":1,"h":900,"screenshot":"docs/media/macos/toolbar/08-rec-link.png","scale":1}
+type record-notes Agenda
+  {"value":"Agenda","typed":147,"target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":58,"incarnation":1,"clock":6000}
+type record-notes key Meta+a
+  {"typed":147,"key":"Meta+a","target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":58,"incarnation":1,"clock":6000}
+type record-notes key Meta+b
+  {"typed":147,"key":"Meta+b","target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":60,"incarnation":1,"clock":6000}
+clock data
+  {"epoch":60,"settled":true,"incarnation":1,"clock":6000}
+state recNotes
+  "**Agenda**"
+tree rec-bold
+  {"clock":6000,"nodes":[{"parent":115,"depth":8,"id":118,"handlers":["press"],"focused":false,"children":[119],"props":{"testId":"rec-bold","accessibilityLabel":"Bold","accessibilityRole":"button","retainFocus":true,"accessibilityPressed":"true","disabled":false},"type":"Pressable"},{"focused":false,"children":[],"parent":118,"handlers":[],"id":119,"props":{"text":"B","accessibilityElementsHidden":true},"type":"Text","depth":9}],"incarnation":1,"epoch":60,"roots":[118],"pending":[]}
+screenshot docs/media/macos/toolbar/09-rec-shortcut-bold.png
+  {"clock":6000,"screenshot":"docs/media/macos/toolbar/09-rec-shortcut-bold.png","epoch":60,"incarnation":1,"h":900,"w":420,"scale":1}
+type record-notes Agenda
+  {"value":"Agenda","typed":147,"target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":62,"incarnation":1,"clock":6000}
 clock +5000
-  {"incarnation":1,"epoch":19,"clock":11000}
+  {"clock":11000,"epoch":64,"incarnation":1}
 clock data
-  {"clock":11000,"settled":true,"epoch":19,"incarnation":1}
+  {"incarnation":1,"clock":11000,"settled":true,"epoch":64}
 tap rec-stamp
-  {"delivery":"platform","tapped":114,"at":[35,345],"target":"rec-stamp","carrier":"macos","mode":"agent","epoch":20,"incarnation":1,"clock":11000}
+  {"delivery":"platform","at":[45,359],"tapped":116,"target":"rec-stamp","scrolled":{"from":[-432.5,359],"to":[45,359]},"carrier":"macos","mode":"agent","epoch":65,"incarnation":1,"clock":11000}
 clock data
-  {"epoch":20,"clock":11000,"settled":true,"incarnation":1}
+  {"settled":true,"clock":11000,"incarnation":1,"epoch":65}
 state recNotes
   "Agenda[0:05] "
-tap rec-bullet
-  {"at":[78.5,345],"delivery":"platform","tapped":116,"target":"rec-bullet","carrier":"macos","mode":"agent","epoch":21,"incarnation":1,"clock":11000}
-clock data
-  {"clock":11000,"epoch":21,"settled":true,"incarnation":1}
-state recNotes
-  "- Agenda[0:05] "
-screenshot docs/media/macos/toolbar/01-stamp-and-bullet.png
-  {"w":420,"incarnation":1,"epoch":21,"h":900,"clock":11000,"screenshot":"docs/media/macos/toolbar/01-stamp-and-bullet.png","scale":1}
-type record-notes Fix login
-  {"value":"Fix login","typed":122,"target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":22,"incarnation":1,"clock":11000}
-tap rec-task
-  {"at":[122.5,345],"delivery":"platform","tapped":118,"target":"rec-task","carrier":"macos","mode":"agent","epoch":23,"incarnation":1,"clock":11000}
-clock data
-  {"incarnation":1,"clock":11000,"settled":true,"epoch":23}
-state recNotes
-  "- [ ] Fix login"
-tap rec-heading
-  {"tapped":120,"delivery":"platform","at":[163,345],"target":"rec-heading","carrier":"macos","mode":"agent","epoch":24,"incarnation":1,"clock":11000}
-clock data
-  {"epoch":24,"clock":11000,"settled":true,"incarnation":1}
-state recNotes
-  "## Fix login"
-screenshot docs/media/macos/toolbar/02-task-and-heading.png
-  {"epoch":24,"h":900,"clock":11000,"screenshot":"docs/media/macos/toolbar/02-task-and-heading.png","w":420,"incarnation":1,"scale":1}
+screenshot docs/media/macos/toolbar/10-timestamp.png
+  {"h":900,"epoch":65,"incarnation":1,"screenshot":"docs/media/macos/toolbar/10-timestamp.png","w":420,"clock":11000,"scale":1}
 tap stop-recording
-  {"at":[210,208],"delivery":"platform","tapped":106,"target":"stop-recording","carrier":"macos","mode":"agent","epoch":25,"incarnation":1,"clock":11000}
+  {"tapped":106,"delivery":"platform","at":[210,208],"target":"stop-recording","carrier":"macos","mode":"agent","epoch":66,"incarnation":1,"clock":11000}
 clock data
-  {"clock":11000,"incarnation":1,"settled":true,"epoch":30}
+  {"incarnation":1,"epoch":71,"clock":11000,"settled":true}
 clock settle
-  {"incarnation":1,"clock":11000,"epoch":30,"settled":true}
+  {"incarnation":1,"settled":true,"epoch":71,"clock":11000}
 clock +12000
-  {"incarnation":1,"clock":23000,"epoch":45}
+  {"epoch":86,"clock":23000,"incarnation":1}
 clock data
-  {"clock":23000,"epoch":45,"settled":true,"incarnation":1}
+  {"settled":true,"epoch":86,"incarnation":1,"clock":23000}
 state detail.status
   "done"
 tap pane-mine
-  {"tapped":163,"native":"segmented-control","delivery":"host-activation","target":"pane-mine","carrier":"macos","mode":"agent","epoch":46,"incarnation":1,"clock":23000}
+  {"delivery":"host-activation","tapped":195,"native":"segmented-control","target":"pane-mine","carrier":"macos","mode":"agent","epoch":87,"incarnation":1,"clock":23000}
 clock settle
-  {"epoch":46,"clock":23000,"settled":true,"incarnation":1}
+  {"incarnation":1,"epoch":87,"settled":true,"clock":23000}
 type my-notes Decisions
-  {"value":"Decisions","typed":186,"target":"my-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":47,"incarnation":1,"clock":23000}
-tap mine-heading
-  {"at":[163,262],"tapped":184,"delivery":"platform","target":"mine-heading","carrier":"macos","mode":"agent","epoch":48,"incarnation":1,"clock":23000}
+  {"typed":243,"value":"Decisions","target":"my-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":88,"incarnation":1,"clock":23000}
+tap mine-title
+  {"at":[315.25,276],"tapped":221,"delivery":"platform","target":"mine-title","carrier":"macos","mode":"agent","epoch":90,"incarnation":1,"clock":23000}
 clock data
-  {"incarnation":1,"epoch":48,"settled":true,"clock":23000}
+  {"epoch":90,"clock":23000,"settled":true,"incarnation":1}
 state noteDraft
   "## Decisions"
-tap mine-task
-  {"at":[122.5,262],"tapped":182,"delivery":"platform","target":"mine-task","carrier":"macos","mode":"agent","epoch":49,"incarnation":1,"clock":23000}
+tree mine-title
+  {"roots":[221],"pending":[],"epoch":90,"nodes":[{"depth":8,"props":{"testId":"mine-title","accessibilityLabel":"Title","accessibilityRole":"button","retainFocus":true,"accessibilityPressed":"true","disabled":false},"id":221,"parent":211,"type":"Pressable","handlers":["press"],"children":[222],"focused":false},{"handlers":[],"type":"Text","props":{"text":"Title"},"focused":false,"parent":221,"depth":9,"children":[],"id":222}],"clock":23000,"incarnation":1}
+tap mine-plain
+  {"delivery":"platform","tapped":225,"at":[381.25,276],"target":"mine-plain","scrolled":{"from":[439.75,276],"to":[381.25,276]},"carrier":"macos","mode":"agent","epoch":92,"incarnation":1,"clock":23000}
 clock data
-  {"clock":23000,"settled":true,"epoch":49,"incarnation":1}
+  {"incarnation":1,"epoch":92,"settled":true,"clock":23000}
 state noteDraft
-  "- [ ] Decisions"
-screenshot docs/media/macos/toolbar/03-toolbar-on-my-notes.png
-  {"w":420,"h":900,"clock":23000,"epoch":49,"incarnation":1,"screenshot":"docs/media/macos/toolbar/03-toolbar-on-my-notes.png","scale":1}
-clock +1500
-  {"inflight":1,"incarnation":1,"epoch":49,"background":1,"clock":24500,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+  "Decisions"
+tap mine-ordered
+  {"delivery":"platform","tapped":231,"at":[358.5,276],"target":"mine-ordered","scrolled":{"from":[547.5,276],"to":[358.5,276]},"carrier":"macos","mode":"agent","epoch":94,"incarnation":1,"clock":23000}
 clock data
-  {"incarnation":1,"settled":true,"epoch":50,"clock":24500}
+  {"epoch":94,"clock":23000,"settled":true,"incarnation":1}
+state noteDraft
+  "1. Decisions"
+tree mine-ordered
+  {"clock":23000,"pending":[],"roots":[231],"epoch":94,"incarnation":1,"nodes":[{"depth":8,"props":{"testId":"mine-ordered","accessibilityLabel":"Numbered list","accessibilityRole":"button","retainFocus":true,"accessibilityPressed":"true","disabled":false},"id":231,"parent":211,"type":"Pressable","handlers":["press"],"children":[232,233],"focused":false},{"type":"Text","handlers":[],"props":{"text":"1.","accessibilityElementsHidden":true},"id":232,"depth":9,"parent":231,"children":[],"focused":false},{"handlers":[],"type":"Text","props":{"text":"Numbers"},"focused":false,"parent":231,"depth":9,"children":[],"id":233}]}
+screenshot docs/media/macos/toolbar/11-my-notes-numbered.png
+  {"screenshot":"docs/media/macos/toolbar/11-my-notes-numbered.png","epoch":94,"w":420,"clock":23000,"incarnation":1,"h":900,"scale":1}
+clock +1500
+  {"clock":24500,"background":1,"inflight":1,"incarnation":1,"epoch":94,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+clock data
+  {"epoch":95,"settled":true,"clock":24500,"incarnation":1}
 state detail.userNotes
-  "- [ ] Decisions"
+  "1. Decisions"

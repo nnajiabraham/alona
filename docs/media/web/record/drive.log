@@ -17,17 +17,17 @@ clock settle
 state rec.state
   "recording"
 screenshot docs/media/web/record/01-recording-started.png
-  {"clock":6400,"epoch":45,"incarnation":1,"screenshot":"docs/media/web/record/01-recording-started.png","w":1100,"h":760}
+  {"clock":6400,"epoch":46,"incarnation":1,"screenshot":"docs/media/web/record/01-recording-started.png","w":1100,"h":760}
 type record-title Launch sync
-  {"at":[550,320],"typed":90,"target":"record-title","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":48,"incarnation":1}
+  {"at":[550,301.5],"typed":90,"target":"record-title","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":49,"incarnation":1}
 type record-notes - Ask about the login fix
-  {"at":[550,551],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":49,"incarnation":1}
+  {"at":[550,548.5],"typed":74,"target":"record-notes","delivery":"platform","carrier":"web","mode":"agent","clock":6400,"epoch":51,"incarnation":1}
 clock +5000
   {"clock":11400}
 screenshot docs/media/web/record/02-notes-while-recording.png
-  {"clock":11400,"epoch":55,"incarnation":1,"screenshot":"docs/media/web/record/02-notes-while-recording.png","w":1100,"h":760}
+  {"clock":11400,"epoch":57,"incarnation":1,"screenshot":"docs/media/web/record/02-notes-while-recording.png","w":1100,"h":760}
 tap stop-recording
-  {"at":[550,252],"tapped":87,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":11400,"epoch":70,"incarnation":1}
+  {"at":[550,233.5],"tapped":87,"target":"stop-recording","delivery":"platform","carrier":"web","mode":"agent","clock":11400,"epoch":72,"incarnation":1}
 clock data
   {"clock":11400,"settled":true}
 clock settle
@@ -35,7 +35,7 @@ clock settle
 state lib.0.status
   "recorded"
 screenshot docs/media/web/record/03-saved-and-queued.png
-  {"clock":11800,"epoch":73,"incarnation":1,"screenshot":"docs/media/web/record/03-saved-and-queued.png","w":1100,"h":760}
+  {"clock":11800,"epoch":75,"incarnation":1,"screenshot":"docs/media/web/record/03-saved-and-queued.png","w":1100,"h":760}
 clock +3000
   {"clock":14800}
 clock data
@@ -43,7 +43,7 @@ clock data
 state lib.0.status
   "transcribing"
 screenshot docs/media/web/record/04-transcribing.png
-  {"clock":14800,"epoch":90,"incarnation":1,"screenshot":"docs/media/web/record/04-transcribing.png","w":1100,"h":760}
+  {"clock":14800,"epoch":92,"incarnation":1,"screenshot":"docs/media/web/record/04-transcribing.png","w":1100,"h":760}
 clock +2000
   {"clock":16800}
 clock data
@@ -51,7 +51,7 @@ clock data
 state lib.0.status
   "summarizing"
 screenshot docs/media/web/record/05-writing-notes.png
-  {"clock":16800,"epoch":102,"incarnation":1,"screenshot":"docs/media/web/record/05-writing-notes.png","w":1100,"h":760}
+  {"clock":16800,"epoch":104,"incarnation":1,"screenshot":"docs/media/web/record/05-writing-notes.png","w":1100,"h":760}
 clock +6000
   {"clock":22800}
 clock data
@@ -63,4 +63,4 @@ state detail.title
 state detail.userNotes
   "- Ask about the login fix"
 screenshot docs/media/web/record/06-notes-ready.png
-  {"clock":22800,"epoch":114,"incarnation":1,"screenshot":"docs/media/web/record/06-notes-ready.png","w":1100,"h":760}
+  {"clock":22800,"epoch":116,"incarnation":1,"screenshot":"docs/media/web/record/06-notes-ready.png","w":1100,"h":760}
