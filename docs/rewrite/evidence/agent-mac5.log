@@ -1,0 +1,13 @@
+macOS: core/notes.ts changed; running the new plan on the existing build (no native rebuild). Only the agent's drives run it: a launch outside them (`simctl launch`, the home screen) runs the installed plan, so `bun exact.mjs mac` before timing one
+compiler: 1 note (not counted), as before (.exact/warnings-macos.txt lists them; bun exact.mjs contract build quotes each line)
+clock 0 ms · settled · epoch 3
+tapped #19 "Untitled meeting" · delivery platform · epoch 4 · clock 0 ms
+clock 0 ms · settled · epoch 5
+tapped #52 "regenerate" · delivery platform · epoch 6 · clock 0 ms
+clock 0 ms · settled · epoch 9
+clock 12000 ms · epoch 17 · real=12007
+clock 12000 ms · settled · epoch 17
+"done"
+"Launch date and bug fixes for mobile app"
+"## Summary\nToday's meeting decided the launch date is March 15th with a critical login fix scheduled by Friday. We also agreed on the design deliverables, including updated icons sent to the team by Thursday.\n## Key points\n- Android build confirmed stable.\n- Crash fixed on settings screen yesterday.\n- Login issue identified and needs two more days for full testing.\n- Design side: onboarding screens finalized with new icons.\n- Release plan: launch on March 15th, login fix by Friday.\n## Decisions\n- Launch date set to March 15th.\n- Login fix completed by Friday morning (Daniel's responsibility).\n- Release notes prepared for store screen shots.\n- Full regression suite will run on Friday morning.\n- Design team receives updated icons by Thursday.\n## Action items\n- Karen: Own login fix and run full regression suite on Friday morning.\n- Daniel: Own login fix, review design deliverables by Thursday.\n- Team: Review open bugs after March 15th launch.\n- Design side: Send updated icons to the team by Thursday.\n- Team: Prepare release notes and store screen shots for the app.\n## Open questions\n- When will Karen confirm the full regression suite is ready before Friday?\n- How long will Daniel spend on reviewing design deliverables by Thursday?"
+screenshot <scratchpad>/shots/mac-real-notes.png · 420×900 · epoch 17 · clock 12000 ms · scale=1 · window=true

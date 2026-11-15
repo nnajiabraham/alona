@@ -1,0 +1,86 @@
+clock data
+  {"clock":0,"incarnation":1,"settled":true,"epoch":3}
+tap continue
+  {"at":[210,832],"tapped":28,"delivery":"platform","target":"continue","carrier":"macos","mode":"agent","epoch":4,"incarnation":1,"clock":0}
+clock data
+  {"settled":true,"epoch":4,"incarnation":1,"clock":0}
+clock +6000
+  {"incarnation":1,"epoch":9,"clock":6000}
+clock data
+  {"clock":6000,"incarnation":1,"epoch":9,"settled":true}
+tap start-recording
+  {"at":[210,174],"delivery":"platform","tapped":55,"target":"start-recording","carrier":"macos","mode":"agent","epoch":10,"incarnation":1,"clock":6000}
+clock data
+  {"incarnation":1,"epoch":14,"clock":6000,"settled":true}
+clock settle
+  {"epoch":14,"clock":6000,"settled":true,"incarnation":1}
+type record-title Launch sync
+  {"value":"Launch sync","typed":95,"target":"record-title","delivery":"platform","carrier":"macos","mode":"agent","epoch":15,"incarnation":1,"clock":6000}
+type record-notes - Ask about the login fix
+  {"value":"- Ask about the login fix","typed":99,"target":"record-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":16,"incarnation":1,"clock":6000}
+clock +5000
+  {"epoch":18,"clock":11000,"incarnation":1}
+tap stop-recording
+  {"delivery":"platform","tapped":92,"at":[210,208],"target":"stop-recording","carrier":"macos","mode":"agent","epoch":19,"incarnation":1,"clock":11000}
+clock data
+  {"incarnation":1,"epoch":24,"clock":11000,"settled":true}
+clock settle
+  {"clock":11000,"epoch":24,"settled":true,"incarnation":1}
+clock +12000
+  {"epoch":39,"clock":23000,"incarnation":1}
+clock data
+  {"settled":true,"epoch":39,"clock":23000,"incarnation":1}
+state detail.status
+  "done"
+screenshot docs/media/macos/review/01-ai-notes.png
+  {"incarnation":1,"w":420,"screenshot":"docs/media/macos/review/01-ai-notes.png","h":900,"clock":23000,"epoch":39,"scale":1}
+tap pane-transcript
+  {"native":"segmented-control","tapped":137,"delivery":"host-activation","target":"pane-transcript","carrier":"macos","mode":"agent","epoch":40,"incarnation":1,"clock":23000}
+state pane
+  "transcript"
+screenshot docs/media/macos/review/02-transcript.png
+  {"clock":23000,"w":420,"screenshot":"docs/media/macos/review/02-transcript.png","incarnation":1,"h":900,"epoch":40,"scale":1}
+tap pane-mine
+  {"native":"segmented-control","tapped":135,"delivery":"host-activation","target":"pane-mine","carrier":"macos","mode":"agent","epoch":41,"incarnation":1,"clock":23000}
+type my-notes ## Follow up
+  {"value":"## Follow up","typed":168,"target":"my-notes","delivery":"platform","carrier":"macos","mode":"agent","epoch":42,"incarnation":1,"clock":23000}
+clock +1000
+  {"incarnation":1,"clock":24000,"background":1,"inflight":1,"epoch":42,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+clock data
+  {"settled":true,"epoch":43,"clock":24000,"incarnation":1}
+state detail.userNotes
+  "## Follow up"
+state noteDirty
+  false
+screenshot docs/media/macos/review/03-my-notes-saved.png
+  {"screenshot":"docs/media/macos/review/03-my-notes-saved.png","w":420,"incarnation":1,"h":900,"epoch":43,"clock":24000,"scale":1}
+type title-field Q1 launch plan
+  {"typed":125,"value":"Q1 launch plan","target":"title-field","delivery":"platform","carrier":"macos","mode":"agent","epoch":43,"incarnation":1,"clock":24000}
+type title-field key Enter
+  {"typed":125,"key":"Enter","value":"Q1 launch plan","target":"title-field","delivery":"platform","carrier":"macos","mode":"agent","epoch":43,"incarnation":1,"clock":24000}
+clock data
+  {"incarnation":1,"settled":true,"epoch":45,"clock":24000}
+state detail.title
+  "Q1 launch plan"
+screenshot docs/media/macos/review/04-renamed.png
+  {"screenshot":"docs/media/macos/review/04-renamed.png","w":420,"incarnation":1,"clock":24000,"epoch":45,"h":900,"scale":1}
+tap pane-ai
+  {"native":"segmented-control","delivery":"host-activation","tapped":133,"target":"pane-ai","carrier":"macos","mode":"agent","epoch":46,"incarnation":1,"clock":24000}
+tap regenerate
+  {"delivery":"platform","at":[210,765.5],"tapped":172,"target":"regenerate","carrier":"macos","mode":"agent","epoch":47,"incarnation":1,"clock":24000}
+clock data
+  {"incarnation":1,"settled":true,"epoch":50,"clock":24000}
+clock +1000
+  {"incarnation":1,"epoch":50,"background":1,"inflight":1,"clock":25000,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+clock data
+  {"incarnation":1,"epoch":52,"settled":true,"clock":25000}
+state detail.status
+  "summarizing"
+screenshot docs/media/macos/review/05-writing-again.png
+  {"incarnation":1,"clock":25000,"epoch":52,"w":420,"screenshot":"docs/media/macos/review/05-writing-again.png","h":900,"scale":1}
+clock +6000
+  {"epoch":58,"incarnation":1,"clock":31000}
+clock data
+  {"epoch":58,"clock":31000,"settled":true,"incarnation":1}
+state detail.status
+  "done"

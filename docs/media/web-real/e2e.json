@@ -1,0 +1,183 @@
+{
+  "date": "2026-11-14T21:56:47.641Z",
+  "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+  "fixture": "tools/fixture/meeting-fixture.wav (53 s, 16 kHz mono)",
+  "microphone": "Chrome fake capture device playing the fixture (--use-file-for-fake-audio-capture)",
+  "runs": [
+    {
+      "run": 1,
+      "jobs": [
+        "m1794693423080.a0.stt",
+        "m1794693423080.a0.notes0"
+      ],
+      "pipelineSeconds": 30.086,
+      "transcribe": {
+        "loadMs": 1177,
+        "transcribeMs": 3811,
+        "audioSeconds": 56.02,
+        "windows": 4,
+        "decodeMs": 80
+      },
+      "generate": [
+        {
+          "loadMs": 1400,
+          "promptTokens": 475,
+          "tokens": 206,
+          "ttftMs": 14585,
+          "generateMs": 19398,
+          "tokensPerSecond": 42.59
+        }
+      ],
+      "wer": {
+        "errors": 9,
+        "words": 168,
+        "wer": 0.0536
+      },
+      "transcript": "Thanks for joining everyone. Today we need to decide the launch date for the mobile app and review the open bugs. The Android build is stable. We fixed the crash on the settings screen yesterday, and battery usage is down by 20%. Good. What about the login issue on older phones? That one is still open. I need two more days to finish the fix and test it. From the design side, the onboarding screens of final, I will send the updated icons to the team by Thursday. Then let us agree on the plan. We launch on the 15th of March, as long as the login fix lands by Friday. Agreed. I will also prepare the release notes and the store screen shots. I will own the login fix and I will run the full regression suite on Friday morning. Great. To summarize the launch date is March 15. Daniel owns the login fix and Karen owns the icons, the release notes and the screen shots. Thanks, everyone.",
+      "segments": [
+        {
+          "start": 0,
+          "end": 13.77,
+          "text": "Thanks for joining everyone. Today we need to decide the launch date for the mobile app and review the open bugs. The Android build is stable. We fixed the crash on the settings screen yesterday, and battery usage is down by 20%. Good."
+        },
+        {
+          "start": 13.77,
+          "end": 33.63,
+          "text": "What about the login issue on older phones? That one is still open. I need two more days to finish the fix and test it. From the design side, the onboarding screens of final, I will send the updated icons to the team by Thursday. Then let us agree on the plan. We launch on the 15th of March, as long as the login fix lands by Friday. Agreed."
+        },
+        {
+          "start": 33.63,
+          "end": 51.78,
+          "text": "I will also prepare the release notes and the store screen shots. I will own the login fix and I will run the full regression suite on Friday morning. Great. To summarize the launch date is March 15. Daniel owns the login fix and Karen owns the icons, the release notes and the screen shots."
+        },
+        {
+          "start": 51.78,
+          "end": 53.1,
+          "text": "Thanks, everyone."
+        }
+      ],
+      "notes": "Title: Meeting on App Launch, Bugs, and Release Plan\n## Summary\nThe team discussed the mobile app launch date of March 15th to ensure the login fix lands by Friday, while also reviewing open bugs and updating design icons.\n## Key points\n- The Android build is stable regarding the crash on the settings screen.\n- Battery usage will be down by 20%.\n- The design team will provide updated icons by Thursday.\n- The launch plans are decided by agreeing with Daniel on the login fix.\n## Decisions\n- \"None recorded.\"\n## Action items\n- [ ] Owner: Task assigned to the group regarding the release notes and screen shots.\n- [ ] Owner: Task assigned to Daniel regarding the login fix.\n- [ ] Owner: Task assigned to Karen regarding the updated icons and release notes.\n- [ ] Owner: Task assigned to the group regarding the March 15th launch plan.\n## Open questions\n- \"None recorded.\"",
+      "missingHeadings": [],
+      "memory": {
+        "peak": {
+          "rendererMB": 3060,
+          "gpuMB": 880,
+          "totalMB": 3940
+        },
+        "afterUnload": {
+          "rendererMB": 1678,
+          "gpuMB": 388,
+          "totalMB": 2066
+        }
+      }
+    },
+    {
+      "run": 2,
+      "jobs": [
+        "m1794693423080.a1.stt",
+        "m1794693423080.a1.notes0"
+      ],
+      "pipelineSeconds": 26.758,
+      "transcribe": {
+        "loadMs": 1155,
+        "transcribeMs": 3743,
+        "audioSeconds": 56.02,
+        "windows": 4,
+        "decodeMs": 76
+      },
+      "generate": [
+        {
+          "loadMs": 1389,
+          "promptTokens": 475,
+          "tokens": 206,
+          "ttftMs": 14442,
+          "generateMs": 19287,
+          "tokensPerSecond": 42.32
+        }
+      ],
+      "wer": {
+        "errors": 9,
+        "words": 168,
+        "wer": 0.0536
+      },
+      "transcript": "Thanks for joining everyone. Today we need to decide the launch date for the mobile app and review the open bugs. The Android build is stable. We fixed the crash on the settings screen yesterday, and battery usage is down by 20%. Good. What about the login issue on older phones? That one is still open. I need two more days to finish the fix and test it. From the design side, the onboarding screens of final, I will send the updated icons to the team by Thursday. Then let us agree on the plan. We launch on the 15th of March, as long as the login fix lands by Friday. Agreed. I will also prepare the release notes and the store screen shots. I will own the login fix and I will run the full regression suite on Friday morning. Great. To summarize the launch date is March 15. Daniel owns the login fix and Karen owns the icons, the release notes and the screen shots. Thanks, everyone.",
+      "segments": [
+        {
+          "start": 0,
+          "end": 13.77,
+          "text": "Thanks for joining everyone. Today we need to decide the launch date for the mobile app and review the open bugs. The Android build is stable. We fixed the crash on the settings screen yesterday, and battery usage is down by 20%. Good."
+        },
+        {
+          "start": 13.77,
+          "end": 33.63,
+          "text": "What about the login issue on older phones? That one is still open. I need two more days to finish the fix and test it. From the design side, the onboarding screens of final, I will send the updated icons to the team by Thursday. Then let us agree on the plan. We launch on the 15th of March, as long as the login fix lands by Friday. Agreed."
+        },
+        {
+          "start": 33.63,
+          "end": 51.78,
+          "text": "I will also prepare the release notes and the store screen shots. I will own the login fix and I will run the full regression suite on Friday morning. Great. To summarize the launch date is March 15. Daniel owns the login fix and Karen owns the icons, the release notes and the screen shots."
+        },
+        {
+          "start": 51.78,
+          "end": 53.1,
+          "text": "Thanks, everyone."
+        }
+      ],
+      "notes": "Title: Meeting on App Launch, Bugs, and Release Plan\n## Summary\nThe team discussed the mobile app launch date of March 15th to ensure the login fix lands by Friday, while also reviewing open bugs and updating design icons.\n## Key points\n- The Android build is stable regarding the crash on the settings screen.\n- Battery usage will be down by 20%.\n- The design team will provide updated icons by Thursday.\n- The launch plans are decided by agreeing with Daniel on the login fix.\n## Decisions\n- \"None recorded.\"\n## Action items\n- [ ] Owner: Task assigned to the group regarding the release notes and screen shots.\n- [ ] Owner: Task assigned to Daniel regarding the login fix.\n- [ ] Owner: Task assigned to Karen regarding the updated icons and release notes.\n- [ ] Owner: Task assigned to the group regarding the March 15th launch plan.\n## Open questions\n- \"None recorded.\"",
+      "missingHeadings": [],
+      "memory": {
+        "peak": {
+          "rendererMB": 3095,
+          "gpuMB": 930,
+          "totalMB": 4025
+        },
+        "afterUnload": {
+          "rendererMB": 1712,
+          "gpuMB": 391,
+          "totalMB": 2104
+        }
+      }
+    }
+  ],
+  "checks": {
+    "noError": true,
+    "werAtMost15": true,
+    "headingsRun1": true,
+    "secondRunCompleted": true,
+    "headingsRun2": true,
+    "memoryAfterUnloadNotGrowing": true
+  },
+  "probe": {
+    "host": "web",
+    "memoryGB": 32,
+    "cores": 12,
+    "gpu": true,
+    "gpuMaxBufferGB": 3.9999999962747097,
+    "storageFreeGB": 10.73741824,
+    "formFactor": "desktop",
+    "appleSilicon": false,
+    "iosBrowser": false,
+    "description": "Chrome on macOS",
+    "demo": false,
+    "demoReason": ""
+  },
+  "download": {
+    "seconds": 12.516,
+    "bytes": 761444246,
+    "jobs": [
+      {
+        "id": "dl.moonshine-base.onnx",
+        "state": "done",
+        "bytes": 157499295
+      },
+      {
+        "id": "dl.qwen3.5-0.8b.onnx",
+        "state": "done",
+        "bytes": 603944951
+      }
+    ],
+    "persisted": false
+  },
+  "recording": "recorded by the app: app:/data/meetings/m1794693423080/audio.m4a (910286 bytes)",
+  "console": []
+}

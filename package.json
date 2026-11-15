@@ -1,0 +1,12 @@
+{
+  "name": "alona",
+  "private": true,
+  "scripts": {
+    "build": "bun exact.mjs web-build --out dist",
+    "start": "bun exact.mjs serve dist"
+  },
+  "dependencies": {
+    "@exact/media-capture": "file:../exact/packages/media-capture",
+    "@exact/recording": "file:../exact/packages/recording"
+  }
+}

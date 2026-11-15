@@ -1,0 +1,12 @@
+e2e macos balanced: preparing models
+recording a take and swapping in the spoken fixture
+running the pipeline 6 times on the fixture
+word error rate: 4.8% (8 of 168)
+title: Mobile App Launch Review
+cycle 1: transcribe 5.196 s, notes 3.08 s, total 8.276 s, peak 1389 MB, idle after 116 MB
+cycle 2: transcribe 5.153 s, notes 3.087 s, total 8.24 s, peak 1402 MB, idle after 104 MB
+cycle 3: transcribe 5.181 s, notes 3.091 s, total 8.272 s, peak 1099 MB, idle after 103 MB
+cycle 4: transcribe 5.185 s, notes 3.08 s, total 8.265 s, peak 1087 MB, idle after 103 MB
+cycle 5: transcribe 5.182 s, notes 3.081 s, total 8.263 s, peak 1092 MB, idle after 103 MB
+cycle 6: transcribe 5.173 s, notes 3.079 s, total 8.252 s, peak 1086 MB, idle after 103 MB
+e2e: ok

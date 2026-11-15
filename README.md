@@ -1,127 +1,41 @@
 # Alona
 
-[![CI](https://github.com/nnajiabraham/alona/actions/workflows/ci.yml/badge.svg)](https://github.com/nnajiabraham/alona/actions/workflows/ci.yml)
+Private meeting notes. Alona records a meeting, transcribes it with a small speech model, and has a small language model write the notes. Both models run on the device, and the only network use is downloading them once.
 
-**Alona** is a macOS-native meeting assistant that captures, transcribes, and summarizes your meetings — entirely on-device.
+One [Exact](https://github.com/expo/exact) app builds the web, macOS, iOS, and Android versions.
 
-## Features
+## Status
 
-- **🎯 Meeting Detection** — Automatically detects active Zoom and Google Meet sessions
-- **🎙️ Audio Capture** — Records system audio (meeting participants) and microphone (your voice) using macOS CoreAudio Process Taps
-- **🗣️ Local Transcription** — Transcribes audio locally using Whisper (multiple models available, default: large-v3-turbo) — no cloud uploads
-- **📝 Notes & Summaries** — Take notes during meetings and generate AI-powered summaries [not complete yet 🚧🚧🚧]
-- **📁 Organized Storage** — All meeting artifacts (audio, notes, transcripts, summaries) saved to a user-chosen directory
+| Platform | Screens and flows (demo engine) | Real models |
+|---|---|---|
+| macOS | 6 of 6 flows pass | All three tiers run: sherpa-onnx and llama.cpp in a Swift module |
+| Web | 6 of 6 flows pass | Lite tier runs in Chrome on WebGPU, recording from Chrome's fake microphone |
+| Android | 6 of 6 flows pass on an emulator | Demo engine only; the native bridge is not built |
+| iOS | Not built | Needs Xcode 27.1 on the build machine |
 
-## Requirements
+No hardware microphone and no real meeting has been run on any platform. Accuracy figures come from synthetic voices.
 
-- macOS 14.6+ (Sonoma)
-- Apple Silicon (arm64)
+The demo engine returns a sample transcript and sample notes, and the app says so on screen.
 
-## Installation
+## Read next
 
-1. Clone the repository
-2. Download the Whisper model:
-   ```bash
-   make download-model
-   ```
-3. Open `Alona.xcworkspace` in Xcode and build, or:
-   ```bash
-   make build
-   make run
-   ```
+- **Field guide:** open `docs/explainer/index.html` in a browser. It covers the system design, each flow with screenshots and videos, the brand, measured results, and developer setup.
+- **Guidelines for contributors and agents:** `AGENTS.md`.
+- **Why the models were chosen:** `docs/research/local-models-2026-11.md`.
+- **How decisions were made:** `docs/rewrite/decisions.tsv`.
 
-## Development
+## Quick start
 
-```bash
-# Run all tests
-make test
-
-# Build and launch app
-make run
-
-# Format code
-make format
-
-# Check formatting (swiftformat + swiftlint)
-make lint
-
-# Clean build artifacts
-make clean
-
-# Regenerate app icon from source PNG
-make icon
-
-# Download Whisper model (default: large-v3-turbo)
-make download-model
-
-# Download specific model
-make download-model MODEL=base.en
-make download-model MODEL=small.en
+```sh
+git clone https://github.com/expo/exact.git ../exact
+git -C ../exact checkout 3baa28ffa5e2598f2eca2ff5d830fa2b444e741f
+bun ../exact/scripts/exact.mjs setup
+# Only on Xcode older than 27.1, for the macOS build:
+git -C ../exact apply "$PWD/tools/patches/exact-3baa28f-xcode26.patch"
+bun install && bun exact.mjs update
+bun exact.mjs web
 ```
 
-See [AGENTS.md](AGENTS.md) for detailed development guidelines.
+The field guide lists the extra steps for macOS, Android, and the web engine.
 
-## Permissions Required
-
-Alona requires the following macOS permissions:
-
-| Permission | Purpose |
-|------------|---------|
-| **Microphone** | Capture your voice |
-| **System Audio Recording** | Capture meeting participant audio via CoreAudio Process Taps |
-| **Accessibility** | Detect Zoom meeting state |
-| **Automation** | Detect Google Meet tab titles via AppleScript |
-
-## Architecture
-
-```
-Alona/
-├── AlonaApp.swift           # App entry point, MenuBarExtra
-├── Models/
-│   ├── AppState.swift       # @Observable main state container
-│   └── TranscriptionResult.swift
-├── Services/
-│   ├── AudioRecorder.swift  # CoreAudio process tap + mic capture
-│   ├── MeetingDetector.swift
-│   ├── TranscriptionEngine.swift
-│   └── ...
-├── Views/
-│   ├── MenuBarView.swift    # Menu bar UI
-│   ├── MeetingNotesView.swift
-│   └── ...
-└── Resources/
-    ├── alona_icon_main.png  # Source icon (2048x2048)
-    ├── Assets.xcassets/     # Generated icon sizes
-    └── Models/              # Whisper model files
-```
-
-## Whisper Models
-
-Alona supports multiple Whisper models. Select and download models in **Settings > Transcription Model**.
-
-| Model | Size | Speed | Quality |
-|-------|------|-------|---------|
-| tiny.en | 75 MB | ~10x | Basic |
-| base.en | 142 MB | ~7x | Good |
-| small.en | 466 MB | ~4x | Better |
-| **large-v3-turbo** | 1.6 GB | ~2x | Best (default) |
-| large-v3 | 2.9 GB | ~1x | Best |
-
-Models are stored in `~/Library/Application Support/Alona/Models/`.
-
-## Tech Stack
-
-- **SwiftUI** with `MenuBarExtra` for menu bar integration
-- **@Observable** (Swift Observation framework) for state management
-- **CoreAudio** Process Taps for non-interfering system audio capture
-- **SwiftWhisper** for local transcription
-- **Swift 6.0** with strict concurrency
-- **Swift Package Manager** for testing (`swift test`)
-
-## Contributing
-
-This repo is currently private and under active development. Please coordinate before opening pull requests.
-
-## License
-
-Private — For individual, personal use only. Can't be used for sold or rebranded or resold or included in a commercial product or service.
+The original Swift app is in `legacy/macos-swift/`.

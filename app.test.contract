@@ -1,0 +1,30 @@
+test "first launch checks the device and recommends a tier"
+  clock data
+  expect tree has "welcome"
+  expect text "recommended" == "Best fit: Balanced"
+  expect tree has "demo-note"
+
+test "continue downloads the models, then the home screen is ready to record"
+  clock data
+  tap "continue"
+  clock data
+  expect tree missing "welcome"
+  expect tree has "download-card"
+  clock +6000
+  clock data
+  expect tree missing "download-card"
+  expect tree missing "models-needed"
+  expect tree has "start-recording"
+  reload
+  expect tree missing "welcome"
+
+test "not now skips the download, and the home screen says models are needed"
+  clock data
+  tap "skip-download"
+  clock data
+  expect tree has "models-needed"
+  tap "download-models"
+  clock data
+  clock +6000
+  clock data
+  expect tree missing "models-needed"

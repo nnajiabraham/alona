@@ -1,0 +1,21 @@
+// Alona's brand: moss and lichen greens on warm stone grays. Controls stay the
+// platform's; these tokens colour the app's own surfaces and its accent.
+tamber alona
+
+theme
+  AccentColor = light-dark(#4d6b57, #5f8a6e)
+  surface.page = light-dark(#f4f3ee, #151916)
+  surface.card = light-dark(#eae9e1, #1f2420)
+  surface.raised = light-dark(#fbfaf6, #262c27)
+  line.soft = light-dark(#d9d8cd, #2e352f)
+  text.primary = light-dark(#1f2622, #e6e9e3)
+  text.muted = light-dark(#56615a, #a3aea5)  pair=surface.card
+  moss.fill = light-dark(#4d6b57, #5f8a6e)
+  moss.soft = light-dark(#dfe6dc, #27332b)
+  moss.ink = light-dark(#35503f, #a9c8b3)  pair=moss.soft
+  clay.fill = light-dark(#a8553a, #c9704f)
+  clay.soft = light-dark(#f1dfd6, #3a2820)
+  clay.ink = light-dark(#8a3f28, #e6a288)  pair=clay.soft
+  ochre.soft = light-dark(#efe6cf, #353021)
+  ochre.ink = light-dark(#765a14, #d9bd72)  pair=ochre.soft
+  ink.on-fill = #ffffff  scheme=fixed

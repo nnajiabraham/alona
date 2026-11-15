@@ -1,0 +1,50 @@
+{
+  "host": "macos",
+  "tier": "quality",
+  "date": "2026-11-14T19:50:52.095Z",
+  "method": {
+    "audio": "tools/fixture/meeting-fixture.wav (53 s synthetic three-speaker meeting), copied over the recorded take",
+    "wer": "lowercase, punctuation stripped, word-level edit distance, no number normalization",
+    "timing": "wall time between agent replies polled once a second, so each figure is accurate to about one second",
+    "memory": "physical footprint of the app process (proc_pid_rusage), sampled every 250 ms; idle is the lowest sample in the 3 s that end a cycle, about a minute after the notes finish"
+  },
+  "downloadSeconds": 7,
+  "wer": {
+    "errors": 8,
+    "words": 168,
+    "rate": 0.0476
+  },
+  "title": "Mobile App Launch Planning",
+  "transcript": "Thanks everyone. Today we need to decide the launch date for the mobile app and review the open bugs. The Android build is stable. We fixed the crash on the settings screen yesterday, and battery usage is down by 20%. Good, what about the login issue on older phones? That one is still open. I need two more days to finish the fix and test it. From the design side, the onboarding screens are final. I will send the updated icons to the team by Thursday. Then let us agree on the plan. We launch on the 15th of March. As long as the login fix lands by Friday. Agreed. I will also prepare the release notes and the store screenshots. I will own the login fix, and I will run the full regression suite on Friday morning. Great. To summarize, the launch date is March 15, Daniel own the login fix, and Karen own the icons, the release notes, and the screenshots. Thanks everyone.",
+  "notes": "## Summary\nThe team decided on a launch date of March 15 for the mobile app. Key topics included reviewing open bugs, specifically a login issue on older phones that requires two more days to fix. The design side confirmed onboarding screens are final with updated icons coming by Thursday. A full regression suite will be run on Friday morning before the release.\n\n## Key points\n*   The Android build is stable after fixing a crash on the settings screen and reducing battery usage by 20%.\n*   There is an open login issue on older phones that needs two more days to fix and test.\n*   Onboarding screens are final, and updated icons will be sent by Thursday.\n*   The launch date is set for March 15.\n*   Daniel will own the login fix and run the full regression suite on Friday morning.\n*   Karen will prepare release notes, store screenshots, and send updated icons to the team.\n\n## Decisions\n*   Launch date confirmed as March 15.\n*   Login fix must land by Friday to proceed with launch.\n\n## Action items\n*   [ ] Owner: Daniel - Finish login fix and run full regression suite on Friday morning. Due date: Friday.\n*   [ ] Owner: Karen - Send updated icons to the team by Thursday.\n*   [ ] Owner: Karen - Prepare release notes and store screenshots.\n\n## Open questions\n*   None recorded.",
+  "runs": [
+    {
+      "cycle": 1,
+      "transcribeSeconds": 5.243,
+      "notesSeconds": 12.338,
+      "totalSeconds": 17.581,
+      "peakMB": 1384,
+      "idleMB": 116,
+      "finished": true
+    },
+    {
+      "cycle": 2,
+      "transcribeSeconds": 5.173,
+      "notesSeconds": 12.348,
+      "totalSeconds": 17.521,
+      "peakMB": 1402,
+      "idleMB": 105,
+      "finished": true
+    },
+    {
+      "cycle": 3,
+      "transcribeSeconds": 5.185,
+      "notesSeconds": 12.341,
+      "totalSeconds": 17.526,
+      "peakMB": 1108,
+      "idleMB": 105,
+      "finished": true
+    }
+  ],
+  "failures": []
+}

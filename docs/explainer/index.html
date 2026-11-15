@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Alona Field Guide</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a fixed section rail on wide screens beside one reading column; flow media sits in a wider band. */
+:root {
+  --page: #f4f3ee; --card: #eae9e1; --raised: #fbfaf6; --line: #d9d8cd;
+  --ink: #1f2622; --muted: #56615a;
+  --moss: #4d6b57; --moss-soft: #dfe6dc; --moss-ink: #35503f;
+  --clay: #a8553a; --clay-soft: #f1dfd6; --clay-ink: #8a3f28;
+  --ochre-soft: #efe6cf; --ochre-ink: #765a14;
+  --display: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --text: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --measure: 68ch;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page: #151916; --card: #1f2420; --raised: #262c27; --line: #2e352f;
+    --ink: #e6e9e3; --muted: #a3aea5;
+    --moss: #7fa98d; --moss-soft: #27332b; --moss-ink: #a9c8b3;
+    --clay: #d58a6b; --clay-soft: #3a2820; --clay-ink: #e6a288;
+    --ochre-soft: #353021; --ochre-ink: #d9bd72;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --page: #151916; --card: #1f2420; --raised: #262c27; --line: #2e352f;
+  --ink: #e6e9e3; --muted: #a3aea5;
+  --moss: #7fa98d; --moss-soft: #27332b; --moss-ink: #a9c8b3;
+  --clay: #d58a6b; --clay-soft: #3a2820; --clay-ink: #e6a288;
+  --ochre-soft: #353021; --ochre-ink: #d9bd72;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--page); color: var(--ink); font: 16px/1.6 var(--text); }
+a { color: var(--moss-ink); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--moss); outline-offset: 2px; border-radius: 4px; }
+code, pre { font-family: var(--mono); font-size: 0.86em; }
+code { background: var(--card); padding: 0.1em 0.35em; border-radius: 5px; }
+pre { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; overflow-x: auto; line-height: 1.55; margin: 0; }
+pre code { background: none; padding: 0; font-size: 1em; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; line-height: 1.15; margin: 0; }
+h1 { font-size: clamp(2.4rem, 6vw, 4rem); font-weight: 700; letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.6rem, 3.4vw, 2.2rem); font-weight: 600; letter-spacing: -0.01em; }
+h3 { font-size: 1.15rem; font-weight: 600; }
+p { margin: 0; max-width: var(--measure); }
+.shell { display: grid; grid-template-columns: minmax(0, 1fr); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+nav.rail { display: none; }
+main { min-width: 0; max-width: 1040px; width: 100%; margin: 0 auto; padding-block: 40px 96px; display: flex; flex-direction: column; gap: 72px; }
+@media (min-width: 1180px) {
+  .shell { grid-template-columns: 210px minmax(0, 1fr); column-gap: 40px; }
+  nav.rail { display: flex; flex-direction: column; gap: 4px; position: sticky; top: 0; align-self: start; height: 100vh; padding-block: 44px; font-size: 0.9rem; }
+  nav.rail a { color: var(--muted); text-decoration: none; padding: 5px 10px; border-radius: 8px; }
+  nav.rail a:hover { background: var(--card); color: var(--ink); }
+  nav.rail .mark { font-family: var(--display); font-weight: 700; font-size: 1.15rem; color: var(--ink); padding: 0 10px 14px; }
+}
+section { display: flex; flex-direction: column; gap: 20px; scroll-margin-top: 24px; }
+.eyebrow { font-size: 0.78rem; letter-spacing: 0.09em; text-transform: uppercase; color: var(--moss-ink); font-weight: 600; }
+.lede { font-size: 1.2rem; color: var(--muted); max-width: 60ch; }
+.hero { gap: 18px; padding-top: 24px; }
+.grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.tile { background: var(--card); border-radius: 14px; padding: 16px 18px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.tile p { font-size: 0.93rem; color: var(--muted); }
+.tile .k { font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 600; padding: 3px 10px; border-radius: 999px; width: fit-content; }
+.pill.ok { background: var(--moss-soft); color: var(--moss-ink); }
+.pill.part { background: var(--ochre-soft); color: var(--ochre-ink); }
+.pill.no { background: var(--clay-soft); color: var(--clay-ink); }
+.scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: var(--raised); }
+table { border-collapse: collapse; width: 100%; font-size: 0.93rem; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; font-size: 0.78rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+figure { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+figcaption { font-size: 0.86rem; color: var(--muted); }
+svg.diagram { width: 100%; height: auto; display: block; }
+svg.diagram text { font-family: var(--text); fill: var(--ink); }
+svg.diagram .box { fill: var(--raised); stroke: var(--line); }
+svg.diagram .core { fill: var(--moss-soft); stroke: var(--moss); }
+svg.diagram .warn { fill: var(--clay-soft); stroke: var(--clay); }
+svg.diagram .arrow { stroke: var(--muted); fill: none; stroke-width: 1.5; }
+svg.diagram .head { fill: var(--muted); }
+svg.diagram .small { font-size: 12px; fill: var(--muted); }
+svg.diagram .label { font-size: 14px; font-weight: 600; }
+.swatches { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.swatch { border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: var(--raised); }
+.swatch .chip { display: grid; grid-template-columns: 1fr 1fr; height: 64px; }
+.swatch .meta { padding: 9px 12px 11px; font-size: 0.82rem; line-height: 1.4; }
+.swatch .meta b { display: block; font-size: 0.9rem; }
+.swatch .meta span { font-family: var(--mono); color: var(--muted); font-size: 0.76rem; }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.tabs button { font: 600 0.86rem var(--text); border: 1px solid var(--line); background: var(--raised); color: var(--muted); padding: 6px 12px; border-radius: 999px; cursor: pointer; }
+.tabs button[aria-pressed="true"] { background: var(--moss); border-color: var(--moss); color: var(--page); }
+.flow { background: var(--raised); border: 1px solid var(--line); border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.flow ol { margin: 0; padding-left: 1.2em; max-width: var(--measure); color: var(--muted); }
+.flow ol li { padding-left: 4px; }
+.strip { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 6px; scroll-snap-type: x proximity; }
+.strip figure { flex: 0 0 auto; scroll-snap-align: start; }
+.strip img { height: 300px; width: auto; max-width: none; border-radius: 10px; border: 1px solid var(--line); background: var(--card); display: block; }
+.strip.phone img { height: 420px; }
+video { width: 100%; max-width: 760px; border-radius: 12px; border: 1px solid var(--line); background: #000; }
+.note { background: var(--ochre-soft); color: var(--ochre-ink); border-radius: 12px; padding: 12px 16px; font-size: 0.93rem; max-width: var(--measure); }
+.empty { color: var(--muted); font-size: 0.93rem; }
+ul.plain { margin: 0; padding-left: 1.1em; max-width: var(--measure); display: flex; flex-direction: column; gap: 6px; }
+details { border: 1px solid var(--line); border-radius: 12px; background: var(--raised); padding: 12px 16px; }
+details summary { cursor: pointer; font-weight: 600; }
+details > *:not(summary) { margin-top: 12px; }
+footer { color: var(--muted); font-size: 0.86rem; }
+</style>
+</head>
+<body>
+<div class="shell">
+<nav class="rail" aria-label="Sections">
+  <span class="mark">Alona</span>
+  <a href="#what">What it is</a>
+  <a href="#status">Platform status</a>
+  <a href="#system">System design</a>
+  <a href="#pipeline">The pipeline</a>
+  <a href="#models">Models and tiers</a>
+  <a href="#flows">App flows</a>
+  <a href="#checks">Measured results</a>
+  <a href="#brand">Brand guide</a>
+  <a href="#dev">Developer onboarding</a>
+  <a href="#gaps">Open gaps</a>
+</nav>
+<main>
+
+<section class="hero" id="what">
+  <span class="eyebrow">Field guide · November 2026</span>
+  <h1>Meeting notes that never leave the device</h1>
+  <p class="lede">Alona records a meeting, transcribes it with a small speech model, and has a small language model write the notes. Both models run on the device. One codebase builds the web, macOS, iOS, and Android apps.</p>
+  <div class="grid">
+    <div class="tile"><span class="k">Record</span><h3>Microphone and a notes pad</h3><p>A timer, a live waveform, and a Markdown pad for your own notes while the meeting runs.</p></div>
+    <div class="tile"><span class="k">Transcribe</span><h3>Speech to text, locally</h3><p>Voice activity detection cuts the audio into speech, and each stretch is decoded as it is found.</p></div>
+    <div class="tile"><span class="k">Write</span><h3>Notes from a small LLM</h3><p>Summary, key points, decisions, action items, and open questions, led by what you wrote yourself.</p></div>
+    <div class="tile"><span class="k">Fit</span><h3>A model tier per device</h3><p>First launch checks memory and GPU, recommends a tier, and Settings lets you move to a lighter one.</p></div>
+  </div>
+</section>
+
+<section id="status">
+  <span class="eyebrow">Where each platform stands</span>
+  <h2>Platform status</h2>
+  <p>Each row says what was run and seen, not what is expected to work. The flow runs in the first column use the demo engine on every platform, with a sample device, a sample transcript, and sample notes, so they prove the screens and the pipeline's steps. The second column is the separate check on real models.</p>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Platform</th><th>Screens and flows</th><th>Real models</th><th>Notes</th></tr></thead>
+    <tbody id="status-rows">
+      <tr><td><b>macOS</b></td><td><span class="pill ok">6 of 6 flows</span></td><td><span class="pill ok">All three tiers</span></td><td>Swift engine with sherpa-onnx and llama.cpp. The real-model check feeds a spoken fixture in place of the recorded take, so a hardware microphone has not been exercised. Capturing other apps' audio needs an Exact permission that does not exist yet.</td></tr>
+      <tr><td><b>Web</b></td><td><span class="pill ok">6 of 6 flows</span></td><td><span class="pill ok">Lite tier, in Chrome</span></td><td>WebGPU engine in a worker. The real-model run records through the browser's own recorder from Chrome's fake microphone, which plays the fixture. A hardware microphone, Safari, and Firefox are untested.</td></tr>
+      <tr><td><b>Android</b></td><td><span class="pill ok">6 of 6 flows</span></td><td><span class="pill no">Demo engine</span></td><td>Driven on an emulator. Real models need a Kotlin bridge to the native runtimes, which is not built. The audio player does not draw on Android.</td></tr>
+      <tr><td><b>iOS</b></td><td><span class="pill no">Not built</span></td><td><span class="pill no">Not run</span></td><td>Exact's iOS host needs Xcode 27.1 and this Mac has 26.1.1. The Apple engine source is shared with macOS and has never been compiled for iOS.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="system">
+  <span class="eyebrow">How the pieces fit</span>
+  <h2>System design</h2>
+  <p>The app is built on <a href="https://github.com/expo/exact">Exact</a>. The interface is one Contract file that each platform draws with its own controls. The logic is plain TypeScript in <code>core/</code>, the same on every host. Inference sits behind one JSON protocol, and each host answers it with its own engine.</p>
+  <figure>
+    <svg class="diagram" viewBox="0 0 960 430" role="img" aria-label="Layers of the app: the Contract view calls the data module, which calls the shared core, which calls one engine per host through a JSON protocol.">
+      <rect class="box" x="20" y="20" width="920" height="64" rx="12"/>
+      <text class="label" x="40" y="48">app.contract</text>
+      <text class="small" x="40" y="68">Welcome · Home · Recording · Meeting · Settings. Platform controls, brand tokens from app.tamber.</text>
+      <path class="arrow" d="M480 84v26"/><path class="head" d="M475 108l5 8 5-8z"/>
+      <rect class="box" x="20" y="116" width="920" height="52" rx="12"/>
+      <text class="label" x="40" y="140">app.ts</text>
+      <text class="small" x="40" y="158">The data module. Maps each source the view asks for to the service, and picks the engine.</text>
+      <path class="arrow" d="M480 168v26"/><path class="head" d="M475 192l5 8 5-8z"/>
+      <rect class="core" x="20" y="200" width="920" height="96" rx="12"/>
+      <text class="label" x="40" y="226">core/ (TypeScript, shared by every host)</text>
+      <text class="small" x="40" y="248">service.ts: tiers, downloads, the queue</text>
+      <text class="small" x="330" y="248">pipeline.ts: recorded → transcribing → summarizing → done</text>
+      <text class="small" x="40" y="270">device.ts: which tiers this device can run</text>
+      <text class="small" x="330" y="270">notes.ts: prompts, chunking for long meetings, title</text>
+      <text class="small" x="700" y="248">store.ts: one folder per meeting</text>
+      <text class="small" x="700" y="270">models.ts: pinned model files</text>
+      <path class="arrow" d="M480 296v26"/><path class="head" d="M475 320l5 8 5-8z"/>
+      <text class="small" x="496" y="314">engine.ts: nine JSON requests, one reply each, long work polled by job id</text>
+      <rect class="box" x="20" y="328" width="216" height="82" rx="12"/>
+      <text class="label" x="36" y="354">Apple engine</text>
+      <text class="small" x="36" y="374">modules/apple, Swift</text>
+      <text class="small" x="36" y="392">sherpa-onnx + llama.cpp</text>
+      <rect class="box" x="254" y="328" width="216" height="82" rx="12"/>
+      <text class="label" x="270" y="354">Web engine</text>
+      <text class="small" x="270" y="374">modules/web, a Worker</text>
+      <text class="small" x="270" y="392">transformers.js on WebGPU</text>
+      <rect class="warn" x="488" y="328" width="216" height="82" rx="12"/>
+      <text class="label" x="504" y="354">Android engine</text>
+      <text class="small" x="504" y="374">Not built yet</text>
+      <text class="small" x="504" y="392">Needs a Kotlin bridge</text>
+      <rect class="box" x="722" y="328" width="218" height="82" rx="12"/>
+      <text class="label" x="738" y="354">Demo engine</text>
+      <text class="small" x="738" y="374">core/sim-engine.ts</text>
+      <text class="small" x="738" y="392">Tests and hosts with no engine</text>
+    </svg>
+    <figcaption>Only the bottom row differs per platform. Everything above it is one source.</figcaption>
+  </figure>
+  <div class="grid">
+    <div class="tile"><h3>Why one protocol</h3><p>A host only has to answer nine requests. Prompts, chunking, tier rules, and storage are written once, so notes come out the same way everywhere.</p></div>
+    <div class="tile"><h3>Jobs are polled by id</h3><p>The caller names each job. Starting a name twice returns the running job. An engine that restarted answers "unknown", and the pipeline starts that stage again.</p></div>
+    <div class="tile"><h3>Two writers, two sets of files</h3><p>Your actions write <code>meeting.json</code> and <code>notes.md</code>. Only the pipeline writes <code>stage.json</code>, the transcript, and the AI notes. Neither can overwrite the other.</p></div>
+    <div class="tile"><h3>One model in memory</h3><p>Speech and notes run one after the other. Loading one releases the other, and the engine unloads when the queue is empty.</p></div>
+  </div>
+</section>
+
+<section id="pipeline">
+  <span class="eyebrow">From recording to notes</span>
+  <h2>The pipeline</h2>
+  <p>A meeting is a small state machine saved to disk. Once a second, while anything is unfinished, the app moves the oldest meeting forward by one step. Each step reads where the meeting is, asks the engine about that stage's job, and acts on the answer, so quitting the app mid-meeting loses nothing.</p>
+  <figure>
+    <svg class="diagram" viewBox="0 0 960 220" role="img" aria-label="Pipeline states: recorded, transcribing, summarizing, done, with failed and its retry path.">
+      <g>
+        <rect class="box" x="20" y="40" width="170" height="64" rx="12"/><text class="label" x="40" y="68">recorded</text><text class="small" x="40" y="88">audio saved, queued</text>
+        <rect class="core" x="258" y="40" width="190" height="64" rx="12"/><text class="label" x="278" y="68">transcribing</text><text class="small" x="278" y="88">speech model, with progress</text>
+        <rect class="core" x="516" y="40" width="190" height="64" rx="12"/><text class="label" x="536" y="68">summarizing</text><text class="small" x="536" y="88">one request, or several</text>
+        <rect class="box" x="774" y="40" width="166" height="64" rx="12"/><text class="label" x="794" y="68">done</text><text class="small" x="794" y="88">transcript, notes, title</text>
+        <path class="arrow" d="M190 72h60"/><path class="head" d="M248 67l8 5-8 5z"/>
+        <path class="arrow" d="M448 72h60"/><path class="head" d="M506 67l8 5-8 5z"/>
+        <path class="arrow" d="M706 72h60"/><path class="head" d="M764 67l8 5-8 5z"/>
+        <rect class="warn" x="387" y="150" width="190" height="52" rx="12"/><text class="label" x="407" y="174">failed</text><text class="small" x="407" y="192">reason shown, Try again</text>
+        <path class="arrow" d="M353 104v72h26"/><path class="head" d="M377 171l8 5-8 5z"/>
+        <path class="arrow" d="M611 104v72h-26"/><path class="head" d="M587 171l-8 5 8 5z"/>
+        <text class="small" x="204" y="62">start</text>
+        <text class="small" x="452" y="62">transcript</text>
+        <text class="small" x="712" y="62">last step</text>
+      </g>
+    </svg>
+    <figcaption>"Try again" returns to the stage that failed. "Transcribe again" and "Write again" rerun a finished meeting, for example after switching tier.</figcaption>
+  </figure>
+  <div class="grid">
+    <div class="tile"><h3>Short meetings</h3><p>The transcript and your notes go to the model in one request when they fit the tier's budget: 3,000 tokens on Lite, 8,000 on Balanced, 24,000 on Quality.</p></div>
+    <div class="tile"><h3>Long meetings</h3><p>The transcript is cut on segment boundaries, each part is reduced to topics, decisions, and action items, and one final request merges the parts.</p></div>
+    <div class="tile"><h3>No speech</h3><p>A recording with no speech skips the notes model and says so.</p></div>
+  </div>
+</section>
+
+<section id="models">
+  <span class="eyebrow">What runs, and where</span>
+  <h2>Models and tiers</h2>
+  <p>The old app used Whisper large-v3-turbo, a 1.6 GB download. The new lineup is smaller per tier and picked by what the device can hold. Every file is pinned to a repository revision with its size and SHA-256 in <code>core/artifacts.json</code>, and a download only counts once its hash matches.</p>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Tier</th><th>Speech to text</th><th>Notes model</th><th>Download</th><th>Offered when</th></tr></thead>
+    <tbody>
+      <tr><td><b>Lite</b></td><td>Moonshine Base, English</td><td>Qwen3.5 0.8B</td><td class="num">674 MB native<br>761 MB web</td><td>Always. The only tier browsers are offered today.</td></tr>
+      <tr><td><b>Balanced</b></td><td>Parakeet v3, 25 languages</td><td>Qwen3.5 2B</td><td class="num">2.0 GB</td><td>Native with 6 GB of memory or more. Not offered in browsers until it has been run there.</td></tr>
+      <tr><td><b>Quality</b></td><td>Parakeet v3, 25 languages</td><td>Qwen3.5 9B</td><td class="num">6.4 GB</td><td>Apple silicon Macs with 16 GB or more. Never phones or browsers.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The highest tier a device can run is recommended at first launch. Settings lists every tier with its size, and a tier the device cannot run is disabled with the reason, such as "Needs 16 GB of memory. This computer has 8 GB."</p>
+  <p class="note">Lite notes are draft quality. In the measured runs the 0.8B model kept the right structure but sometimes gave a task to the wrong person. The transcripts carry no speaker labels yet, which makes ownership hard for any model.</p>
+</section>
+
+<section id="flows">
+  <span class="eyebrow">Every flow, captured</span>
+  <h2>App flows</h2>
+  <p>Each flow below is driven by <code>tools/flows.mjs</code>, which taps through the app, checks the app's state at each checkpoint, and saves a screenshot per step and a video per flow. Pick a platform to see its captures.</p>
+  <div class="tabs" id="targets" role="group" aria-label="Platform"></div>
+  <p class="note" id="target-note" hidden></p>
+  <div id="flow-list" style="display:flex;flex-direction:column;gap:18px"></div>
+</section>
+
+<section id="checks">
+  <span class="eyebrow">Real models, real numbers</span>
+  <h2>Measured results</h2>
+  <p>These come from repeatable checks that run the built app on real models with a 53-second spoken meeting (three synthetic voices) and compare the transcript with the script that was spoken. Synthetic speech is easier than a real room, so read the word error rate as a floor.</p>
+  <p>Memory on macOS is the app's physical footprint, the figure Activity Monitor shows. It leaves out the model file itself, which is memory-mapped: 0.5 GB on Lite, 1.3 GB on Balanced, and 5.7 GB on Quality stay in the system's file cache while the notes model runs. Memory in the browser is resident size, which runs higher than footprint.</p>
+  <div id="check-list" style="display:flex;flex-direction:column;gap:18px"></div>
+</section>
+
+<section id="brand">
+  <span class="eyebrow">Moss on stone</span>
+  <h2>Brand guide</h2>
+  <p>Alona should feel like a quiet notebook. The palette is moss and lichen green on warm stone gray, with clay for recording and anything that needs attention. Controls stay the platform's own, so the app reads as native on each device, and brand color goes on the accent and on the app's own surfaces.</p>
+  <div class="swatches" id="swatches"></div>
+  <div class="grid">
+    <div class="tile"><h3>Color rules</h3><p>Moss means go or done. Clay means recording or a problem. Ochre marks a notice, such as the demo engine. Never use color alone: each state also has words.</p></div>
+    <div class="tile"><h3>Type</h3><p>The app uses each platform's system font and its named sizes (large title, headline, footnote), so text follows the person's accessibility size. This guide uses Schibsted Grotesk and Inter.</p></div>
+    <div class="tile"><h3>Shape and space</h3><p>Cards have 14 to 18 px corners and no shadows. One column on a phone, a centered 720 px column on wide screens. One main action per screen, filled in moss.</p></div>
+    <div class="tile"><h3>Voice</h3><p>Plain and specific. Say what happens ("Stop and write notes"), where things are ("Saved on this device"), and why something cannot be done, with the number.</p></div>
+  </div>
+  <p>The tokens live in <code>app.tamber</code>. Each has a light and a dark value, and <code>bun exact.mjs tamber check .</code> verifies contrast for the text pairs.</p>
+</section>
+
+<section id="dev">
+  <span class="eyebrow">From clone to a running app</span>
+  <h2>Developer onboarding</h2>
+  <h3>1. Tools</h3>
+  <ul class="plain">
+    <li>macOS on Apple silicon, with Xcode. Exact's Apple hosts ask for Xcode 27.1. On Xcode 26.1 the macOS host builds after the patch in step 2, and the iOS host does not build.</li>
+    <li>Rust through rustup, and Bun 1.4.2. Node is not needed.</li>
+    <li>Google Chrome, for the web tests and the web real-model check.</li>
+    <li>For Android: the Android SDK with platform 37.2, build-tools 37.0.0, an NDK, and JDK 17 or newer.</li>
+  </ul>
+  <h3>2. Set up</h3>
+<pre><code># Exact has no packaged CLI. Apps use a checkout beside them.
+git clone https://github.com/expo/exact.git ../exact
+git -C ../exact checkout 3baa28ffa5e2598f2eca2ff5d830fa2b444e741f
+bun ../exact/scripts/exact.mjs setup            # toolchains, a few minutes
+
+# Only on Xcode older than 27.1: let Exact's Swift host compile.
+git -C ../exact apply "$PWD/tools/patches/exact-3baa28f-xcode26.patch"
+
+bun install
+bun exact.mjs update                            # point exact.mjs at your checkout
+tools/fetch-apple-frameworks.sh                 # sherpa-onnx, ONNX Runtime, llama.cpp
+bun tools/build-web-engine.mjs                  # bundle the web worker</code></pre>
+  <h3>3. Run it</h3>
+<pre><code>bun exact.mjs web          # the web app, rebuilt on save
+bun exact.mjs mac --run    # the macOS app
+bun exact.mjs android      # build and install on the emulator or phone in ANDROID_SERIAL</code></pre>
+  <h3>4. Check your work</h3>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Command</th><th>What it proves</th></tr></thead>
+    <tbody>
+      <tr><td><code>bun test core/</code></td><td>The shared logic: tier rules, the pipeline, prompts, storage. Runs in milliseconds.</td></tr>
+      <tr><td><code>bun exact.mjs verify web</code></td><td>The Contract tests, then every end screen in light and dark, at two sizes, at the largest text size, and through the accessibility tree.</td></tr>
+      <tr><td><code>bun tools/flows.mjs web</code></td><td>Every flow with state checks, and fresh screenshots and videos. Also takes <code>web-phone</code>, <code>macos</code>, and <code>android</code>.</td></tr>
+      <tr><td><code>bun tools/e2e-native.mjs lite</code></td><td>The macOS app on real models: word error rate, the notes' five sections, timing, and memory over three runs.</td></tr>
+      <tr><td><code>bun tools/e2e-web.mjs</code></td><td>The web app on real models in Chrome, with the fixture played as the microphone.</td></tr>
+      <tr><td><code>bun tools/explainer-data.mjs</code></td><td>Refreshes this page's media list and measured results.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <h3>5. Where things live</h3>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Path</th><th>What it is</th></tr></thead>
+    <tbody>
+      <tr><td><code>app.contract</code></td><td>Every screen, in Exact's Contract language.</td></tr>
+      <tr><td><code>app.ts</code></td><td>The data module: sources the view asks for, wired to the service.</td></tr>
+      <tr><td><code>app.tamber</code></td><td>Brand tokens, light and dark.</td></tr>
+      <tr><td><code>core/</code></td><td>Shared TypeScript: <code>service</code>, <code>pipeline</code>, <code>notes</code>, <code>device</code>, <code>models</code>, <code>store</code>, <code>engine</code> (the protocol), <code>sim-engine</code>, and <code>artifacts.json</code>.</td></tr>
+      <tr><td><code>modules/apple/</code></td><td>The Swift engine for macOS and iOS.</td></tr>
+      <tr><td><code>modules/web/</code>, <code>engine/web/</code></td><td>The web engine's seam and its Worker source.</td></tr>
+      <tr><td><code>tools/</code></td><td>Flow runner, real-model checks, model pinning, framework fetch, the Exact patch.</td></tr>
+      <tr><td><code>docs/</code></td><td>This guide, captured media, research, spike reports, and the decision trail.</td></tr>
+      <tr><td><code>legacy/macos-swift/</code></td><td>The original Swift app, kept as reference for system-audio capture and meeting detection.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <details>
+    <summary>How to change the models</summary>
+    <p>Edit the spec list in <code>tools/pin-models.mjs</code> and run it. It writes the files, sizes, and hashes to <code>core/artifacts.json</code>. Then name the artifact under a tier and host in <code>core/models.ts</code>. A host is listed under a model only after that host's engine has run it end to end.</p>
+  </details>
+  <details>
+    <summary>How to add an engine for a host</summary>
+    <p>Answer the nine requests in <code>core/engine.ts</code> from that host's native module, with <code>modules/apple/Engine.swift</code> as the reference. Start jobs by the id the caller gives, answer "unknown" for an id you do not have, verify downloads before reporting a model installed, keep one model in memory, and check for cancel while working. Then add the host's artifacts to <code>core/models.ts</code>.</p>
+  </details>
+  <details>
+    <summary>Contract habits worth knowing</summary>
+    <ul class="plain">
+      <li>A screen is a route. A value never changes in place, and nothing runs because a value changed: an event runs an action.</li>
+      <li>The data module has no clock and no randomness. Time comes in as an argument from the view.</li>
+      <li>Contract test files cannot grant the microphone permission. Scripted drives can, which is why recording flows live in <code>tools/flows.mjs</code>.</li>
+      <li>A drive refuses a build older than its sources. Rebuild with the host's verb when it says so.</li>
+    </ul>
+  </details>
+</section>
+
+<section id="gaps">
+  <span class="eyebrow">What is not done</span>
+  <h2>Open gaps</h2>
+  <div class="grid">
+    <div class="tile"><span class="pill no">Blocked</span><h3>Other participants' audio on macOS</h3><p>The Swift app captured meeting audio with a Core Audio process tap. Exact has no permission entry for audio capture and refuses hand-written Info.plist keys, so the new app records the microphone only.</p></div>
+    <div class="tile"><span class="pill no">Blocked</span><h3>iOS</h3><p>Needs Xcode 27.1 on the build machine. Nothing about iOS has been compiled or run.</p></div>
+    <div class="tile"><span class="pill part">Not built</span><h3>Android inference</h3><p>Needs a Kotlin extension package that bridges to sherpa-onnx and llama.cpp. The spike report lists the route and its risks.</p></div>
+    <div class="tile"><span class="pill part">Not built</span><h3>Meeting detection and menu bar</h3><p>Zoom and Meet detection and the menu bar item from the Swift app are not ported. Detection of Meet needs an Apple Events permission Exact cannot declare.</p></div>
+    <div class="tile"><span class="pill part">Unmeasured</span><h3>Long meetings</h3><p>The chunked path is unit-tested, but no hour-long recording has been run through real models, and no eval set scores notes quality.</p></div>
+    <div class="tile"><span class="pill part">Not ported</span><h3>Smaller Swift features</h3><p>The notes toolbar (timestamp, bullet, and action-item buttons), the choice of save folder, and migration of recordings made by the Swift app.</p></div>
+    <div class="tile"><span class="pill part">Unverified</span><h3>Real rooms and real microphones</h3><p>Every accuracy figure comes from synthetic voices fed in as a file or a fake microphone. No hardware microphone and no real meeting has been run on any platform.</p></div>
+    <div class="tile"><span class="pill part">Known limit</span><h3>Speaker labels</h3><p>Transcripts have timestamps but no speakers. Diarization models exist for the runtimes in use and are not wired in.</p></div>
+  </div>
+  <footer>Sources: <code>docs/research/local-models-2026-11.md</code>, <code>docs/rewrite/spikes/</code>, and the decision trail at <code>docs/rewrite/decisions.tsv</code>.</footer>
+</section>
+
+</main>
+</div>
+<script src="data.js"></script>
+<script>
+(function () {
+  var data = window.ALONA || { flows: {}, checks: [] };
+  var TARGETS = [
+    ['web', 'Web, desktop', ''],
+    ['web-phone', 'Web, phone size', ''],
+    ['web-real', 'Web, real models', 'Recorded in Chrome with real models. The spoken fixture was played as the microphone.'],
+    ['macos', 'macOS', ''],
+    ['macos-real', 'macOS, real models', 'The notes screen after the real-model check, one capture per tier.'],
+    ['android', 'Android', 'Android runs the demo engine: the transcript and notes shown are samples.'],
+  ];
+  var DEMO = 'These captures use the demo engine, so the transcript and notes are samples. The agent owns the clock, so each video is one frame per step.';
+  var FLOWS = [
+    ['onboarding', 'First launch', ['The app checks memory, GPU, and storage.', 'It recommends the best tier this device can run and names the two models.', 'Continue starts the download, with progress, and lands on Home.']],
+    ['record', 'Record a meeting', ['Record opens the microphone and shows a timer and waveform.', 'Type a title and Markdown notes while it records.', 'Stop saves the meeting, then it is transcribed and the notes are written, with progress.']],
+    ['review', 'Review and edit', ['Read the AI notes, the transcript with timestamps, or your own notes.', 'Edits to your notes save by themselves.', 'Rename the meeting, or have the notes written again.']],
+    ['library', 'Library', ['Home lists meetings, newest first, each with its state.', 'Light and dark follow the system.', 'Delete asks first, then removes the recording, transcript, and notes.']],
+    ['settings', 'Settings and models', ['See what this device is and what Alona recommends.', 'Pick a lighter tier, download it, or remove one to free space.', 'A tier the device cannot run is disabled and says why.']],
+    ['leaving', 'Leaving mid-task', ['Back during a recording stops it and saves the meeting, so the microphone never stays on.', 'Notes typed just before Back are saved to the meeting they belong to.']],
+    ['real-time', 'Real-time capture', ['Screen recordings of the installed app, driven by real taps.']],
+    ['real-run', 'A run on real models', ['The built app, real models, and the spoken fixture: first launch, download, record, transcript, notes.']],
+  ];
+  var el = function (tag, attrs, children) {
+    var node = document.createElement(tag);
+    for (var k in attrs || {}) { if (k === 'text') node.textContent = attrs[k]; else node.setAttribute(k, attrs[k]); }
+    (children || []).forEach(function (c) { node.appendChild(c); });
+    return node;
+  };
+
+  var tabs = document.getElementById('targets'), list = document.getElementById('flow-list'), note = document.getElementById('target-note');
+  var available = TARGETS.filter(function (t) { return data.flows[t[0]]; });
+  function show(target) {
+    Array.prototype.forEach.call(tabs.children, function (b) { b.setAttribute('aria-pressed', String(b.dataset.target === target[0])); });
+    var real = target[0].indexOf('real') >= 0;
+    note.textContent = target[2] || (real ? '' : DEMO);
+    note.hidden = note.textContent === '';
+    list.replaceChildren();
+    var flows = data.flows[target[0]] || {};
+    var known = FLOWS.filter(function (f) { return flows[f[0]]; });
+    Object.keys(flows).forEach(function (name) {
+      if (!FLOWS.some(function (f) { return f[0] === name; })) known.push([name, name.replace(/-/g, ' '), []]);
+    });
+    known.forEach(function (f) {
+      var media = flows[f[0]];
+      var strip = el('div', { class: 'strip' + (target[0] === 'web-phone' || target[0] === 'android' ? ' phone' : '') });
+      media.shots.forEach(function (s) {
+        strip.appendChild(el('figure', {}, [el('img', { src: s.src, alt: f[1] + ': ' + s.label, loading: 'lazy' }), el('figcaption', { text: s.label })]));
+      });
+      var parts = [el('h3', { text: f[1] })];
+      if (f[2].length) parts.push(el('ol', {}, f[2].map(function (step) { return el('li', { text: step }); })));
+      if (media.shots.length) parts.push(strip);
+      if (media.video) parts.push(el('video', { src: media.video, controls: '', preload: 'metadata', 'aria-label': f[1] + ' video' }));
+      list.appendChild(el('div', { class: 'flow' }, parts));
+    });
+  }
+  if (available.length === 0) {
+    list.appendChild(el('p', { class: 'empty', text: 'No captures yet. Run bun tools/flows.mjs web, then bun tools/explainer-data.mjs.' }));
+  } else {
+    available.forEach(function (t) {
+      var b = el('button', { type: 'button', 'data-target': t[0], text: t[1] });
+      b.addEventListener('click', function () { show(t); });
+      tabs.appendChild(b);
+    });
+    show(available[0]);
+  }
+
+  var checks = document.getElementById('check-list');
+  var fmt = function (n, unit) { return n === null || n === undefined ? 'not measured' : n + (unit || ''); };
+  if (data.checks.length === 0) checks.appendChild(el('p', { class: 'empty', text: 'No real-model check has been recorded yet.' }));
+  data.checks.forEach(function (c) {
+    var ok = (c.failures || []).length === 0;
+    var head = el('div', { style: 'display:flex;flex-wrap:wrap;gap:10px;align-items:center' }, [
+      el('h3', { text: (c.host || c.target) + (c.tier ? ', ' + c.tier + ' tier' : '') }),
+      el('span', { class: 'pill ' + (ok ? 'ok' : 'no'), text: ok ? 'All checks held' : (c.failures.length + ' failed') }),
+    ]);
+    var rows = [];
+    if (c.wer) rows.push(['Word error rate', (c.wer.rate * 100).toFixed(1) + '% (' + c.wer.errors + ' of ' + c.wer.words + ' words)']);
+    if (c.title) rows.push(['Title the model proposed', c.title]);
+    (c.runs || []).forEach(function (r) {
+      rows.push(['Run ' + r.cycle, 'transcribe ' + fmt(r.transcribeSeconds, ' s') + ', notes ' + fmt(r.notesSeconds, ' s') + ', total ' + fmt(r.totalSeconds, ' s') + ', peak memory ' + fmt(r.peakMB, ' MB') + ', idle after ' + fmt(r.idleMB, ' MB') + (r.detail ? '. ' + r.detail : '')]);
+    });
+    Object.keys(c.metrics || {}).forEach(function (k) { rows.push([k, String(c.metrics[k])]); });
+    (c.failures || []).forEach(function (f) { rows.push(['Failed', f]); });
+    var table = el('table', {}, [el('tbody', {}, rows.map(function (r) { return el('tr', {}, [el('td', { text: r[0] }), el('td', { text: r[1] })]); }))]);
+    var parts = [head, el('div', { class: 'scroll' }, [table])];
+    if (c.notes) parts.push(el('details', {}, [el('summary', { text: 'The notes it wrote' }), el('pre', {}, [el('code', { text: c.notes })])]));
+    if (c.transcript) parts.push(el('details', {}, [el('summary', { text: 'The transcript' }), el('p', { text: c.transcript })]));
+    if (c.method) parts.push(el('details', {}, [el('summary', { text: 'How this was measured' }), el('ul', { class: 'plain' }, Object.keys(c.method).map(function (k) { return el('li', { text: k + ': ' + c.method[k] }); }))]));
+    parts.push(el('p', { class: 'empty', text: 'Source: ' + c.file + (c.date ? ', run ' + c.date.slice(0, 10) : '') }));
+    checks.appendChild(el('div', { class: 'flow' }, parts));
+  });
+
+  var TOKENS = [
+    ['AccentColor', 'The accent: filled buttons, focus', '#4d6b57', '#5f8a6e'],
+    ['surface.page', 'Page ground', '#f4f3ee', '#151916'],
+    ['surface.card', 'Cards and rows', '#eae9e1', '#1f2420'],
+    ['surface.raised', 'The record card', '#fbfaf6', '#262c27'],
+    ['line.soft', 'Hairlines', '#d9d8cd', '#2e352f'],
+    ['text.primary', 'Body text', '#1f2622', '#e6e9e3'],
+    ['text.muted', 'Secondary text', '#56615a', '#a3aea5'],
+    ['moss.soft', 'Progress and ready states', '#dfe6dc', '#27332b'],
+    ['moss.ink', 'Text on moss.soft', '#35503f', '#a9c8b3'],
+    ['clay.fill', 'Recording dot, waveform', '#a8553a', '#c9704f'],
+    ['clay.soft', 'Recording and error cards', '#f1dfd6', '#3a2820'],
+    ['clay.ink', 'Text on clay.soft', '#8a3f28', '#e6a288'],
+    ['ochre.soft', 'Notices', '#efe6cf', '#353021'],
+    ['ochre.ink', 'Text on ochre.soft', '#765a14', '#d9bd72'],
+  ];
+  var swatches = document.getElementById('swatches');
+  TOKENS.forEach(function (t) {
+    var chip = el('div', { class: 'chip', role: 'img', 'aria-label': t[0] + ' light ' + t[2] + ', dark ' + t[3] }, [
+      el('div', { style: 'background:' + t[2] }), el('div', { style: 'background:' + t[3] }),
+    ]);
+    var meta = el('div', { class: 'meta' }, [el('b', { text: t[0] }), document.createTextNode(t[1]), el('br'), el('span', { text: t[2] + ' · ' + t[3] })]);
+    swatches.appendChild(el('div', { class: 'swatch' }, [chip, meta]));
+  });
+})();
+</script>
+</body>
+</html>

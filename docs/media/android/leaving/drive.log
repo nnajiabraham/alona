@@ -1,0 +1,70 @@
+clock data
+  {"clock":0,"settled":true,"epoch":2,"incarnation":1}
+tap continue
+  {"tapped":28,"at":[205.71,760.33],"target":"continue","delivery":"platform","carrier":"android","mode":"agent","epoch":3,"incarnation":1,"clock":0}
+clock data
+  {"clock":0,"settled":true,"epoch":3,"incarnation":1}
+clock +6000
+  {"clock":6000,"epoch":8,"incarnation":1}
+clock data
+  {"clock":6000,"settled":true,"epoch":8,"incarnation":1}
+tap start-recording
+  {"tapped":55,"at":[205.71,223],"target":"start-recording","delivery":"platform","carrier":"android","mode":"agent","epoch":11,"incarnation":1,"clock":6000}
+clock data
+  {"clock":6000,"settled":false,"reason":"requests","epoch":11,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
+clock settle
+  {"clock":6000,"settled":false,"reason":"requests","epoch":13,"incarnation":1,"diagnostic":"clock settle gave up on requests still in flight at its bound (20 s native); state shows them under pending, and logs a `request N` with no `fulfil N`"}
+clock +3000
+  {"clock":9000,"inflight":1,"epoch":14,"incarnation":1,"diagnostic":"1 request still in flight on real time (a store's, a worker's, the network's): `clock +N` moved the clock without waiting for it; `clock data` or `clock settle` lands them (then `clock +N`), and `state` lists them under pending. A native view's UIView.animate runs on for up to N ms (at most 1.5 s) of a `clock +N`, and `clock settle` waits up to 1.5 s for it; one a display link moves runs only with `clock +N real`"}
+state rec.state
+  "recording"
+screenshot docs/media/android/leaving/01-recording.png
+  {"screenshot":"docs/media/android/leaving/01-recording.png","device":true,"epoch":15,"incarnation":1,"clock":9000}
+back
+  {"back":"route","delivery":"platform","carrier":"android","epoch":16,"incarnation":1,"clock":9000}
+clock data
+  {"clock":9000,"settled":false,"reason":"requests","epoch":16,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
+clock settle
+  {"clock":9000,"settled":false,"reason":"requests","epoch":21,"incarnation":1,"diagnostic":"clock settle gave up on requests still in flight at its bound (20 s native); state shows them under pending, and logs a `request N` with no `fulfil N`"}
+state recorderId
+  ""
+state trackId
+  ""
+state lib.length
+  1
+screenshot docs/media/android/leaving/02-back-stopped-and-saved.png
+  {"screenshot":"docs/media/android/leaving/02-back-stopped-and-saved.png","device":true,"epoch":21,"incarnation":1,"clock":9000}
+clock +12000
+  {"clock":21000,"epoch":36,"incarnation":1}
+clock data
+  {"clock":21000,"settled":true,"epoch":36,"incarnation":1}
+state detail.status
+  "done"
+tap pane-mine
+  {"tapped":135,"at":[205.71,274.38],"target":"pane-mine","delivery":"platform","carrier":"android","mode":"agent","epoch":37,"incarnation":1,"clock":21000}
+type my-notes ## Typed just before Back
+  {"typed":149,"value":"## Typed just before Back","target":"my-notes","delivery":"platform","carrier":"android","mode":"agent","epoch":38,"incarnation":1,"clock":21000}
+back
+  {"back":"route","delivery":"platform","carrier":"android","epoch":39,"incarnation":1,"clock":21000}
+clock data
+  {"clock":21000,"settled":true,"epoch":39,"incarnation":1}
+clock +1500
+  {"clock":22500,"epoch":39,"incarnation":1}
+clock data
+  {"clock":22500,"settled":true,"epoch":39,"incarnation":1}
+state lib.length
+  1
+screenshot docs/media/android/leaving/03-library-after-back.png
+  {"screenshot":"docs/media/android/leaving/03-library-after-back.png","device":true,"epoch":39,"incarnation":1,"clock":22500}
+tap "Sample notes"
+  {"tapped":117,"at":[161.71,330.5],"target":"Sample notes","delivery":"platform","carrier":"android","mode":"agent","epoch":40,"incarnation":1,"clock":22500}
+clock data
+  {"clock":22500,"settled":true,"epoch":40,"incarnation":1}
+clock settle
+  {"clock":22800,"settled":true,"epoch":40,"incarnation":1}
+state detail.userNotes
+  "## Typed just before Back"
+tap pane-mine
+  {"tapped":166,"at":[205.71,274.38],"target":"pane-mine","delivery":"platform","carrier":"android","mode":"agent","epoch":41,"incarnation":1,"clock":22800}
+screenshot docs/media/android/leaving/04-notes-kept.png
+  {"screenshot":"docs/media/android/leaving/04-notes-kept.png","device":true,"epoch":41,"incarnation":1,"clock":22800}

@@ -1,319 +1,67 @@
-# AGENTS.md - Alona Development Guidelines
+<!-- exact:begin (exact new writes this block; bun exact.mjs update rewrites it) -->
+# alona: an Exact app
 
-Guidelines for AI agents (Cursor, Copilot, Claude, etc.) and human contributors working on this macOS app.
+`app.contract` is the view, `app.ts` the data module, `app.test.contract` the tests, `app.json`
+the manifest: set `app.name` and `app.id` before building. The app uses Exact at
+`/Users/manlikeabro/Documents/repos/exact` by path (`EXACT` overrides it).
 
----
+This file is already in your instructions. Start from the nearest pattern: `bun exact.mjs
+pattern` lists them and `pattern <name>` writes one, tested. /Users/manlikeabro/Documents/repos/exact/docs/start-here-site.md (a site) or
+/Users/manlikeabro/Documents/repos/exact/docs/start-here.md is the only required reading. `bun exact.mjs contract vocab <name>` answers a
+name (none: the card); `bun exact.mjs docs <heading words>` a guide's
+section. Run `bun exact.mjs verify` when the features work, and `verify ios|android` at the end for a
+phone app. When an iPhone app is ready to try, run `bun exact.mjs share` and send its link;
+repeat for each change the person should see. `bun exact.mjs help` lists the verbs, including
+app.json's `"commands"`.
+`bun exact.mjs update` refreshes files. Native verbs (`ios`, `mac`, `linux`, `android`, `windows`)
+name their platform in app.json on first use and build in a generated workspace;
+`update --without <platform>` stops shipping it.
+`bun /Users/manlikeabro/Documents/repos/exact/scripts/exact.mjs setup --check` names what a native build lacks.
 
-## Project Overview
+Generated, so don't edit: `exact.mjs` and this block.
 
-**Alona** is a macOS meeting assistant that detects active meetings (Zoom, Google Meet), captures audio, transcribes locally using Whisper, and generates summaries.
+## Feedback (required)
 
-| Attribute | Value |
-|-----------|-------|
-| Build System | Xcode workspace (`Alona.xcworkspace`) + Makefile |
-| Platform | macOS 14.6+ (arm64) |
-| Swift Version | 6.0 |
-| UI Framework | SwiftUI with `MenuBarExtra` |
-| State Management | `@Observable` / `@State` / `@Environment` |
+When a doc was wrong or missing, a workaround was needed, something took several tries or a
+command confused you, record it: `bun exact.mjs feedback note "<what happened>"`. It attaches
+exact2's commit and the last exit code, never output or code. `bun exact.mjs feedback status` says
+whether notes are sent and whether to keep a diary; under `never`, skip all of this.
+<!-- exact:end -->
 
----
+# Alona: project guidelines
 
-## Build, Test, Run Commands
+Alona is a private meeting assistant. It records a meeting, transcribes it with a local speech model, and a local LLM writes the notes. One Exact app builds web, macOS, iOS, and Android. The field guide at `docs/explainer/index.html` explains the design, the flows, the brand, and setup.
 
-**Always run these after making changes:**
+## Layout
 
-```bash
-# Full dev loop (preferred)
-make test                    # Run all tests (uses swift test --parallel)
+| Path | What it holds |
+|---|---|
+| `app.contract`, `app.ts`, `app.tamber`, `app.json` | The view, the data module, the brand tokens, the manifest |
+| `core/` | Shared TypeScript: `service`, `pipeline`, `notes`, `device`, `models`, `store`, `engine` (the protocol), `sim-engine`, `artifacts.json` |
+| `modules/apple/` | The Swift inference engine for macOS and iOS |
+| `modules/web/`, `engine/web/` | The web engine's seam and its Worker source |
+| `tools/` | Flow runner, real-model checks, model pinning, framework fetch, the Exact patch |
+| `docs/` | Field guide, captured media, research, spike reports, decision trail |
+| `legacy/macos-swift/` | The original Swift app, reference only |
 
-# Individual commands
-make build                   # Build macOS app via xcodebuild
-make run                     # Build and launch app
-make lint                    # Check formatting (swiftformat + swiftlint)
-make format                  # Apply formatting fixes
-make clean                   # Clean DerivedData
-make setup                   # Regenerate buildServer.json
-make icon                    # Regenerate app icon from source PNG
-make download-model          # Fetch Whisper model (default: large-v3-turbo)
+## Checks to run before calling work done
+
+```sh
+bun test core/                  # shared logic
+bun exact.mjs verify web        # Contract tests plus Exact's screen checks; ends with "verify: clean"
+bun tools/flows.mjs web         # every flow, with state checks and fresh media
+bun tools/e2e-native.mjs lite   # macOS on real models, after any engine or pipeline change
 ```
 
-### Verification Checklist
-
-Before considering any task complete, verify:
-
-1. ✅ `make test` — All tests pass
-2. ✅ `make lint` — No formatting issues
-3. ✅ No compiler warnings in the build output
-
----
-
-## Project Structure
-
-```
-Alona/
-├── AlonaApp.swift           # App entry, MenuBarExtra, WindowGroups
-├── AppDelegate.swift        # NSApplicationDelegate
-├── Models/
-│   ├── AppState.swift       # @Observable main state container
-│   └── TranscriptionResult.swift
-├── Services/
-│   ├── AudioRecorder.swift  # @Observable - CoreAudio process tap + mic capture
-│   ├── MeetingDetector.swift # @Observable - detects Zoom/Meet
-│   ├── PermissionManager.swift # @Observable - permission handling
-│   ├── TranscriptionEngine.swift # @Observable - Whisper integration
-│   └── ...
-├── Views/
-│   ├── MenuBarView.swift    # Main menu bar UI
-│   ├── StartupView.swift    # Primary window
-│   └── ...
-└── Resources/
-    └── Models/              # Whisper model files (ggml-base.en.bin)
-
-AlonaTests/
-├── TestHelpers.swift        # Shared mocks and harnesses
-├── AppStateTests.swift      # AppState behavior tests (18 tests)
-├── MeetingFileManagerTests.swift # File operations (14 tests)
-├── MeetingDetectorTests.swift # Meeting detection (6 tests)
-├── AudioTests.swift         # Audio processing, CoreAudio (20 tests)
-├── TranscriptionTests.swift # Transcription (9 tests)
-├── PermissionTests.swift    # Permissions (6 tests)
-├── MicrophoneTrackerTests.swift # Mic tracking (4 tests)
-├── WindowControllerTests.swift # Window mgmt (2 tests)
-├── SummaryManagerTests.swift # Summaries (7 tests)
-└── NotificationTests.swift  # Notifications (6 tests)
-```
-
----
-
-## Coding Style
-
-### SwiftFormat
-
-Run `make format` before committing. Key rules:
-- 4-space indentation
-- Explicit `self` where required for Swift concurrency
-- Modern trailing closure syntax
-
-### State Management (IMPORTANT)
-
-**Use modern Observation framework:**
-
-| ✅ Use | ❌ Avoid |
-|--------|----------|
-| `@Observable` | `ObservableObject` |
-| `@State` | `@StateObject` |
-| `@Environment(Type.self)` | `@EnvironmentObject` |
-| `.environment(object)` | `.environmentObject(object)` |
-| `@Bindable var x = x` | `$object.property` without Bindable |
-
-**Exception:** Classes extending `NSObject` (e.g., `RecordingAudioPlayer` for `AVAudioPlayerDelegate`) must use `ObservableObject`.
-
-### Bindings with @Observable
-
-When a view needs to create a binding to an `@Observable` property:
-
-```swift
-struct SettingsView: View {
-    @Environment(AppState.self) private var appState
-    
-    var body: some View {
-        @Bindable var appState = appState  // Create bindable at start of body
-        Toggle("Option", isOn: $appState.someProperty)
-    }
-}
-```
-
-### Concurrency
-
-- Mark UI-related classes with `@MainActor`
-- Use `Task.detached` for background work, with `guard let self else { return }` before `MainActor.run`
-- Prefer `async/await` over Combine for new code
-- Keep Combine for interop with legacy/NSObject classes that expose publishers
-
-### SwiftUI onChange
-
-Use modern `onChange` syntax (macOS 14+):
-
-```swift
-// ✅ Correct
-.onChange(of: value) { }                      // Zero-param
-.onChange(of: value) { oldValue, newValue in } // Two-param
-
-// ❌ Deprecated
-.onChange(of: value) { newValue in }          // One-param (deprecated)
-```
-
----
-
-## Testing Guidelines
-
-### Running Tests
-
-```bash
-make test   # Runs swift test --parallel (kills any running Alona instance first)
-```
-
-Tests use Swift Package Manager via `Package.swift` which defines `AlonaCore` as a library target. Test files import `@testable import AlonaCore`.
-
-### Writing Tests
-
-- Add tests to the appropriate `*Tests.swift` file by subsystem (see Project Structure)
-- Use `@MainActor` for tests involving main-actor-isolated types
-- Use test harnesses with cleanup (see `MeetingFileManagerTestHarness` in `TestHelpers.swift`)
-- Mock external dependencies (see `MockAudioRecorder`, `MockTranscriptionEngine` in `TestHelpers.swift`)
-
-### Test Naming
-
-```swift
-func testFeatureNameBehaviorDescription() { ... }
-// Example: testNotesAutosaveAndFinalize()
-```
-
----
-
-## Common Tasks
-
-### Adding a New View
-
-1. Create `Views/NewView.swift`
-2. Use `@Environment(AppState.self)` for state access
-3. Add to appropriate `WindowGroup` in `AlonaApp.swift`
-4. Add preview with `.environment(AppState())`
-
-### Adding a New Service
-
-1. Create `Services/NewService.swift`
-2. Use `@Observable` macro (unless NSObject required)
-3. Inject via `@Environment` or pass directly
-4. Add tests for public API
-
-### Modifying AppState
-
-1. Add/modify properties in `Alona/Models/AppState.swift`
-2. Properties are automatically observable (no `@Published` needed)
-3. For debounced behavior, use Task-based debouncing in `didSet`
-4. Run `make test` to verify no regressions
-
----
-
-## What to Avoid
-
-1. **Don't use `@StateObject` / `@ObservableObject` / `@EnvironmentObject`** for new code
-2. **Don't use deprecated `onChange(of:perform:)`** — use zero or two-param version
-3. **Don't block the main thread** — use `Task.detached` for slow operations
-4. **Don't skip tests** — always run `make test` before considering work complete
-5. **Don't create new files without tests** for non-trivial logic
-6. **Don't use `print()` for debugging** — use `Logger` from OSLog
-
----
-
-## Permissions Required
-
-The app requires these macOS permissions:
-- **Microphone** — Voice capture
-- **System Audio Recording** — Meeting participant audio (CoreAudio Process Taps)
-- **Accessibility** — Zoom UI state detection
-- **Automation** — Google Meet tab detection via AppleScript
-
-Permission handling is in `Services/PermissionManager.swift`.
-
----
-
-## App Icon
-
-The app icon source is at `Alona/Resources/alona_icon_main.png` (2048x2048).
-
-### Updating the Icon
-
-```bash
-# Replace the source file, then regenerate all sizes
-cp /path/to/new_icon.png Alona/Resources/alona_icon_main.png
-make icon    # Generates 10 sizes (16x16 to 1024x1024)
-make run     # Build and launch with new icon
-```
-
-Icon sizes are generated in `Alona/Resources/Assets.xcassets/AppIcon.appiconset/`.
-
----
-
-## Whisper Model
-
-The app supports multiple Whisper models with **large-v3-turbo** as the default:
-
-| Model | Size | Speed | Quality |
-|-------|------|-------|---------|
-| tiny.en | 75 MB | ~10x | Basic |
-| base.en | 142 MB | ~7x | Good |
-| small.en | 466 MB | ~4x | Better |
-| **large-v3-turbo** | 1.6 GB | ~2x | Best (default) |
-| large-v3 | 2.9 GB | ~1x | Best |
-
-### Download Models
-
-```bash
-# Download default model (large-v3-turbo)
-make download-model
-
-# Download specific model
-make download-model MODEL=base.en
-make download-model MODEL=small.en
-
-# Convenience targets
-make download-model-turbo  # large-v3-turbo
-make download-model-base   # base.en
-make download-model-small  # small.en
-```
-
-### Model Selection
-
-Users can select and download models in **Settings > Transcription Model**:
-- View available models with size, speed, and quality info
-- Download models with progress tracking
-- Switch between downloaded models
-- Delete unused models to save space
-
-Model selection persists in UserDefaults (`selectedWhisperModel`).
-
-### Implementation
-
-- `WhisperModel` enum in `Services/ModelManager.swift` defines all models
-- `WhisperModelManager` handles selection, download, and status tracking
-- `ModelLocator` manages model file paths (bundle and user directory)
-- Models are stored in `~/Library/Application Support/Alona/Models/`
-
-Or manually download from: https://huggingface.co/ggerganov/whisper.cpp
-
----
-
-## Troubleshooting
-
-### SourceKit/Autocomplete Not Working
-
-```bash
-make setup   # Regenerate buildServer.json
-make build   # Force a clean build
-```
-
-### Tests Fail with Permission Errors
-
-```bash
-# Use a fresh DerivedData to reset TCC permissions
-DERIVED_DATA_PATH=/tmp/alona-test-$$ make test
-```
-
-### App Not Launching
-
-```bash
-killall Alona 2>/dev/null  # Kill any stuck instances
-make run
-```
-
----
-
-## Reference Documentation
-
-- [RFC-001: Alona MVP Implementation](docs/rfcs/RFC-001-alona-mvp-full-implementation.md)
-- [PRD: Alona macOS MVP](docs/PRD-alona-macos-mvp-2025-11-27.md)
-- [Design System Guidelines](docs/design_system/design_system_guidelines.md) — Colors, typography, spacing, component specs
-- [Design System Research](docs/research/design-system-research.md) — Detailed UI audit and component inventory
-
+`bun tools/explainer-data.mjs` refreshes the field guide after new media or check results.
+
+## Rules
+
+1. Logic goes in `core/` as pure TypeScript with a test in `core/core.test.ts`. `app.ts` only wires sources to the service.
+2. An engine answers the protocol in `core/engine.ts` and nothing else. Prompts, chunking, tier rules, and storage stay in `core/`.
+3. Every model file is pinned by `tools/pin-models.mjs` into `core/artifacts.json`. Do not hand-edit that file.
+4. A host is listed under a model in `core/models.ts` only after its engine has run that model end to end.
+5. The person's actions and the pipeline write different files in a meeting's folder (`core/store.ts`). Keep it that way.
+6. Colors come from `app.tamber` tokens or platform roles. No hex values in `app.contract`, except the waveform tint, which takes only a literal.
+7. Recording flows are tested in `tools/flows.mjs`, because Contract test files cannot grant the microphone permission.
+8. Nothing about a meeting leaves the device. The only network use is downloading models.

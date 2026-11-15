@@ -38,3 +38,22 @@ __pycache__/
 
 # Misc
 coverage/
+
+# Exact app
+/target/
+/dist/
+/dist.*
+/dist-windows/
+/app.contract.d.ts
+/.exact/
+/.env.local
+
+# Native inference frameworks, fetched by tools/fetch-apple-frameworks.sh
+/modules/apple/*.xcframework
+
+# Web inference engine, built by tools/build-web-engine.mjs
+/modules/web/worker.js
+/modules/web/ort/
+
+# Built packages staged for a release
+/release/

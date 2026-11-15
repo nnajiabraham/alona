@@ -1,0 +1,50 @@
+{
+  "$schema": "/Users/manlikeabro/Documents/repos/exact/scripts/app.schema.json",
+  "name": "Alona",
+  "short_name": "Alona",
+  "id": "com.alona.app",
+  "start_url": "/",
+  "display": "standalone",
+  "app": {
+    "id": "com.alona.app",
+    "name": "Alona"
+  },
+  "host": {
+    "web": {},
+    "macos": {
+      "minimumOS": "14.0",
+      "window": {
+        "width": 1040,
+        "height": 760,
+        "minWidth": 420,
+        "minHeight": 560
+      },
+      "link": [
+        "-lc++"
+      ]
+    },
+    "android": {},
+    "ios": {
+      "minimumOS": "17.0",
+      "deviceFamily": [
+        "iphone",
+        "ipad"
+      ],
+      "link": [
+        "-lc++"
+      ]
+    }
+  },
+  "deploy": {
+    "store": {
+      "web": "0",
+      "macos": "0",
+      "ios": "0"
+    }
+  },
+  "theme_color": "#f4f3ee",
+  "background_color": "#f4f3ee",
+  "color_scheme_dark": {
+    "background_color": "#151916"
+  }
+}
