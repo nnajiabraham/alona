@@ -83,3 +83,27 @@ The covered-button error at large text (`tap rec-bold: view is covered or not hi
 - **iOS and macOS** were not rebuilt or run. Their path is unchanged: `ownFormat` is false there, and the pad calls `format` as before.
 - **Clinic on Android:** only the `toolbar` flow was run, not every clinic flow.
 - **A visual defect this change exposed, not fixed:** at phone width and the largest text size, with text in the My notes pad and the page scrolled, the sticky toolbar overlaps the link-address row. Exact's screen check found it on `web-phone` when Title was tapped before the screen check (`mine-quote`/`mine-link` overlap `mine-link-url`). The flow now taps Title after the check. The overlap is in the pad's layout and was not introduced by the Android path.
+
+## After review
+
+A second model reviewed `core/markdown.ts` and reproduced seven defects. Each now has a test in `core/core.test.ts`.
+
+| Defect | Now |
+|---|---|
+| Italic inside bold, or bold inside italic, was read wrongly and later presses corrupted the note | Spans are paired by CommonMark's rule of three |
+| A format pressed at a bare caret did not show as on, and a second press stacked markers | The empty pair reads as on and a second press removes it. Inside a word, the word takes the format |
+| Bold over text that was partly bold produced broken Markdown | Spans the selection overlaps or touches join into one |
+| A format over several lines wrapped the line break | Each line's text is wrapped on its own |
+| A selection with a space at its end produced `**word **` | Spaces and markers at a selection's ends stay outside |
+| A selection ending at the start of the next line changed that line | That line is left alone |
+| A link address with parentheses was cut at the first `)` | One level of parentheses is part of the address |
+
+An exhaustive check then pressed each inline format twice on every selection of eight sample texts, and stacked and unstacked every pair of formats on every selection of five. It found one more case, two formats on a selection carrying a trailing space, which is fixed. Both checks end with no failures.
+
+The review also found that the app root held one selection for every pad and note. It now holds the note and pad the selection came from. A button pressed over another note or pad edits at the end of the text. This path was checked by Exact's web verification and the Android flows, which still pass. The stale case itself was not driven on a device.
+
+Still not handled:
+
+- Emphasis written with underscores (`_x_`, `__x__`) is not recognised, so a format pressed there adds asterisks around it.
+- A toolbar edit on Android is not one undo step.
+- Selection by touch (long-press and handles) was not driven. The flows select with keys.
