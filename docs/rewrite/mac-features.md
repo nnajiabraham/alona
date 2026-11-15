@@ -264,11 +264,11 @@ Filled from runs on this Mac (Apple Silicon, 8 GB, macOS 26). Commands ran from 
 | Memory over 10 minutes | VERIFIED for recording; see note | `EXACT=<patched> bun tools/e2e-native.mjs --long 10` | footprint by minute (MB): `46, 48, 50, 51, 53, 54, 55, 57, 58, 62, 63`; mix 600.5 s; `long recording: ok` |
 | Clinic | VERIFIED | `bun tools/tenant.mjs verify default web` | `verify: clean in 26.8 s` (after deleting a stale `.exact/tenants/default/app/target/web-dist`) |
 
-**Memory note.** While recording, the footprint rises about 1.7 MB a minute (46 → 63 MB over 10 minutes). The figures come from `docs/media/macos-real/long-recording-10min.json`. Under the agent this is Exact's recorder and the app; the real tap is not running. From Stop until the meeting is done, the footprint peaks at about 1.2 GB. The peak is not the mix. Two 2-minute runs: system audio on, 1148 MB; microphone only, 1240 MB (`--long 2 --mic-only`). The source of the peak is somewhere in the stop path that predates this branch, and it is not identified. It is listed as an open risk.
+**Memory note.** While recording, the footprint rises about 1.7 MB a minute (46 → 63 MB over 10 minutes). The figures come from `docs/media/macos-real/long-recording-10min.json`. Under the agent this is Exact's recorder and the app; the real tap is not running. From Stop until the meeting is done, the footprint peaks at about 1.2 GB. The peak is not the mix. Two 2-minute runs: system audio on, 1148 MB; microphone only, 1240 MB (`--long 2 --mic-only`). Its source is not identified, and the base commit was not measured, so whether it predates this branch is unknown. It is listed as an open risk.
 
 ## Open risks
 
-- About 1.2 GB peak footprint between Stop and done, with or without system audio (see the memory note). It predates this branch, and its source is not identified.
+- About 1.2 GB peak footprint between Stop and done, with or without system audio (see the memory note). The source is not identified, and the base commit was not measured for comparison.
 
 - The real Core Audio tap, the real detector, and notifications have not run on this Mac. Each is listed above for a computer-use run.
 - If a release build of the Mac app is ever sandboxed, the meetings folder and the import need security-scoped bookmarks instead of absolute paths.
