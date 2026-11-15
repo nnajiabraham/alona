@@ -40,7 +40,7 @@ Windows and Linux use an Electron shell (`desktop/`) around Alona's web build, b
 
 ## Releases
 
-Test builds are on the [0.1.0 release page](https://github.com/nnajiabraham/alona/releases/tag/v0.1.0): the macOS app, the Android package, the web build, the Windows installer, two Linux packages, and the clinical app for each example tenant. iOS is not there yet.
+Test builds are on the [release page](https://github.com/nnajiabraham/alona/releases): the macOS app, the Android package, the web build, the Windows installer, two Linux packages, and the clinical app for each example tenant. iOS is not there yet.
 
 `bun tools/release.mjs build` builds every platform's package into `release/`, and `bun tools/release.mjs publish` creates a GitHub release with notes and checksums. Every package is unsigned or ad-hoc signed.
 

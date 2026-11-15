@@ -1,6 +1,6 @@
-# Alona 0.1.0
+# Alona 0.1.1
 
-A first build of the rewrite, for testing. Alona records a meeting, transcribes it with a local speech model, and has a local language model write the notes. Nothing about a meeting leaves the device. The only network use is downloading the models once.
+A test build of the rewrite. It replaces 0.1.0, whose Android formatting toolbar had defects found in review: nested bold and italic, formats at a bare caret, formats over several lines, and links with parentheses. Alona records a meeting, transcribes it with a local speech model, and has a local language model write the notes. Nothing about a meeting leaves the device. The only network use is downloading the models once.
 
 This release also carries the clinical app, a white-label patient note-taking app, built once per tenant file under `tenants/`.
 

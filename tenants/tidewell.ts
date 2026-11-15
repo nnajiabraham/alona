@@ -8,7 +8,7 @@ export default defineTenant({
     shortName: 'Tidewell',
     tagline: 'Session notes for counsellors, kept on your device.',
     bundleId: 'app.tidewell.sessionnotes',
-    version: '0.1.0',
+    version: '0.1.1',
   },
   colors: {
     accent: { light: '#9a4a12', dark: '#b8611f' },

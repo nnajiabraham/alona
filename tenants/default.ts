@@ -8,7 +8,7 @@ export default defineTenant({
     shortName: 'Clinic Notes',
     tagline: 'Visit notes, drafted on this device.',
     bundleId: 'app.clinicnotes.default',
-    version: '0.1.0',
+    version: '0.1.1',
   },
   colors: {
     accent: { light: '#1f6f6b', dark: '#2f8a84' },
