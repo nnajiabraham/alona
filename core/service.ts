@@ -23,6 +23,8 @@ export interface TierView {
 
 export interface SetupView {
   ready: boolean;
+  /** The host the engine reports, `macos`, `ios`, `android` or `web`. */
+  host: string;
   demo: boolean;
   /** Why the demo engine is in use, shown wherever sample content appears. Empty with a real engine. */
   demoNote: string;
@@ -125,6 +127,10 @@ interface TierState {
 export interface ServiceOptions {
   /** The note format of one meeting. Alona's for every meeting when absent. */
   profileOf?: (meeting: StoredMeeting) => Promise<NotesProfile>;
+  /** The recording a new meeting keeps, given the microphone's: system audio may be mixed in. */
+  finishRecording?: (id: string, audio: string) => Promise<string>;
+  /** Runs when no meeting is being worked on: after launch, and when the last one finishes. */
+  onIdle?: () => Promise<void>;
 }
 
 /**
@@ -141,7 +147,7 @@ export function service(engine: Engine, store: MeetingStore, demoNote: string, o
 
   /** Orphaned recordings are adopted once, at the first read after launch, when none can be in progress. */
   const meetings = async (): Promise<StoredMeeting[]> => {
-    await (adopted ??= store.adoptOrphans());
+    await (adopted ??= store.adoptOrphans().then(() => options.onIdle?.()));
     return store.list();
   };
 
@@ -218,6 +224,7 @@ export function service(engine: Engine, store: MeetingStore, demoNote: string, o
       const current = tiers.find((t) => t.id === active);
       return {
         ready: true,
+        host: d.host,
         demo,
         demoNote,
         deviceLine: deviceLine(d),
@@ -265,7 +272,10 @@ export function service(engine: Engine, store: MeetingStore, demoNote: string, o
       try {
         const waiting = (await meetings()).filter(isWorking).sort((x, y) => x.createdAt - y.createdAt);
         const next = waiting[0];
-        if (!next) return { working: false };
+        if (!next) {
+          await options.onIdle?.();
+          return { working: false };
+        }
         const active = await activeArtifacts(picked);
         if (!active) return { working: true };
         const { stt, llm } = active.artifacts;
@@ -301,7 +311,8 @@ export function service(engine: Engine, store: MeetingStore, demoNote: string, o
       return {
         ...row(m),
         found: true,
-        audio: m.audio,
+        // A meeting in the person's folder has an absolute path, which the player reads as a file URL.
+        audio: m.audio.startsWith('/') ? `file://${encodeURI(m.audio)}` : m.audio,
         error: m.stage.kind === 'failed' ? m.stage.error : '',
         aiNotes: await store.readAiNotes(id),
         userNotes: await store.readUserNotes(id),
@@ -311,7 +322,8 @@ export function service(engine: Engine, store: MeetingStore, demoNote: string, o
 
     async create(id: string, title: string, audio: string, durationMs: number, userNotes: string, createdAt: number, tier: string): Promise<Reply> {
       if (!isMeetingId(id) || audio === '') return refused('The recording was not saved.');
-      await store.create({ id, title, audio, durationS: durationMs / 1000, userNotes, createdAt, tier: isTierId(tier) ? tier : 'lite' });
+      const kept = options.finishRecording ? await options.finishRecording(id, audio) : audio;
+      await store.create({ id, title, audio: kept, durationS: durationMs / 1000, userNotes, createdAt, tier: isTierId(tier) ? tier : 'lite' });
       return OK;
     },
 

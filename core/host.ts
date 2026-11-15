@@ -14,6 +14,8 @@ export interface HostOptions extends ServiceOptions {
   demo?: Pick<SimOptions, 'segments' | 'notes'>;
   /** Ends the note shown wherever samples appear. */
   sampleLine?: string;
+  /** The meetings, when the app keeps them somewhere besides app storage. */
+  store?: MeetingStore;
 }
 
 const DEMO_SHELF = 'app:/data/demo-models.json';
@@ -37,7 +39,7 @@ const demoShelf = (files: Files) => ({
  * engine does under browser automation.
  */
 export async function hostService(files: Files, native: Native | null | undefined, options: HostOptions = {}): Promise<{ service: Service; store: MeetingStore }> {
-  const store = meetingStore(files);
+  const store = options.store ?? meetingStore(files);
   const sample = options.sampleLine ?? 'Transcripts and notes shown here are samples.';
   const demo = (why: string, device: DeviceFacts = SIM_DEVICE): Service =>
     service(simEngine({ polls: 3, shelf: demoShelf(files), device, ...options.demo }), store, `${why} ${sample}`, options);
