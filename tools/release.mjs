@@ -19,6 +19,11 @@ const ROOT = resolve(dirname(new URL(import.meta.url).pathname), '..');
 const OUT = join(ROOT, 'release');
 const VERSION = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')).version;
 const TAG = `v${VERSION}`;
+// Exact stamps native apps from these two, not from package.json. The build number rises with
+// the version, so a newer package installs over an older one: 0.1.1 is 101.
+const [major, minor, patch] = VERSION.split('.').map(Number);
+process.env.EXACT_VERSION ??= VERSION;
+process.env.EXACT_BUILD_NUMBER ??= String(major * 10000 + minor * 100 + patch);
 const BUN = process.execPath;
 
 function run(command, args, options = {}) {
