@@ -68,6 +68,21 @@ const BUILDS = {
       copyFileSync(join(built, name), join(OUT, name));
     }
   },
+  /** The clinical app, once per tenant file: a web build and an Android package. */
+  clinic() {
+    const tenants = readdirSync(join(ROOT, 'tenants')).filter((n) => n.endsWith('.ts') && !['schema.ts', 'validate.ts'].includes(n) && !n.endsWith('.test.ts')).map((n) => n.slice(0, -3)).sort();
+    for (const slug of tenants) {
+      const dir = join(ROOT, '.exact', 'tenants', slug);
+      run(BUN, ['tools/tenant.mjs', 'build', slug, 'web']);
+      const site = join(tmpdir(), `clinic-web-${Date.now()}`, `Clinic-${slug}-${VERSION}-web`);
+      mkdirSync(dirname(site), { recursive: true });
+      run('ditto', [join(dir, 'dist'), site]);
+      zip(site, `Clinic-${slug}-${VERSION}-web.zip`);
+      rmSync(dirname(site), { recursive: true, force: true });
+      run(BUN, ['tools/tenant.mjs', 'build', slug, 'android', '--release', '--no-install']);
+      copyFileSync(join(dir, 'app', 'target', 'android', 'app', 'outputs', 'apk', 'release', 'app-release.apk'), join(OUT, `Clinic-${slug}-${VERSION}-android-arm64.apk`));
+    }
+  },
 };
 
 const sha256 = (path) => createHash('sha256').update(readFileSync(path)).digest('hex');
@@ -75,6 +90,8 @@ const packages = () => readdirSync(OUT).filter((n) => !n.endsWith('.md') && !n.e
 const megabytes = (path) => `${(statSync(path).size / 1e6).toFixed(1)} MB`;
 
 const HOW = [
+  [/^Clinic-.*-web\.zip$/, 'Clinical app, web', 'One tenant\'s build of the clinical app. Unzip and serve the folder as for Alona\'s web build.'],
+  [/^Clinic-.*\.apk$/, 'Clinical app, Android (arm64)', 'One tenant\'s build of the clinical app. Install with `adb install`.'],
   [/macos-arm64\.zip$/, 'macOS (Apple silicon)', 'Unzip and move Alona.app to Applications. It is not signed with a developer identity, so the first time, right-click it and choose Open, or run `xattr -dr com.apple.quarantine /Applications/Alona.app`.'],
   [/android-arm64\.apk$/, 'Android (arm64)', 'Install with `adb install` or open the file on the phone after allowing installs from this source.'],
   [/ios-simulator\.zip$/, 'iOS Simulator', 'Unzip, then `xcrun simctl install booted Alona.app`. This build runs in the Simulator only. A build for a phone needs a signing identity and a provisioning profile.'],
@@ -131,6 +148,6 @@ if (verb === 'build') {
 } else if (verb === 'publish') {
   publish();
 } else {
-  console.error('usage: bun tools/release.mjs build [macos android ios web desktop] | notes | publish');
+  console.error('usage: bun tools/release.mjs build [macos android ios web desktop clinic] | notes | publish');
   process.exit(2);
 }
