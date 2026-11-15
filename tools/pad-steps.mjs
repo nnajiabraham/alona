@@ -3,10 +3,12 @@
 // the active state the toolbar shows.
 
 // Select all, bold, and the ends of a line. Chrome under the agent runs no Mac editing chords for a line's ends.
+// Android's agent selects nothing with Control+a; each step's value is one line with the caret at
+// its end, so Shift+Home selects all of it there. Android has no bold shortcut (see formatSteps).
 export const KEYS = {
   web: { selectAll: 'Meta+a', boldKey: 'Meta+b', lineStart: 'Home', lineEnd: 'End' },
   macos: { selectAll: 'Meta+a', boldKey: 'Meta+b', lineStart: 'Meta+ArrowLeft', lineEnd: 'Meta+ArrowRight' },
-  android: { selectAll: 'Control+a', boldKey: 'Control+b', lineStart: 'Home', lineEnd: 'End' },
+  android: { selectAll: 'Shift+Home', boldKey: '', lineStart: 'Home', lineEnd: 'End' },
 };
 export const keysFor = (host) => KEYS[host] ?? KEYS.web;
 
@@ -76,13 +78,17 @@ export function formatSteps(p, field, value) {
     ...fresh('Alona site'), ...select, `tap ${p}-link`, 'clock settle', `type ${p}-link-url https://example.com`, `tap ${p}-link-apply`,
     'clock data', check(value, '[Alona site](https://example.com)'), pressed(`${p}-link`, true), shot(`${p}-link`),
     // The state follows the caret: the start of the line is plain, its end inside the bold. The
-    // macOS agent moves the caret without a selection event, so only the web drives this.
-    only(['web'], `${p} caret-follow: the macOS agent sends no selection event for a caret move`, [
+    // macOS agent moves the caret without a selection event, so the web and Android drive this.
+    only(['web', 'android'], `${p} caret-follow: the macOS agent sends no selection event for a caret move`, [
       ...fresh('Plain **bold**'), `type ${field} key {lineStart}`, 'clock data', pressed(`${p}-bold`, false), shot(`${p}-caret-in-plain`),
       `type ${field} key {lineEnd}`, 'clock data', pressed(`${p}-bold`, true), shot(`${p}-caret-in-bold`),
     ]),
-    // The platform shortcut is the editor's, and the toolbar follows it.
-    ...fresh('Agenda'), ...select, `type ${field} key {boldKey}`, 'clock data', check(value, '**Agenda**'), pressed(`${p}-bold`, true), shot(`${p}-shortcut-bold`),
+    // Every host ends on bold "Agenda", which the runners' save checks read, with or without the shortcut step below.
+    ...fresh('Agenda'), ...select, `tap ${p}-bold`, 'clock data', check(value, '**Agenda**'),
+    // The platform shortcut is the editor's, and the toolbar follows it. Android's editor has none.
+    only(['web', 'macos', 'ios'], `${p} bold shortcut: Android's editor has no Ctrl+B`, [
+      ...fresh('Agenda'), ...select, `type ${field} key {boldKey}`, 'clock data', check(value, '**Agenda**'), pressed(`${p}-bold`, true), shot(`${p}-shortcut-bold`),
+    ]),
   ];
 }
 
