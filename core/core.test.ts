@@ -533,6 +533,65 @@ describe('a service with its own note format', () => {
   });
 });
 
+describe('a second meeting from the same recording', () => {
+  async function finished() {
+    const files = memoryFiles();
+    const store = meetingStore(files);
+    const notes: string[] = [];
+    const engine = simEngine({ polls: 1, notes: (prompt) => (notes.push(prompt), '## Summary\nSaid things.') });
+    const s = service(engine, store, 'Demo.');
+    await s.downloadTier('balanced');
+    for (let i = 0; i < 5; i++) await s.setup('auto');
+    await files.atomicWriteFile('app:/data/meetings/a/audio.wav', new Uint8Array([1, 2, 3]));
+    await s.create('a', 'Visit', 'app:/data/meetings/a/audio.wav', 1000, '- BP 120/80', 7, 'balanced');
+    for (let i = 0; i < 30; i++) await s.tick('auto');
+    return { files, store, s, notes };
+  }
+
+  test('starts from the first one’s transcript and notes, plays its recording, and writes notes of its own', async () => {
+    const { s, store, notes } = await finished();
+    const first = await s.detail('a');
+    expect(first.status).toBe('done');
+    const transcribed = notes.length;
+    expect(await s.fork('a', 'b')).toEqual({ ok: true, error: '' });
+    const waiting = await s.detail('b');
+    expect(waiting.status).toBe('summarizing');
+    expect(waiting.segments).toEqual(first.segments);
+    expect(waiting.userNotes).toBe('- BP 120/80');
+    expect(waiting.audio).toBe(first.audio);
+    expect(waiting.createdAt).toBe(first.createdAt);
+    for (let i = 0; i < 30; i++) await s.tick('auto');
+    expect((await s.detail('b')).status).toBe('done');
+    expect(notes.length).toBeGreaterThan(transcribed);
+    expect(await store.readAiNotes('a')).toBe(first.aiNotes);
+  });
+
+  test('a meeting still being written is not forked, and an id in use is refused', async () => {
+    const { s, store } = await finished();
+    await s.regenerate('a');
+    expect((await s.fork('a', 'b')).ok).toBe(false);
+    for (let i = 0; i < 30; i++) await s.tick('auto');
+    expect((await s.fork('a', 'a')).ok).toBe(false);
+    expect(await store.load('b')).toBeNull();
+  });
+
+  test('deleting either meeting leaves the other’s recording playable', async () => {
+    const first = await finished();
+    await first.s.fork('a', 'b');
+    await first.s.remove('a');
+    const kept = await first.s.detail('b');
+    expect(kept.audio).toBe('app:/data/meetings/b/audio.wav');
+    expect([...new Uint8Array(await first.files.readFile(kept.audio))]).toEqual([1, 2, 3]);
+    expect(first.files.paths().some((p) => p.startsWith('app:/data/meetings/a/'))).toBe(false);
+
+    const second = await finished();
+    await second.s.fork('a', 'b');
+    await second.s.remove('b');
+    expect((await second.s.detail('a')).audio).toBe('app:/data/meetings/a/audio.wav');
+    expect([...new Uint8Array(await second.files.readFile('app:/data/meetings/a/audio.wav'))]).toEqual([1, 2, 3]);
+  });
+});
+
 describe('choosing the engine at launch', () => {
   test('without a native module, the demo engine answers and says why', async () => {
     const { service: s } = await hostService(memoryFiles(), null, { sampleLine: 'Samples.' });

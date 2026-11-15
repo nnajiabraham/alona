@@ -339,10 +339,37 @@ export function service(engine: Engine, store: MeetingStore, demoNote: string, o
       return OK;
     },
 
+    /**
+     * A second meeting from a finished one, waiting for its notes: it plays the same recording
+     * file, and starts from a copy of the transcript and of the person's notes, so its notes and
+     * the first meeting's are written and kept apart.
+     */
+    async fork(from: string, id: string): Promise<Reply> {
+      if (!isMeetingId(from) || !isMeetingId(id)) return refused(GONE);
+      const m = await store.load(from);
+      if (!m) return refused(GONE);
+      if (m.stage.kind !== 'done') return refused('The first notes are still being written.');
+      if (await store.load(id)) return refused('That meeting already exists.');
+      await store.mkdirMeeting(id);
+      await store.writeTranscript(id, await store.readTranscript(from));
+      await store.saveProgress({ ...regenerate({ ...m, id, attempt: 0 }), progress: 0, suggestedTitle: '' });
+      // Last, so the list never shows a meeting whose transcript or stage is not written yet.
+      await store.create({ id, title: m.title, audio: m.audio, durationS: m.durationS, createdAt: m.createdAt, tier: m.tier, userNotes: await store.readUserNotes(from) });
+      return OK;
+    },
+
+    /** Removes a meeting's folder. A recording in it that another meeting still plays moves to that meeting's folder first. */
     async remove(id: string): Promise<Reply> {
       if (!isMeetingId(id)) return refused(GONE);
       const m = await store.load(id);
       if (m && (m.stage.kind === 'transcribing' || m.stage.kind === 'summarizing')) await engine.cancel(m.stage.job);
+      if (m && m.audio.startsWith(`${store.dir(id)}/`)) {
+        const sharing = (await store.list()).filter((o) => o.id !== id && o.audio === m.audio);
+        if (sharing.length > 0) {
+          const kept = await store.copyAudio(m.audio, sharing[0].id);
+          for (const o of sharing) await store.relocateAudio(o.id, kept);
+        }
+      }
       await store.remove(id);
       return OK;
     },

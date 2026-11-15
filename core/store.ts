@@ -242,6 +242,13 @@ export function meetingStore(files: Files, root: string = MEETINGS_DIR) {
 
     remove: (id: string): Promise<void> => files.rm(meetingDir(id)),
 
+    /** Copies a recording into a meeting's folder under its own file name, and answers the copy's path. */
+    async copyAudio(path: string, toId: string): Promise<string> {
+      const copy = `${meetingDir(toId)}/${path.slice(path.lastIndexOf('/') + 1)}`;
+      await files.atomicWriteFile(copy, new Uint8Array(await files.readFile(path)));
+      return copy;
+    },
+
     readUserNotes: async (id: string): Promise<string> => (await readText(files, paths(id).userNotes)) ?? '',
     writeUserNotes: (id: string, text: string): Promise<void> => writeText(files, paths(id).userNotes, text),
     readAiNotes: async (id: string): Promise<string> => (await readText(files, paths(id).aiNotes)) ?? '',

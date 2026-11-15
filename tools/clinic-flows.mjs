@@ -29,10 +29,16 @@ const TARGETS = {
 const shot = (name) => ({ shot: name });
 const check = (path, equals) => ({ check: path, equals });
 const has = (path, text) => ({ check: path, contains: text });
+/** Remembers a state's value under a name, for a later `same` to compare against. */
+const keep = (path, name) => ({ check: path, keep: name });
+const same = (path, name) => ({ check: path, same: name });
 
 function flows(tenant) {
   const second = tenant.templates.find((t) => t.id !== tenant.defaults.template) ?? tenant.templates[0];
   const headings = second.sections.map((s) => `## ${s.heading}`);
+  // The rewrite flow's pair: a consultation note written again as a referral letter, where the tenant has both.
+  const first = tenant.templates.find((t) => t.id === 'consultation') ?? tenant.templates[0];
+  const other = tenant.templates.find((t) => t.id === 'referral') ?? tenant.templates.find((t) => t.id !== first.id);
   const READY = ['clock data', 'tap continue', 'clock data', 'clock +6000', 'clock data'];
   const RECORDED = [
     ...READY,
@@ -123,6 +129,29 @@ function flows(tenant) {
       'tap edit-note', 'clock settle', 'tap draft-link', 'clock settle', padClean('draft', 'note-editor'), shot('draft-large'),
       'prefer prefers-color-scheme dark', 'clock settle', shot('draft-large-dark'),
     ],
+    // A second document from one visit: the reviewed note stays as it was, the new one is an unreviewed draft in the other template.
+    rewrite: [
+      ...READY,
+      'tap new-note-button', 'clock settle', 'type new-ref Bed 4', `tap template-${first.id}`, 'clock settle', 'tap start-recording',
+      'clock data', 'clock settle', ...(tenant.features.jottings ? ['type record-jottings - L knee, 2 weeks'] : []),
+      'clock +5000', 'tap stop-recording', 'clock data', 'clock settle', 'clock +12000', 'clock data',
+      check('detail.state', 'draft'), check('detail.templateName', first.name),
+      'tap mark-reviewed', 'clock data', check('detail.state', 'reviewed'), keep('detail.note', 'firstNote'), keep('detail.reviewedAt', 'firstReviewedAt'),
+      keep('detail.audio', 'firstAudio'), shot('reviewed-first'),
+      'tap write-as', 'clock settle', shot('write-as-sheet'),
+      `tap write-as-${other.id}`, 'clock settle', shot('template-picked'),
+      'tap write-as-start', 'clock data', 'clock settle', check('detail.templateName', other.name), check('detail.patientRef', 'Bed 4'),
+      check('detail.writtenFrom', first.name), check('detail.sharesRecording', true), same('detail.audio', 'firstAudio'), shot('second-writing'),
+      'clock +12000', 'clock data', check('detail.state', 'draft'), check('detail.hasEdits', false), check('detail.reviewedAt', 0),
+      ...other.sections.map((x) => has('detail.note', `## ${x.heading}`)), shot('second-draft'),
+      check('lib.length', 2), check('lib.0.patientRef', 'Bed 4'), check('lib.1.patientRef', 'Bed 4'),
+      'tap delete-note', 'clock settle', shot('confirm-delete-keeps-recording'),
+      'tap delete-confirm', 'clock data', 'clock settle', check('lib.length', 1), check('lib.0.templateName', first.name),
+      check('detail.templateName', first.name), check('detail.state', 'reviewed'), same('detail.note', 'firstNote'),
+      same('detail.reviewedAt', 'firstReviewedAt'), same('detail.audio', 'firstAudio'), check('detail.sharesRecording', false),
+      'tree player', shot('first-untouched-after-delete'),
+      'back', 'clock data', 'clock settle', shot('one-note-left'),
+    ],
     settings: [
       ...READY,
       'tap open-settings', 'clock data', 'clock settle', check('choice', tenant.defaults.tier), shot('settings'),
@@ -168,6 +197,7 @@ function run(slug, app, targetName, flowName, steps) {
     const reason = result.stderr.split('\n').filter((l) => l.trim() !== '' && !l.startsWith('    at ') && !l.startsWith('exact:') && !l.startsWith('app:'));
     failures.push(`the drive exited ${result.status}: ${reason.slice(-2).join(' | ').slice(0, 400)}`);
   }
+  const kept = {};
   for (const c of checks) {
     const raw = replies[c.at];
     let actual;
@@ -176,7 +206,11 @@ function run(slug, app, targetName, flowName, steps) {
     } catch {
       actual = raw;
     }
-    if ('contains' in c) {
+    if ('keep' in c) {
+      kept[c.keep] = actual;
+    } else if ('same' in c) {
+      if (JSON.stringify(actual) !== JSON.stringify(kept[c.same])) failures.push(`${c.check}: expected the ${c.same} kept earlier, ${JSON.stringify(kept[c.same])?.slice(0, 200)}, got ${(raw ?? '(no reply)').slice(0, 200)}`);
+    } else if ('contains' in c) {
       if (typeof actual !== 'string' || !actual.includes(c.contains)) failures.push(`${c.check}: expected to contain ${JSON.stringify(c.contains)}, got ${(raw ?? '(no reply)').slice(0, 300)}`);
     } else if (JSON.stringify(actual) !== JSON.stringify(c.equals)) {
       failures.push(`${c.check}: expected ${JSON.stringify(c.equals)}, got ${c.read ? JSON.stringify(actual).slice(0, 300) : (raw ?? '(no reply)').slice(0, 300)}`);

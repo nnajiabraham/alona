@@ -39,6 +39,7 @@ const sources: Sources = {
   saveJottings: async ([id, text], _store, storage, native) => (await app(storage, native)).saveJottings(id, text),
   markReviewed: async ([id, at], _store, storage, native) => (await app(storage, native)).markReviewed(id, at),
   writeAgain: async ([id], _store, storage, native) => (await app(storage, native)).writeAgain(id),
+  writeAs: async ([from, templateId, id], _store, storage, native) => (await app(storage, native)).writeAs(from, templateId, id),
   transcribeAgain: async ([id], _store, storage, native) => (await app(storage, native)).transcribeAgain(id),
   retryNote: async ([id], _store, storage, native) => (await app(storage, native)).retry(id),
   deleteNote: async ([id], _store, storage, native) => (await app(storage, native)).remove(id),
