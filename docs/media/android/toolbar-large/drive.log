@@ -1,5 +1,5 @@
 clock data
-  {"clock":0,"settled":true,"epoch":3,"incarnation":1}
+  {"clock":0,"settled":false,"reason":"requests","epoch":2,"incarnation":1,"diagnostic":"clock data gave up on requests still in flight at its bound (20 s); state shows them under pending"}
 tap continue
   {"tapped":28,"at":[205.71,760.33],"target":"continue","delivery":"platform","carrier":"android","mode":"agent","epoch":4,"incarnation":1,"clock":0}
 clock data
@@ -13,7 +13,7 @@ prefer root-font-size 53px
 tap start-recording
   {"tapped":67,"at":[205.71,675],"target":"start-recording","delivery":"platform","carrier":"android","mode":"agent","epoch":11,"incarnation":1,"clock":6000}
 clock until state rec.state == "recording" within 15000
-  {"clock":6000,"real":150,"until":"met","value":"recording"}
+  {"clock":6000,"real":145,"until":"met","value":"recording"}
 clock data
   {"clock":6000,"settled":true,"epoch":15,"incarnation":1}
 clock settle

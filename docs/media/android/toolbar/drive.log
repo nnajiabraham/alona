@@ -11,7 +11,7 @@ clock data
 tap start-recording
   {"tapped":67,"at":[205.71,223],"target":"start-recording","delivery":"platform","carrier":"android","mode":"agent","epoch":10,"incarnation":1,"clock":6000}
 clock until state rec.state == "recording" within 15000
-  {"clock":6000,"real":145,"until":"met","value":"recording"}
+  {"clock":6000,"real":89,"until":"met","value":"recording"}
 clock data
   {"clock":6000,"settled":true,"epoch":14,"incarnation":1}
 clock settle
@@ -247,7 +247,7 @@ clock data
 state noteDraft
   "Decisions"
 tap mine-ordered
-  {"tapped":228,"at":[343.43,336.38],"target":"mine-ordered","scrolled":{"from":[553.43,336.38],"to":[553.43,336.38]},"delivery":"platform","carrier":"android","mode":"agent","epoch":72,"incarnation":1,"clock":23350}
+  {"tapped":228,"at":[343.43,240.95],"target":"mine-ordered","scrolled":{"from":[553.43,240.95],"to":[553.43,240.95]},"delivery":"platform","carrier":"android","mode":"agent","epoch":72,"incarnation":1,"clock":23350}
 clock data
   {"clock":23350,"settled":true,"epoch":72,"incarnation":1}
 state noteDraft

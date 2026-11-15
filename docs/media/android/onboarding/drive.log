@@ -1,26 +1,26 @@
 clock data
-  {"clock":0,"settled":true,"epoch":2,"incarnation":1}
+  {"clock":0,"settled":true,"epoch":3,"incarnation":1}
 state setup.ready
   true
 state welcomed
   false
 screenshot docs/media/android/onboarding/01-device-check.png
-  {"screenshot":"docs/media/android/onboarding/01-device-check.png","device":true,"epoch":2,"incarnation":1,"clock":0}
+  {"screenshot":"docs/media/android/onboarding/01-device-check.png","device":true,"epoch":3,"incarnation":1,"clock":0}
 tap continue
-  {"tapped":28,"at":[205.71,760.33],"target":"continue","delivery":"platform","carrier":"android","mode":"agent","epoch":3,"incarnation":1,"clock":0}
+  {"tapped":28,"at":[205.71,760.33],"target":"continue","delivery":"platform","carrier":"android","mode":"agent","epoch":4,"incarnation":1,"clock":0}
 clock data
-  {"clock":0,"settled":true,"epoch":3,"incarnation":1}
+  {"clock":0,"settled":true,"epoch":4,"incarnation":1}
 state welcomed
   true
 state setup.activeDownloading
   true
 screenshot docs/media/android/onboarding/02-downloading-models.png
-  {"screenshot":"docs/media/android/onboarding/02-downloading-models.png","device":true,"epoch":3,"incarnation":1,"clock":0}
+  {"screenshot":"docs/media/android/onboarding/02-downloading-models.png","device":true,"epoch":4,"incarnation":1,"clock":0}
 clock +6000
-  {"clock":6000,"epoch":8,"incarnation":1}
+  {"clock":6000,"epoch":9,"incarnation":1}
 clock data
-  {"clock":6000,"settled":true,"epoch":8,"incarnation":1}
+  {"clock":6000,"settled":true,"epoch":9,"incarnation":1}
 state setup.activeInstalled
   true
 screenshot docs/media/android/onboarding/03-ready-to-record.png
-  {"screenshot":"docs/media/android/onboarding/03-ready-to-record.png","device":true,"epoch":8,"incarnation":1,"clock":6000}
+  {"screenshot":"docs/media/android/onboarding/03-ready-to-record.png","device":true,"epoch":9,"incarnation":1,"clock":6000}
